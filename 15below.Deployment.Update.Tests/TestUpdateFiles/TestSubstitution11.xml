@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces/>
+  <Files>
+    <File Filename="TestUpdateFiles\DoesntExist.xml">
+      <ReplacementTemplate>TestUpdateFiles\TestConfig3.xml</ReplacementTemplate>
+    </File>
+  </Files>
+</Root>
