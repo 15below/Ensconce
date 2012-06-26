@@ -1,10 +1,10 @@
 $scriptDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
-Write-Host "Deploying Tools to $DeployDir"
+Write-Host "Deploying Tools to $DeployToolsDir"
 
-if(!(Test-Path $DeployDir))
+if(!(Test-Path $DeployToolsDir))
 {
-    New-Item $DeployDir -Type container
+    New-Item $DeployToolsDir -Type container
 }
 
-Copy-Item "$scriptDir\..\Content\*.*" $DeployDir -Force
+Copy-Item "$scriptDir\..\Content\*.*" $DeployToolsDir -Force
