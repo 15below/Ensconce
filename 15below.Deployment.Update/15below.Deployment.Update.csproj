@@ -35,10 +35,8 @@
       <HintPath>..\..\THIRDPARTYLIBRARIES\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FSharp.PowerPack, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
-      <HintPath>..\..\THIRDPARTYLIBRARIES\FSharp.PowerPack.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
+    <Reference Include="FSharp.PowerPack, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+      <HintPath>..\THIRDPARTYLIBRARIES\FSharp.PowerPack.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40">
       <HintPath>..\THIRDPARTYLIBRARIES\NDjango.Core40.dll</HintPath>

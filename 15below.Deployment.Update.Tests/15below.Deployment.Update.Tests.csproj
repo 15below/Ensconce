@@ -31,10 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.PowerPack, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
-      <HintPath>..\..\THIRDPARTYLIBRARIES\FSharp.PowerPack.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
+    <Reference Include="FSharp.PowerPack, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+      <HintPath>..\THIRDPARTYLIBRARIES\FSharp.PowerPack.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\THIRDPARTYLIBRARIES\nunit.framework.dll</HintPath>
