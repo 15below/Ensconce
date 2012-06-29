@@ -49,7 +49,7 @@ namespace FifteenBelow.Deployment
                 .Set(x => x.VersionFile = Path.GetFullPath(Assembly.GetExecutingAssembly().Location))
                 .Set(x => x.WithTransaction = true)
                 .Set(x => x.Silent = true)
-                .Set(x => x.RecoveryMode=RecoveryMode.Simple)
+                .Set(x => x.RecoveryMode=RecoveryMode.NoChange)
                 .Set(x => x.WarnOnOneTimeScriptChanges=true)
                 .SetCustomLogging(logger);
 
