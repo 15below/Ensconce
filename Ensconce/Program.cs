@@ -173,7 +173,7 @@ namespace Ensconce
                                 s => databaseName = s
                                 },
                             {
-                                "ConnectionString="
+                                "connectionString="
                                 ,"The connection string for the database to be deployed, Requires the deployFrom option. Can optionally provide the databaseRepository option.",
                                 s => connectionString = s
                                 },
@@ -224,7 +224,7 @@ namespace Ensconce
                 return true;
             }
 
-            if (showHelp || !(updateConfig || copyTo || finalisePath || readFromStdIn || !string.IsNullOrEmpty(templateFilters) || !string.IsNullOrEmpty(databaseName)))
+            if (showHelp || !(updateConfig || copyTo || finalisePath || readFromStdIn || !string.IsNullOrEmpty(templateFilters) || !string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)))
             {
                 ShowHelp(p);
                 return true;

@@ -46,6 +46,9 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\THIRDPARTYLIBRARIES\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\THIRDPARTYLIBRARIES\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\THIRDPARTYLIBRARIES\log4net.dll</HintPath>
     </Reference>
@@ -64,6 +67,9 @@
     </Reference>
     <Reference Include="NGit">
       <HintPath>..\THIRDPARTYLIBRARIES\NGit.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\THIRDPARTYLIBRARIES\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NSch">
       <HintPath>..\THIRDPARTYLIBRARIES\NSch.dll</HintPath>
