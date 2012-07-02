@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace Ensconce
         private static bool readFromStdIn;
         private static string configUrl = "{{ DeployService }}{{ ClientCode }}/{{ Environment }}";
         private static string databaseName;
+        private static string connectionString;
         private static string fixedPath = "structure.xml";
         private static string substitutionPath = "substitutions.xml";
         private static bool finalisePath;
@@ -86,12 +88,26 @@ namespace Ensconce
                 }
             }
 
-            if (!string.IsNullOrEmpty(databaseName))
+            if (!string.IsNullOrEmpty(connectionString) || !string.IsNullOrEmpty(databaseName))
             {
-                Log(string.Format("databaseName is {0}\ndatabaseRepository is {1}\nDeployFrom is {2}", databaseName,
-                                  databaseRepository, deployFrom));
-                Log(string.Format("Deploying {0}", databaseName));
-                var database = new Database(databaseName.RenderTemplate(LazyTags.Value), new LegacyFolderStructure());
+                Log(string.Format(
+                    "ConnectionString is {0}\ndbname is {1}\ndatabaseRepository is {2}\nDeployFrom is {3}",
+                    connectionString, databaseName,
+                    databaseRepository, deployFrom));
+
+                Log(string.Format("Deploying {0}{1}", databaseName, connectionString));
+
+                Database database=null;
+                if (!string.IsNullOrEmpty(connectionString))
+                {
+                    database =new Database(new SqlConnectionStringBuilder(connectionString.RenderTemplate(LazyTags.Value)), new LegacyFolderStructure());
+                }
+                else if (!string.IsNullOrEmpty(databaseName))
+                {
+                    database = new Database(databaseName.RenderTemplate(LazyTags.Value),new LegacyFolderStructure());
+                }
+
+                if (database == null) throw new NullReferenceException("database");
                 database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value));
             }
 
@@ -155,6 +171,11 @@ namespace Ensconce
                                 "d|databaseName="
                                 ,"The name of the database to be deployed, assumes that the process is running on the destination server. Requires the deployFrom option. Can optionally provide the databaseRepository option.",
                                 s => databaseName = s
+                                },
+                            {
+                                "ConnectionString="
+                                ,"The connection string for the database to be deployed, Requires the deployFrom option. Can optionally provide the databaseRepository option.",
+                                s => connectionString = s
                                 },
                             {
                                 "databaseRepository="

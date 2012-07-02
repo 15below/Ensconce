@@ -46,6 +46,9 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\THIRDPARTYLIBRARIES\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\THIRDPARTYLIBRARIES\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\THIRDPARTYLIBRARIES\Mono.Posix.dll</HintPath>
