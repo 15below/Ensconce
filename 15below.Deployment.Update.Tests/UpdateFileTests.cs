@@ -163,6 +163,25 @@ namespace FifteenBelow.Deployment.Update.Tests
                 ));
             Assert.IsTrue(newConfig.XPathSelectElements("/root/value/NewTag").Count() == 1);
         }
+
+        [Test]
+        public void EmptyChildContentWorks()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution16.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>{{"newValue", "after"}}
+                ));
+            Assert.IsTrue(newConfig.XPathSelectElements("/root/value/NewTag").Count() == 0);
+        }
+
+        [Test]
+        public void MultipleChildContentWorks()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution17.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>{{"newValue", "after"}}
+                ));
+            Assert.AreEqual("1", newConfig.XPathSelectElements("/root/value/one").First().Value);
+            Assert.AreEqual("2", newConfig.XPathSelectElements("/root/value/two").First().Value);
+        }
         
         [Test]
         public void UpdateAllTouchesAllFiles()
