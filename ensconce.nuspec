@@ -15,6 +15,7 @@
 	
 	<files>
 		<file src="Ensconce\bin\Release\*" target="Content" />
+		<file src="deployHelp.ps1" target="Content" />
 		<file src="deploy.ps1" target="Tools" />
 	</files>
 </package>
