@@ -110,13 +110,13 @@ namespace FifteenBelow.Deployment.Update
         private static void AppendAfterActive(IDictionary<string, object> tagValues, XElement activeNode, Substitution sub)
         {
             var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AppendAfter.RenderTemplate(tagValues) + "</fakeRoot>");
-            activeNode.AddAfterSelf(fakeRoot.Descendants());
+            activeNode.AddAfterSelf(fakeRoot.Elements());
         }
 
         private static void AddChildContentToActive(IDictionary<string, object> tagValues, XElement activeNode, Substitution sub)
         {
             var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderTemplate(tagValues) + "</fakeRoot>");
-            activeNode.Add(fakeRoot.Descendants());
+            activeNode.Add(fakeRoot.Elements());
         }
 
         private static void ReplaceChildNodes(IDictionary<string, object> tagValues, XElement activeNode,
