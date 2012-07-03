@@ -54,21 +54,28 @@ namespace FifteenBelow.Deployment.Update
                     el => ((string) el.Attribute("Filename")).RenderTemplate(tagValues) == baseFile);
                  
             if (fileElement == null) return File.ReadAllText(baseFile);
+            string replacementTemplate;
+            string baseData = null;
+            var replacementTemplateElement = fileElement.XPathSelectElement("s:ReplacementTemplate", nsm);
+            if (replacementTemplateElement != null)
+            {
+                replacementTemplate = replacementTemplateElement.Value;
+                baseData = File.ReadAllText(replacementTemplate).RenderTemplate(tagValues);
+            }
             var subs =
                 fileElement
                     .XPathSelectElements(
-                        string.Format("s:Changes/s:Change", baseFile), nsm)
+                        string.Format("s:Changes/s:Change"), nsm)
                     .Select(
-                        change => BuildSubstitions(change, nsm)
+                        change => BuildSubstitions(change, nsm, tagValues)
                     );
             if (subs.Any())
             {
-                var baseXml = XDocument.Load(baseFile);
+                if (baseData == null) baseData = File.ReadAllText(baseFile);
+                var baseXml = XDocument.Parse(baseData);
                 return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
             }
-            var replacementTemplate =
-                fileElement.XPathSelectElement("s:ReplacementTemplate", nsm).Value;
-            return File.ReadAllText(replacementTemplate).RenderTemplate(tagValues);
+            return baseData;
         }
 
         private static string UpdateXml(IDictionary<string, object> tagValues, IEnumerable<Substitution> subs, XDocument baseXml, XmlNamespaceManager nsm,
@@ -129,7 +136,7 @@ namespace FifteenBelow.Deployment.Update
             activeNode.ReplaceNodes(children);
         }
 
-        private static Substitution BuildSubstitions(XElement change, XmlNamespaceManager nsm)
+        private static Substitution BuildSubstitions(XElement change, XmlNamespaceManager nsm, IDictionary<string, object> tagValues)
         {
             var sub = new Substitution();
             var replacementContent = change.XPathSelectElement("s:ReplacementContent", nsm);
@@ -165,7 +172,7 @@ namespace FifteenBelow.Deployment.Update
                 sub.AppendAfter = appendAfter.Value;
                 sub.HasAppendAfter = true;
             }
-            sub.XPath = change.XPathSelectElement("s:XPath", nsm).Value;
+            sub.XPath = change.XPathSelectElement("s:XPath", nsm).Value.RenderTemplate(tagValues);
             sub.RemoveCurrentAttributes = 
                 XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
             sub.ChangeAttributes = change.XPathSelectElements("s:ChangeAttribute", nsm)

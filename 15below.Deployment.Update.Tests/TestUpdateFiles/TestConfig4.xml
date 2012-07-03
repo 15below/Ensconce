@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <value myAttr="before" duckAttr="quack">oldValue</value>
+  <myValue-{{ Environment }}>{{ tagged }}</myValue-{{ Environment }}>
+</root>

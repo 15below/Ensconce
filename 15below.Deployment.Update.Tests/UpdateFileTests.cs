@@ -236,6 +236,27 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void TemplateAndChangesWork()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution18.xml", @"TestUpdateFiles\TestConfig2.xml", new Dictionary<string, object>{{"tagged", "after"}}
+                ));
+            Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue").Value);
+            Assert.AreEqual("afterAttr", newConfig.XPathSelectElement("/root/myValue").Attribute("myAttr").Value);
+        }
+
+        [Test]
+        public void TemplateAndChangesWorkWithTemplatedXPaths()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution19.xml", @"TestUpdateFiles\TestConfig2.xml",
+                new Dictionary<string, object> {{"tagged", "after"}, {"Environment", "LOC"}}
+                                                ));
+            Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue-LOC").Value);
+            Assert.AreEqual("afterAttr", newConfig.XPathSelectElement("/root/myValue-LOC").Attribute("myAttr").Value);
+        }
+
+        [Test]
         public void NDjangoFiltersAvailable()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
