@@ -53,7 +53,7 @@ namespace FifteenBelow.Deployment
             if (databaseFolderStructure != null) databaseFolderStructure.SetMigrateFolders(roundhouseMigrate, schemaScriptsFolder);
 
             roundhouseMigrate.Set(x => x.ConnectionString = this.ConnectionString)
-                .Set(x => x.VersionFile = Path.GetFullPath(Assembly.GetExecutingAssembly().Location))
+                .Set(x => x.VersionFile = Path.Combine(schemaScriptsFolder, "_BuildInfo.txt"))
                 .Set(x => x.WithTransaction = true)
                 .Set(x => x.Silent = true)
                 .Set(x => x.RecoveryMode=RecoveryMode.NoChange)

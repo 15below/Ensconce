@@ -262,9 +262,15 @@ namespace Ensconce
                 return true;
             }
 
-            if (!string.IsNullOrEmpty(databaseName) && !Directory.Exists(deployFrom))
+            if ((!string.IsNullOrEmpty(databaseName)||!string.IsNullOrEmpty(connectionString)) && !Directory.Exists(deployFrom))
             {
                 Console.WriteLine("Error: You cannot use databaseName without a valid from directory.");
+                return true;
+            }
+
+            if ((!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)) && !File.Exists(Path.Combine(deployFrom, "_BuildInfo.txt")))
+            {
+                Console.WriteLine("Error: You cannot deploy database without a valid version file. File must be named _BuildInfo.txt");
                 return true;
             }
 
