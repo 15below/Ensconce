@@ -15,7 +15,14 @@ if(!(Test-Path "env:\ConfigOnly"))
 
 function ensconce
 {
-    $results = & "$deployToolsDir\ensconce.exe" $args 2>&1
+    if (@($input).Count -ne 0)
+    {
+        $input.Reset()
+        $results = $input | & "$deployToolsDir\ensconce.exe" $args 2>&1
+    }
+    else {
+        $results = & "$deployToolsDir\ensconce.exe" $args 2>&1
+    }
     if ($LASTEXITCODE -ne 0)
     {
         throw (
