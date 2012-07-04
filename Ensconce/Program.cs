@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.ServiceProcess;
+using System.Text;
 using FifteenBelow.Deployment;
 using FifteenBelow.Deployment.Update;
 using ICSharpCode.SharpZipLib.Zip;
@@ -77,11 +78,14 @@ namespace Ensconce
                 foreach (var templateFile in templateFiles)
                 {
                     string template;
+                    Encoding encoding = null;
                     using (var readStream = templateFile.OpenText())
                     {
+                        encoding = readStream.CurrentEncoding;
                         template = readStream.ReadToEnd();
+                        
                     }
-                    using (var writeStream = templateFile.CreateText())
+                    using (var writeStream = new StreamWriter(templateFile.FullName, false, encoding))
                     {
                         writeStream.Write(template.Render());
                     }
