@@ -12,3 +12,15 @@ if(!(Test-Path "env:\ConfigOnly"))
 {
     Set-Content "env:\ConfigOnly" $false
 }
+
+function ensconce
+{
+    $results = & "$deployToolsDir\ensconce.exe" $args 2>&1
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw (
+"Ensconce operation failed.
+$results")
+    }
+    $results
+}
