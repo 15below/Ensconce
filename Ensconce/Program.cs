@@ -57,7 +57,7 @@ namespace Ensconce
 
         private static void MainLogic(string[] args)
         {
-            if (SetUpAndParseOptions(args)) return;
+            SetUpAndParseOptions(args);
 
             if (readFromStdIn)
             {
@@ -144,7 +144,7 @@ namespace Ensconce
             }
         }
 
-        private static bool SetUpAndParseOptions(string[] args)
+        private static void SetUpAndParseOptions(string[] args)
         {
             var showHelp = false;
             var p = new OptionSet
@@ -158,7 +158,7 @@ namespace Ensconce
                                 }, 
                             {
                                 "fixedPath=",
-                                "NOTE! Ignored if env:/FixedStructure is false. Override path to structure.xml relative to executable (default=\"structure.xml\")",
+                                @"NOTE! Ignored if env:/FixedStructure is false. Override path to structure.xml relative to executable (default=""structure.xml"")",
                                 s => fixedPath = string.IsNullOrEmpty(s) ? fixedPath : s
                                 },
                             {
@@ -217,21 +217,12 @@ namespace Ensconce
                                },
                         };
 
-            try
-            {
-                p.Parse(args);
-            }
-            catch (OptionException e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-                Console.WriteLine("Try running again with the '--help' option.");
-                return true;
-            }
+            p.Parse(args);
 
             if (showHelp || !(updateConfig || copyTo || finalisePath || readFromStdIn || !string.IsNullOrEmpty(templateFilters) || !string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)))
             {
                 ShowHelp(p);
-                return true;
+                if (!showHelp) throw new OptionException("Invalid combination of options given, showing help.", "help");
             }
 
             if (RawToDirectories.Count > 0)
@@ -243,42 +234,33 @@ namespace Ensconce
             {
                 if (DeployTo.Count == 0)
                 {
-                    Console.WriteLine(
-                        "Error: You must specify at least one deployTo directory to use the copyTo or replace options.");
-                    return true;
+                    throw new OptionException("Error: You must specify at least one deployTo directory to use the copyTo or replace options.", "deployTo");
                 }
                 if (!Directory.Exists(deployFrom))
                 {
-                    Console.WriteLine(
-                        "Error: You must specify a existing from directory to use the copyTo or replace options.");
-                    return true;
+                    throw new OptionException(
+                        "Error: You must specify a existing from directory to use the copyTo or replace options.", "deployFrom");
                 }
                 if (copyTo && replace)
                 {
-                    Console.WriteLine("Error: You cannot specify both the replace and copyTo options.");
-                    return true;
+                    throw new OptionException("Error: You cannot specify both the replace and copyTo options.", "deployTo and deployFrom");
                 }
             }
 
             if (!string.IsNullOrEmpty(templateFilters) && !Directory.Exists(deployFrom))
             {
-                Console.WriteLine("Error: You cannot use filterTemplate without a valid from directory.");
-                return true;
+                throw new OptionException("Error: You cannot use filterTemplate without a valid from directory.", "deployFrom");
             }
 
             if ((!string.IsNullOrEmpty(databaseName)||!string.IsNullOrEmpty(connectionString)) && !Directory.Exists(deployFrom))
             {
-                Console.WriteLine("Error: You cannot use databaseName without a valid from directory.");
-                return true;
+                throw new OptionException("Error: You cannot use databaseName without a valid from directory.", "deployFrom");
             }
 
             if ((!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)) && !File.Exists(Path.Combine(deployFrom, "_BuildInfo.txt")))
             {
-                Console.WriteLine("Error: You cannot deploy database without a valid version file. File must be named _BuildInfo.txt");
-                return true;
+                throw new FileNotFoundException("Error: You cannot deploy database without a valid version file. File must be named _BuildInfo.txt", "databaseName");
             }
-
-            return false;
         }
 
         private static void ProcessRawDirectories(IEnumerable<string> rawNames, List<string> processedNameList)
