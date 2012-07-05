@@ -8,6 +8,8 @@ if (Test-Path variable:\OctopusParameters)
     }
 }
 
+. $deployToolsDir\createWebSite.ps1
+
 if(!(Test-Path "env:\ConfigOnly"))
 {
     Set-Content "env:\ConfigOnly" $false
