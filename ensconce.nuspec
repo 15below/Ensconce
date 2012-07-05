@@ -17,5 +17,8 @@
 		<file src="Ensconce\bin\Release\*" target="Content" />
 		<file src="deployHelp.ps1" target="Content" />
 		<file src="deploy.ps1" target="Tools" />
+		<file src="createWebSite.ps1" target="Tools" />
+		<file src="createiis6app.ps1" target="Tools" />
+		<file src="createiis7app.ps1" target="Tools" />
 	</files>
 </package>
