@@ -425,7 +425,7 @@ namespace Ensconce
 
         private static void ShowHelp(OptionSet optionSet)
         {
-            Console.WriteLine("Configuration update console wrapper. See some github address for details.");
+            Console.WriteLine("Configuration update console wrapper. See https://github.com/15below/Ensconce for details.");
             optionSet.WriteOptionDescriptions(Console.Out);
         }
 
