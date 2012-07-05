@@ -24,7 +24,8 @@ How do I use it?
 * Set up your environment; Ensconce expects one of the following environment variables sets to exist:
 	* ClientCode
 	* Environment
-	* FixedStructure
+* OR
+	* FixedStructure = true
 * Run Ensconce:
 	d:\DeployTools\Ensconce.exe -finalise -replace -deployFrom . -deployTo c:\targetDir -updateConfig
 * Stuff happens: check the [wiki]:(https://github.com/15below/Ensconce/wiki) for details
