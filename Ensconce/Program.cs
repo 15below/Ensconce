@@ -219,11 +219,11 @@ namespace Ensconce
 
             p.Parse(args);
 
-            if (showHelp || !(updateConfig || copyTo || finalisePath || readFromStdIn || !string.IsNullOrEmpty(templateFilters) || !string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)))
-            {
-                ShowHelp(p);
-                if (!showHelp) throw new OptionException("Invalid combination of options given, showing help.", "help");
-            }
+			//if (showHelp || !(updateConfig || copyTo || finalisePath || readFromStdIn || !string.IsNullOrEmpty(templateFilters) || !string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)))
+			//{
+			//    ShowHelp(p);
+			//    if (!showHelp) throw new OptionException("Invalid combination of options given, showing help.", "help");
+			//}
 
             if (RawToDirectories.Count > 0)
             {
