@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Update.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Database", "15below.Deployment.Database\15below.Deployment.Database.csproj", "{3BF706C4-851B-4502-9F09-E74FCC92C379}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Database.Tests", "15below.Deployment.Database.Tests\15below.Deployment.Database.Tests.csproj", "{13467120-C4AA-4F35-B86F-8444A5C96318}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,16 +61,6 @@ Global
 		{3BF706C4-851B-4502-9F09-E74FCC92C379}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3BF706C4-851B-4502-9F09-E74FCC92C379}.Release|x86.ActiveCfg = Release|x86
 		{3BF706C4-851B-4502-9F09-E74FCC92C379}.Release|x86.Build.0 = Release|x86
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{13467120-C4AA-4F35-B86F-8444A5C96318}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

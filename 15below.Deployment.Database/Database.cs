@@ -1,6 +1,5 @@
 ﻿using System.Data.Common;
 using System.IO;
-using System.Reflection;
 using roundhouse;
 using roundhouse.databases;
 
@@ -57,6 +56,7 @@ namespace FifteenBelow.Deployment
                 .Set(x => x.WithTransaction = true)
                 .Set(x => x.Silent = true)
                 .Set(x => x.RecoveryMode=RecoveryMode.NoChange)
+                .Set(x => x.RepositoryPath = repository)
                 .Set(x => x.WarnOnOneTimeScriptChanges=true)
                 .SetCustomLogging(logger);
 
