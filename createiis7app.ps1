@@ -7,39 +7,46 @@ $LoadAsSnapin = $false
 
 if ($PSVersionTable.PSVersion.Major -ge 2) {
     if ((Get-Module -ListAvailable | ForEach-Object {$_.Name}) -contains $ModuleName) {
-        write-host "Import-Module $ModuleName"
+        write-host "Module $ModuleName Is Avaliable!"
+		write-host "Running: Import-Module $ModuleName"
 		Import-Module $ModuleName
         if ((Get-Module | ForEach-Object {$_.Name}) -contains $ModuleName) {
             $ModuleLoaded = $true
-			write-host "Loaded As Module"
+			write-host "Loaded $ModuleName As Module"
         } else {
             $LoadAsSnapin = $true
-			write-host "Need To Load Snap In"
+			write-host "Didn't Load Module For $ModuleName Will Try Snap In"
         }
     } elseif ((Get-Module | ForEach-Object {$_.Name}) -contains $ModuleName) {
         $ModuleLoaded = $true
-		write-host "The Module Is Already Available"
+		write-host "The Module $ModuleName Is Already Available & Imported"
     } else {
         $LoadAsSnapin = $true
-		write-host "Need To Load Snap In"
+		write-host "Module $ModuleName Not Found Will Try Snap In"
     }
 } else {
     $LoadAsSnapin = $true
-	write-host "Need To Load Snap In"
+	write-host "Not Powershell >= 2, Will Try Snap In"
 }
 
 if ($LoadAsSnapin) {
     if ((Get-PSSnapin -Registered | ForEach-Object {$_.Name}) -contains $ModuleName) {
-        write-host "Add-PSSnapin $ModuleName"
+        write-host "Snap-In $ModuleName Is Avaliable!"
+		write-host "Add-PSSnapin $ModuleName"
 		Add-PSSnapin $ModuleName
         if ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName) {
             $ModuleLoaded = $true
-			write-host "Loaded As Snap In"	
+			write-host "Loaded $ModuleName As Snap In"	
         }
     } elseif ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName) {
         $ModuleLoaded = $true
-		write-host "The Snap In Is Already Available"
-    }
+		write-host "The Snap In $ModuleName Is Already Available & Imported"
+    } else
+	{
+		write-host "Couldn't Load Module Or Snap In For $ModuleName"
+		write-host "Returning Error As Cannot Process Any Functions"
+		exit 1
+	}
 }
 
 function CreateAppPool ([string]$name)
@@ -53,7 +60,7 @@ function CreateAppPool ([string]$name)
 	 # Assume it doesn't exist. Create it.
 	 New-WebAppPool -Name $name
 	 Set-ItemProperty IIS:\AppPools\$name managedRuntimeVersion v4.0
-	}
+	}	
 }
 
 function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation)
