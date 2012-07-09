@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.XPath;
 using NUnit.Framework;
 
@@ -254,6 +255,15 @@ namespace FifteenBelow.Deployment.Update.Tests
                                                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue-LOC").Value);
             Assert.AreEqual("afterAttr", newConfig.XPathSelectElement("/root/myValue-LOC").Attribute("myAttr").Value);
+        }
+
+        [Test]
+        public void InvalidSubstitutionXmlShouldThrow()
+        {
+            Assert.Throws<XmlSchemaValidationException>(() => XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution20.xml", @"TestUpdateFiles\TestConfig2.xml",
+                new Dictionary<string, object> {{"tagged", "after"}, {"Environment", "LOC"}}
+                                                )));
         }
 
         [Test]

@@ -219,48 +219,48 @@ namespace Ensconce
 
             p.Parse(args);
 
-			//if (showHelp || !(updateConfig || copyTo || finalisePath || readFromStdIn || !string.IsNullOrEmpty(templateFilters) || !string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)))
-			//{
-			//    ShowHelp(p);
-			//    if (!showHelp) throw new OptionException("Invalid combination of options given, showing help.", "help");
-			//}
+            if (showHelp || !(updateConfig || copyTo || finalisePath || readFromStdIn || !string.IsNullOrEmpty(templateFilters) || !string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)))
+            {
+                ShowHelp(p);
+                if (!showHelp) throw new OptionException("Invalid combination of options given, showing help.", "help");
+            }
 
             if (RawToDirectories.Count > 0)
             {
                 ProcessRawDirectories(RawToDirectories, DeployTo);
             }
 
-			//if (copyTo || replace)
-			//{
-			//    if (DeployTo.Count == 0)
-			//    {
-			//        throw new OptionException("Error: You must specify at least one deployTo directory to use the copyTo or replace options.", "deployTo");
-			//    }
-			//    if (!Directory.Exists(deployFrom))
-			//    {
-			//        throw new OptionException(
-			//            "Error: You must specify a existing from directory to use the copyTo or replace options.", "deployFrom");
-			//    }
-			//    if (copyTo && replace)
-			//    {
-			//        throw new OptionException("Error: You cannot specify both the replace and copyTo options.", "deployTo and deployFrom");
-			//    }
-			//}
+            if (copyTo || replace)
+            {
+                if (DeployTo.Count == 0)
+                {
+                    throw new OptionException("Error: You must specify at least one deployTo directory to use the copyTo or replace options.", "deployTo");
+                }
+                if (!Directory.Exists(deployFrom))
+                {
+                    throw new OptionException(
+                        "Error: You must specify a existing from directory to use the copyTo or replace options.", "deployFrom");
+                }
+                if (copyTo && replace)
+                {
+                    throw new OptionException("Error: You cannot specify both the replace and copyTo options.", "deployTo and deployFrom");
+                }
+            }
 
-			//if (!string.IsNullOrEmpty(templateFilters) && !Directory.Exists(deployFrom))
-			//{
-			//    throw new OptionException("Error: You cannot use filterTemplate without a valid from directory.", "deployFrom");
-			//}
+            if (!string.IsNullOrEmpty(templateFilters) && !Directory.Exists(deployFrom))
+            {
+                throw new OptionException("Error: You cannot use filterTemplate without a valid from directory.", "deployFrom");
+            }
 
-			//if ((!string.IsNullOrEmpty(databaseName)||!string.IsNullOrEmpty(connectionString)) && !Directory.Exists(deployFrom))
-			//{
-			//    throw new OptionException("Error: You cannot use databaseName without a valid from directory.", "deployFrom");
-			//}
+            if ((!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)) && !Directory.Exists(deployFrom))
+            {
+                throw new OptionException("Error: You cannot use databaseName without a valid from directory.", "deployFrom");
+            }
 
-			//if ((!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)) && !File.Exists(Path.Combine(deployFrom, "_BuildInfo.txt")))
-			//{
-			//    throw new FileNotFoundException("Error: You cannot deploy database without a valid version file. File must be named _BuildInfo.txt", "databaseName");
-			//}
+            if ((!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)) && !File.Exists(Path.Combine(deployFrom, "_BuildInfo.txt")))
+            {
+                throw new FileNotFoundException("Error: You cannot deploy database without a valid version file. File must be named _BuildInfo.txt", "databaseName");
+            }
         }
 
         private static void ProcessRawDirectories(IEnumerable<string> rawNames, List<string> processedNameList)

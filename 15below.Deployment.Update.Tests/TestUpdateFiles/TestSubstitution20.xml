@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces/>
+  <Files>
+    <File Filename="TestUpdateFiles\TestConfig2.xml">
+      <ReplacementTemplate>TestUpdateFiles\TestConfig4.xml</ReplacementTemplate>
+      <Change>
+        <XPath>/root/myValue-{{ Environment }}</XPath>
+        <ChangeAttribute attributeName="myAttr">afterAttr</ChangeAttribute>
+      </Change>
+    </File>
+  </Files>
+</Root>

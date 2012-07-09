@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.XPath;
 
 namespace FifteenBelow.Deployment.Update
@@ -49,6 +51,7 @@ namespace FifteenBelow.Deployment.Update
             var subsXml = XDocument.Load(substitutionFile);
             var nsm = new XmlNamespaceManager(new NameTable());
             nsm.AddNamespace("s", "http://15below.com/Substitutions.xsd");
+            ValidateSubstitutionDoc(subsXml);
             var fileElement =
                 subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm).SingleOrDefault(
                     el => ((string) el.Attribute("Filename")).RenderTemplate(tagValues) == baseFile);
@@ -76,6 +79,16 @@ namespace FifteenBelow.Deployment.Update
                 return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
             }
             return baseData;
+        }
+
+        private static void ValidateSubstitutionDoc(XDocument subXml)
+        {
+            var schemas = new XmlSchemaSet();
+            var assembly = Assembly.GetExecutingAssembly();
+            schemas.Add(null,
+                        XmlReader.Create(
+                            assembly.GetManifestResourceStream("FifteenBelow.Deployment.Update.Substitutions.xsd")));
+            subXml.Validate(schemas, (sender, args) => { throw args.Exception; });
         }
 
         private static string UpdateXml(IDictionary<string, object> tagValues, IEnumerable<Substitution> subs, XDocument baseXml, XmlNamespaceManager nsm,
