@@ -267,6 +267,24 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void PlainTextTemplatingWorks()
+        {
+            var newConfig = UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution21.xml", @"TestUpdateFiles\PlainText01.txt",
+                new Dictionary<string, object> {{"tag", "after"}, {"Environment", "LOC"}});
+            Assert.IsTrue(newConfig.Contains("after"));
+        }
+
+        [Test]
+        public void PlainTextTemplatingWorksEvenWithXmlEscapableCharacters()
+        {
+            var newConfig = UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution21.xml", @"TestUpdateFiles\PlainText01.txt",
+                new Dictionary<string, object> {{"tag", "<after>"}, {"Environment", "LOC"}});
+            Assert.IsTrue(newConfig.Contains("<after>"));
+        }
+
+        [Test]
         public void NDjangoFiltersAvailable()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(

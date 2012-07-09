@@ -13,8 +13,11 @@ namespace FifteenBelow.Deployment.Update
         private static readonly Lazy<TemplateManagerProvider> Instance =
             new Lazy<TemplateManagerProvider>(
                 () =>
-                new TemplateManagerProvider().WithLoader(new StringLoader()).WithSetting(
-                    Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid).WithFilters(NDjango.FiltersCS.FilterManager.GetFilters())
+                new TemplateManagerProvider()
+                    .WithLoader(new StringLoader())
+                    .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
+                    .WithSetting(Constants.DEFAULT_AUTOESCAPE, false)
+                    .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters())
                 );
 
         static NDjangoWrapper()
