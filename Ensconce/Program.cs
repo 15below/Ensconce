@@ -79,7 +79,7 @@ namespace Ensconce
 				foreach (var templateFile in templateFiles)
 				{
 					string template;
-					Encoding encoding = null;
+					Encoding encoding;
 					using (var readStream = templateFile.OpenText())
 					{
 						encoding = readStream.CurrentEncoding;
@@ -95,25 +95,22 @@ namespace Ensconce
 
 			if (!string.IsNullOrEmpty(connectionString) || !string.IsNullOrEmpty(databaseName))
 			{
-				Log(string.Format(
-					"ConnectionString is {0}\ndbname is {1}\ndatabaseRepository is {2}\nDeployFrom is {3}",
-					connectionString, databaseName,
-					databaseRepository, deployFrom));
-
-				Log(string.Format("Deploying {0}{1}", databaseName, connectionString));
-
 				Database database=null;
 				if (!string.IsNullOrEmpty(connectionString))
 				{
-					database =new Database(new SqlConnectionStringBuilder(connectionString.RenderTemplate(LazyTags.Value)), new LegacyFolderStructure());
+				    var renderedConnectionString = connectionString.Render();
+				    Log("Deploying scripts from {0} using connection string {1}", deployFrom, renderedConnectionString);
+					database =new Database(new SqlConnectionStringBuilder(renderedConnectionString), new LegacyFolderStructure());
 				}
 				else if (!string.IsNullOrEmpty(databaseName))
 				{
-					database = new Database(databaseName.RenderTemplate(LazyTags.Value),new LegacyFolderStructure());
+				    var renderedDatabaseName = databaseName.Render();
+				    Log("Deploying scripts from {0} using local user and database name {1}", deployFrom, renderedDatabaseName);
+					database = new Database(renderedDatabaseName,new LegacyFolderStructure());
 				}
 
 				if (database == null) throw new NullReferenceException("database");
-				database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value));
+				database.Deploy(deployFrom, databaseRepository.Render());
 			}
 
 			if (copyTo || replace)
@@ -220,7 +217,7 @@ namespace Ensconce
 
 			p.Parse(args);
 
-			var filesToBeMovedOrChanged = (updateConfig || copyTo || replace);
+			var filesToBeMovedOrChanged = (updateConfig || copyTo || replace || !string.IsNullOrEmpty(templateFilters));
 			var databaseOperation = (!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString));
 			var operationRequested = (filesToBeMovedOrChanged || databaseOperation || finalisePath || readFromStdIn);
 
