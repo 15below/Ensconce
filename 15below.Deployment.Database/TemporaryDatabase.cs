@@ -1,19 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using roundhouse;
+using roundhouse.infrastructure.logging;
 
 namespace FifteenBelow.Deployment
 {
-    public class TemporaryDatabase : Database, IDisposable
+    public class TemporaryDatabase : IDatabase, IDisposable
     {
-        public TemporaryDatabase() : base(GenerateDbName())
+        private readonly Database database;
+        private readonly string masterDatabaseConnectionString;
+        public string DatabaseName { get; private set; }
+
+        public TemporaryDatabase() : this(null)
         {
         }
 
-        public TemporaryDatabase(IDatabaseFolderStructure databaseFolderStructure)
-            : base(GenerateDbName(), databaseFolderStructure)
+        public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions)  : this(restoreOptions, null)
         {
+        }
+
+        public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions, Logger logger)
+        {
+            DatabaseName = GenerateDbName();
+            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName), new LegacyFolderStructure(), restoreOptions, logger);
+            masterDatabaseConnectionString = Database.GetLocalConnectionStringFromDatabaseName("master").ConnectionString;
+        }
+
+        [Obsolete("Temporary database only used for local testing")]
+        public TemporaryDatabase(string server, string user, string password)
+        {
+            DatabaseName = GenerateDbName();
+            masterDatabaseConnectionString = new SqlConnectionStringBuilder()
+                                                 {
+                                                     DataSource = server,
+                                                     InitialCatalog = DatabaseName,
+                                                     UserID = user,
+                                                     Password = password
+                                                 }.ConnectionString;
+
+            DbConnectionStringBuilder databaseConnectionString = new SqlConnectionStringBuilder()
+                                                                     {
+                                                                         DataSource = server,
+                                                                         InitialCatalog = DatabaseName,
+                                                                         UserID = user,
+                                                                         Password = password
+                                                                     };
+            database = new Database(databaseConnectionString, new LegacyFolderStructure());
         }
 
         private static string GenerateDbName()
@@ -25,7 +59,7 @@ namespace FifteenBelow.Deployment
         {
             const string sql = "select version from [RoundhousE].[Version]";
 
-            using (var cnn = new SqlConnection(GetLocalConnectionStringFromDatabaseName(this.databaseName)))
+            using (var cnn = new SqlConnection(database.ConnectionString))
             {
                 cnn.Open();
                 using (var cmd = new SqlCommand(sql, cnn))
@@ -39,7 +73,7 @@ namespace FifteenBelow.Deployment
         {
             const string sql = "select top 1 repository_path from [RoundhousE].[Version] order by Id desc";
 
-            using (var cnn = new SqlConnection(GetLocalConnectionStringFromDatabaseName(this.databaseName)))
+            using (var cnn = new SqlConnection(database.ConnectionString))
             {
                 cnn.Open();
                 using (var cmd = new SqlCommand(sql, cnn))
@@ -51,26 +85,25 @@ namespace FifteenBelow.Deployment
 
         public bool Exists()
         {
-            using (var cnn = new SqlConnection(GetLocalConnectionStringFromDatabaseName("master")))
+            using (var cnn = new SqlConnection(masterDatabaseConnectionString))
             {
-                string sql = string.Format("SELECT name FROM master.dbo.sysdatabases WHERE ([name] = N'{0}')", this.databaseName);
+                string sql = string.Format("SELECT name FROM master.dbo.sysdatabases WHERE ([name] = N'{0}')", this.DatabaseName);
                 cnn.Open();
                 using (var cmd = new SqlCommand(sql, cnn))
                 {
-                    return Convert.ToString(cmd.ExecuteScalar()) == this.databaseName;
+                    return Convert.ToString(cmd.ExecuteScalar()) == this.DatabaseName;
                 }
             }
         }
 
         public IEnumerable<Table> GetTables()
         {
-            using (var cnn = new SqlConnection(GetLocalConnectionStringFromDatabaseName("master")))
+            using (var cnn = new SqlConnection(database.ConnectionString))
             {
                 string sql = "SELECT Table_Name from information_schema.tables WHERE table_type = 'base table'";
                 cnn.Open();
                 using (var cmd = new SqlCommand(sql, cnn))
                 {
-                    //return Convert.ToString(cmd.ExecuteScalar()) == this.databaseName;
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -83,11 +116,16 @@ namespace FifteenBelow.Deployment
         public void Dispose()
         {
             var roundhouseMigrate = new Migrate();
-            roundhouseMigrate.Set(x => x.ConnectionString = GetLocalConnectionStringFromDatabaseName(this.databaseName));
+            roundhouseMigrate.Set(x => x.ConnectionString = database.ConnectionString);
             roundhouseMigrate.GetConfiguration().DoNotCreateDatabase = true;
             roundhouseMigrate.GetConfiguration().Drop = true;
             roundhouseMigrate.GetConfiguration().WithTransaction = false;
             roundhouseMigrate.Run();
+        }
+
+        public void Deploy(string schemaScriptsFolder="", string repository="")
+        {
+            database.Deploy(schemaScriptsFolder, repository);
         }
     }
 }

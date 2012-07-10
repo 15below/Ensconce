@@ -75,8 +75,12 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="AssemblyPathExtensions.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="DatabaseRestoreOptions.cs" />
+    <Compile Include="IDatabase.cs" />
     <Compile Include="IDatabaseFolderStructure.cs" />
+    <Compile Include="IDatabaseRestoreOptions.cs" />
     <Compile Include="LegacyFolderStructure.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="TemporaryDatabase.cs" />

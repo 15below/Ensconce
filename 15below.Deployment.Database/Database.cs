@@ -1,86 +1,78 @@
 ﻿using System.Data.Common;
+using System.Data.SqlClient;
 using System.IO;
+using System.Reflection;
 using roundhouse;
 using roundhouse.databases;
+using roundhouse.infrastructure.logging;
 
 namespace FifteenBelow.Deployment
 {
-    public class Database
+    public class Database : IDatabase
     {
-        protected readonly string databaseName;
-        protected IDatabaseFolderStructure databaseFolderStructure;
+        protected IDatabaseFolderStructure DatabaseFolderStructure;
+        private readonly IDatabaseRestoreOptions databaseRestoreOptions;
+        private Logger logger;
 
         public string ConnectionString { get; protected set; }
 
-        public Database(string databaseName)
-            : this(databaseName, null)
+        public Database(DbConnectionStringBuilder connectionStringBuilder) : this(connectionStringBuilder, null)
         {
         }
 
-        public Database(string databaseName, IDatabaseFolderStructure databaseFolderStructure)
+        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure) : this(connectionStringBuilder, databaseFolderStructure, null, null)
         {
-            this.databaseName = databaseName;
-            this.ConnectionString = GetLocalConnectionStringFromDatabaseName(this.databaseName);
-            this.databaseFolderStructure = databaseFolderStructure;
         }
 
-        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure)
+        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger)
         {
             this.ConnectionString = connectionStringBuilder.ToString();
-            this.databaseFolderStructure = databaseFolderStructure;
+            this.DatabaseFolderStructure = databaseFolderStructure;
+            this.databaseRestoreOptions = databaseRestoreOptions;
+            this.logger = logger ?? new roundhouse.infrastructure.logging.custom.ConsoleLogger();
         }
-
 
         public virtual void Deploy()
         {
             this.Deploy(Directory.GetCurrentDirectory());
         }
 
-        public void Deploy(string schemaScriptsFolder, string repository = "", string restoreFromPath = "")
+        public void Deploy(string schemaScriptsFolder, string repository = "")
         {
+            if (schemaScriptsFolder == string.Empty) 
+                schemaScriptsFolder = Assembly.GetExecutingAssembly().Directory();
+
             if (!Directory.Exists(schemaScriptsFolder))
                 throw new DirectoryNotFoundException(
                     string.Format(
                         "Database schema scripts folder {0}\r\ndoes not exist", schemaScriptsFolder));
-
-            if (!string.IsNullOrWhiteSpace(restoreFromPath) && !File.Exists(restoreFromPath))
-                throw new FileNotFoundException(string.Format("Restore Path {0}\r\ndoes not exist", restoreFromPath));
             
-            var logger = new roundhouse.infrastructure.logging.custom.ConsoleLogger();
-
             var roundhouseMigrate = new Migrate();
-            if (databaseFolderStructure != null) databaseFolderStructure.SetMigrateFolders(roundhouseMigrate, schemaScriptsFolder);
+            if (DatabaseFolderStructure != null) DatabaseFolderStructure.SetMigrateFolders(roundhouseMigrate, schemaScriptsFolder);
+            if (databaseRestoreOptions != null) databaseRestoreOptions.SetRunRestoreOptions(roundhouseMigrate);
 
             roundhouseMigrate.Set(x => x.ConnectionString = this.ConnectionString)
                 .Set(x => x.VersionFile = Path.Combine(schemaScriptsFolder, "_BuildInfo.txt"))
                 .Set(x => x.WithTransaction = true)
                 .Set(x => x.Silent = true)
-                .Set(x => x.RecoveryMode=RecoveryMode.NoChange)
+                .Set(x => x.RecoveryMode = RecoveryMode.NoChange)
                 .Set(x => x.RepositoryPath = repository)
-                .Set(x => x.WarnOnOneTimeScriptChanges=true)
+                .Set(x => x.WarnOnOneTimeScriptChanges = true)
                 .SetCustomLogging(logger);
 
-            if(!string.IsNullOrWhiteSpace(restoreFromPath) )
+            if(databaseRestoreOptions!=null)
             {
-                string database = Path.GetFileNameWithoutExtension(restoreFromPath);
-                roundhouseMigrate   .Set(x => x.RestoreFromPath = restoreFromPath)
-                                    .Set(x => x.Restore = !string.IsNullOrWhiteSpace(restoreFromPath))
-                                    .Set(x => x.RestoreCustomOptions = string.Format(", MOVE '{0}' TO '{1}{0}.mdf', MOVE '{0}_log' TO '{1}{0}_log.LDF'", database, @"c:\Temp"));
-            }
-
-            if (string.IsNullOrWhiteSpace(restoreFromPath))
-            {
-                roundhouseMigrate.Run();
+                roundhouseMigrate.RunRestore();
             }
             else
             {
-                roundhouseMigrate.RunRestore();    
+                roundhouseMigrate.Run();
             }
         }
 
-        protected string GetLocalConnectionStringFromDatabaseName(string database)
+        public static SqlConnectionStringBuilder GetLocalConnectionStringFromDatabaseName(string database)
         {
-            return string.Format("Data Source=(local);Initial Catalog={0};Trusted_Connection=Yes", database);
+            return new SqlConnectionStringBuilder(string.Format("Data Source=(local);Initial Catalog={0};Trusted_Connection=Yes", database));
         }
     }
 }

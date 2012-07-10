@@ -4,7 +4,6 @@
 *.user
 *.suo
 *.[Cc]ache
-*.bak
 *.ncb
 *.log 
 *.DS_Store
@@ -38,5 +37,3 @@ buildOutput
 Nuget/
 NugetFeed/
 Packages/
-build/scripts/TestResult.html
-build/scripts/TestResult.xml

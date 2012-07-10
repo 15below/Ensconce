@@ -96,22 +96,19 @@ namespace Ensconce
 
             if (!string.IsNullOrEmpty(connectionString) || !string.IsNullOrEmpty(databaseName))
             {
-                Database database=null;
+                SqlConnectionStringBuilder connStr = null;
+                
                 if (!string.IsNullOrEmpty(connectionString))
                 {
-                    var renderedConnectionString = connectionString.Render();
-                    Log("Deploying scripts from {0} using connection string {1}", deployFrom, renderedConnectionString);
-                    database =new Database(new SqlConnectionStringBuilder(renderedConnectionString), new LegacyFolderStructure());
-                }
-                else if (!string.IsNullOrEmpty(databaseName))
-                {
-                    var renderedDatabaseName = databaseName.Render();
-                    Log("Deploying scripts from {0} using local user and database name {1}", deployFrom, renderedDatabaseName);
-                    database = new Database(renderedDatabaseName,new LegacyFolderStructure());
-                }
-
-                if (database == null) throw new NullReferenceException("database");
-                database.Deploy(deployFrom, databaseRepository.Render());
+                    connStr = new SqlConnectionStringBuilder(connectionString.RenderTemplate(LazyTags.Value));
+				}
+				else if (!string.IsNullOrEmpty(databaseName))
+				{
+                    connStr = Database.GetLocalConnectionStringFromDatabaseName(databaseName.RenderTemplate(LazyTags.Value));
+				}
+                Log("Deploying scripts from {0} using connection string {1}", deployFrom, connStr.ConnectionString);
+                var database = new Database(connStr, new LegacyFolderStructure());
+                database.Deploy(deployFrom, databaseRepository);
             }
 
             if (copyTo || replace)

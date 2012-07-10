@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Update.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Database", "15below.Deployment.Database\15below.Deployment.Database.csproj", "{3BF706C4-851B-4502-9F09-E74FCC92C379}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Database.Tests", "Ensconce.Database.Tests\Ensconce.Database.Tests.csproj", "{4E884DFE-E8D7-4742-AA5A-618FECE890CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,16 @@ Global
 		{3BF706C4-851B-4502-9F09-E74FCC92C379}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3BF706C4-851B-4502-9F09-E74FCC92C379}.Release|x86.ActiveCfg = Release|x86
 		{3BF706C4-851B-4502-9F09-E74FCC92C379}.Release|x86.Build.0 = Release|x86
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
