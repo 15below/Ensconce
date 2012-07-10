@@ -24,7 +24,7 @@ How do I use it?
 * Set up your environment; Ensconce expects one of the following environment variables sets to exist:
 	* ClientCode
 	* Environment
-        * DeployService
+	* DeployService
 * OR
 	* FixedStructure = true
 * Run Ensconce:
