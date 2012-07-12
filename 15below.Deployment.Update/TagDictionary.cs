@@ -14,6 +14,7 @@ namespace FifteenBelow.Deployment.Update
             public string Username;
             public string Password;
             public string DefaultDb;
+            public string ConnectionString;
 
             public override string ToString()
             {
@@ -29,7 +30,7 @@ namespace FifteenBelow.Deployment.Update
 
         public Dictionary<string, DbLogin> DbLogins = new Dictionary<string, DbLogin>();
         // These values (and no others) can be used as tags in property values
-        private static readonly string[] ValidTagsInProperties = new[] {"ClientCode", "Environment"};
+        private static readonly string[] ValidTagsInProperties = new[] {"ClientCode", "Environment", "DbServer"};
         private HashSet<string> idSpecificValues = new HashSet<string>();
         private Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
 
@@ -56,7 +57,7 @@ namespace FifteenBelow.Deployment.Update
             foreach(var name in DbLogins.Keys)
             {
                 var login = DbLogins[name];
-                expandedLogins[name] = new DbLogin{DefaultDb = GetExpandedPropertyValue(login.DefaultDb), Password = login.Password, Username = GetExpandedPropertyValue(login.Username)};
+                expandedLogins[name] = new DbLogin{DefaultDb = GetExpandedPropertyValue(login.DefaultDb), Password = login.Password, Username = GetExpandedPropertyValue(login.Username), ConnectionString = GetExpandedPropertyValue(login.ConnectionString)};
             }
             DbLogins = expandedLogins;
             Add("DbLogins", DbLogins);
@@ -103,11 +104,19 @@ namespace FifteenBelow.Deployment.Update
             PropertiesFromXml(identifier, doc);
         }
 
+        private static Tuple<string, string> GetTagInPropertyValue(XDocument doc, string propName)
+        {
+            var xEl = doc.XPathSelectElement(string.Format("Structure/{0}", propName)) ??
+                      doc.XPathSelectElements("/Structure/Properties/Property").FirstOrDefault(
+                          el => el.Attribute("name").Value == propName);
+            return Tuple.Create(propName, xEl == null ? "" : xEl.Value);
+        }
+
         private void PropertiesFromXml(string identifier, XDocument doc)
         {
             if(!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
             ValidTagsInProperties
-                .Select(str => Tuple.Create(str, doc.XPathSelectElement(string.Format("Structure/{0}", str)).Value))
+                .Select(str => GetTagInPropertyValue(doc, str))
                 .ToList()
                 .ForEach(tuple => AddOrDiscard(tuple.Item1, tuple.Item2));
 
@@ -165,7 +174,8 @@ namespace FifteenBelow.Deployment.Update
                         {
                             Username = fullname,
                             Password = dbLoginElement.XPathSelectElement("Password").Value,
-                            DefaultDb = dbLoginElement.XPathSelectElement("DefaultDb").Value
+                            DefaultDb = dbLoginElement.XPathSelectElement("DefaultDb").Value,
+                            ConnectionString = string.Format("Data Source={{{{ DbServer }}}}; Initial Catalog={0}; User ID={1}; Password={2};", dbLoginElement.XPathSelectElement("DefaultDb").Value, fullname, dbLoginElement.XPathSelectElement("Password").Value)
                         });
                 }
             }
@@ -177,6 +187,7 @@ namespace FifteenBelow.Deployment.Update
 
             // TODO: Remove this replacement set once move to delimetered tags complete
             var djangoStyleValue = baseValue
+                .Replace("tagDbServer", "{{ DbServer }}")
                 .Replace("tagClientCode", "{{ ClientCode }}")
                 .Replace("tagEnvironment", "{{ Environment }}");
             return djangoStyleValue.RenderTemplate(shortTagList);

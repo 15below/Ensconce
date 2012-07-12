@@ -155,6 +155,22 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void DbLoginSuppliesConnectionString()
+        {
+            var sut = new TagDictionary("ident", XmlData);
+            var login = sut.DbLogins.First();
+            Assert.IsFalse(string.IsNullOrEmpty(login.Value.ConnectionString));
+        }
+
+        [Test]
+        public void DbLoginSuppliesConnectionStringWithSubbedValues()
+        {
+            var sut = new TagDictionary("ident", XmlData);
+            var login = sut.DbLogins.First();
+            Assert.IsTrue(login.Value.ConnectionString.Contains("DbServerAddress"));
+        }
+
+        [Test]
         public void LoadLabelledGroups()
         {
             var sut = new TagDictionary("ident", XmlData);

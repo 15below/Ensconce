@@ -13,6 +13,7 @@
     <Property name="DbPassword">
       NotAPassword
     </Property>
+    <Property name="DbServer">DbServerAddress</Property>
     <Property name="IsSys">notSYS</Property>
   </Properties>
   <PropertyGroups>
