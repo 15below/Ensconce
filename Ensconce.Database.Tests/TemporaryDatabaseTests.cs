@@ -95,7 +95,6 @@ namespace Ensconce.Database.Tests
         }
         
         [Test]
-        [Ignore("TODO: Get around problem with calling roundhouse dll directly where it continually logs missing type for nhibernate")]      
         public void should_not_display_fluent_nhibernate_warnings()
         {
             // Get around problem with calling roundhouse dll directly where it continually logs missing type for nhibernate
