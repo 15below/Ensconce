@@ -25,7 +25,7 @@ namespace Ensconce
         private static string configUrl = "{{ DeployService }}{{ ClientCode }}/{{ Environment }}";
         private static string databaseName;
         private static string connectionString;
-        private static string fixedPath = "structure.xml";
+        private static string fixedPath = @"D:\FixedStructure\structure.xml";
         private static string substitutionPath = "substitutions.xml";
         private static bool finalisePath;
         private static string databaseRepository ="";
@@ -154,7 +154,7 @@ namespace Ensconce
                                 }, 
                             {
                                 "fixedPath=",
-                                @"NOTE! Ignored if env:/FixedStructure is false. Override path to structure.xml relative to executable (default=""structure.xml"")",
+                                @"NOTE! Ignored if env:/FixedStructure is false. Override path to structure.xml relative to executable (default=""D:\FixedStructure\structure.xml"")",
                                 s => fixedPath = string.IsNullOrEmpty(s) ? fixedPath : s
                                 },
                             {
