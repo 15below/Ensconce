@@ -25,9 +25,16 @@ function ensconce
     }
     if ($LASTEXITCODE -ne 0)
     {
+        if (Test-Path env:\teamcity_version)
+        {
+            $results
+            exit $LASTEXITCODE
+        }
+        else {
         throw (
 "Ensconce operation failed.
 $results")
+        }
     }
     $results
 }
