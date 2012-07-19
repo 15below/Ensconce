@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -282,6 +281,15 @@ namespace FifteenBelow.Deployment.Update.Tests
                 @"TestUpdateFiles\TestSubstitution21.xml", @"TestUpdateFiles\PlainText01.txt",
                 new Dictionary<string, object> {{"tag", "<after>"}, {"Environment", "LOC"}});
             Assert.IsTrue(newConfig.Contains("<after>"));
+        }
+
+        [Test]
+        public void PlainTextWithEscaping()
+        {
+            var newConfig = UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution22.xml", @"TestUpdateFiles\PlainText02.txt",
+                new Dictionary<string, object> {{"tag", "<after>"}, {"Environment", "LOC"}});
+            Assert.AreEqual("Some plain text. With a {{ tag }}.", newConfig);
         }
 
         [Test]

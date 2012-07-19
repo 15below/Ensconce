@@ -9,6 +9,7 @@ namespace FifteenBelow.Deployment.Update
     public static class NDjangoWrapper
     {
         private const string ErrorGuid = "{668B7536-C32B-4D86-B065-70C143EB4AD9}";
+        private const string StringProvider = "string://";
 
         private static readonly Lazy<TemplateManagerProvider> Instance =
             new Lazy<TemplateManagerProvider>(
@@ -31,7 +32,7 @@ namespace FifteenBelow.Deployment.Update
 
         public static string RenderTemplate(this string template, IDictionary<string, object> values)
         {
-            var replacementValue = GetTemplateManager().RenderTemplate(template, values).ReadToEnd();
+            var replacementValue = GetTemplateManager().RenderTemplate(StringProvider + template, values).ReadToEnd();
             if (replacementValue.Contains(ErrorGuid))
             {
                 var attemptedRender = replacementValue.Replace(ErrorGuid, "ERROR OCCURRED HERE");
@@ -46,8 +47,12 @@ namespace FifteenBelow.Deployment.Update
         {
             public TextReader GetTemplate(string path)
             {
-                var mem = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(path));
-                return new StreamReader(mem);
+                if (path.StartsWith(StringProvider))
+                {
+                    var mem = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(path.Substring(StringProvider.Length)));
+                    return new StreamReader(mem);
+                }
+                return new StreamReader(path);
             }
 
             public bool IsUpdated(string path, DateTime timestamp)
