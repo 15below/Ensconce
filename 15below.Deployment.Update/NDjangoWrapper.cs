@@ -19,6 +19,7 @@ namespace FifteenBelow.Deployment.Update
                     .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
                     .WithSetting(Constants.DEFAULT_AUTOESCAPE, false)
                     .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters())
+                    .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
                 );
 
         static NDjangoWrapper()

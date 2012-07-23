@@ -300,5 +300,14 @@ namespace FifteenBelow.Deployment.Update.Tests
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Value);
         }
+
+        [Test]
+        public void ConcatFilterWorks()
+        {
+            var newConfig = UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution23.xml", @"TestUpdateFiles\PlainText03.txt",
+                new Dictionary<string, object> {{"tag", "<after>"}, {"Environment", "LOC"}});
+            Assert.AreEqual("Some plain text. With a concat <after></after>.", newConfig);
+        }
     }
 }
