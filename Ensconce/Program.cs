@@ -375,14 +375,10 @@ namespace Ensconce
 
         private static void TurnOffReadOnly(DirectoryInfo directory)
         {
-            foreach (var file in directory.GetFiles())
-            {
-                file.IsReadOnly = false;
-            }
-            foreach (var dir in directory.GetDirectories())
-            {
-                TurnOffReadOnly(dir);
-            }
+			foreach (var file in directory.EnumerateFiles("*", SearchOption.AllDirectories))
+			{
+				file.IsReadOnly = false;
+			}
         }
 
         private static void Finalise(string directory)
