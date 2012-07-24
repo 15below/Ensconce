@@ -351,6 +351,7 @@ namespace Ensconce
                     if(!string.IsNullOrEmpty(item.Path) && Path.GetFullPath(item.Path).Contains(new DirectoryInfo(directory).FullName))
                     {
                         item.Process.Kill();
+                        item.Process.WaitForExit();
                     }
                 }
             }
