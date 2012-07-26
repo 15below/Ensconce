@@ -110,6 +110,12 @@ namespace FifteenBelow.Deployment.Update
             foreach (var sub in subs)
             {
                 var activeNode = baseXml.XPathSelectElement(sub.XPath, baseNsm);
+
+				if (activeNode == null)
+				{
+					throw new ApplicationException(String.Format("XPath select of {0} returned null", sub.XPath));
+				}
+
                 if (sub.HasReplacementContent)
                     ReplaceChildNodes(tagValues, activeNode, sub);
                 if(sub.HasAddChildContent)
