@@ -54,9 +54,9 @@ function CheckIfAppPoolExists ([string]$name)
 	Test-Path "IIS:\AppPools\$name"
 }
 
-function CheckIfWebApplicationExists ([string]$webSite, [string]$webApp) 
+function CheckIfWebApplicationExists ([string]$webSite, [string]$appName) 
 {
-	$tempApp = Get-WebApplication -Site "BUK-LOC-PASNGR" | where-object {$_.path.contains("Tools.Net") } 
+	$tempApp = Get-WebApplication -Site $webSite | where-object {$_.path.contains($appName) } 
 	$tempApp -ne $NULL
 }
 
@@ -92,7 +92,7 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir) 
 {
-	New-WebApplication -Name $appPool -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool
+	New-WebApplication -Name $appName -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool
 }
 
 function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName)

@@ -18,10 +18,10 @@ function CheckIfWebSiteExists ([string]$name)
 	$tempWebsite -ne $NULL
 }
 
-function CheckIfWebApplicationExists ([string]$webSite, [string]$webApp) 
+function CheckIfWebApplicationExists ([string]$webSite, [string]$appName) 
 {
 	$tempWebsite  = (gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'")
-	$tempApp = (gwmi -namespace "root\MicrosoftIISv2" -class "IISWebDirectory" | where {$_.name -like "$tempWebSite/*Tools.Net" })
+	$tempApp = (gwmi -namespace "root\MicrosoftIISv2" -class "IISWebDirectory" | where {$_.name -like "$tempWebSite/*$appName" })
 	if ($tempApp -ne $NULL) 
 	{
     $tempApp.AppGetStatus().returnvalue -ne 2
