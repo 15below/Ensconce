@@ -1,8 +1,9 @@
 $deployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
 $ErrorActionPreference = 'SilentlyContinue'
-get-wmiobject -namespace "root\MicrosoftIISv2" -class "IISApplicationPoolSetting" | out-null
-if ($?)
+$IISVersion = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\InetStp").SetupString
+
+if ($IISVersion.Contains("6.0"))
 {
 	$IIS6 = $true
 }

@@ -49,6 +49,22 @@ if ($LoadAsSnapin) {
 	}
 }
 
+function CheckIfAppPoolExists ([string]$name)
+{
+	Test-Path "IIS:\AppPools\$name"
+}
+
+function CheckIfWebApplicationExists ([string]$webSite, [string]$webApp) 
+{
+	$tempApp = Get-WebApplication -Site "BUK-LOC-PASNGR" | where-object {$_.path.contains("Tools.Net") } 
+	$tempApp -ne $NULL
+}
+
+function CheckIfWebSiteExists ([string]$name)
+{
+	Test-Path "IIS:\Sites\$name"
+}
+
 function CreateAppPool ([string]$name)
 {
 	try
@@ -72,6 +88,11 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 	}
 	
 	Set-ItemProperty IIS:\Sites\$name -name logFile.directory -value $logLocation
+}
+
+function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir) 
+{
+	New-WebApplication -Name $appPool -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool
 }
 
 function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName)

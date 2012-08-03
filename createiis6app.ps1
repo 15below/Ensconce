@@ -1,7 +1,34 @@
+$frameworkPath = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client").InstallPath 
+set-alias regIIS $frameworkPath\aspnet_regiis.exe
+
 function TestInclude ([string]$name) {
 	(get-host).ui.rawui.foregroundcolor= "Magenta"
 	$name
 	(get-host).ui.rawui.foregroundcolor= "Yellow"
+}
+function CheckIfAppPoolExists ([string]$name)
+{
+	$tempPool  = gwmi -namespace "root\MicrosoftIISv2" -class "IISApplicationPoolSetting" -filter "Name like '%$name%'"
+	$tempPool -ne $NULL
+}
+
+function CheckIfWebSiteExists ([string]$name)
+{
+	$tempWebsite  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$name%'"
+	$tempWebsite -ne $NULL
+}
+
+function CheckIfWebApplicationExists ([string]$webSite, [string]$webApp) 
+{
+	$tempWebsite  = (gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'")
+	$tempApp = (gwmi -namespace "root\MicrosoftIISv2" -class "IISWebDirectory" | where {$_.name -like "$tempWebSite/*Tools.Net" })
+	if ($tempApp -ne $NULL) 
+	{
+    $tempApp.AppGetStatus().returnvalue -ne 2
+	} 
+	else 
+	{ $False }
+	
 }
 
 function CreateAppPool ([string]$name) #, [string]$user, [string]$password)
@@ -16,8 +43,6 @@ function CreateAppPool ([string]$name) #, [string]$user, [string]$password)
 		$newPool = $appPoolSettings.CreateInstance()
 
 		$newPool.Name = "W3SVC/AppPools/" + $name
-		#$newPool.WAMUsername = $user
-		#$newPool.WAMUserPass = $password
 
 		$newPool.PeriodicRestartTime = 1740
 		$newPool.IdleTimeout = 20
@@ -44,11 +69,7 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 		$NewSite = $iisWebService.CreateNewSite($name, $bindings, $localPath)
 
-		# Assign App Pool
 		$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$name%'"
-
-		# Switch the Website to .NET 4.0
-		# regIIS -sn $webServerSettings.Name
 		
 		# Add wildcard map
 		$iis = [ADSI]"IIS://localhost/W3SVC"
@@ -70,10 +91,29 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 		$webServer.CommitChanges()
 		$webVirtualDir.CommitChanges()
 
+		# Switch the Website to .NET 4.0
+		$webServerSettings.Name
+		regiis -s $webServerSettings.Name
+
 		# Start the newly created web site
 		if (!($webServer -eq $NULL)) {$webServer.start()}
 	}
 }
+
+function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir) 
+{
+	$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
+    
+    $dirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebDirectory"
+    $newDir = $dirSettings.CreateInstance()
+    $newDir.Name = ($webServerSettings.Name + '/ROOT/' + $appName)
+    $newDir.Description = $appPool
+    $newDir.Put()
+    
+    $newDir.AppCreate3(2, $appPool, $True)
+}
+
+
 function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName)
 {
 	# This method requires for you to have selfssl on your machine
