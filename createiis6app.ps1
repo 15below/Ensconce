@@ -28,7 +28,11 @@ function CheckIfWebApplicationExists ([string]$webSite, [string]$appName)
 	} 
 	else 
 	{ $False }
-	
+}
+
+function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
+{
+	$True
 }
 
 function CreateAppPool ([string]$name) #, [string]$user, [string]$password)
@@ -111,6 +115,11 @@ function CreateWebApplication([string]$webSite, [string]$appName, [string] $appP
     $newDir.Put()
     
     $newDir.AppCreate3(2, $appPool, $True)
+}
+
+function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
+{
+	"Virtual directory won't be created"
 }
 
 

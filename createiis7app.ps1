@@ -60,6 +60,13 @@ function CheckIfWebApplicationExists ([string]$webSite, [string]$appName)
 	$tempApp -ne $NULL
 }
 
+function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
+{
+	$tempApp = Get-WebVirtualDirectory -Site $webSite | where-object {$_.path.contains($virtualDir) } 
+	$tempApp -ne $NULL
+	
+}
+
 function CheckIfWebSiteExists ([string]$name)
 {
 	Test-Path "IIS:\Sites\$name"
@@ -93,6 +100,12 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir) 
 {
 	New-WebApplication -Name $appName -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool
+}
+
+function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
+{
+	"Creating $virtualDir pointing at $physicalPath"
+	New-WebVirtualDirectory -Site $webSite -Name $virtualDir -PhysicalPath $physicalPath
 }
 
 function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName)
