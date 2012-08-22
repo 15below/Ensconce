@@ -109,7 +109,7 @@ namespace FifteenBelow.Deployment.Update
             }
             foreach (var sub in subs)
             {
-                var activeNode = baseXml.XPathSelectElement(sub.XPath, baseNsm);
+                var activeNode = baseXml.XPathSelectElement(sub.XPath.RenderTemplate(tagValues), baseNsm);
 
 				if (activeNode == null)
 				{
