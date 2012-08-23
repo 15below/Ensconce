@@ -112,7 +112,7 @@ namespace Ensconce
 				}
                 Log("Deploying scripts from {0} using connection string {1}", deployFrom, connStr.ConnectionString);
                 var database = new Database(connStr, new LegacyFolderStructure());
-                database.Deploy(deployFrom, databaseRepository);
+                database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value));
             }
 
             if (copyTo || replace)
