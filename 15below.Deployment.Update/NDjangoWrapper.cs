@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NDjango;
 using NDjango.Interfaces;
 
@@ -18,8 +19,9 @@ namespace FifteenBelow.Deployment.Update
                     .WithLoader(new StringLoader())
                     .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
                     .WithSetting(Constants.DEFAULT_AUTOESCAPE, false)
-                    .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters())
+                    .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
                     .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
+                    .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
                 );
 
         static NDjangoWrapper()

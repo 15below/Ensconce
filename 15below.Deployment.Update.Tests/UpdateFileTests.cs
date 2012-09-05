@@ -302,6 +302,14 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void NDjangoDefaultFilter()
+        {
+            Assert.AreEqual(
+                "bob",
+                "{{ bob|default:\"bob\" }}".RenderTemplate(new Dictionary<string, object>()));
+        }
+
+        [Test]
         public void ConcatFilterWorks()
         {
             var newConfig = UpdateFile.Update(
