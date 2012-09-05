@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NDjangoExpansions\ConcatFilter.cs" />
+    <Compile Include="NDjangoExpansions\DefaultFilter.cs" />
     <Compile Include="NDjangoWrapper.cs" />
     <Compile Include="TagDictionary.cs" />
     <Compile Include="UpdateFile.cs" />
