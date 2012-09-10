@@ -71,6 +71,7 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 		$bindings.Port = "80"
 		$bindings.Hostname = $hostname
 
+		EnsurePath $localPath
 		$NewSite = $iisWebService.CreateNewSite($name, $bindings, $localPath)
 
 		$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$name%'"
@@ -106,6 +107,8 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir) 
 {
+	EnsurePath $localPath
+	
 	$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
     
     $dirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebDirectory"
