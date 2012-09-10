@@ -86,19 +86,12 @@ function CreateAppPool ([string]$name)
 	}	
 }
 
-function CheckAndCreatePath ([string]$pathToCheck)
-{
-	if ((test-path $pathToCheck) -eq $False) {
-		md $pathToCheck
-	}
-}
-
 function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation)
 {
 	$site = Get-WebSite | where { $_.Name -eq $name }
 	if($site -eq $null)
 	{
-		CheckAndCreatePath $localPath
+		EnsurePath $localPath
 		New-WebSite $name -Port 80 -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName
 	}
 	
@@ -107,14 +100,14 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir) 
 {
-	CheckAndCreatePath $installDir
+	EnsurePath $installDir
 	New-WebApplication -Name $appName -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool
 }
 
 function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
 {
 	"Creating $virtualDir pointing at $physicalPath" | Write-Host
-	CheckAndCreatePath $physicalPath
+	EnsurePath $physicalPath
 	New-WebVirtualDirectory -Site $webSite -Name $virtualDir -PhysicalPath $physicalPath
 }
 
