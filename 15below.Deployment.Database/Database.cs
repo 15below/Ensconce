@@ -58,6 +58,7 @@ namespace FifteenBelow.Deployment
                 .Set(x => x.RecoveryMode = RecoveryMode.NoChange)
                 .Set(x => x.RepositoryPath = repository)
                 .Set(x => x.WarnOnOneTimeScriptChanges = true)
+                .Set(x => x.DisableTokenReplacement = true)
                 .SetCustomLogging(logger);
 
             if(databaseRestoreOptions!=null)

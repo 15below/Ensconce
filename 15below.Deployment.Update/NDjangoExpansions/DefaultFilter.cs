@@ -2,7 +2,7 @@
 
 namespace FifteenBelow.Deployment.Update.NDjangoExpansions
 {
-    [Name("concat")]
+    [Name("default")]
     public class DefaultFilter : IFilter
     {
         private readonly string templateStringIfInvalid;

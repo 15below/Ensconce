@@ -165,7 +165,7 @@ namespace FifteenBelow.Deployment.Update
             foreach (var dbLoginElement in dbLoginElements)
             {
                 var fullname = dbLoginElement.XPathSelectElement("Name").Value;
-                var prefix = "tagClientCode-tagEnvironment-";
+                const string prefix = "tagClientCode-tagEnvironment-";
                 var key = fullname.StartsWith(prefix) ? fullname.Substring(prefix.Length) : fullname;
                 if (!DbLogins.ContainsKey(key))
                 {
