@@ -38,3 +38,13 @@ $results")
     }
     $results
 }
+
+function EnsurePath([string]$name)
+{
+	$path = $name | ensconce -i
+	
+	if ((Test-Path $path) -eq $False)
+	{
+		md $path
+	}
+}
