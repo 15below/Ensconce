@@ -107,7 +107,7 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir) 
 {
-	EnsurePath $localPath
+	EnsurePath $InstallDir
 	
 	$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
     
