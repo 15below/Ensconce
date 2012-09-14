@@ -37,3 +37,4 @@ buildOutput
 Nuget/
 NugetFeed/
 Packages/
+_TeamCity.*
