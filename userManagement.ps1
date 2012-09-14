@@ -31,6 +31,8 @@ Function AddUser([string]$name, [string]$password)
 	
 	$newuser.UserFlags = $ADS_UF_DONT_EXPIRE_PASSWD           
 	$newuser.CommitChanges()
+	
+	
 }
 
 Function CheckAndCreateServiceAccount([string]$name, [string]$password)
@@ -45,5 +47,7 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 
 	if ($blnFound -eq $False) {
 		AddUser $name $password
+		
+		net localgroup administrators $name /add
 	}
 }
