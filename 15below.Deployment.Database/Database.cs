@@ -52,6 +52,7 @@ namespace FifteenBelow.Deployment
             if (databaseRestoreOptions != null) databaseRestoreOptions.SetRunRestoreOptions(roundhouseMigrate);
 
             roundhouseMigrate.Set(x => x.ConnectionString = this.ConnectionString)
+                .Set(x => x.SqlFilesDirectory = schemaScriptsFolder)
                 .Set(x => x.VersionFile = Path.Combine(schemaScriptsFolder, "_BuildInfo.txt"))
                 .Set(x => x.WithTransaction = true)
                 .Set(x => x.Silent = true)
