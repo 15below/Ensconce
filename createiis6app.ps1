@@ -145,3 +145,13 @@ function AddSslCertificate ([string] $websiteName, [string] $certificateCommonNa
 	cd -path $selfSslPath
 	.\selfssl.exe $addToTrusted $certificateCommonName $certificateValidityDays $websitePort $websiteId $quietMode
 }
+
+function EnableWebDav ([string] $websiteName) 
+{
+	"EnableWebDav is not supported for IIS6" | Write-Host
+}
+
+function AddAuthoringRule ([string] $websiteName, [string] $userName, [string] $access)
+{
+	"AddAutoringRole is not supported for IIS6" | Write-Host
+}	

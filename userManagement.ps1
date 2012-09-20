@@ -51,3 +51,20 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 		net localgroup administrators $name /add
 	}
 }
+
+Function CheckAndCreateUserAccount([string]$name, [string]$password)
+{
+	$objComputer = [ADSI]("WinNT://$env:computername,computer")
+
+	$colUsers = ($objComputer.psbase.children |
+		Where-Object {$_.psBase.schemaClassName -eq "User"} |
+			Select-Object -expand Name)
+
+	$blnFound = $colUsers -contains $name
+
+	if ($blnFound -eq $False) {
+		AddUser $name $password
+		
+		net localgroup Users $name /add
+	}
+}

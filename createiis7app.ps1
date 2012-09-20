@@ -115,3 +115,19 @@ function AddSslCertificate ([string] $websiteName, [string] $certificateCommonNa
 {
 	write-host "You Will Need To Write PowerShell For This - Or Do It Manually"
 }
+
+function EnableWebDav ([string] $websiteName) 
+{
+	"Enabling WebDav authoring for $websiteName" | Write-Host
+	Set-WebConfigurationProperty -filter "/system.WebServer/webdav/authoring" -name enabled -value true -PSPath "IIS:\" -location $websiteName
+}
+
+function AddAuthoringRule ([string] $websiteName, [string] $userName, [string] $access)
+{
+	$exists = Get-WebConfiguration -filter "system.WebServer/webdav/authoringRules/add[@users='$userName' and @path='*']" -PSPath "IIS:\Sites\$websiteName"
+	if ($exists -eq $null)
+	{
+		"Giving $userName $access access for WebDav on $websiteName" | Write-Host
+		Add-WebConfiguration -filter "/system.WebServer/webdav/authoringRules" -Value @{users=$userName;path="*";access=$access} -PSPath "IIS:\" -location $websiteName
+	}
+}
