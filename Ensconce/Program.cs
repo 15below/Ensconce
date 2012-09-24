@@ -499,6 +499,10 @@ namespace Ensconce
                     fixedPath = pathEnvVariable;
                 if (File.Exists(fixedPath))
                     configXml = File.ReadAllText(fixedPath);
+                else
+                {
+                    Log("No structure file found at: {0}", Path.GetFullPath(fixedPath));
+                }
             }
             else
             {
