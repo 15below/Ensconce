@@ -158,7 +158,7 @@ namespace Ensconce
                                 }, 
                             {
                                 "fixedPath=",
-                                @"NOTE! Ignored if env:/FixedStructure is false. Override path to structure.xml relative to executable (default=""D:\FixedStructure\structure.xml"")",
+                                @"NOTE! Ignored if env:/FixedStructure is false or env:/FixedPath is set. Override path to structure.xml relative to executable (default=""D:\FixedStructure\structure.xml"")",
                                 s => fixedPath = string.IsNullOrEmpty(s) ? fixedPath : s
                                 },
                             {
@@ -494,6 +494,9 @@ namespace Ensconce
             var configXml = "";
             if (fixedStructure)
             {
+                var pathEnvVariable = Environment.GetEnvironmentVariable("FixedPath");
+                if (pathEnvVariable != null)
+                    fixedPath = pathEnvVariable;
                 if (File.Exists(fixedPath))
                     configXml = File.ReadAllText(fixedPath);
             }
