@@ -105,26 +105,47 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 	}
 }
 
-function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir) 
+function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir ,[string]$subFolders) 
 {
 	EnsurePath $InstallDir
+  $webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
 	
-	$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
-    
+	if ($subFolders -eq $null -or $subFolders -eq "" ) 
+	{
+
     $dirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebDirectory"
     $newDir = $dirSettings.CreateInstance()
     $newDir.Name = ($webServerSettings.Name + '/ROOT/' + $appName)
     $newDir.Description = $appPool
     $newDir.Put()
+  } else {
+    $virtualDirName = $subFolders +"\" + $appName
+    CreateVirtualDirectory $webSite $virtualDirName $installDir
+    $nvdir = ($webServerSettings.Name + '/ROOT/' + $virtualDirName)
+
+    $nvdir = $nvdir.Replace("\", "/") 
+
+    $newDir = gwmi -namespace "root\microsoftiisv2" -Class "IIsWebVirtualDir" -filter "Name='$nvdir'"  
+  }
     
-    $newDir.AppCreate3(2, $appPool, $True)
+  $newDir.AppCreate3(2, $appPool, $True)
 }
 
 function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
 {
-	"Virtual directory won't be created"
+  "Creating $virtualDir pointing at $physicalPath" | Write-Host
+  $webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
+  $virtualDirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebVirtualDirSetting"
+  $virtualDirName = $virtualDir
+  if ($virtualDirName.StartsWith("\")) {
+    $virtualDirName = $VirtualDirName.substring(1)
+  }
+  $newVDir = $virtualDirSettings.CreateInstance()
+  $newVDir.Name = ($webServerSettings.Name + '/ROOT/' + $virtualDirName)
+  $newVDir.Path = $InstallDir
+    
+  $newVDir.Put();
 }
-
 
 function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName)
 {

@@ -98,10 +98,16 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 	Set-ItemProperty IIS:\Sites\$name -name logFile.directory -value $logLocation
 }
 
-function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir) 
+function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir, [string]$SubFolders) 
 {
 	EnsurePath $installDir
-	New-WebApplication -Name $appName -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool
+	if ($subFolders -eq $null -or $subFolders -eq "") 
+	{ New-WebApplication -Name $appName -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool }
+	else
+	{ 
+		"$installDir\$SubFolders"
+		New-WebApplication -Name "$SubFolders\$appName" -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool 
+	}
 }
 
 function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
