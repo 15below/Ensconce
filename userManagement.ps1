@@ -31,8 +31,6 @@ Function AddUser([string]$name, [string]$password)
 	
 	$newuser.UserFlags = $ADS_UF_DONT_EXPIRE_PASSWD           
 	$newuser.CommitChanges()
-	
-	
 }
 
 Function CheckAndCreateServiceAccount([string]$name, [string]$password)
@@ -66,5 +64,26 @@ Function CheckAndCreateUserAccount([string]$name, [string]$password)
 		AddUser $name $password
 		
 		net localgroup Users $name /add
+	}
+}
+
+Function SetServiceAccount([string]$serviceName, [string]$account, [string]$password)
+{
+	$svc = gwmi win32_service -filter ("Name=""$serviceName""")
+	
+	if ($svc -eq $null)
+	{
+		"Could not locate service $serviceName" | Write-Host
+	}
+	else
+	{
+		CheckAndCreateServiceAccount $account $password
+
+		$inParams = $svc.psbase.getMethodParameters("Change")
+		$inParams["StartName"] = ".\$account"
+		$inParams["StartPassword"] = $password
+		$svc.invokeMethod("Change", $inParams, $null)
+
+		"Service $serviceName set to use account $account" | Write-Host
 	}
 }
