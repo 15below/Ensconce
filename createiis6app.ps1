@@ -6,6 +6,7 @@ function TestInclude ([string]$name) {
 	$name
 	(get-host).ui.rawui.foregroundcolor= "Yellow"
 }
+
 function CheckIfAppPoolExists ([string]$name)
 {
 	$tempPool  = gwmi -namespace "root\MicrosoftIISv2" -class "IISApplicationPoolSetting" -filter "Name like '%$name%'"
@@ -76,9 +77,8 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 		$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$name%'"
 		
-		# Add wildcard map
 		$iis = [ADSI]"IIS://localhost/W3SVC"
-		$webServer = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer" -AND $_.ServerComment -eq $name }
+		$webServer = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer"	 -AND $_.ServerComment -eq $name }
 		$webserver.AspEnableParentPaths = $True
 		$webserver.LogFileDirectory = $logLocation
 		$webServer.Properties["AccessFlags"].Value = 513
@@ -108,27 +108,27 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir ,[string]$subFolders) 
 {
 	EnsurePath $InstallDir
-  $webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
+	$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
 	
 	if ($subFolders -eq $null -or $subFolders -eq "" ) 
 	{
 
-    $dirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebDirectory"
-    $newDir = $dirSettings.CreateInstance()
-    $newDir.Name = ($webServerSettings.Name + '/ROOT/' + $appName)
-    $newDir.Description = $appPool
-    $newDir.Put()
-  } else {
-    $virtualDirName = $subFolders +"\" + $appName
-    CreateVirtualDirectory $webSite $virtualDirName $installDir
-    $nvdir = ($webServerSettings.Name + '/ROOT/' + $virtualDirName)
+		$dirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebDirectory"
+		$newDir = $dirSettings.CreateInstance()
+		$newDir.Name = ($webServerSettings.Name + '/ROOT/' + $appName)
+		$newDir.Description = $appPool
+		$newDir.Put()
+	} else {
+		$virtualDirName = $subFolders +"\" + $appName
+		CreateVirtualDirectory $webSite $virtualDirName $installDir
+		$nvdir = ($webServerSettings.Name + '/ROOT/' + $virtualDirName)
 
-    $nvdir = $nvdir.Replace("\", "/") 
+		$nvdir = $nvdir.Replace("\", "/") 
 
-    $newDir = gwmi -namespace "root\microsoftiisv2" -Class "IIsWebVirtualDir" -filter "Name='$nvdir'"  
-  }
-    
-  $newDir.AppCreate3(2, $appPool, $True)
+		$newDir = gwmi -namespace "root\microsoftiisv2" -Class "IIsWebVirtualDir" -filter "Name='$nvdir'"  
+	}
+
+	$newDir.AppCreate3(2, $appPool, $True)
 }
 
 function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
@@ -176,3 +176,18 @@ function AddAuthoringRule ([string] $websiteName, [string] $userName, [string] $
 {
 	"AddAutoringRole is not supported for IIS6" | Write-Host
 }	
+
+function AddWildcardMap ([string] $websiteName)
+{
+	$iis = [ADSI]"IIS://localhost/W3SVC"
+	$webServer = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer"	 -AND $_.ServerComment -eq $websiteName }
+	$webVirtualDir = $webServer.children | where { $_.keyType -eq "IIsWebVirtualDir" }
+
+  if ($webVirtualDir -ne $null) 
+  {
+    # Add wildcard map
+    $wildcardMap = "*, C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\aspnet_isapi.dll, 0, All"
+    $webVirtualDir.ScriptMaps.Add($wildcardMap)
+    $webVirtualDir.CommitChanges()
+  }
+}

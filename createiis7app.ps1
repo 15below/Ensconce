@@ -137,3 +137,8 @@ function AddAuthoringRule ([string] $websiteName, [string] $userName, [string] $
 		Add-WebConfiguration -filter "/system.WebServer/webdav/authoringRules" -Value @{users=$userName;path="*";access=$access} -PSPath "IIS:\" -location $websiteName
 	}
 }
+
+function AddWildcardMap ([string] $websiteName)
+{
+	"Don't need to do anything for IIS7"
+}
