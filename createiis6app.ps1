@@ -197,7 +197,7 @@ function AddWildcardMap ([string] $websiteName, [string]$subFolders)
 		if ($check -eq $null) 
 		{
 			# Add wildcard map
-			$wildcardMap = "*, C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\aspnet_isapi.dll, 0, All"
+			$wildcardMap = "*,C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\aspnet_isapi.dll, 0, All"
 			$webVirtualDir.ScriptMaps.Add($wildcardMap)
 			$webVirtualDir.CommitChanges()
 		}
