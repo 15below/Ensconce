@@ -177,17 +177,29 @@ function AddAuthoringRule ([string] $websiteName, [string] $userName, [string] $
 	"AddAutoringRole is not supported for IIS6" | Write-Host
 }	
 
-function AddWildcardMap ([string] $websiteName)
+function AddWildcardMap ([string] $websiteName, [string]$subFolders)
 {
 	$iis = [ADSI]"IIS://localhost/W3SVC"
 	$webServer = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer"	 -AND $_.ServerComment -eq $websiteName }
 	$webVirtualDir = $webServer.children | where { $_.keyType -eq "IIsWebVirtualDir" }
-
-  if ($webVirtualDir -ne $null) 
-  {
-    # Add wildcard map
-    $wildcardMap = "*, C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\aspnet_isapi.dll, 0, All"
-    $webVirtualDir.ScriptMaps.Add($wildcardMap)
-    $webVirtualDir.CommitChanges()
-  }
+	if ($subFolders -ne $null -and $subFolders -ne "" ) 
+	{
+		$folders = $subFolders.split("\")
+		foreach ($folder in $Folders)
+		{
+			$webVirtualDir = ($webVirtualDir.Children | where {$_.name -like $Folder })
+		}
+	}
+	
+	if ($webVirtualDir -ne $null) 
+	{
+		$check = $webVirtualDir.ScriptMaps | where {$_.EndsWith(", All")}
+		if ($check -eq $null) 
+		{
+			# Add wildcard map
+			$wildcardMap = "*, C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\aspnet_isapi.dll, 0, All"
+			$webVirtualDir.ScriptMaps.Add($wildcardMap)
+			$webVirtualDir.CommitChanges()
+		}
+	}
 }
