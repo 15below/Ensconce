@@ -203,3 +203,15 @@ function AddWildcardMap ([string] $websiteName, [string]$subFolders)
 		}
 	}
 }
+
+function AddDefaultDocument ([string] $websiteName, [string] $defaultDocumentName)
+{
+	$iis = [ADSI]"IIS://localhost/W3SVC"
+	$webServer = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer"	 -AND $_.ServerComment -eq $websiteName }
+	if ($webServer.DefaultDoc.Contains($defaultDocumentName) -eq $false)
+	{
+		"Adding $defaultDocumentName as a default document of $websiteName" | Write-Host
+		$webServer.DefaultDoc = "index.asp," + $webServer.DefaultDoc
+		$webServer.CommitChanges()
+	}
+}

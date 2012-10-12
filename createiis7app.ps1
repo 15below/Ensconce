@@ -142,3 +142,13 @@ function AddWildcardMap ([string] $websiteName)
 {
 	"Don't need to do anything for IIS7"
 }
+
+function AddDefaultDocument ([string] $websiteName, [string] $defaultDocumentName)
+{
+	$exists = get-webconfiguration -filter "//defaultDocument/Files/Add[@value='$defaultDocumentName']" "IIS:\sites\$websiteName"
+	if ($exists -eq $null)
+	{
+		"Adding $defaultDocumentName as a default document of $websiteName" | Write-Host
+		Add-WebConfiguration //defaultDocument/files "IIS:\sites\$websiteName" -atIndex 0 -Value @{value=$defaultDocumentName}
+	}
+}
