@@ -215,3 +215,8 @@ function AddDefaultDocument ([string] $websiteName, [string] $defaultDocumentNam
 		$webServer.CommitChanges()
 	}
 }
+
+function EnableParentPaths ([string] $websiteName)
+{
+	"EnbableParentPaths is set during site creation for IIS6" | Write-Host
+}

@@ -152,3 +152,13 @@ function AddDefaultDocument ([string] $websiteName, [string] $defaultDocumentNam
 		Add-WebConfiguration //defaultDocument/files "IIS:\sites\$websiteName" -atIndex 0 -Value @{value=$defaultDocumentName}
 	}
 }
+
+function EnableParentPaths ([string] $websiteName)
+{
+	$current = get-webconfigurationproperty -filter "//asp" -name enableParentPaths "IIS:\Sites\$websiteName"
+	if ($current.Value -eq $False)
+	{
+		"Setting enableParentPaths to True for $websiteName" | Write-Host
+		Set-WebConfigurationProperty -Filter "//asp" -name enableParentPaths -PSPath "IIS:\" -value true -location $websiteName
+	}
+}
