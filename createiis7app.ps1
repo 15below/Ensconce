@@ -162,3 +162,14 @@ function EnableParentPaths ([string] $websiteName)
 		Set-WebConfigurationProperty -Filter "//asp" -name enableParentPaths -PSPath "IIS:\" -value true -location $websiteName
 	}
 }
+
+function Enable32BitApps ([string] $appPoolName)
+{
+	$current = (get-itemProperty IIS:\AppPools\$appPoolName).enable32BitAppOnWin64
+	
+	if ($current -eq $False)
+	{
+		"Setting enable32BitAppOnWin64 to True for the $appPoolName AppPool" | Write-Host
+		Set-ItemProperty IIS:\AppPools\$appPoolName enable32BitAppOnWin64 true
+	}
+}

@@ -218,5 +218,10 @@ function AddDefaultDocument ([string] $websiteName, [string] $defaultDocumentNam
 
 function EnableParentPaths ([string] $websiteName)
 {
-	"EnbableParentPaths is set during site creation for IIS6" | Write-Host
+	"EnableParentPaths is set during site creation for IIS6" | Write-Host
+}
+
+function Enable32BitApps ([string] $appPoolName)
+{
+	"The Enable32BirApps function does nothing in IIS6" | Write-Host
 }
