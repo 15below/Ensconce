@@ -131,9 +131,9 @@ function CreateWebApplication([string]$webSite, [string]$appName, [string] $appP
 	$newDir.AppCreate3(2, $appPool, $True)
 }
 
-function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
+function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$installDir)
 {
-  "Creating $virtualDir pointing at $physicalPath" | Write-Host
+  "Creating $virtualDir pointing at $installDir" | Write-Host
   $webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
   $virtualDirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebVirtualDirSetting"
   $virtualDirName = $virtualDir
@@ -142,8 +142,8 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
   }
   $newVDir = $virtualDirSettings.CreateInstance()
   $newVDir.Name = ($webServerSettings.Name + '/ROOT/' + $virtualDirName)
-  $newVDir.Path = $InstallDir
-    
+  $newVDir.Path = $installDir
+
   $newVDir.Put();
 }
 
