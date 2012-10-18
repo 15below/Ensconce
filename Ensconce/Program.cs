@@ -436,9 +436,11 @@ namespace Ensconce
             if (!Directory.Exists(dirPath)) return;
             Log("Backing up {0}", dirPath);
 
-            var dir = new DirectoryInfo(dirPath);
-            var dirLength = dir.FullName.TrimEnd('\\', '/').Length + 1;
-            var parent = Directory.GetParent(dirPath);
+            var dirPathTrimmed = dirPath.TrimEnd('\\', '/');
+
+            var dir = new DirectoryInfo(dirPathTrimmed);
+            var dirLength = dirPathTrimmed.Length + 1;
+            var parent = Directory.GetParent(dirPathTrimmed);
             var backupName = dir.Name + ".old.zip";
             using (var zipStream = new ZipOutputStream(File.Create(Path.Combine(parent.FullName, backupName))))
             {
