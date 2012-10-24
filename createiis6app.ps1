@@ -33,7 +33,10 @@ function CheckIfWebApplicationExists ([string]$webSite, [string]$appName)
 
 function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
 {
-	$True
+	$iis = [ADSI]"IIS://localhost/W3SVC"
+	$webServer = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer"	 -AND $_.ServerComment -eq $website }
+	$webVirtualDir = ($webServer.children | where { $_.keyType -eq "IIsWebVirtualDir" }).children | where { $_.keyType -eq "IIsWebVirtualDir" -and $_.Name -eq $virtualDir}
+	($webVirtualDir -ne $null)
 }
 
 function CreateAppPool ([string]$name) #, [string]$user, [string]$password)
