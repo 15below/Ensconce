@@ -48,6 +48,10 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 		
 		net localgroup administrators $name /add
 	}
+	
+	$exe = "$deployToolsDir\Grant.exe"
+	$userName = "$env:computername\$name"
+	&$exe ADD SeServiceLogonRight $userName
 }
 
 Function CheckAndCreateUserAccount([string]$name, [string]$password)
