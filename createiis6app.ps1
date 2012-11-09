@@ -116,7 +116,7 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 	$site = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer" -AND $_.ServerComment -eq $siteName }
 	if($site -ne $null)
 	{
-		$webBinding = $site.ServerBindings | where { $_.Port -eq $port -AND $_.Hostname -eq $hostHeader AND $_.IP -eq "*" }
+		$webBinding = $site.ServerBindings | where { $_.Port -eq $port -AND $_.Hostname -eq $hostHeader -AND $_.IP -eq "*" }
 		if($webBinding -eq $null) {
 			if( $hostHeader -eq "" ) {
 				"Host-header is empty, cannot add" | Write-Host
