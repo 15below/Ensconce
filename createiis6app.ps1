@@ -77,17 +77,19 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 		EnsurePath $localPath
 		$NewSite = $iisWebService.CreateNewSite($name, $bindings, $localPath)
-
+				
 		$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$name%'"
 		
 		$iis = [ADSI]"IIS://localhost/W3SVC"
 		$webServer = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer"	 -AND $_.ServerComment -eq $name }
+				
 		$webserver.AspEnableParentPaths = $True
 		$webserver.LogFileDirectory = $logLocation
 		$webServer.Properties["AccessFlags"].Value = 513
 		$webServer.Properties["AuthFlags"].Value = 1
 		$webServer.DefaultDoc = "index.asp," + $webServer.DefaultDoc
 		$webServer.AppPoolID = $appPoolName
+				
 		$webserver.SetInfo()
 
 		$webVirtualDir = $webServer.children | where { $_.keyType -eq "IIsWebVirtualDir" }
@@ -107,6 +109,30 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 		if (!($webServer -eq $NULL)) {$webServer.start()}
 	}
 }
+
+function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [string] $protocol)
+{
+	$iis = [ADSI]"IIS://localhost/W3SVC"
+	$site = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer" -AND $_.ServerComment -eq $siteName }
+	if($site -ne $null)
+	{
+		$webBinding = $site.ServerBindings | where { $_.Port -eq $port -AND $_.Hostname -eq $hostHeader AND $_.IP -eq "*" }
+		if($webBinding -eq $null) {
+			if( $hostHeader -eq "" ) {
+				"Host-header is empty, cannot add" | Write-Host
+			}
+			else {
+				"Adding additional host-header binding of: $hostHeader, port: $port" | Write-Host
+				"Ignoring protocol of: '$protocol' - IIS6 does not have this concept "| Write-Host
+				$webServer.ServerBindings.Insert($webServer.ServerBindings.Count, ":$port:$hostHeader")
+			}
+		}
+		else {
+			"Http host header already exists - no need to add" | Write-Host
+		}
+	}
+}
+
 
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir ,[string]$subFolders) 
 {

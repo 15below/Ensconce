@@ -98,6 +98,37 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 	Set-ItemProperty IIS:\Sites\$name -name logFile.directory -value $logLocation
 }
 
+function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [string] $protocol)
+{
+	if($protocol -eq "" ) {
+		$protocol = "http"
+	}
+	
+	$site = Get-WebSite | where { $_.Name -eq $siteName }
+	if($site -ne $null)
+	{
+		$webBinding = Get-WebBinding -Name $siteName -IPAddress "*" -Port $port -HostHeader $hostHeader -Protocol $protocol
+		if($webBinding -eq $null) {
+			if( $hostHeader -eq "" ) {
+				"Host-header is empty, cannot add" | Write-Host
+			}
+			else {
+				$supportedProtocols = "http", "https", "net.tcp", "net.pipe", "net.msmq", "msmq.formatname"
+				if($supportedProtocols -contains $protocol) {
+					"Adding additional host-header binding of: $hostHeader, port: $port, protocol: $protocol" | Write-Host
+					New-WebBinding -Name $siteName -IPAddress "*" -Port $port -HostHeader $hostHeader -Protocol $protocol
+				}
+				else {
+					"Error - cant add binding, protocol: $protocol is not supported in IIS7" | Write-Host
+				}
+			}
+		}
+		else {
+			"Http host header already exists - no need to add" | Write-Host
+		}
+	}
+}
+
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir, [string]$SubFolders) 
 {
 	EnsurePath $installDir
