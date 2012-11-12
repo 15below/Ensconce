@@ -51,5 +51,5 @@ function EnsurePath([string]$name)
 }
 
 function is64bit() {
-  return ([IntPtr]::Size -eq 8)
+  return ( (Get-WmiObject Win32_OperatingSystem).OSArchitecture -eq "64-bit")
 }
