@@ -49,3 +49,7 @@ function EnsurePath([string]$name)
 		md $path
 	}
 }
+
+function is64bit() {
+  return ([IntPtr]::Size -eq 8)
+}
