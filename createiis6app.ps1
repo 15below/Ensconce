@@ -61,6 +61,24 @@ function CreateAppPool ([string]$name) #, [string]$user, [string]$password)
 	}
 }
 
+function StopAppPool([string]$name)
+{
+	$appPool = get-wmiobject -namespace "root\MicrosoftIISv2" -class "IIsApplicationPool" | where-object {$_.Name -eq "W3SVC/AppPools/$name"}
+	if ($appPool)
+	{
+		$appPool.Stop()
+	}
+}
+
+function StartAppPool([string]$name)
+{
+	$appPool = get-wmiobject -namespace "root\MicrosoftIISv2" -class "IIsApplicationPool" | where-object {$_.Name -eq "W3SVC/AppPools/$name"}
+	if ($appPool)
+	{
+		$appPool.Start
+	}
+}
+
 function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation)
 {
 	# check if web site exists and delete it - for testing purposes

@@ -54,6 +54,16 @@ function CheckIfAppPoolExists ([string]$name)
 	Test-Path "IIS:\AppPools\$name"
 }
 
+function StopAppPool([string]$name)
+{
+	Stop-WebAppPool "$name"
+}
+
+function StartAppPool([string]$name)
+{
+	Start-WebAppPool "$name"
+}
+
 function CheckIfWebApplicationExists ([string]$webSite, [string]$appName) 
 {
 	$tempApp = Get-WebApplication -Site $webSite | where-object {$_.path.contains($appName) } 
