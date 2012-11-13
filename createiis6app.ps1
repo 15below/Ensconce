@@ -75,7 +75,7 @@ function StartAppPool([string]$name)
 	$appPool = get-wmiobject -namespace "root\MicrosoftIISv2" -class "IIsApplicationPool" | where-object {$_.Name -eq "W3SVC/AppPools/$name"}
 	if ($appPool)
 	{
-		$appPool.Start
+		$appPool.Start()
 	}
 }
 
