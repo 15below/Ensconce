@@ -33,6 +33,11 @@ Function AddUser([string]$name, [string]$password)
 	$newuser.CommitChanges()
 }
 
+Function AddUserToGroup([string]$name, [string]$group)
+{
+	net localgroup $group $name /add
+}
+
 Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 {
 	$objComputer = [ADSI]("WinNT://$env:computername,computer")
@@ -45,8 +50,7 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 
 	if ($blnFound -eq $False) {
 		AddUser $name $password
-		
-		net localgroup administrators $name /add
+		AddUserToGroup $name "administrators"
 	}
 	
 	$exe = "$deployToolsDir\Grant.exe"

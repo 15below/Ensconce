@@ -68,6 +68,8 @@ function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 	$appPool.WAMUserPass = $password
 	$appPool.AppPoolIdentityType = 3
 	$appPool.Put()
+	
+	AddUserToGroup $user "IIS_WPG"
 }
 
 function StopAppPool([string]$name)
