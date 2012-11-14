@@ -39,11 +39,11 @@ function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
 	($webVirtualDir -ne $null)
 }
 
-function CreateAppPool ([string]$name) #, [string]$user, [string]$password)
+function CreateAppPool ([string]$name)
 {
 	# check if pool exists and delete it - for testing purposes
 	"    Creating ISS app pool for " + $name
-	$tempPool  = gwmi -namespace "root\MicrosoftIISv2" -class "IISApplicationPoolSetting" -filter "Name like '%$name%'"
+	$tempPool = gwmi -namespace "root\MicrosoftIISv2" -class "IISApplicationPoolSetting" -filter "Name like '%$name%'"
 	if (($tempPool -eq $NULL)) {
 
 		# create Application Pool
@@ -59,6 +59,15 @@ function CreateAppPool ([string]$name) #, [string]$user, [string]$password)
 
 		$newPool.Put()
 	}
+}
+
+function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
+{
+	$appPool = gwmi -namespace "root\MicrosoftIISv2" -class "IISApplicationPoolSetting" -filter "Name like '%$name%'"
+	$appPool.WAMUserName = $user
+	$appPool.WAMUserPass = $password
+	$appPool.AppPoolIdentityType = 3
+	$appPool.Put()
 }
 
 function StopAppPool([string]$name)

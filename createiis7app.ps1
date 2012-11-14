@@ -96,6 +96,15 @@ function CreateAppPool ([string]$name)
 	}	
 }
 
+function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
+{
+	$appPool = Get-Item "IIS:\AppPools\$name"
+	$appPool.processModel.username = $user
+	$appPool.processModel.password = $password
+	$appPool.processModel.identityType = 3
+	$appPool | set-item
+}
+
 function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation)
 {
 	$site = Get-WebSite | where { $_.Name -eq $name }
