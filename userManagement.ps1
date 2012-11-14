@@ -35,7 +35,15 @@ Function AddUser([string]$name, [string]$password)
 
 Function AddUserToGroup([string]$name, [string]$group)
 {
-	net localgroup $group $name /add
+	"AddUserToGroup: $name, $group" | Write-Host
+	
+	try {
+		net localgroup $group $name /add
+		exit 0
+	}
+	catch [Exception] {
+		"Error caught" | Write-Host
+	}
 }
 
 Function CheckAndCreateServiceAccount([string]$name, [string]$password)
