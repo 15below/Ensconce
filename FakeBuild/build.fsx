@@ -97,6 +97,21 @@ Target "CreateNugets" (fun _ ->
     ReportProgressFinish "Create Nugets"
 )
 
+Target "RunUnitTests" (fun _ ->
+    ReportProgressStart "Run Unit Tests"
+    !+ (sprintf @"**\bin\%s\**\*.Tests.dll" configuration)
+    |> Scan
+    |> NUnit (fun defaults -> { defaults with
+                                    ExcludeCategory = "Integration,IntegrationTest,IntegrationsTest,IntegrationTests,IntegrationsTests,Integration Test,Integration Tests,Integrations Tests,Approval Tests"
+                                    ToolPath = currentDirectory @@ "FakeBuild" @@ "NUnit" @@ "net-2.0"
+                                    DisableShadowCopy = true
+                                    ShowLabels = false
+                                    TimeOut = TimeSpan.FromMinutes 5.
+                                    OutputFile = "TestResults.xml"
+                                    })
+    ReportProgressFinish "Run Unit Tests"
+)
+
 FinalTarget "PushNugetsAndArtifacts" (fun _ ->
     let getPackageName (nuspecFileName : string) =
         let postfix = sprintf ".%s.nupkg" (environVar "NugetVersion")
@@ -120,6 +135,7 @@ Target "Default" DoNothing
 
 "UpdateVersions"
     ==> "BuildSolution"
+    ==> "RunUnitTests"
     ==> "CreateNugets"
     ==> "Default"
 

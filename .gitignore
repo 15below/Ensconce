@@ -38,3 +38,4 @@ Nuget/
 NugetFeed/
 Packages/
 _TeamCity.*
+TestResults.xml
