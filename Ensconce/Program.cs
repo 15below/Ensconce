@@ -498,7 +498,7 @@ namespace Ensconce
             {
                 var pathEnvVariable = Environment.GetEnvironmentVariable("FixedPath");
                 if (pathEnvVariable != null)
-                    fixedPath = pathEnvVariable;
+                    fixedPath = pathEnvVariable.RenderTemplate(tags);
                 if (File.Exists(fixedPath))
                     configXml = File.ReadAllText(fixedPath);
                 else
