@@ -15,6 +15,7 @@ namespace FifteenBelow.Deployment
         private Logger logger;
 
         public string ConnectionString { get; protected set; }
+		public bool WarnOnOneTimeScriptChanges { get; private set; }
 
         public Database(DbConnectionStringBuilder connectionStringBuilder) : this(connectionStringBuilder, null)
         {
@@ -24,12 +25,13 @@ namespace FifteenBelow.Deployment
         {
         }
 
-        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger)
+        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger, bool warnOnOneTimeScriptChanges = false)
         {
             this.ConnectionString = connectionStringBuilder.ToString();
             this.DatabaseFolderStructure = databaseFolderStructure;
             this.databaseRestoreOptions = databaseRestoreOptions;
             this.logger = logger ?? new roundhouse.infrastructure.logging.custom.ConsoleLogger();
+			this.WarnOnOneTimeScriptChanges = warnOnOneTimeScriptChanges;
         }
 
         public virtual void Deploy()
@@ -37,7 +39,7 @@ namespace FifteenBelow.Deployment
             this.Deploy(Directory.GetCurrentDirectory());
         }
 
-        public void Deploy(string schemaScriptsFolder, string repository = "")
+		public void Deploy(string schemaScriptsFolder, string repository = "")
         {
             if (schemaScriptsFolder == string.Empty) 
                 schemaScriptsFolder = Assembly.GetExecutingAssembly().Directory();
@@ -58,7 +60,7 @@ namespace FifteenBelow.Deployment
                 .Set(x => x.Silent = true)
                 .Set(x => x.RecoveryMode = RecoveryMode.NoChange)
                 .Set(x => x.RepositoryPath = repository)
-                .Set(x => x.WarnOnOneTimeScriptChanges = true)
+				.Set(x => x.WarnOnOneTimeScriptChanges = WarnOnOneTimeScriptChanges)
                 .Set(x => x.DisableTokenReplacement = true)
                 .SetCustomLogging(logger);
 

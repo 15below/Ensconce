@@ -36,6 +36,7 @@ namespace Ensconce
         private static bool replace;
         private static bool updateConfig;
         private static string templateFilters;
+		private static bool warnOnOneTimeScriptChanges = false;
         private static bool quiet;
         private static bool nobackup;
         private static readonly Lazy<TagDictionary> LazyTags = new Lazy<TagDictionary>(BuildTagDictionary);
@@ -219,7 +220,18 @@ namespace Ensconce
                                 "treatAsTemplateFilter=", "File filter for files in the deploy from directory to treat as templates. These will be updated after config and before deployment.",
                                 s => templateFilters = s
                                },
+							{
+                                "warnOnOneTimeScriptChanges=", "If one-time-scripts have had changes, only treat them as warnings, not as errors. Defaults to False.",
+                                s => warnOnOneTimeScriptChanges = Convert.ToBoolean(s)
+                               },
                         };
+
+			var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
+			if (!string.IsNullOrEmpty(envWarnOnOneTimeScriptChanges) == false)
+			{
+				// Will be overridden by command-line option
+				warnOnOneTimeScriptChanges = Convert.ToBoolean(envWarnOnOneTimeScriptChanges);
+			}
 
             p.Parse(args);
 
@@ -247,7 +259,7 @@ namespace Ensconce
                 if (!Directory.Exists(deployFrom))
                 {
                     throw new OptionException(
-                        "Error: You must specify a existing from directory to use the copyTo or replace options.", "deployFrom");
+                        "Error: You must specify an existing from directory to use the copyTo or replace options.", "deployFrom");
                 }
                 if (copyTo && replace)
                 {
