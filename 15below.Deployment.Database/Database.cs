@@ -21,7 +21,8 @@ namespace FifteenBelow.Deployment
         {
         }
 
-        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure) : this(connectionStringBuilder, databaseFolderStructure, null, null)
+		public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, bool warnOnOneTimeScriptChanges = false)
+			: this(connectionStringBuilder, databaseFolderStructure, null, null, warnOnOneTimeScriptChanges)
         {
         }
 
