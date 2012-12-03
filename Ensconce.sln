@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Database
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Database.Tests", "Ensconce.Database.Tests\Ensconce.Database.Tests.csproj", "{4E884DFE-E8D7-4742-AA5A-618FECE890CD}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FakeBuild", "FakeBuild\FakeBuild.fsproj", "{67560FA4-B1C4-444C-9162-B47F84A6D372}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,16 @@ Global
 		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|x86.ActiveCfg = Release|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

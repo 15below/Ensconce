@@ -128,6 +128,9 @@ FinalTarget "PushNugetsAndArtifacts" (fun _ ->
         sprintf "%s --> %s" fromPath toPath)
     |> Log "Pushing file: "
 
+    // Create Ensconce Nuget build artifact
+    PublishArticfact (outputDirectory @@ "Ensconce.*.nupkg")
+
     ReportProgressFinish "Push Nugets"
 )
 
