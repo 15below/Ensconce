@@ -153,7 +153,7 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 			else {
 				"Adding additional host-header binding of: $hostHeader, port: $port" | Write-Host
 				"Ignoring protocol of: '$protocol' - IIS6 does not have this concept "| Write-Host
-				$webServer.ServerBindings.Insert($webServer.ServerBindings.Count, ":$port:$hostHeader")
+				$site.ServerBindings.Insert($site.ServerBindings.Count, ":$port:$hostHeader")
 			}
 		}
 		else {
