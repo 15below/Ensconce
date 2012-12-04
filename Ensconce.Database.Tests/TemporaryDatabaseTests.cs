@@ -41,6 +41,16 @@ namespace Ensconce.Database.Tests
                 Assert.That(sut.GetTables().Select(x => x.Name), Has.Member("Table1"));
             }
         }
+
+        [Test]
+        public void should_drop_database_when_deployed_with_dropDatabase_option()
+        {
+            using (var sut = new TemporaryDatabase())
+            {
+                sut.Deploy(string.Empty, string.Empty, true);
+                Assert.True(!sut.Exists());
+            }
+        }
         
         [Test]
         public void should_stamp_version_from_default_buildinfo_file_when_deployed()
