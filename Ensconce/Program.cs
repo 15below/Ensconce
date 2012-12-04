@@ -39,9 +39,11 @@ namespace Ensconce
 		private static bool warnOnOneTimeScriptChanges = false;
         private static bool quiet;
         private static bool nobackup;
+        private static bool dropDatabase;
+        private static bool dropDatabaseConfirm;
         private static readonly Lazy<TagDictionary> LazyTags = new Lazy<TagDictionary>(BuildTagDictionary);
         private const string CachedResultPath = "_cachedConfigurationResults.xml";
-
+        
         private static int Main(string[] args)
         {
             try
@@ -113,7 +115,7 @@ namespace Ensconce
 				}
                 Log("Deploying scripts from {0} using connection string {1}", deployFrom, connStr.ConnectionString);
 				var database = new Database(connStr, new LegacyFolderStructure(), warnOnOneTimeScriptChanges);
-                database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value));
+                database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value), dropDatabase);
             }
 
             if (copyTo || replace)
@@ -224,6 +226,16 @@ namespace Ensconce
                                 "warnOnOneTimeScriptChanges=", "If one-time-scripts have had changes, only treat them as warnings, not as errors. Defaults to False.",
                                 s => warnOnOneTimeScriptChanges = Convert.ToBoolean(s)
                                },
+                            {
+                                "dropDatabase",
+                                "Drop database, useful if you need to test installations on a fresh database or need control of databases for performance/load tests.", 
+                                s => dropDatabase = s != null
+                                },
+                            {
+                                "dropDatabaseConfirm",
+                                "Drop database Confirmation, used to confirm that database is to be dropped (for safety)", 
+                                s => dropDatabaseConfirm = s != null
+                                },
                         };
 
 			var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
@@ -280,6 +292,11 @@ namespace Ensconce
             if ((!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)) && !File.Exists(Path.Combine(deployFrom, "_BuildInfo.txt")))
             {
                 throw new FileNotFoundException("Error: You cannot deploy database without a valid version file. File must be named _BuildInfo.txt", "databaseName");
+            }
+
+            if (dropDatabase && !dropDatabaseConfirm)
+            {
+                throw new OptionException("Error: You cannot drop a database without specifying the drop database confirm argument", "dropDatabaseConfirm");
             }
         }
 
