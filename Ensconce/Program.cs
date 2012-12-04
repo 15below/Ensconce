@@ -227,7 +227,7 @@ namespace Ensconce
                         };
 
 			var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
-			if (!string.IsNullOrEmpty(envWarnOnOneTimeScriptChanges) == false)
+			if (!string.IsNullOrEmpty(envWarnOnOneTimeScriptChanges))
 			{
 				// Will be overridden by command-line option
 				warnOnOneTimeScriptChanges = Convert.ToBoolean(envWarnOnOneTimeScriptChanges);
