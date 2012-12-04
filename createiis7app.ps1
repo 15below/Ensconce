@@ -93,7 +93,12 @@ function CreateAppPool ([string]$name)
 	 # Assume it doesn't exist. Create it.
 	 New-WebAppPool -Name $name
 	 Set-ItemProperty IIS:\AppPools\$name managedRuntimeVersion v4.0
-	}	
+	}
+}
+
+function SetManagedPipelineModeClassic ([string]$name)
+{
+	Set-ItemProperty IIS:\AppPools\$name managedPipelineMode 1
 }
 
 function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
