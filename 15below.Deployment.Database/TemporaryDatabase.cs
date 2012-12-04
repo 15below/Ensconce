@@ -123,9 +123,9 @@ namespace FifteenBelow.Deployment
             roundhouseMigrate.Run();
         }
 
-        public void Deploy(string schemaScriptsFolder="", string repository="")
+        public void Deploy(string schemaScriptsFolder = "", string repository = "", bool dropDatabase = false)
         {
-            database.Deploy(schemaScriptsFolder, repository);
+            database.Deploy(schemaScriptsFolder, repository, dropDatabase);
         }
     }
 }

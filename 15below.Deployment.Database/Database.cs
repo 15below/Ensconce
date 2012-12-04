@@ -40,7 +40,7 @@ namespace FifteenBelow.Deployment
             this.Deploy(Directory.GetCurrentDirectory());
         }
 
-		public void Deploy(string schemaScriptsFolder, string repository = "")
+        public void Deploy(string schemaScriptsFolder, string repository = "", bool dropDatabase = false)
         {
             if (schemaScriptsFolder == string.Empty) 
                 schemaScriptsFolder = Assembly.GetExecutingAssembly().Directory();
@@ -63,6 +63,7 @@ namespace FifteenBelow.Deployment
                 .Set(x => x.RepositoryPath = repository)
 				.Set(x => x.WarnOnOneTimeScriptChanges = WarnOnOneTimeScriptChanges)
                 .Set(x => x.DisableTokenReplacement = true)
+                .Set(x => x.Drop = dropDatabase)
                 .SetCustomLogging(logger);
 
             if(databaseRestoreOptions!=null)
