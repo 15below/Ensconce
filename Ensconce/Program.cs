@@ -118,7 +118,7 @@ namespace Ensconce
                 database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value), dropDatabase);
             }
 
-            if (copyTo || replace)
+            if (replace)
             {
                 DeployTo.ForEach(BackupDirectory);
             }
