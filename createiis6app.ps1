@@ -283,3 +283,8 @@ function Enable32BitApps ([string] $appPoolName)
 {
 	"The Enable32BirApps function does nothing in IIS6" | Write-Host
 }
+
+function DefaultApplicationPoolGroup ()
+{
+	"IIS_WPG"
+}
