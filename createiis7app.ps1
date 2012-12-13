@@ -228,3 +228,8 @@ function Enable32BitApps ([string] $appPoolName)
 		Set-ItemProperty IIS:\AppPools\$appPoolName enable32BitAppOnWin64 true
 	}
 }
+
+function DefaultApplicationPoolGroup ()
+{
+	"IIS_IUSRS"
+}
