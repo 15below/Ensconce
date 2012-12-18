@@ -40,35 +40,43 @@ namespace Ensconce.StructureEditor
                 }
             }
 
-            lstItems.DataSource = savedConfigs;
-            keyValueData.DataSource = configData.Tables["KeyValues"].DefaultView;
-            instanceGrid.DataSource = configData.Tables["InstanceValues"].DefaultView;
-            dbLoginsGrid.DataSource = configData.Tables["DBLogins"].DefaultView;
+            if (savedConfigs.Count == 0)
+            {
+                btnDelete.Enabled = false;
+                btnLoad.Enabled = false;
+            }
 
+            lstItems.DataSource = savedConfigs;
+            keyValueGrid.DataSource = configData.Tables["KeyValues"].DefaultView;
+            propertyGroupGrid.DataSource = configData.Tables["InstanceValues"].DefaultView;
+            dbLoginsGrid.DataSource = configData.Tables["DBLogins"].DefaultView;
         }
 
-        private void SetupDataTables()
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            configData.Tables.Add(new DataTable("KeyValues"));
-            configData.Tables["KeyValues"].Columns.Add("Key");
-            configData.Tables["KeyValues"].Columns.Add("Value");
+            try
+            {
+                UpdateLoadedConfig(true);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Failed To Save Config Changes!", "Save Failure", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
 
-            configData.Tables.Add(new DataTable("InstanceValues"));
-            configData.Tables["InstanceValues"].Columns.Add("Instance");
-            configData.Tables["InstanceValues"].Columns.Add("Label");
-            configData.Tables["InstanceValues"].Columns.Add("Key");
-            configData.Tables["InstanceValues"].Columns.Add("Value");
-
-            configData.Tables.Add(new DataTable("DBLogins"));
-            configData.Tables["DBLogins"].Columns.Add("UserName");
-            configData.Tables["DBLogins"].Columns.Add("DefaultDb");
-            configData.Tables["DBLogins"].Columns.Add("Password");
-            configData.Tables["DBLogins"].Columns.Add("ConnectionString");
+            Properties.Settings.Default.SavedConfigs = string.Join(",", savedConfigs);
+            Properties.Settings.Default.Save();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
             savedConfigs.Remove(lstItems.SelectedValue.ToString());
+            if (savedConfigs.Count == 0)
+            {
+                btnDelete.Enabled = false;
+                btnLoad.Enabled = false;
+                btnUnload.Enabled = false;
+            }
         }
 
         private void btnNew_Click(object sender, EventArgs e)
@@ -88,15 +96,73 @@ namespace Ensconce.StructureEditor
                 if (!savedConfigs.Contains(saveFileDialog.FileName))
                 {
                     savedConfigs.Add(saveFileDialog.FileName);
+                    lstItems.SelectedItem = saveFileDialog.FileName;
                 }
+
+                LoadConfigFromFile(saveFileDialog.FileName);
+
+                btnDelete.Enabled = true;
+                btnLoad.Enabled = true;
             }
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
+            LoadConfigFromFile(lstItems.SelectedValue.ToString());
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            var fileSelected = openFileDialog.ShowDialog();
+
+            if (fileSelected == DialogResult.OK)
+            {
+                if (!savedConfigs.Contains(openFileDialog.FileName))
+                {
+                    savedConfigs.Add(openFileDialog.FileName);
+                    lstItems.SelectedItem = openFileDialog.FileName;
+                }
+            }
+
+            LoadConfigFromFile(openFileDialog.FileName);
+            btnDelete.Enabled = true;
+            btnLoad.Enabled = true;
+        }
+
+        private void btnUnload_Click(object sender, EventArgs e)
+        {
             try
             {
-                loadedConfig = XDocument.Load(lstItems.SelectedValue.ToString());
+                UpdateLoadedConfig(true);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Failed To Save Config Changes!", "Save Failure", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                return;
+            }
+
+            configData.Tables["KeyValues"].Clear();
+            configData.Tables["InstanceValues"].Clear();
+            configData.Tables["DBLogins"].Clear();
+            btnUnload.Enabled = false;
+
+            loadedConfigPath = string.Empty;
+            loadedConfig = new XDocument();
+        }
+
+        private void LoadConfigFromFile(string configFile)
+        {
+            if (!File.Exists(configFile))
+            {
+                MessageBox.Show("Couldn't Find Config File At Path!", "Load Failure", MessageBoxButtons.OK,
+                                   MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                loadedConfig = XDocument.Load(configFile);
             }
             catch (Exception)
             {
@@ -200,7 +266,8 @@ namespace Ensconce.StructureEditor
 
                         if (xelementProperty.Descendants(XName.Get("ConnectionString")).Any())
                         {
-                            dataRow["ConnectionString"] = xelementProperty.Descendants(XName.Get("ConnectionString")).First().Value;
+                            dataRow["ConnectionString"] =
+                                xelementProperty.Descendants(XName.Get("ConnectionString")).First().Value;
                         }
                         else
                         {
@@ -218,64 +285,26 @@ namespace Ensconce.StructureEditor
                 return;
             }
 
-            dbLoginsGrid.Enabled = true;
-            keyValueData.Enabled = true;
-            instanceGrid.Enabled = true;
+            btnUnload.Enabled = true;
         }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            var fileSelected = openFileDialog.ShowDialog();
-
-            if (fileSelected == DialogResult.OK)
-            {
-                if (!savedConfigs.Contains(openFileDialog.FileName))
-                {
-                    savedConfigs.Add(openFileDialog.FileName);
-                }
-            }
-        }
-
-        private void btnUnload_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                UpdateLoadedConfig(true);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Failed To Save Config Changes!", "Save Failure", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-            }
-
-            configData.Tables["KeyValues"].Clear();
-            configData.Tables["InstanceValues"].Clear();
-            configData.Tables["DBLogins"].Clear();
-
-            loadedConfigPath = lstItems.SelectedValue.ToString();
-            loadedConfig = new XDocument();
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            try
-            {
-                UpdateLoadedConfig(true);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Failed To Save Config Changes!", "Save Failure", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-            }
-
-            Properties.Settings.Default.SavedConfigs = string.Join(",", savedConfigs);
-            Properties.Settings.Default.Save();
-        }
-
+        
         private void UpdateLoadedConfig(bool onClose = false)
         {
             if (string.IsNullOrWhiteSpace(loadedConfigPath))
             {
+                if (!onClose)
+                {
+                    if (configData.Tables["KeyValues"].Rows.Count > 0 || 
+                        configData.Tables["KeyValues"].Rows.Count > 0 ||
+                        configData.Tables["KeyValues"].Rows.Count > 0)
+                    {
+                        MessageBox.Show("You Need To Have Config Loaded To Change!", "Update Failure", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                        configData.Tables["KeyValues"].Clear();
+                        configData.Tables["InstanceValues"].Clear();
+                        configData.Tables["DBLogins"].Clear();
+                    }
+                }
                 return;
             }
 
@@ -339,12 +368,31 @@ namespace Ensconce.StructureEditor
             }
         }
 
-        private void keyValueData_RowValidated(object sender, DataGridViewCellEventArgs e)
+        private void SetupDataTables()
+        {
+            configData.Tables.Add(new DataTable("KeyValues"));
+            configData.Tables["KeyValues"].Columns.Add("Key");
+            configData.Tables["KeyValues"].Columns.Add("Value");
+
+            configData.Tables.Add(new DataTable("InstanceValues"));
+            configData.Tables["InstanceValues"].Columns.Add("Instance");
+            configData.Tables["InstanceValues"].Columns.Add("Label");
+            configData.Tables["InstanceValues"].Columns.Add("Key");
+            configData.Tables["InstanceValues"].Columns.Add("Value");
+
+            configData.Tables.Add(new DataTable("DBLogins"));
+            configData.Tables["DBLogins"].Columns.Add("UserName");
+            configData.Tables["DBLogins"].Columns.Add("DefaultDb");
+            configData.Tables["DBLogins"].Columns.Add("Password");
+            configData.Tables["DBLogins"].Columns.Add("ConnectionString");
+        }
+
+        private void keyValueGrid_RowValidated(object sender, DataGridViewCellEventArgs e)
         {
             UpdateLoadedConfig();
         }
 
-        private void instanceGrid_RowValidated(object sender, DataGridViewCellEventArgs e)
+        private void propertyGroupGrid_RowValidated(object sender, DataGridViewCellEventArgs e)
         {
             UpdateLoadedConfig();
         }
