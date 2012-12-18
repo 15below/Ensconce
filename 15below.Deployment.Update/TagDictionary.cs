@@ -30,13 +30,13 @@ namespace FifteenBelow.Deployment.Update
 
         public Dictionary<string, DbLogin> DbLogins = new Dictionary<string, DbLogin>();
         // These values (and no others) can be used as tags in property values
-        private static readonly string[] ValidTagsInProperties = new[] {"ClientCode", "Environment", "DbServer"};
+        private static readonly string[] ValidTagsInProperties = new[] { "ClientCode", "Environment", "DbServer" };
         private HashSet<string> idSpecificValues = new HashSet<string>();
         private Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
 
         private TagDictionary(string identifier, bool isLabel, params Tuple<string, TagSource>[] sources)
         {
-            if (sources.Length == 0) { sources = new []{ Tuple.Create("", TagSource.Environment)};}
+            if (sources.Length == 0) { sources = new[] { Tuple.Create("", TagSource.Environment) }; }
             foreach (var source in sources)
             {
                 switch (source.Item2)
@@ -54,18 +54,18 @@ namespace FifteenBelow.Deployment.Update
             }
             this.ToList().ForEach(pair => this[pair.Key] = GetExpandedPropertyValue(pair.Value.ToString()));
             var expandedLogins = new Dictionary<string, DbLogin>();
-            foreach(var name in DbLogins.Keys)
+            foreach (var name in DbLogins.Keys)
             {
                 var login = DbLogins[name];
-                expandedLogins[name] = new DbLogin{DefaultDb = GetExpandedPropertyValue(login.DefaultDb), Password = login.Password, Username = GetExpandedPropertyValue(login.Username), ConnectionString = GetExpandedPropertyValue(login.ConnectionString)};
+                expandedLogins[name] = new DbLogin { DefaultDb = GetExpandedPropertyValue(login.DefaultDb), Password = login.Password, Username = GetExpandedPropertyValue(login.Username), ConnectionString = GetExpandedPropertyValue(login.ConnectionString) };
             }
             DbLogins = expandedLogins;
             Add("DbLogins", DbLogins);
-            if(!isLabel)
+            if (!isLabel)
             {
                 foreach (var label in labelsAndIdentities.Keys)
                 {
-                    if(ContainsKey(label))
+                    if (ContainsKey(label))
                     {
                         throw new InvalidDataException(
                             string.Format(
@@ -73,7 +73,7 @@ namespace FifteenBelow.Deployment.Update
                                 label));
                     }
                     var labelEnumerable = new List<IDictionary<string, object>>();
-                    foreach(var id in labelsAndIdentities[label])
+                    foreach (var id in labelsAndIdentities[label])
                     {
                         labelEnumerable.Add(new TagDictionary(id, true, sources));
                     }
@@ -81,13 +81,14 @@ namespace FifteenBelow.Deployment.Update
                 }
             }
         }
-        
-        public TagDictionary(string identifier, params Tuple<string, TagSource>[] sources) : this(identifier, false, sources)
+
+        public TagDictionary(string identifier, params Tuple<string, TagSource>[] sources)
+            : this(identifier, false, sources)
         {
-            
+
         }
 
-        public TagDictionary(string identifier, string xmlData) : 
+        public TagDictionary(string identifier, string xmlData) :
             this(identifier, Tuple.Create("", TagSource.Environment), Tuple.Create(xmlData, TagSource.XmlData))
         { }
 
@@ -99,7 +100,7 @@ namespace FifteenBelow.Deployment.Update
 
         private void LoadXmlData(string xml, string identifier)
         {
-            if(string.IsNullOrEmpty(xml)) return;
+            if (string.IsNullOrEmpty(xml)) return;
             var doc = XDocument.Parse(xml);
             PropertiesFromXml(identifier, doc);
         }
@@ -114,7 +115,7 @@ namespace FifteenBelow.Deployment.Update
 
         private void PropertiesFromXml(string identifier, XDocument doc)
         {
-            if(!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
+            if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
             ValidTagsInProperties
                 .Select(str => GetTagInPropertyValue(doc, str))
                 .ToList()
@@ -151,11 +152,11 @@ namespace FifteenBelow.Deployment.Update
                 {
                     if (labelsAndIdentities.Keys.Contains(label))
                     {
-                        labelsAndIdentities[label] = labelsAndIdentities[label].Concat(new List<string> {identity});
+                        labelsAndIdentities[label] = labelsAndIdentities[label].Concat(new List<string> { identity });
                     }
                     else
                     {
-                        labelsAndIdentities[label] = new List<string> {identity};
+                        labelsAndIdentities[label] = new List<string> { identity };
                     }
                 }
             }
@@ -169,13 +170,28 @@ namespace FifteenBelow.Deployment.Update
                 var key = fullname.StartsWith(prefix) ? fullname.Substring(prefix.Length) : fullname;
                 if (!DbLogins.ContainsKey(key))
                 {
+                    string password = string.Empty;
+                    string defaultDb = string.Empty;
+                    string connectionString = string.Empty;
+
+                    if (string.IsNullOrWhiteSpace(dbLoginElement.TryXPathValueWithDefault("ConnectionString", "")))
+                    {
+                        password = dbLoginElement.XPathSelectElement("Password").Value;
+                        defaultDb = dbLoginElement.XPathSelectElement("DefaultDb").Value;
+                        connectionString = string.Format("Data Source={{{{ DbServer }}}}; Initial Catalog={0}; User ID={1}; Password={2};",dbLoginElement.XPathSelectElement("DefaultDb").Value, fullname,dbLoginElement.XPathSelectElement("Password").Value);
+                    }
+                    else
+                    {
+                        connectionString = dbLoginElement.XPathSelectElement("ConnectionString").Value;
+                    }
+
                     DbLogins.Add(key,
                     new DbLogin
                         {
                             Username = fullname,
-                            Password = dbLoginElement.XPathSelectElement("Password").Value,
-                            DefaultDb = dbLoginElement.XPathSelectElement("DefaultDb").Value,
-                            ConnectionString = string.Format("Data Source={{{{ DbServer }}}}; Initial Catalog={0}; User ID={1}; Password={2};", dbLoginElement.XPathSelectElement("DefaultDb").Value, fullname, dbLoginElement.XPathSelectElement("Password").Value)
+                            Password = password,
+                            DefaultDb = defaultDb,
+                            ConnectionString = connectionString
                         });
                 }
             }
@@ -199,10 +215,10 @@ namespace FifteenBelow.Deployment.Update
             foreach (var key in env.Keys)
             {
                 var wantedKey = key.ToString();
-                if(wantedKey.StartsWith("Octopus"))
+                if (wantedKey.StartsWith("Octopus"))
                 {
                     wantedKey = wantedKey
-                        .Split(new[] {"Octopus"}, 2, StringSplitOptions.RemoveEmptyEntries).Last();
+                        .Split(new[] { "Octopus" }, 2, StringSplitOptions.RemoveEmptyEntries).Last();
                     if (wantedKey.EndsWith("Name"))
                         wantedKey = wantedKey.Substring(0, wantedKey.Length - "Name".Length);
                 }
@@ -213,7 +229,7 @@ namespace FifteenBelow.Deployment.Update
         public void AddOrDiscard(string key, string value, bool idSpecific = false)
         {
             if (!Keys.Contains(key))
-                Add(key, value); 
+                Add(key, value);
             if (Keys.Contains(key) && !idSpecificValues.Contains(key) && idSpecific)
                 this[key] = value;
             if (idSpecific) idSpecificValues.Add(key);

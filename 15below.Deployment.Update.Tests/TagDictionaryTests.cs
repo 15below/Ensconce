@@ -155,6 +155,15 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void DbLoginConnectionStringLoaded()
+        {
+            var sut = new TagDictionary("ident", XmlData);
+            Assert.IsTrue(sut.DbLogins.Values.Select(login => login.Username).Contains("ConnectionString"));
+            var correctDbLogin = sut.DbLogins.First(login => login.Key == "ConnectionString");
+            Assert.AreEqual("Actual ConnectionString",correctDbLogin.Value.ConnectionString);
+        }
+
+        [Test]
         public void DbLoginSuppliesConnectionString()
         {
             var sut = new TagDictionary("ident", XmlData);
