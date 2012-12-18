@@ -45,5 +45,9 @@
       <DefaultDb>tagClientCode-tagEnvironment-AUDIT</DefaultDb>
       <Password>Some high entrophy random text</Password>
     </DbLogin>
+    <DbLogin>
+      <Name>ConnectionString</Name>
+      <ConnectionString>Actual ConnectionString</ConnectionString>
+    </DbLogin>
   </DbLogins>
 </Structure>

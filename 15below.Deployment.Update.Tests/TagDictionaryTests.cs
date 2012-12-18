@@ -96,6 +96,20 @@ namespace FifteenBelow.Deployment.Update.Tests
             Assert.AreEqual("SomeUserName", loader["DbUser"]);
         }
 
+        [Test]
+        public void LoadEnvironmentOnlyWithInvalidXML()
+        {
+            var sut = new TagDictionary("ident", "ThisIsNotXML");
+            Assert.AreEqual(EnvClientCode, sut["ClientCode"]);
+        }
+
+        [Test]
+        public void LoadEnvironmentOnlyWithInvalidXMLFile()
+        {
+            var sut = new TagDictionary("ident", Tuple.Create("", TagSource.Environment), Tuple.Create("incorrectStructure.xml", TagSource.XmlFileName));
+            Assert.AreEqual(EnvClientCode, sut["ClientCode"]);
+        }
+
         [TestCase(QueAppServer, QueAppServer)]
         [TestCase("Overridden!", "DbEncoded")]
         public void TestDefaultLoader(string expected, string key)
@@ -152,6 +166,15 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             var sut = new TagDictionary("ident", XmlData);
             Assert.IsTrue(sut.DbLogins.Values.Select(login => login.DefaultDb).Contains("FAA-LOC-AUDIT"));
+        }
+
+        [Test]
+        public void DbLoginConnectionStringLoaded()
+        {
+            var sut = new TagDictionary("ident", XmlData);
+            Assert.IsTrue(sut.DbLogins.Values.Select(login => login.Username).Contains("ConnectionString"));
+            var correctDbLogin = sut.DbLogins.First(login => login.Key == "ConnectionString");
+            Assert.AreEqual("Actual ConnectionString",correctDbLogin.Value.ConnectionString);
         }
 
         [Test]

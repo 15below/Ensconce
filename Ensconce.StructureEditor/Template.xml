@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Structure xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Environment>DEV</Environment>
+  <ClientCode>ZZ</ClientCode>
+  <Properties>
+    <Property name="Property1">Some Value</Property>
+  </Properties>
+  <PropertyGroups>
+    <PropertyGroup identity="GroupIdentity">
+      <Label>Identity1</Label>
+      <Properties>
+        <Property name="Property2">Some Value</Property>
+      </Properties>
+    </PropertyGroup>
+  </PropertyGroups>
+  <DbLogins>
+    <DbLogin>
+      <Name>UserName</Name>
+      <DefaultDb>Database</DefaultDb>
+      <Password>Password</Password>
+    </DbLogin>
+    <DbLogin>
+      <Name>MyConnectionString</Name>
+      <ConnectionString>ConnectionString</ConnectionString>
+    </DbLogin>
+  </DbLogins>
+</Structure>
