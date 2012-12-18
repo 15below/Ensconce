@@ -116,16 +116,20 @@ FinalTarget "PushNugetsAndArtifacts" (fun _ ->
     let getPackageName (nuspecFileName : string) =
         let postfix = sprintf ".%s.nupkg" (environVar "NugetVersion")
         nuspecFileName.Replace(postfix, "")
+    let toolPath = currentDirectory @@ "FakeBuild" @@ "NuGet.exe"
 
     ReportProgressStart "Push Nugets"
     !! (outputDirectory @@ "*.nupkg")
     |> Seq.map (fun fileName -> new FileInfo(fileName))
     |> Seq.map (fun info -> info, (getPackageName info.Name))
     |> Seq.map (fun (info, name) -> 
-        let fromPath = info.FullName
-        let toPath = (environVar "nuget_repository_path") @@ name @@ info.Name
-        File.Copy(fromPath, toPath)
-        sprintf "%s --> %s" fromPath toPath)
+            let args = sprintf @"push ""%s"" -ApiKey ""%s"" -Source %s" (info.FullName) "ATest" "http://btn-tc01:8083"
+            let result =
+                    ExecProcess (fun info ->
+                                    info.FileName <- toolPath
+                                    info.Arguments <- args) (TimeSpan.FromMinutes 20.)
+            if result <> 0 then failwithf "Error during Nuget creation. %s %s" toolPath args 
+            sprintf "%s" info.FullName)
     |> Log "Pushing file: "
 
     // Create Ensconce Nuget build artifact
