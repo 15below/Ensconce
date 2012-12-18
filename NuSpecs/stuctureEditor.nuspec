@@ -15,5 +15,6 @@
 	
 	<files>
 		<file src="..\Ensconce.StructureEditor\bin\Release\*" target="Content" />
+		<file src="..\Ensconce.StructureEditor\deploy.ps1" target="Tools" />
 	</files>
 </package>
