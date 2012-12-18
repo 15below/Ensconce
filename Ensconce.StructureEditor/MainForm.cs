@@ -63,6 +63,7 @@ namespace Ensconce.StructureEditor
             configData.Tables["DBLogins"].Columns.Add("UserName");
             configData.Tables["DBLogins"].Columns.Add("DefaultDb");
             configData.Tables["DBLogins"].Columns.Add("Password");
+            configData.Tables["DBLogins"].Columns.Add("ConnectionString");
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -72,6 +73,13 @@ namespace Ensconce.StructureEditor
 
         private void btnNew_Click(object sender, EventArgs e)
         {
+            if (!File.Exists(Environment.CurrentDirectory + "\\Template.xml"))
+            {
+                MessageBox.Show("You Don't Have A Template File!", "No Template File", MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                return;
+            }
+
             var fileSelected = saveFileDialog.ShowDialog();
 
             if (fileSelected == DialogResult.OK)
@@ -163,9 +171,42 @@ namespace Ensconce.StructureEditor
                     if (xelementProperty != null)
                     {
                         var dataRow = configData.Tables["DBLogins"].NewRow();
-                        dataRow["UserName"] = xelementProperty.Descendants(XName.Get("Name")).First().Value;
-                        dataRow["DefaultDb"] = xelementProperty.Descendants(XName.Get("DefaultDb")).First().Value;
-                        dataRow["Password"] = xelementProperty.Descendants(XName.Get("Password")).First().Value;
+                        if (xelementProperty.Descendants(XName.Get("Name")).Any())
+                        {
+                            dataRow["UserName"] = xelementProperty.Descendants(XName.Get("Name")).First().Value;
+                        }
+                        else
+                        {
+                            dataRow["UserName"] = "";
+                        }
+
+                        if (xelementProperty.Descendants(XName.Get("DefaultDb")).Any())
+                        {
+                            dataRow["DefaultDb"] = xelementProperty.Descendants(XName.Get("DefaultDb")).First().Value;
+                        }
+                        else
+                        {
+                            dataRow["DefaultDb"] = "";
+                        }
+
+                        if (xelementProperty.Descendants(XName.Get("Password")).Any())
+                        {
+                            dataRow["Password"] = xelementProperty.Descendants(XName.Get("Password")).First().Value;
+                        }
+                        else
+                        {
+                            dataRow["Password"] = "";
+                        }
+
+                        if (xelementProperty.Descendants(XName.Get("ConnectionString")).Any())
+                        {
+                            dataRow["ConnectionString"] = xelementProperty.Descendants(XName.Get("ConnectionString")).First().Value;
+                        }
+                        else
+                        {
+                            dataRow["ConnectionString"] = "";
+                        }
+
                         configData.Tables["DBLogins"].Rows.Add(dataRow);
                     }
                 }

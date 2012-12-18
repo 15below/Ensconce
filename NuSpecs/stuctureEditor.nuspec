@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
 	<metadata>
-		<id>Ensconce Structure Editor</id>
+		<id>EnsconceStructureEditor</id>
 		<version>0.0.0.0</version>
 		<title>Ensconce Structure Editor</title>
 		<authors>15below Ltd</authors>
