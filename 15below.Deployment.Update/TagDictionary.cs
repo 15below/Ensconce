@@ -94,14 +94,30 @@ namespace FifteenBelow.Deployment.Update
 
         private void LoadXmlFileName(string fileName, string identifier)
         {
-            var doc = XDocument.Load(new FileStream(fileName, FileMode.Open, FileAccess.Read));
+            XDocument doc;
+            try
+            {
+                doc = XDocument.Load(new FileStream(fileName, FileMode.Open, FileAccess.Read));
+            }
+            catch (Exception)
+            {
+                doc = new XDocument();
+            }
             PropertiesFromXml(identifier, doc);
         }
 
         private void LoadXmlData(string xml, string identifier)
         {
             if (string.IsNullOrEmpty(xml)) return;
-            var doc = XDocument.Parse(xml);
+            XDocument doc;
+            try
+            {
+                doc = XDocument.Parse(xml);
+            }
+            catch (Exception)
+            {
+                doc = new XDocument();
+            }
             PropertiesFromXml(identifier, doc);
         }
 

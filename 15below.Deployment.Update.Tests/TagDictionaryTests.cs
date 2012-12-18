@@ -96,6 +96,20 @@ namespace FifteenBelow.Deployment.Update.Tests
             Assert.AreEqual("SomeUserName", loader["DbUser"]);
         }
 
+        [Test]
+        public void LoadEnvironmentOnlyWithInvalidXML()
+        {
+            var sut = new TagDictionary("ident", "ThisIsNotXML");
+            Assert.AreEqual(EnvClientCode, sut["ClientCode"]);
+        }
+
+        [Test]
+        public void LoadEnvironmentOnlyWithInvalidXMLFile()
+        {
+            var sut = new TagDictionary("ident", Tuple.Create("", TagSource.Environment), Tuple.Create("incorrectStructure.xml", TagSource.XmlFileName));
+            Assert.AreEqual(EnvClientCode, sut["ClientCode"]);
+        }
+
         [TestCase(QueAppServer, QueAppServer)]
         [TestCase("Overridden!", "DbEncoded")]
         public void TestDefaultLoader(string expected, string key)
