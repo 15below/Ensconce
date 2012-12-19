@@ -165,6 +165,42 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void ReplacementContentWorksWithAmpersandInTag()
+        {
+            var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution24.xml",
+                                               new Dictionary<string, object> { { "tagValue", "t&his*text" } });
+            var nms = new XmlNamespaceManager(new NameTable());
+            nms.AddNamespace("c", "http://madeup.com");
+            Assert.AreEqual("t&his*text",
+                            XDocument.Parse(configs.Where(c => c.Item1 == @"TestUpdateFiles\TestConfig1.xml").Single().Item2).XPathSelectElement
+                                ("/root/value").Value);
+        }
+
+        [Test]
+        public void AddChildContenWorksWithAmpersandInTag()
+        {
+            var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution25.xml",
+                                               new Dictionary<string, object> { { "tagValue", "t&his*text" } });
+            var nms = new XmlNamespaceManager(new NameTable());
+            nms.AddNamespace("c", "http://madeup.com");
+            Assert.AreEqual("t&his*text",
+                            XDocument.Parse(configs.Where(c => c.Item1 == @"TestUpdateFiles\TestConfig1.xml").Single().Item2).XPathSelectElement
+                                ("/root/value/testing").Value);
+        }
+        
+        [Test]
+        public void AppendAfterWorksWithAmpersandInTag()
+        {
+            var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution26.xml",
+                                               new Dictionary<string, object> { { "tagValue", "t&his*text" } });
+            var nms = new XmlNamespaceManager(new NameTable());
+            nms.AddNamespace("c", "http://madeup.com");
+            Assert.AreEqual("t&his*text",
+                            XDocument.Parse(configs.Where(c => c.Item1 == @"TestUpdateFiles\TestConfig1.xml").Single().Item2).XPathSelectElement
+                                ("/root/testing").Value);
+        }
+
+        [Test]
         public void EmptyChildContentWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(

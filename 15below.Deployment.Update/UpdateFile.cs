@@ -135,20 +135,20 @@ namespace FifteenBelow.Deployment.Update
 
         private static void AppendAfterActive(IDictionary<string, object> tagValues, XElement activeNode, Substitution sub)
         {
-            var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AppendAfter.RenderTemplate(tagValues) + "</fakeRoot>");
+            var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AppendAfter.RenderXmlTemplate(tagValues) + "</fakeRoot>");
             activeNode.AddAfterSelf(fakeRoot.Elements());
         }
 
         private static void AddChildContentToActive(IDictionary<string, object> tagValues, XElement activeNode, Substitution sub)
         {
-            var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderTemplate(tagValues) + "</fakeRoot>");
+            var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
             activeNode.Add(fakeRoot.Elements());
         }
 
         private static void ReplaceChildNodes(IDictionary<string, object> tagValues, XElement activeNode,
                                               Substitution sub)
         {
-            var replacementValue = sub.ReplacementContent.RenderTemplate(tagValues);
+            var replacementValue = sub.ReplacementContent.RenderXmlTemplate(tagValues);
             // Ugly hack to stop XElement.SetValue escaping text...
             var tempEl = XElement.Parse("<fakeRoot>" + replacementValue + "</fakeRoot>");
             var children = tempEl.DescendantNodes().Where(el => el.Parent == tempEl);
