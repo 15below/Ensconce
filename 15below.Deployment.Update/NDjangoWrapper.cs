@@ -24,6 +24,18 @@ namespace FifteenBelow.Deployment.Update
                     .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
                 );
 
+        private static readonly Lazy<TemplateManagerProvider> XmlSafeInstance =
+            new Lazy<TemplateManagerProvider>(
+                () =>
+                new TemplateManagerProvider()
+                    .WithLoader(new StringLoader())
+                    .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
+                    .WithSetting(Constants.DEFAULT_AUTOESCAPE, true)
+                    .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
+                    .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
+                    .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
+                );
+
         static NDjangoWrapper()
         {
         }
@@ -32,10 +44,28 @@ namespace FifteenBelow.Deployment.Update
         {
             return Instance.Value.GetNewManager();
         }
+        
+        private static ITemplateManager GetXmlSafeTemplateManager()
+        {
+            return XmlSafeInstance.Value.GetNewManager();
+        }
 
         public static string RenderTemplate(this string template, IDictionary<string, object> values)
         {
             var replacementValue = GetTemplateManager().RenderTemplate(StringProvider + template, values).ReadToEnd();
+            CheckForTagError(template, replacementValue);
+            return replacementValue;
+        }
+
+        public static string RenderXmlTemplate(this string template, IDictionary<string, object> values)
+        {
+            var replacementValue = GetXmlSafeTemplateManager().RenderTemplate(StringProvider + template, values).ReadToEnd();
+            CheckForTagError(template, replacementValue);
+            return replacementValue;
+        }
+
+        private static void CheckForTagError(string template, string replacementValue)
+        {
             if (replacementValue.Contains(ErrorGuid))
             {
                 var attemptedRender = replacementValue.Replace(ErrorGuid, "ERROR OCCURRED HERE");
@@ -43,7 +73,6 @@ namespace FifteenBelow.Deployment.Update
                     string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}",
                                   template, attemptedRender));
             }
-            return replacementValue;
         }
 
         public class StringLoader : ITemplateLoader
