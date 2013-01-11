@@ -16,26 +16,26 @@ namespace FifteenBelow.Deployment
 
         public string ConnectionString { get; protected set; }
         public bool WarnOnOneTimeScriptChanges { get; private set; }
-        public bool WithTransaction { get; private set; }
+        public bool WithTransaction { get; set; }
 
         public Database(DbConnectionStringBuilder connectionStringBuilder)
             : this(connectionStringBuilder, null)
         {
         }
 
-        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, bool warnOnOneTimeScriptChanges = false, bool withTransaction = true)
-			: this(connectionStringBuilder, databaseFolderStructure, null, null, warnOnOneTimeScriptChanges, withTransaction)
+        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, bool warnOnOneTimeScriptChanges = false)
+			: this(connectionStringBuilder, databaseFolderStructure, null, null, warnOnOneTimeScriptChanges)
         {
         }
 
-        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger, bool warnOnOneTimeScriptChanges = false, bool withTransaction = true)
+        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger, bool warnOnOneTimeScriptChanges = false)
         {
             this.ConnectionString = connectionStringBuilder.ToString();
             this.DatabaseFolderStructure = databaseFolderStructure;
             this.databaseRestoreOptions = databaseRestoreOptions;
             this.logger = logger ?? new roundhouse.infrastructure.logging.custom.ConsoleLogger();
 			this.WarnOnOneTimeScriptChanges = warnOnOneTimeScriptChanges;
-            this.WithTransaction = withTransaction;
+            this.WithTransaction = true;
         }
 
         public virtual void Deploy()

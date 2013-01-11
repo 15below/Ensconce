@@ -115,7 +115,8 @@ namespace Ensconce
                     connStr = Database.GetLocalConnectionStringFromDatabaseName(databaseName.RenderTemplate(LazyTags.Value));
 				}
                 Log("Deploying scripts from {0} using connection string {1}", deployFrom, connStr.ConnectionString);
-                var database = new Database(connStr, new LegacyFolderStructure(), warnOnOneTimeScriptChanges, withTransaction);
+                var database = new Database(connStr, new LegacyFolderStructure(), warnOnOneTimeScriptChanges);
+                database.WithTransaction = withTransaction;
                 database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value), dropDatabase);
             }
 
