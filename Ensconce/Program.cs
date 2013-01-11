@@ -36,7 +36,8 @@ namespace Ensconce
         private static bool replace;
         private static bool updateConfig;
         private static string templateFilters;
-		private static bool warnOnOneTimeScriptChanges = false;
+        private static bool warnOnOneTimeScriptChanges = false;
+        private static bool withTransaction = true;
         private static bool quiet;
         private static bool nobackup;
         private static bool dropDatabase;
@@ -114,7 +115,7 @@ namespace Ensconce
                     connStr = Database.GetLocalConnectionStringFromDatabaseName(databaseName.RenderTemplate(LazyTags.Value));
 				}
                 Log("Deploying scripts from {0} using connection string {1}", deployFrom, connStr.ConnectionString);
-				var database = new Database(connStr, new LegacyFolderStructure(), warnOnOneTimeScriptChanges);
+                var database = new Database(connStr, new LegacyFolderStructure(), warnOnOneTimeScriptChanges, withTransaction);
                 database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value), dropDatabase);
             }
 
@@ -225,6 +226,10 @@ namespace Ensconce
 							{
                                 "warnOnOneTimeScriptChanges=", "If one-time-scripts have had changes, only treat them as warnings, not as errors. Defaults to False.",
                                 s => warnOnOneTimeScriptChanges = Convert.ToBoolean(s)
+                               },
+							{
+                                "withTransaction=", "Execute RoundhousE in transactional mode. Defaults to True.",
+                                s => withTransaction = Convert.ToBoolean(s)
                                },
                             {
                                 "dropDatabase",
