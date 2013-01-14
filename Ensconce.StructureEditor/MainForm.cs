@@ -212,8 +212,8 @@ namespace Ensconce.StructureEditor
                             if (xelementProperty != null)
                             {
                                 var dataRow = configData.Tables["InstanceValues"].NewRow();
-                                dataRow["Instance"] = instance;
                                 dataRow["Label"] = label;
+                                dataRow["Instance"] = instance;
                                 dataRow["Key"] = xelementProperty.Attribute("name").Value;
                                 dataRow["Value"] = xelementProperty.Value;
                                 configData.Tables["InstanceValues"].Rows.Add(dataRow);
@@ -375,8 +375,8 @@ namespace Ensconce.StructureEditor
             configData.Tables["KeyValues"].Columns.Add("Value");
 
             configData.Tables.Add(new DataTable("InstanceValues"));
-            configData.Tables["InstanceValues"].Columns.Add("Instance");
             configData.Tables["InstanceValues"].Columns.Add("Label");
+            configData.Tables["InstanceValues"].Columns.Add("Instance");
             configData.Tables["InstanceValues"].Columns.Add("Key");
             configData.Tables["InstanceValues"].Columns.Add("Value");
 
