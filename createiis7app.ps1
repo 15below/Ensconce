@@ -79,7 +79,7 @@ function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
 
 function CheckIfSslBindingExists ([string]$webSite, [string]$hostHeader) 
 {
-	$tempApp = Get-WebApplication -Site $webSite | where-object {$_.path.contains($appName) } 
+	$tempApp = Get-WebBinding -Name $webSite -HostHeader $hostHeader -Protocol https
 	$tempApp -ne $NULL
 }
 
@@ -181,6 +181,12 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
 function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName, [string] $hostHeader)
 {
 	New-WebBinding -Name $websiteName -IP "*" -Port 443 -Protocol https -HostHeader $hostHeader
+	Set-Location IIS:
+	cd sslbindings
+	get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $certificateCommonName} | Select-Object -first 1 | new-item 0.0.0.0!443
+	
+	Set-Location $scriptDir
+
 }
 
 function EnableWebDav ([string] $websiteName) 
