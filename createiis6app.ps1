@@ -209,12 +209,12 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
   $newVDir.Put();
 }
 
-function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName, [string] $hostHeader)
+function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [string] $hostHeader)
 {
 	# This method requires for you to have selfssl on your machine
 	$selfSslPath = "\program files\iis resources\selfssl"
 
-	$certificateCommonName = "/N:cn=" + $certificateCommonName
+	$certificateCommonName = "/N:cn=" + $friendlyName
 
 	$certificateValidityDays = "/V:3650"
 	$websitePort = "/P:443"
@@ -226,7 +226,7 @@ function AddSslCertificate ([string] $websiteName, [string] $certificateCommonNa
 	$websiteId ="/S:" + $webServerSetting.name.substring($webServerSetting.name.lastindexof('/')+1)
 
 	cd -path $selfSslPath
-	.\selfssl.exe $addToTrusted $certificateCommonName $certificateValidityDays $websitePort $websiteId $quietMode
+	.\selfssl.exe $addToTrusted $friendlyName $certificateValidityDays $websitePort $websiteId $quietMode
 }
 
 function EnableWebDav ([string] $websiteName) 
