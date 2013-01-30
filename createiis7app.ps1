@@ -77,6 +77,12 @@ function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
 	
 }
 
+function CheckIfSslBindingExists ([string]$webSite, [string]$hostHeader) 
+{
+	$tempApp = Get-WebApplication -Site $webSite | where-object {$_.path.contains($appName) } 
+	$tempApp -ne $NULL
+}
+
 function CheckIfWebSiteExists ([string]$name)
 {
 	Test-Path "IIS:\Sites\$name"
@@ -172,9 +178,9 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
 	New-WebVirtualDirectory -Site $webSite -Name $virtualDir -PhysicalPath $physicalPath
 }
 
-function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName)
+function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName, [string] $hostHeader)
 {
-	write-host "You Will Need To Write PowerShell For This - Or Do It Manually"
+	New-WebBinding -Name $websiteName -IP "*" -Port 443 -Protocol https -HostHeader $hostHeader
 }
 
 function EnableWebDav ([string] $websiteName) 

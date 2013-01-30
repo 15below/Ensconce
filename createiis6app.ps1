@@ -90,7 +90,7 @@ function StartAppPool([string]$name)
 	}
 }
 
-function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation)
+function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [Boolean] $SSL)
 {
 	# check if web site exists and delete it - for testing purposes
 	"    Creating IIS website for " + $name
@@ -205,7 +205,7 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
   $newVDir.Put();
 }
 
-function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName)
+function AddSslCertificate ([string] $websiteName, [string] $certificateCommonName, [string] $hostHeader)
 {
 	# This method requires for you to have selfssl on your machine
 	$selfSslPath = "\program files\iis resources\selfssl"
