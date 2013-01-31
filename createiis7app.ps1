@@ -116,13 +116,17 @@ function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 	$appPool | set-item
 }
 
-function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation)
+function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80)
 {
 	$site = Get-WebSite | where { $_.Name -eq $name }
 	if($site -eq $null)
 	{
 		EnsurePath $localPath
-		New-WebSite $name -Port 80 -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName
+		if ($port -eq 443) {
+			New-WebSite $name -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName -ssl
+		} else {
+			New-WebSite $name -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName
+		}
 	}
 	
 	Set-ItemProperty IIS:\Sites\$name -name logFile.directory -value $logLocation
@@ -180,7 +184,11 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
 
 function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [string] $hostHeader)
 {
-	New-WebBinding -Name $websiteName -IP "*" -Port 443 -Protocol https -HostHeader $hostHeader
+	$checkBinding = CheckIfSslBindingExists $instanceName $hostHeader
+	if ( $checkBinding -eq $False) {
+		New-WebBinding -Name $websiteName -IP "*" -Port 443 -Protocol https -HostHeader $hostHeader
+	}
+	
 	if ((dir IIS:\\sslbindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq "0.0.0.0"}) -eq $Null) 
 	{
 		Set-Location IIS:\sslbindings
