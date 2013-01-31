@@ -181,10 +181,12 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
 function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [string] $hostHeader)
 {
 	New-WebBinding -Name $websiteName -IP "*" -Port 443 -Protocol https -HostHeader $hostHeader
-	Set-Location IIS:\sslbindings
-	get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1 | new-item 0.0.0.0!443
-	
-	Set-Location $scriptDir
+	if ((dir IIS:\\sslbindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq "0.0.0.0"}) -eq $Null) 
+	{
+		Set-Location IIS:\sslbindings
+		get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1 | new-item 0.0.0.0!443
+		Set-Location $scriptDir
+	}
 
 }
 
