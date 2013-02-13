@@ -62,7 +62,7 @@ namespace FifteenBelow.Deployment.Update
             var replacementTemplateElement = fileElement.XPathSelectElement("s:ReplacementTemplate", nsm);
             if (replacementTemplateElement != null)
             {
-                replacementTemplate = replacementTemplateElement.Value;
+                replacementTemplate = replacementTemplateElement.Value.RenderTemplate(tagValues);
                 baseData = File.ReadAllText(replacementTemplate).RenderTemplate(tagValues);
             }
             var subs =
