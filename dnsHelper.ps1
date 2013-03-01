@@ -27,3 +27,26 @@ function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 	}
 	$outcome
 }
+
+function CheckHostsEntry ([string]$Address, [string]$FullyQualifiedName)
+{
+	write-host "Checking hosts file for $Address pointing at $FullyQualifiedName"
+	$checkEntry = "^\s*$Address\s+$FullyQualifiedName\s*$"
+
+	$matches = (Get-Content "$env:windir\System32\drivers\etc\hosts") -match $checkEntry 
+	If ($matches.Count -gt 0)
+	{ $True}
+	else
+	{ $False}
+		
+}
+
+function AddHostsEntry ([string]$Address, [string]$FullyQualifiedName)
+{
+	write-host "Creating hosts file entry for $Address pointing at $FullyQualifiedName"
+	$newEntry = "`n$Address`t$FullyQualifiedName"
+	
+	Add-Content "$env:windir\System32\drivers\etc\hosts" -Value $newEntry
+	
+	CheckHostsEntry $Address $FullyQualifiedName
+}
