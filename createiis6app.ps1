@@ -213,20 +213,26 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 {
 	# This method requires for you to have selfssl on your machine
 	$selfSslPath = "\program files\iis resources\selfssl"
+	if (Test-Path $selfSslPath)
+	{
+		$certificateCommonName = "/N:cn=" + $friendlyName
 
-	$certificateCommonName = "/N:cn=" + $friendlyName
-
-	$certificateValidityDays = "/V:3650"
-	$websitePort = "/P:443"
-	$addToTrusted = "/T"
-	$quietMode = "/Q"
+		$certificateValidityDays = "/V:3650"
+		$websitePort = "/P:443"
+		$addToTrusted = "/T"
+		$quietMode = "/Q"
 
 
-	$webServerSetting = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '$websiteName'"
-	$websiteId ="/S:" + $webServerSetting.name.substring($webServerSetting.name.lastindexof('/')+1)
+		$webServerSetting = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '$websiteName'"
+		$websiteId ="/S:" + $webServerSetting.name.substring($webServerSetting.name.lastindexof('/')+1)
 
-	cd -path $selfSslPath
-	.\selfssl.exe $addToTrusted $friendlyName $certificateValidityDays $websitePort $websiteId $quietMode
+		cd -path $selfSslPath
+		.\selfssl.exe $addToTrusted $friendlyName $certificateValidityDays $websitePort $websiteId $quietMode
+	}
+	else
+	{
+		"Didn't add SSL ass SelfSSL was not installed on this machine!" | Write-Host
+	}
 }
 
 function EnableWebDav ([string] $websiteName) 
