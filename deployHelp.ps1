@@ -25,17 +25,9 @@ function ensconce
     }
     if ($LASTEXITCODE -ne 0)
     {
-        if (Test-Path env:\TEAMCITY_VERSION)
-        {
-            Write-Host "##teamcity[buildStatus status='FAILURE' text='{build.status.text}; Ensconce failure']"
-            $results
-            exit $LASTEXITCODE
-        }
-        else {
-        throw (
-"Ensconce operation failed.
-$results")
-        }
+	    Write-Host "##teamcity[buildStatus status='FAILURE' text='{build.status.text}; Ensconce failure']"
+	    $results
+	    exit $LASTEXITCODE
     }
     $results
 }
