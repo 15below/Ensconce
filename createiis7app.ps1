@@ -64,6 +64,11 @@ function StartAppPool([string]$name)
 	Start-WebAppPool "$name"
 }
 
+function RestartAppPool([string]$name)
+{
+	Restart-WebItem "IIS:\AppPools\$name" 
+}
+
 function CheckIfWebApplicationExists ([string]$webSite, [string]$appName) 
 {
 	$tempApp = Get-WebApplication -Site $webSite | where-object {$_.path.contains($appName) } 
