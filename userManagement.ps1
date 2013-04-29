@@ -37,12 +37,48 @@ Function AddUserToGroup([string]$name, [string]$group)
 {
 	"AddUserToGroup: $name, $group" | Write-Host
 	
-	try {
-		net localgroup $group $name /add
-		exit 0
+	$objComputer = [ADSI]("WinNT://$env:computername,computer")
+
+	$colUsers = $objComputer.psbase.children |
+		Where-Object {$_.psBase.schemaClassName -eq "User" -and $_.psBase.Name -eq $name} 
+
+	if($colUsers -eq $null)
+	{
+		"Could not locate user: $user" | Write-Host
+		exit 1
 	}
-	catch [Exception] {
-		"Error caught" | Write-Host
+
+	$searchgroup = ($objComputer.psbase.children | 
+		Where {$_.psbase.schemaClassName -eq "group" -and $_.psbase.Name -eq $group} |
+		Select-Object -First 1)
+	
+	if($searchgroup -eq $null)
+	{
+		"Could not locate group: $group" | Write-Host
+		exit 1
+	}
+
+	$blnFound = $False
+	$members = @($searchgroup.psbase.Invoke("Members")) 
+	ForEach ($Member In $Members)
+	{
+		$class = $member.GetType().InvokeMember("Class", 'GetProperty', $Null, $member, $Null)
+		$username = $member.GetType().InvokeMember("Name", 'GetProperty', $Null, $member, $Null)
+		if ($class -eq "User" -and $username -eq $name)
+		{
+			$blnFound = $True
+			"User already added to group: $name, $group" | Write-Host
+		}
+	}
+	
+	if ($blnFound -eq $False) {	
+		try {
+			net localgroup $group $name /add
+			exit 0
+		}
+		catch [Exception] {
+			"Error caught" | Write-Host
+		}
 	}
 }
 
