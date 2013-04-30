@@ -18,28 +18,28 @@ function ensconce
     if (@($input).Count -ne 0)
     {
         $input.Reset()
-        $results = $input | & "$deployToolsDir\ensconce.exe" $args 2>&1
+        $results = $input | & "$deployToolsDir\ensconce.exe" $args
     }
     else {
-        $results = & "$deployToolsDir\ensconce.exe" $args 2>&1
+        $results = & "$deployToolsDir\ensconce.exe" $args
     }
     if ($LASTEXITCODE -ne 0)
     {
-	    Write-Host "##teamcity[buildStatus status='FAILURE' text='{build.status.text}; Ensconce failure']"
-	    $results
-	    exit $LASTEXITCODE
+        Write-Host "##teamcity[buildStatus status='FAILURE' text='{build.status.text}; Ensconce failure']"
+        $results
+        exit $LASTEXITCODE
     }
     $results
 }
 
 function EnsurePath([string]$name)
 {
-	$path = $name | ensconce -i
-	
-	if ((Test-Path $path) -eq $False)
-	{
-		md $path
-	}
+    $path = $name | ensconce -i
+    
+    if ((Test-Path $path) -eq $False)
+    {
+        md $path
+    }
 }
 
 function is64bit() {
