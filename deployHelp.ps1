@@ -4,7 +4,10 @@ if (Test-Path variable:\OctopusParameters)
 {
     foreach($kp in $OctopusParameters.GetEnumerator())
     {
-        Set-Content ("env:\" + $kp.Key) ($kp.Value) -Force
+        if (!($kp -like '*Octopus.Step*'))
+        {
+            Set-Content ("env:\" + $kp.Key) ($kp.Value) -Force
+        }
     }
 }
 
