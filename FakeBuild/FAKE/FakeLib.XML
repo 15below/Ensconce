@@ -37,6 +37,16 @@
  Stores which targets are on the same level
 </summary>
 </member>
+<member name="M:Fake.AdditionalSyntax.RunTarget">
+<summary>
+ Runs the target given by the target parameter
+</summary>
+</member>
+<member name="M:Fake.AdditionalSyntax.RunTargetOrDefault(System.String)">
+<summary>
+ Runs the target given by the target parameter or the given default target
+</summary>
+</member>
 <member name="M:Fake.AdditionalSyntax.RunParameterTargetOrDefault(System.String,System.String)">
 <summary>
  Runs the target given by the build script parameter or the given default target
@@ -62,17 +72,117 @@
  Allows to use For? syntax for Dependencies
 </summary>
 </member>
-<member name="M:Fake.AdditionalSyntax.op_DynamicAssignment``3(Microsoft.FSharp.Core.FSharpFunc`2{``0,Microsoft.FSharp.Core.FSharpFunc`2{``1,``2}},``0,``1)">
+<member name="M:Fake.AdditionalSyntax.op_DynamicAssignment``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``2}},``0,``1)">
 <summary>
  Allows to use Tokens instead of strings for TargetNames
 </summary>
 </member>
-<member name="M:Fake.AdditionalSyntax.op_Dynamic``2(Microsoft.FSharp.Core.FSharpFunc`2{``0,``1},``0)">
+<member name="M:Fake.AdditionalSyntax.op_Dynamic``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``0)">
 <summary>
  Allows to use Tokens instead of strings
 </summary>
 </member>
 <member name="T:Fake.AdditionalSyntax">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:Fake.AssemblyInfoFile.CreateFSharpAssemblyInfo(System.String,System.Collections.Generic.IEnumerable{Fake.AssemblyInfoFile.Attribute})">
+<summary>
+ Creates a F# AssemblyInfo file with the given attributes
+</summary>
+</member>
+<member name="M:Fake.AssemblyInfoFile.CreateCSharpAssemblyInfo(System.String,System.Collections.Generic.IEnumerable{Fake.AssemblyInfoFile.Attribute})">
+<summary>
+ Creates a C# AssemblyInfo file with the given attributes
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:Fake.AssemblyInfoFile">
 
 </member>
 <member name="">
@@ -176,7 +286,7 @@
  AssemblyInfoReplacement default params
 </summary>
 </member>
-<member name="M:Fake.AssemblyInfoHelper.AssemblyInfo(Microsoft.FSharp.Core.FSharpFunc`2{Fake.AssemblyInfoHelper.AssemblyInfoParams,Fake.AssemblyInfoHelper.AssemblyInfoParams})">
+<member name="M:Fake.AssemblyInfoHelper.AssemblyInfo(Microsoft.FSharp.Core.FSharpFunc{Fake.AssemblyInfoHelper.AssemblyInfoParams,Fake.AssemblyInfoHelper.AssemblyInfoParams})">
 <summary>
  Generates an AssemblyInfo file for projects
 </summary>
@@ -194,7 +304,28 @@
 <member name="T:Fake.AssemblyInfoHelper">
 
 </member>
-<member name="M:Fake.AsyncHelper.doParallel``2(Microsoft.FSharp.Core.FSharpFunc`2{``0,``1},System.Collections.Generic.IEnumerable{``0})">
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:Fake.AsyncHelper.doParallel``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},System.Collections.Generic.IEnumerable{``0})">
 <summary>
  Runs the given function on all items in parallel
 </summary>
@@ -279,13 +410,16 @@
 <member name="T:Fake.BuildServerHelper">
 
 </member>
-<member name="M:Fake.CacheHelper.lookup``2(``0,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,``1},System.Collections.Generic.IDictionary{``0,``1})">
+<member name="M:Fake.CacheHelper.lookup``2(``0,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``1},System.Collections.Generic.IDictionary{``0,``1})">
 <summary>
  Looks for a key in the cache.
  If it is not found the newValue functions is executed and the result is stored in the cache.
 </summary>
 </member>
 <member name="T:Fake.CacheHelper">
+
+</member>
+<member name="">
 
 </member>
 <member name="">
@@ -407,6 +541,111 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:Fake.DynamicsNav.CloseAllNavProcesses(System.Boolean)">
+<summary>
+ Closes all running Dynamics NAV instances
+</summary>
+</member>
+<member name="M:Fake.DynamicsNav.OpenPage(System.String,System.String,System.String,System.String,System.Int32)">
+<summary>
+ Opens a page with the RTC client
+</summary>
+</member>
+<member name="M:Fake.DynamicsNav.CompileAll(Fake.DynamicsNav.DynamicsNavParams)">
+<summary>
+ Compiles all uncompiled objects in the Dynamics NAV client
+</summary>
+</member>
+<member name="M:Fake.DynamicsNav.ImportFiles(Fake.DynamicsNav.DynamicsNavParams,System.String,System.Collections.Generic.IEnumerable{System.String})">
+<summary>
+ Creates an import file from the given files and imports it into the Dynamics NAV client
+ If the import fails, then every file will be tried alone
+</summary>
+</member>
+<member name="M:Fake.DynamicsNav.CreateImportFile(System.String,System.Collections.Generic.IEnumerable{System.String})">
+<summary>
+ Creates an importfile from the given files
+</summary>
+</member>
+<member name="M:Fake.DynamicsNav.ImportFile(Fake.DynamicsNav.DynamicsNavParams,System.String)">
+<summary>
+ Imports the given txt or fob file into the Dynamics NAV client
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:Fake.DynamicsNav.createConnectionInfo(System.String,Fake.DynamicsNav.NavisionServerType,System.String,System.String)">
+<summary>
+ Creates the connection information to a Dynamics NAV instance
+</summary>
+</member>
+<member name="T:Fake.DynamicsNav">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
 <member name="M:Fake.EnvironmentHelper.convertWindowsToCurrentPath(System.String)">
 <summary>
  Convert the given windows path to a path in the current system
@@ -422,14 +661,18 @@
  Gets the local directory for the given target platform
 </summary>
 </member>
-<member name="">
-
+<member name="P:Fake.EnvironmentHelper.TargetPlatformPrefix">
+<summary>
+ The path of the current target platform
+</summary>
 </member>
 <member name="">
 
 </member>
-<member name="">
-
+<member name="P:Fake.EnvironmentHelper.isUnix">
+<summary>
+ Detemernines if the current system is Unix system
+</summary>
 </member>
 <member name="P:Fake.EnvironmentHelper.SystemRoot">
 <summary>
@@ -439,6 +682,8 @@
 <member name="P:Fake.EnvironmentHelper.ProgramFilesX86">
 <summary>
  The path of Program Files (x86)
+ I think this covers all cases where PROCESSOR_ARCHITECTURE may misreport and the case where the other variable 
+ PROCESSOR_ARCHITEW6432 can be null
 </summary>
 </member>
 <member name="P:Fake.EnvironmentHelper.ProgramFiles">
@@ -507,10 +752,18 @@
 <member name="">
 
 </member>
-<member name="M:Fake.FSIHelper.runBuildScriptAt(System.String,System.Boolean,System.String,System.Collections.Generic.IEnumerable{System.Tuple`2{System.String,System.String}})">
+<member name="M:Fake.FSIHelper.runBuildScriptAt(System.String,System.Boolean,System.String,System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.String}})">
 <summary>
  Run the given buildscript with fsi.exe
 </summary>
+</member>
+<member name="M:Fake.FSIHelper.executeFSI(System.String,System.String,System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.String}})">
+<summary>
+ Run the given buildscript with fsi.exe
+</summary>
+</member>
+<member name="">
+
 </member>
 <member name="P:Fake.FSIHelper.fsiPath">
 <summary>
@@ -519,6 +772,11 @@
 </member>
 <member name="T:Fake.FSIHelper">
 
+</member>
+<member name="M:Fake.FileHelper.WriteConfigFile``2(System.String,System.Collections.Generic.IEnumerable{System.Tuple{``0,``1}})">
+<summary>
+ Creates a config file with the parameters as key;value lines
+</summary>
 </member>
 <member name="M:Fake.FileHelper.MoveFile(System.String,System.String)">
  <summary>Moves a single file to the target and overwrites the existing file.</summary>
@@ -541,7 +799,7 @@
  <param name="patchDir">The target directory.</param>
  <param name="srcFiles">The source files.</param>
 </member>
-<member name="M:Fake.FileHelper.GeneratePatchWithFindOldFileFunction(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},Microsoft.FSharp.Core.FSharpFunc`2{System.String,Microsoft.FSharp.Core.FSharpFunc`2{System.String,System.String}})">
+<member name="M:Fake.FileHelper.GeneratePatchWithFindOldFileFunction(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpFunc{System.String,System.String}})">
  <summary>Checks the srcFiles for changes to the last release.</summary>
  <param name="lastReleaseDir">The directory of the last release</param>
  <param name="patchDir">The target directory</param>
@@ -590,7 +848,7 @@
 <param name="path">The path of the directory to clean.</param>
 <user/>
 </member>
-<member name="M:Fake.FileHelper.CopyDir(System.String,System.String,Microsoft.FSharp.Core.FSharpFunc`2{System.String,System.Boolean})">
+<member name="M:Fake.FileHelper.CopyDir(System.String,System.String,Microsoft.FSharp.Core.FSharpFunc{System.String,System.Boolean})">
  <summary>Copies a directory recursivly.
  If the target directory does not exist, it will be created.</summary>
  <param name="target">The target directory.</param>
@@ -708,7 +966,7 @@
  Sets the directory readonly 
 </summary>
 </member>
-<member name="M:Fake.FileHelper.recursively(Microsoft.FSharp.Core.FSharpFunc`2{System.IO.DirectoryInfo,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpFunc`2{System.IO.FileInfo,Microsoft.FSharp.Core.Unit},System.IO.DirectoryInfo)">
+<member name="M:Fake.FileHelper.recursively(Microsoft.FSharp.Core.FSharpFunc{System.IO.DirectoryInfo,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpFunc{System.IO.FileInfo,Microsoft.FSharp.Core.Unit},System.IO.DirectoryInfo)">
 <summary>
  Performs the given actions on all files and subdirectories
 </summary>
@@ -908,6 +1166,11 @@
  <summary>Checks if the file exists on disk.</summary>
  <user/>
 </member>
+<member name="P:Fake.FileSystemHelper.fullAssemblyPath">
+<summary>
+ Get the full location of the current assembly
+</summary>
+</member>
 <member name="P:Fake.FileSystemHelper.currentDirectory">
  <summary>Gets the current directory</summary>
  <user/>
@@ -1100,7 +1363,7 @@
 <member name="">
 
 </member>
-<member name="M:Fake.FxCopHelper.FxCop(Microsoft.FSharp.Core.FSharpFunc`2{Fake.FxCopHelper.FxCopParams,Fake.FxCopHelper.FxCopParams},System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:Fake.FxCopHelper.FxCop(Microsoft.FSharp.Core.FSharpFunc{Fake.FxCopHelper.FxCopParams,Fake.FxCopHelper.FxCopParams},System.Collections.Generic.IEnumerable{System.String})">
 <summary>
  Run FxCop on a group of assemblies.
 </summary>
@@ -1228,7 +1491,7 @@
 <member name="">
 
 </member>
-<member name="M:Fake.Git.CommandHelper.directExec(Microsoft.FSharp.Core.FSharpFunc`2{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit})">
+<member name="M:Fake.Git.CommandHelper.directExec(Microsoft.FSharp.Core.FSharpFunc{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit})">
 <summary>
  Runs the given process and returns the exit code
 </summary>
@@ -1683,7 +1946,19 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
 <member name="T:Fake.HttpClientHelper">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
 
 </member>
 <member name="">
@@ -1913,7 +2188,7 @@
 <member name="">
 
 </member>
-<member name="M:Fake.ILMergeHelper.ILMerge(Microsoft.FSharp.Core.FSharpFunc`2{Fake.ILMergeHelper.ILMergeParams,Fake.ILMergeHelper.ILMergeParams},System.String,System.String)">
+<member name="M:Fake.ILMergeHelper.ILMerge(Microsoft.FSharp.Core.FSharpFunc{Fake.ILMergeHelper.ILMergeParams,Fake.ILMergeHelper.ILMergeParams},System.String,System.String)">
  <summary>Use ILMerge to merge some .NET assemblies.</summary>
  <param name="setParams">Function used to create an ILMergeParams value with your required settings.  Called with an ILMergeParams value configured with the defaults.</param>
  <param name="outputFile">Output file path for the merged assembly.</param>
@@ -1996,7 +2271,7 @@
  All references to nunit.*.dlls
 </summary>
 </member>
-<member name="M:Fake.MSBuild.SpecsRemovement.RemoveTestsFromProject(Microsoft.FSharp.Core.FSharpFunc`2{System.String,Microsoft.FSharp.Core.FSharpFunc`2{System.String,System.Boolean}},Microsoft.FSharp.Core.FSharpFunc`2{System.String,Microsoft.FSharp.Core.FSharpFunc`2{System.String,System.Boolean}},System.String)">
+<member name="M:Fake.MSBuild.SpecsRemovement.RemoveTestsFromProject(Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpFunc{System.String,System.Boolean}},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpFunc{System.String,System.Boolean}},System.String)">
  <summary>Removes test data and test files from a given MSBuild project and recursivly from all MSBuild project dependencies</summary>
  <param name="assemblyFilterF">A filter function for assembly references.</param>
  <param name="fileFilterF">A filter function for files in a project.</param>
@@ -2124,28 +2399,37 @@
 <member name="">
 
 </member>
+<member name="M:Fake.MSBuildHelper.MSBuildWithDefaults(System.String)">
+<summary>
+ Builds the given project files or solution files in release mode to the default outputs.
+</summary>
+</member>
 <member name="M:Fake.MSBuildHelper.MSBuildRelease(System.String,System.String)">
 <summary>
- Builds the given project files and collects the output files
+ Builds the given project files or solution files and collects the output files
+ If the outputpath is null or empty then the project settings are used.
 </summary>
 </member>
 <member name="M:Fake.MSBuildHelper.MSBuildDebug(System.String,System.String)">
 <summary>
- Builds the given project files and collects the output files
+ Builds the given project files or solution files and collects the output files
+ If the outputpath is null or empty then the project settings are used.
 </summary>
 </member>
-<member name="M:Fake.MSBuildHelper.MSBuild(System.String,System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple`2{System.String,System.String}})">
+<member name="M:Fake.MSBuildHelper.MSBuild(System.String,System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}})">
 <summary>
- Builds the given project files and collects the output files
+ Builds the given project files or solution files and collects the output files
+ If the outputpath is null or empty then the project settings are used.
 </summary>
 </member>
-<member name="M:Fake.MSBuildHelper.MSBuildWithProjectProperties(System.String,System.String,Microsoft.FSharp.Core.FSharpFunc`2{System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple`2{System.String,System.String}}},System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:Fake.MSBuildHelper.MSBuildWithProjectProperties(System.String,System.String,Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.String,System.String}}},System.Collections.Generic.IEnumerable{System.String})">
 <summary>
  Builds the given project files and collects the output files.
  Properties are parameterized by project name.
+ If the outputpath is null or empty then the project settings are used.&gt;
 </summary>
 </member>
-<member name="M:Fake.MSBuildHelper.build(Microsoft.FSharp.Core.FSharpFunc`2{Fake.MSBuildHelper.MSBuildParams,Fake.MSBuildHelper.MSBuildParams},System.String)">
+<member name="M:Fake.MSBuildHelper.build(Microsoft.FSharp.Core.FSharpFunc{Fake.MSBuildHelper.MSBuildParams,Fake.MSBuildHelper.MSBuildParams},System.String)">
 <summary>
  Runs a msbuild project
 </summary>
@@ -2285,7 +2569,7 @@
 <member name="">
 
 </member>
-<member name="M:Fake.NCoverHelper.NCover(Microsoft.FSharp.Core.FSharpFunc`2{Fake.NCoverHelper.NCoverParams,Fake.NCoverHelper.NCoverParams},System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:Fake.NCoverHelper.NCover(Microsoft.FSharp.Core.FSharpFunc{Fake.NCoverHelper.NCoverParams,Fake.NCoverHelper.NCoverParams},System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
  <summary>Run NCover on a group of assemblies.</summary>
  <param name="setParams">NCover parameter function</param>
  <param name="assemblies">The test assemblies, which should be inspected</param>
@@ -2365,59 +2649,141 @@
 <member name="">
 
 </member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="M:Fake.NUnitHelper.writeXMLOutput(Fake.NUnitHelper.TestSuite,System.String)">
-<summary>
- writes the given TestSuite as XML file in NUnit style
-</summary>
-</member>
-<member name="M:Fake.NUnitHelper.NUnit(Microsoft.FSharp.Core.FSharpFunc`2{Fake.NUnitHelper.NUnitParams,Fake.NUnitHelper.NUnitParams},System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:Fake.NUnitHelper.NUnit(Microsoft.FSharp.Core.FSharpFunc{Fake.NUnitHelper.NUnitParams,Fake.NUnitHelper.NUnitParams},System.Collections.Generic.IEnumerable{System.String})">
 <summary>
  Run NUnit on a group of assemblies.
 </summary>
+</member>
+<member name="">
+
 </member>
 <member name="P:Fake.NUnitHelper.NUnitDefaults">
 <summary>
  NUnit default params  
 </summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:Fake.NUnitHelper.NUnitMerge">
+
 </member>
 <member name="T:Fake.NUnitHelper">
 
@@ -2563,10 +2929,35 @@
 <member name="">
 
 </member>
-<member name="M:Fake.NuGetHelper.NuGet(Microsoft.FSharp.Core.FSharpFunc`2{Fake.NuGetHelper.NuGetParams,Fake.NuGetHelper.NuGetParams},System.String)">
+<member name="">
+
+</member>
+<member name="M:Fake.NuGetHelper.NuGet(Microsoft.FSharp.Core.FSharpFunc{Fake.NuGetHelper.NuGetParams,Fake.NuGetHelper.NuGetParams},System.String)">
 <summary>
  Creates a new NuGet package   
 </summary>
+</member>
+<member name="M:Fake.NuGetHelper.NuGetPublish(Microsoft.FSharp.Core.FSharpFunc{Fake.NuGetHelper.NuGetParams,Fake.NuGetHelper.NuGetParams})">
+<summary>
+ Publishes a NuGet package to the nuget server
+</summary>
+</member>
+<member name="M:Fake.NuGetHelper.NuGetPack(Microsoft.FSharp.Core.FSharpFunc{Fake.NuGetHelper.NuGetParams,Fake.NuGetHelper.NuGetParams},System.String)">
+<summary>
+ Creates a new NuGet package based on the nuspecFile
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
 </member>
 <member name="">
 
@@ -2578,6 +2969,12 @@
 <summary>
  Gets the version no. for a given package in the deployments folder
 </summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
 </member>
 <member name="">
 
@@ -2650,6 +3047,18 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
 <member name="P:Fake.ProcessHelper.shellExec">
 <summary>
  Execute an external program and return the exit code.
@@ -2679,6 +3088,11 @@
 
 </member>
 <member name="M:Fake.ProcessHelper.findPath(System.String,System.String)">
+<summary>
+ Tries to find the tool via AppSettings. If no path has the right tool we are trying the PATH system variable. 
+</summary>
+</member>
+<member name="M:Fake.ProcessHelper.tryFindPath(System.String,System.String)">
 <summary>
  Tries to find the tool via AppSettings. If no path has the right tool we are trying the PATH system variable. 
 </summary>
@@ -2733,53 +3147,62 @@
  Adds quotes around the string
 </summary>
 </member>
-<member name="M:Fake.ProcessHelper.StartProcess(Microsoft.FSharp.Core.FSharpFunc`2{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit})">
+<member name="M:Fake.ProcessHelper.StartProcess(Microsoft.FSharp.Core.FSharpFunc{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit})">
 <summary>
  Starts the given process and forgets about it
 </summary>
 </member>
-<member name="M:Fake.ProcessHelper.execProcess(Microsoft.FSharp.Core.FSharpFunc`2{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
+<member name="M:Fake.ProcessHelper.execProcess(Microsoft.FSharp.Core.FSharpFunc{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
 <summary>
  Runs the given process
  returns true if the exit code was 0
 </summary>
 </member>
-<member name="M:Fake.ProcessHelper.setEnvironmentVariables(System.Diagnostics.ProcessStartInfo,System.Collections.Generic.IEnumerable{System.Tuple`2{System.String,System.String}})">
+<member name="M:Fake.ProcessHelper.setEnvironmentVariables(System.Diagnostics.ProcessStartInfo,System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.String}})">
 <summary>
  sets the environment Settings for the given startInfo
  existing values will be overrriden
 </summary>
 </member>
-<member name="M:Fake.ProcessHelper.ExecProcess(Microsoft.FSharp.Core.FSharpFunc`2{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
+<member name="M:Fake.ProcessHelper.ExecProcessElevated(System.String,System.String,System.TimeSpan)">
+<summary>
+Runs the given process in an elevated context
+returns the exit code
+</summary>
+</member>
+<member name="M:Fake.ProcessHelper.ExecProcess(Microsoft.FSharp.Core.FSharpFunc{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
 <summary>
  Runs the given process
  returns the exit code
 </summary>
 </member>
-<member name="M:Fake.ProcessHelper.execProcess3(Microsoft.FSharp.Core.FSharpFunc`2{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
+<member name="M:Fake.ProcessHelper.execProcess3(Microsoft.FSharp.Core.FSharpFunc{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
 <summary>
  Runs the given process
  returns if the exit code was 0
 </summary>
 </member>
-<member name="M:Fake.ProcessHelper.execProcessAndReturnExitCode(Microsoft.FSharp.Core.FSharpFunc`2{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
+<member name="M:Fake.ProcessHelper.execProcessAndReturnExitCode(Microsoft.FSharp.Core.FSharpFunc{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
 <summary>
  Runs the given process
  returns the exit code
 </summary>
 </member>
-<member name="M:Fake.ProcessHelper.execProcess2(Microsoft.FSharp.Core.FSharpFunc`2{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan,System.Boolean)">
+<member name="M:Fake.ProcessHelper.execProcess2(Microsoft.FSharp.Core.FSharpFunc{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan,System.Boolean)">
 <summary>
  Runs the given process
  returns the exit code
 </summary>
 </member>
-<member name="M:Fake.ProcessHelper.ExecProcessAndReturnMessages(Microsoft.FSharp.Core.FSharpFunc`2{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
+<member name="">
+
+</member>
+<member name="M:Fake.ProcessHelper.ExecProcessAndReturnMessages(Microsoft.FSharp.Core.FSharpFunc{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan)">
 <summary>
  Runs the given process and returns the exit code
 </summary>
 </member>
-<member name="M:Fake.ProcessHelper.ExecProcessWithLambdas(Microsoft.FSharp.Core.FSharpFunc`2{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan,System.Boolean,Microsoft.FSharp.Core.FSharpFunc`2{System.String,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpFunc`2{System.String,Microsoft.FSharp.Core.Unit})">
+<member name="M:Fake.ProcessHelper.ExecProcessWithLambdas(Microsoft.FSharp.Core.FSharpFunc{System.Diagnostics.ProcessStartInfo,Microsoft.FSharp.Core.Unit},System.TimeSpan,System.Boolean,Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.Unit})">
 <summary>
  Runs the given process and returns the exit code
 </summary>
@@ -2811,7 +3234,7 @@
 <member name="">
 
 </member>
-<member name="M:Fake.REST.ExecutePostCommand(Microsoft.FSharp.Core.FSharpFunc`2{System.Net.WebHeaderCollection,Microsoft.FSharp.Core.Unit},System.String,System.String,System.String,System.String)">
+<member name="M:Fake.REST.ExecutePostCommand(Microsoft.FSharp.Core.FSharpFunc{System.Net.WebHeaderCollection,Microsoft.FSharp.Core.Unit},System.String,System.String,System.String,System.String)">
  <summary>Executes an HTTP POST command and retrives the information.    
  This function will automatically include a "source" parameter if the "Source" property is set.</summary>
  <param name="headerF">The client information to perform the POST operation.</param>
@@ -2843,7 +3266,7 @@
 <member name="">
 
 </member>
-<member name="M:Fake.RegAsmHelper.RegAsm(Microsoft.FSharp.Core.FSharpFunc`2{Fake.RegAsmHelper.RegAsmParams,Fake.RegAsmHelper.RegAsmParams},System.String)">
+<member name="M:Fake.RegAsmHelper.RegAsm(Microsoft.FSharp.Core.FSharpFunc{Fake.RegAsmHelper.RegAsmParams,Fake.RegAsmHelper.RegAsmParams},System.String)">
 <summary>
  Runs regasm on the given lib
 </summary>
@@ -2893,7 +3316,33 @@
 <member name="T:Fake.RegistryHelper">
 
 </member>
-<member name="M:Fake.SCPHelper.SCP(Microsoft.FSharp.Core.FSharpFunc`2{Fake.SCPParams,Fake.SCPParams},System.String,System.String)">
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="P:Fake.RestorePackageHelper.RestorePackageDefaults">
+<summary>
+ RestorePackage defaults params  
+</summary>
+</member>
+<member name="T:Fake.RestorePackageHelper">
+
+</member>
+<member name="M:Fake.SCPHelper.SCP(Microsoft.FSharp.Core.FSharpFunc{Fake.SCPParams,Fake.SCPParams},System.String,System.String)">
  <summary>Performs a SCP copy.</summary>
  <param name="source">The source directory (fileName)</param>
  <param name="destination">The target directory (fileName)</param>
@@ -3000,6 +3449,9 @@
  Returns all standard chars and digits.
 </summary>
 </member>
+<member name="">
+
+</member>
 <member name="M:Fake.StringHelper.isUmlaut(System.Char)">
 <summary>
  Checks wether the given char is a german umlaut.
@@ -3105,7 +3557,7 @@
 <member name="">
 
 </member>
-<member name="M:Fake.StringHelper.ReplaceInFile(Microsoft.FSharp.Core.FSharpFunc`2{System.String,System.String},System.String)">
+<member name="M:Fake.StringHelper.ReplaceInFile(Microsoft.FSharp.Core.FSharpFunc{System.String,System.String},System.String)">
 <summary>
  Replaces the text in the given file
 </summary>
@@ -3259,7 +3711,7 @@
  Activates the FinalTarget
 </summary>
 </member>
-<member name="M:Fake.TargetHelper.FinalTarget(System.String,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
+<member name="M:Fake.TargetHelper.FinalTarget(System.String,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
 <summary>
  Registers a final target (not activated)
 </summary>
@@ -3286,6 +3738,11 @@
  <param name="verbose">Whether to print verbose output or not.</param>
  <param name="target">The target for which the dependencies should be printed.</param>
 </member>
+<member name="M:Fake.TargetHelper.PrintTargets">
+<summary>
+ Prints all targets
+</summary>
+</member>
 <member name="M:Fake.TargetHelper.runFinalTargets">
 <summary>
  Runs all activated final targets (in alphabetically order)
@@ -3300,17 +3757,17 @@
 <member name="">
 
 </member>
-<member name="M:Fake.TargetHelper.Target(System.String,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
+<member name="M:Fake.TargetHelper.Target(System.String,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
 <summary>
  Creates a Target
 </summary>
 </member>
-<member name="M:Fake.TargetHelper.TargetTemplate``1(Microsoft.FSharp.Core.FSharpFunc`2{``0,Microsoft.FSharp.Core.Unit})">
+<member name="M:Fake.TargetHelper.TargetTemplate``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit})">
 <summary>
  Creates a TargetTemplate      
 </summary>
 </member>
-<member name="M:Fake.TargetHelper.TargetTemplateWithDependecies``1(Microsoft.FSharp.Collections.FSharpList{System.String},Microsoft.FSharp.Core.FSharpFunc`2{``0,Microsoft.FSharp.Core.Unit})">
+<member name="M:Fake.TargetHelper.TargetTemplateWithDependecies``1(Microsoft.FSharp.Collections.FSharpList{System.String},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit})">
 <summary>
  Creates a TargetTemplate with dependencies
 </summary>
@@ -3519,7 +3976,7 @@
  Send message to TeamCity
 </summary>
 </member>
-<member name="M:Fake.TeamCityHelper.sendToTeamCity(Microsoft.FSharp.Core.PrintfFormat{Microsoft.FSharp.Core.FSharpFunc`2{System.String,System.String},Microsoft.FSharp.Core.Unit,System.String,System.String},System.String)">
+<member name="M:Fake.TeamCityHelper.sendToTeamCity(Microsoft.FSharp.Core.PrintfFormat{Microsoft.FSharp.Core.FSharpFunc{System.String,System.String},Microsoft.FSharp.Core.Unit,System.String,System.String},System.String)">
 <summary>
  Send message to TeamCity
 </summary>
@@ -3636,7 +4093,7 @@
 <member name="T:Fake.TeamCityRESTHelper">
 
 </member>
-<member name="M:Fake.TemplateHelper.processTemplates(System.Collections.Generic.IEnumerable{System.Tuple`2{System.String,System.String}},System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:Fake.TemplateHelper.processTemplates(System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.String}},System.Collections.Generic.IEnumerable{System.String})">
 <summary>
  Replaces the templates with the given replacements
 </summary>
@@ -3646,7 +4103,7 @@
  saves all files (lazy - file by file!)
 </summary>
 </member>
-<member name="M:Fake.TemplateHelper.replaceKeywords``2(System.Collections.Generic.IEnumerable{System.Tuple`2{System.String,System.String}})">
+<member name="M:Fake.TemplateHelper.replaceKeywords``2(System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.String}})">
 <summary>
  replaces a bunch of the keywords in all files (lazy - line by line!)
 </summary>
@@ -3659,7 +4116,7 @@
 <member name="T:Fake.TemplateHelper">
 
 </member>
-<member name="M:Fake.TimeoutHelper.waitFor(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Boolean},System.TimeSpan,System.Int32,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
+<member name="M:Fake.TimeoutHelper.waitFor(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,System.Boolean},System.TimeSpan,System.Int32,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
 <summary>
  Waits until the given function returns true or the timeout is reached
 </summary>
@@ -3920,7 +4377,7 @@
 <member name="">
 
 </member>
-<member name="M:Fake.WiXHelper.WiX(Microsoft.FSharp.Core.FSharpFunc`2{Fake.WiXHelper.WiXParams,Fake.WiXHelper.WiXParams},System.String,System.String)">
+<member name="M:Fake.WiXHelper.WiX(Microsoft.FSharp.Core.FSharpFunc{Fake.WiXHelper.WiXParams,Fake.WiXHelper.WiXParams},System.String,System.String)">
  <summary>Use the WiX tools Candle and Light to create an msi.</summary>
  <param name="setParams">Function used to create an WiXParams value with your required settings.  Called with an WixParams value configured with the defaults.</param>
  <param name="outputFile">The msi output file path (given to Light).</param>
@@ -3964,7 +4421,7 @@
 <member name="T:Fake.XCopyHelper">
 
 </member>
-<member name="M:Fake.XMLHelper.XmlPokeNS(System.String,System.Collections.Generic.IEnumerable{System.Tuple`2{System.String,System.String}},System.String,System.String)">
+<member name="M:Fake.XMLHelper.XmlPokeNS(System.String,System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.String}},System.String,System.String)">
 <summary>
  Replaces text in an XML file at the location specified by an XPath expression, with support for namespaces.
 </summary>
@@ -3999,12 +4456,12 @@
  Gets the result as xml
 </summary>
 </member>
-<member name="M:Fake.XMLHelper.parseSubNode``1(System.String,Microsoft.FSharp.Core.FSharpFunc`2{System.Xml.XmlNode,``0})">
+<member name="M:Fake.XMLHelper.parseSubNode``1(System.String,Microsoft.FSharp.Core.FSharpFunc{System.Xml.XmlNode,``0})">
 <summary>
  parses a subnode
 </summary>
 </member>
-<member name="M:Fake.XMLHelper.parse``2(System.String,Microsoft.FSharp.Core.FSharpFunc`2{``0,``1},``0)">
+<member name="M:Fake.XMLHelper.parse``2(System.String,Microsoft.FSharp.Core.FSharpFunc{``0,``1},``0)">
 <summary>
  parses a node
 </summary>
@@ -4101,7 +4558,7 @@
 <member name="">
 
 </member>
-<member name="M:Fake.XUnitHelper.xUnit(Microsoft.FSharp.Core.FSharpFunc`2{Fake.XUnitHelper.XUnitParams,Fake.XUnitHelper.XUnitParams},System.Collections.Generic.IEnumerable{System.String})">
+<member name="M:Fake.XUnitHelper.xUnit(Microsoft.FSharp.Core.FSharpFunc{Fake.XUnitHelper.XUnitParams,Fake.XUnitHelper.XUnitParams},System.Collections.Generic.IEnumerable{System.String})">
 <summary>Runs xUnit unit tests.</summary>
 <param name="setParams">Function used to create an XUnitParams value.  Called with an XUnitParams value configured with the defaults.</param>
 <param name="assemblies">Sequence of one or more assemblies containing xUnit unit tests.</param>
@@ -4115,7 +4572,7 @@
 <member name="T:Fake.XUnitHelper">
 
 </member>
-<member name="M:Fake.ZipHelper.UnzipFirstMatchingFileInMemory(Microsoft.FSharp.Core.FSharpFunc`2{ICSharpCode.SharpZipLib.Zip.ZipEntry,System.Boolean},System.String)">
+<member name="M:Fake.ZipHelper.UnzipFirstMatchingFileInMemory(Microsoft.FSharp.Core.FSharpFunc{ICSharpCode.SharpZipLib.Zip.ZipEntry,System.Boolean},System.String)">
  <summary>Unzips a single file from the archive with the given fileName.</summary>
  <param name="predicate">The predictae for the searched file in the archive.</param>
  <param name="zipFileName">The FileName of the zip file.</param>
