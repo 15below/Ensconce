@@ -9,7 +9,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>Ensconce command line tool.</description>
 		<releaseNotes></releaseNotes>
-		<copyright>Copyright 2004-2012</copyright>
+		<copyright>Copyright 2004-2013</copyright>
 		<tags></tags>
 	</metadata>
 	
@@ -19,6 +19,7 @@
 		<file src="..\createWebSite.ps1" target="Content" />
 		<file src="..\createiis6app.ps1" target="Content" />
 		<file src="..\createiis7app.ps1" target="Content" />
+		<file src="..\dnsHelper.ps1" target="Content" />
 		<file src="..\UserManagement.ps1" target="Content" />
 		<file src="..\Grant.exe" target="Content" />
 		<file src="..\deploy.ps1" target="Tools" />	
