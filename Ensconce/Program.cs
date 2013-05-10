@@ -10,7 +10,6 @@ using System.Text;
 using FifteenBelow.Deployment;
 using FifteenBelow.Deployment.Update;
 using ICSharpCode.SharpZipLib.Zip;
-using Microsoft.VisualBasic.FileIO;
 using Mono.Options;
 using NGit.Api;
 using NGit.Dircache;
@@ -36,7 +35,7 @@ namespace Ensconce
         private static bool replace;
         private static bool updateConfig;
         private static string templateFilters;
-        private static bool warnOnOneTimeScriptChanges = false;
+        private static bool warnOnOneTimeScriptChanges;
         private static bool withTransaction = true;
         private static bool quiet;
         private static bool nobackup;
@@ -318,7 +317,7 @@ namespace Ensconce
         private static void Log(string message, params object[] values)
         {
             if (quiet || readFromStdIn) return;
-            Console.WriteLine(string.Format(message, values));
+            Console.WriteLine(message, values);
         }
 
         private static void CopyDirectory(string from, string to)
@@ -403,17 +402,14 @@ namespace Ensconce
 
             if (!Directory.Exists(dir)) return;
             Log("Deleting from {0}", dir);
-            var directory = new DirectoryInfo(dir);
-            TurnOffReadOnly(directory);
-            new Microsoft.VisualBasic.Devices.Computer().FileSystem.DeleteDirectory(dir, DeleteDirectoryOption.DeleteAllContents);
-        }
+            var directory = new DirectoryInfo(dir) { Attributes = FileAttributes.Normal };
 
-        private static void TurnOffReadOnly(DirectoryInfo directory)
-        {
-			foreach (var file in directory.EnumerateFiles("*", SearchOption.AllDirectories))
-			{
-				file.IsReadOnly = false;
-			}
+            foreach (var info in directory.GetFileSystemInfos("*", SearchOption.AllDirectories))
+            {
+                info.Attributes = FileAttributes.Normal;
+            }
+
+            directory.Delete(true);
         }
 
         private static void Finalise(string directory)
