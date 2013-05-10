@@ -4,7 +4,7 @@
 
 #r "FAKE\FakeLib.dll"
 #r "System.Xml.Linq"
-#r "15below.VersionUpdater.dll"
+#r "FAKE\15below.VersionUpdater.dll"
 open System
 open System.IO
 open System.Text.RegularExpressions
