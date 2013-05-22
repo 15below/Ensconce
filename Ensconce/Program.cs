@@ -356,6 +356,7 @@ namespace Ensconce
 
             return managementObjectCollection
                 .OfType<ManagementObject>()
+                .Where(svc => svc.GetPropertyValue("PathName") != null)
                 .Where(svc => svc.GetPropertyValue("PathName").ToString().Contains(directory))
                 .Select(svc => new ServiceDetails
                 {
