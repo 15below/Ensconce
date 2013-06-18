@@ -112,12 +112,27 @@ function SetManagedPipelineModeClassic ([string]$name)
 	Set-ItemProperty IIS:\AppPools\$name managedPipelineMode 1
 }
 
+
 function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 {
 	$appPool = Get-Item "IIS:\AppPools\$name"
-	$appPool.processModel.username = $user
-	$appPool.processModel.password = $password
-	$appPool.processModel.identityType = 3
+	
+	# LocalSystem = 0
+	# LocalService = 1
+	# NetworkService = 2
+	# SpecificUser = 3
+	# ApplicationPoolIdentity = 4
+	$identityType = 3
+	if($user -And $user.ToLower() -eq "networkservice")
+	{
+		$identityType = 2
+	}
+	else 
+	{
+		$appPool.processModel.username = $user
+		$appPool.processModel.password = $password
+	}
+	$appPool.processModel.identityType = $identityType
 	$appPool | set-item
 }
 
