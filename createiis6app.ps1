@@ -68,9 +68,24 @@ function CreateAppPool ([string]$name)
 function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 {
 	$appPool = gwmi -namespace "root\MicrosoftIISv2" -class "IISApplicationPoolSetting" -filter "Name like '%$name%'"
-	$appPool.WAMUserName = $user
-	$appPool.WAMUserPass = $password
-	$appPool.AppPoolIdentityType = 3
+	
+	# LocalSystem = 0
+	# LocalService = 1
+	# NetworkService = 2
+	# SpecificUser = 3
+	# ApplicationPoolIdentity = 4
+	$identityType = 3
+	if($user -And $user.ToLower() -eq "networkservice")
+	{
+		$identityType = 2
+	}
+	else 
+	{
+		$appPool.WAMUserName = $user
+		$appPool.WAMUserPass = $password
+	}
+	
+	$appPool.AppPoolIdentityType = $identityType
 	$appPool.Put()
 	
 	AddUserToGroup $user "IIS_WPG"
