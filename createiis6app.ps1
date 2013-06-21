@@ -83,12 +83,12 @@ function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 	{
 		$appPool.WAMUserName = $user
 		$appPool.WAMUserPass = $password
+		# Only add user to group if its a specific user, dont do it for networkservice
+		AddUserToGroup $user "IIS_WPG"
 	}
 	
 	$appPool.AppPoolIdentityType = $identityType
-	$appPool.Put()
-	
-	AddUserToGroup $user "IIS_WPG"
+	$appPool.Put()	
 }
 
 function StopAppPool([string]$name)
