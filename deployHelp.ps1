@@ -48,3 +48,11 @@ function EnsurePath([string]$name)
 function is64bit() {
   return ( (Get-WmiObject Win32_OperatingSystem).OSArchitecture -eq "64-bit")
 }
+
+function CreateDesktopShortcut($exePath, $shortcutName)
+{
+	$WshShell = New-Object -comObject WScript.Shell
+	$Shortcut = $WshShell.CreateShortcut((Join-Path $wshShell.SpecialFolders.Item("AllUsersDesktop") "$shortcutName.lnk"))
+	$Shortcut.TargetPath = $exePath
+	$Shortcut.Save()
+}
