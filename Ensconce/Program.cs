@@ -276,7 +276,7 @@ namespace Ensconce
                 if (!Directory.Exists(deployFrom))
                 {
                     throw new OptionException(
-                        "Error: You must specify an existing from directory to use the copyTo or replace options.", "deployFrom");
+                        String.Format("Error: You must specify an existing from directory to use the copyTo or replace options. Couldn't find directory: {0}", deployFrom), "deployFrom");
                 }
                 if (copyTo && replace)
                 {
@@ -286,12 +286,12 @@ namespace Ensconce
 
             if (!string.IsNullOrEmpty(templateFilters) && !Directory.Exists(deployFrom))
             {
-                throw new OptionException("Error: You cannot use filterTemplate without a valid from directory.", "deployFrom");
+                throw new OptionException(String.Format("Error: You cannot use filterTemplate without a valid from directory. Couldn't find directory: {0}", deployFrom), "deployFrom");
             }
 
             if ((!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)) && !Directory.Exists(deployFrom))
             {
-                throw new OptionException("Error: You cannot use databaseName without a valid from directory.", "deployFrom");
+                throw new OptionException(String.Format("Error: You cannot use databaseName without a valid from directory. Couldn't find directory: {0}", deployFrom), "deployFrom");
             }
 
             if ((!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString)) && !File.Exists(Path.Combine(deployFrom, "_BuildInfo.txt")))
