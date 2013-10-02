@@ -45,39 +45,40 @@ Function AddUserToGroup([string]$name, [string]$group)
 	if($colUsers -eq $null)
 	{
 		"Could not locate user: $user" | Write-Host
-		exit 1
 	}
-
-	$searchgroup = ($objComputer.psbase.children | 
-		Where {$_.psbase.schemaClassName -eq "group" -and $_.psbase.Name -eq $group} |
-		Select-Object -First 1)
-	
-	if($searchgroup -eq $null)
+	else
 	{
-		"Could not locate group: $group" | Write-Host
-		exit 1
-	}
-
-	$blnFound = $False
-	$members = @($searchgroup.psbase.Invoke("Members")) 
-	ForEach ($Member In $Members)
-	{
-		$class = $member.GetType().InvokeMember("Class", 'GetProperty', $Null, $member, $Null)
-		$username = $member.GetType().InvokeMember("Name", 'GetProperty', $Null, $member, $Null)
-		if ($class -eq "User" -and $username -eq $name)
+		$searchgroup = ($objComputer.psbase.children | 
+			Where {$_.psbase.schemaClassName -eq "group" -and $_.psbase.Name -eq $group} |
+			Select-Object -First 1)
+		
+		if($searchgroup -eq $null)
 		{
-			$blnFound = $True
-			"User already added to group: $name, $group" | Write-Host
+			"Could not locate group: $group" | Write-Host
 		}
-	}
-	
-	if ($blnFound -eq $False) {	
-		try {
-			net localgroup $group $name /add
-			exit 0
-		}
-		catch [Exception] {
-			"Error caught" | Write-Host
+		else
+		{
+			$blnFound = $False
+			$members = @($searchgroup.psbase.Invoke("Members")) 
+			ForEach ($Member In $Members)
+			{
+				$class = $member.GetType().InvokeMember("Class", 'GetProperty', $Null, $member, $Null)
+				$username = $member.GetType().InvokeMember("Name", 'GetProperty', $Null, $member, $Null)
+				if ($class -eq "User" -and $username -eq $name)
+				{
+					$blnFound = $True
+					"User already added to group: $name, $group" | Write-Host
+				}
+			}
+			
+			if ($blnFound -eq $False) {	
+				try {
+					net localgroup $group $name /add
+				}
+				catch [Exception] {
+					"Error caught" | Write-Host
+				}
+			}
 		}
 	}
 }
