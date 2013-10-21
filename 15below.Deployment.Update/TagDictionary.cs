@@ -72,10 +72,11 @@ namespace FifteenBelow.Deployment.Update
                                 "A label for a method group has been specified that clashes with a property name. The conflicting label is {0}",
                                 label));
                     }
-                    var labelEnumerable = new List<IDictionary<string, object>>();
+                    var labelEnumerable = new LabelEnumeration();
                     foreach (var id in labelsAndIdentities[label])
                     {
-                        labelEnumerable.Add(new TagDictionary(id, true, sources));
+                        if (!labelEnumerable.ContainsKey(id))
+                            labelEnumerable.Add(id, new TagDictionary(id, true, sources));
                     }
                     this[label] = labelEnumerable;
                 }

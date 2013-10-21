@@ -243,5 +243,19 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", Tuple.Create("", TagSource.Environment), Tuple.Create(XmlData, TagSource.XmlData));
             Assert.AreEqual(value, sut[friendlyKey]);
         }
+
+        [Test]
+        public void ForLoopWorks()
+        {
+            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            Assert.AreEqual("myIdmyId2", "{% for instance in GDS %}{{ instance.identity }}{% endfor %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void AccessByGroupType()
+        {
+            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            Assert.AreEqual("SYS", "{{ GDS.myId.IsSys }}".RenderTemplate(sut));
+        }
     }
 }
