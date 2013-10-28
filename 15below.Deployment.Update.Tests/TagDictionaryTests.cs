@@ -257,5 +257,12 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
             Assert.AreEqual("SYS", "{{ GDS.myId.IsSys }}".RenderTemplate(sut));
         }
+
+        [Test]
+        public void AccessFirstInLabel()
+        {
+            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            Assert.AreEqual("SYS", "{% with GDS|first as instance %}{{ instance.IsSys }}{% endwith %}".RenderTemplate(sut));
+        }
     }
 }
