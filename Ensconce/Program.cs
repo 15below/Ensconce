@@ -27,7 +27,9 @@ namespace Ensconce
         private static string fixedPath = @"D:\FixedStructure\structure.xml";
         private static string substitutionPath = "substitutions.xml";
         private static bool finalisePath;
-        private static string databaseRepository ="";
+        private static string scanDirForChanges;
+        private static bool scanForChanges;
+        private static string databaseRepository = "";
         private static readonly List<string> RawToDirectories = new List<string>();
         private static readonly List<string> DeployTo = new List<string>();
         private static string deployFrom;
@@ -67,6 +69,11 @@ namespace Ensconce
             Environment.SetEnvironmentVariable("HOMEPATH", Directory.GetCurrentDirectory());
 
             SetUpAndParseOptions(args);
+
+            if (scanForChanges)
+            {
+                ScanForChanges(scanDirForChanges);
+            }
 
             if (readFromStdIn)
             {
@@ -176,6 +183,14 @@ namespace Ensconce
                                 s => finalisePath = s != null
                                 },
                             {
+                                "scanDirForChanges=",
+                                "Scan a directory for any un-finalised changes in the directory hierarchy. If changes are detected, Ensconce will return an error code.",
+                                s =>    {
+                                            scanForChanges = String.IsNullOrEmpty(s) == false;
+                                            scanDirForChanges = s;
+                                        }
+                                },
+                            {
                                 "d|databaseName="
                                 ,"The name of the database to be deployed, assumes that the process is running on the destination server. Requires the deployFrom option. Can optionally provide the databaseRepository option.",
                                 s => databaseName = s
@@ -254,7 +269,7 @@ namespace Ensconce
 
             var filesToBeMovedOrChanged = (updateConfig || copyTo || replace || !string.IsNullOrEmpty(templateFilters));
             var databaseOperation = (!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString));
-            var operationRequested = (filesToBeMovedOrChanged || databaseOperation || finalisePath || readFromStdIn);
+            var operationRequested = (filesToBeMovedOrChanged || databaseOperation || finalisePath || readFromStdIn || scanForChanges);
 
             if (showHelp || !(operationRequested))
             {
@@ -440,6 +455,47 @@ namespace Ensconce
                 "Ensconce",
                 "Deployment@15below.com").Call();
             repo.GetRepository().Close();
+        }
+
+        private static void ScanForChanges(string rootDirectory)
+        {
+            var gitFolders = Directory.GetDirectories(rootDirectory, ".git", SearchOption.AllDirectories);
+            int i = 0;
+
+            var changeDetected = new Action<string, string, string>((changeType, repoDir, file) =>
+                {
+                    i++;
+                    Console.Error.WriteLine("Change detected: ({0}) {1}", changeType, Path.Combine(repoDir, file));
+                });
+
+            foreach (var gitFolder in gitFolders)
+            {
+                var repoDir = new DirectoryInfo(gitFolder).Parent.FullName;
+
+                try
+                {
+                    Git repo = Git.Open(new FilePath(repoDir));
+                    var status = repo.Status().Call();
+
+                    status.GetModified().ToList().ForEach(file => changeDetected("modified", repoDir, file));
+                    status.GetChanged().ToList().ForEach(file => changeDetected("changed", repoDir, file));
+                    status.GetAdded().ToList().ForEach(file => changeDetected("added", repoDir, file));
+                    status.GetMissing().ToList().ForEach(file => changeDetected("missing", repoDir, file));
+                    status.GetUntracked().ToList().ForEach(file => changeDetected("untracked", repoDir, file));
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            if (i > 0)
+            {
+                throw new ApplicationException(i.ToString() + " changes have been detected in: " + rootDirectory);
+            }
+            else
+            {
+                Console.Out.WriteLine("No changes detected");
+            }
         }
 
         private static void ShowHelp(OptionSet optionSet)
