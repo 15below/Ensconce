@@ -56,17 +56,71 @@ function CheckIfAppPoolExists ([string]$name)
 
 function StopAppPool([string]$name)
 {
-	Stop-WebAppPool "$name"
+	$status = (Get-WebAppPoolState -Name $name).Value
+	
+	if ($status -eq "Started")
+	{
+		"Stopping AppPool: " + $name | Write-Host
+		Stop-WebAppPool "$name"
+	}
+	else
+	{
+		"AppPool not in Started state ($status): " + $name | Write-Host
+	}
 }
 
 function StartAppPool([string]$name)
 {
-	Start-WebAppPool "$name"
+	$status = (Get-WebAppPoolState -Name $name).Value
+	
+	if ($status -ne "Started")
+	{
+		"Starting AppPool: " + $name | Write-Host
+		Start-WebAppPool "$name"
+	}
+	else
+	{
+		"AppPool already in Started state: " + $name | Write-Host
+	}
 }
 
 function RestartAppPool([string]$name)
 {
-	Restart-WebItem "IIS:\AppPools\$name" 
+	$status = (Get-WebAppPoolState -Name $name).Value
+	
+	if ($status -eq "Started")
+	{
+		"Restarting AppPool: " + $name | Write-Host
+		Restart-WebItem "IIS:\AppPools\$name"
+	}
+	else
+	{
+		"AppPool not in Started state ($status): " + $name | Write-Host
+	}
+}
+
+function StopWebSite([string]$name)
+{
+	$status = "Unknown"
+	
+	try
+	{
+		$status = (Get-WebsiteState -Name $name).Value
+
+		if ($status -eq "Started")
+		{
+			"Stopping WebSite: " + $name | Write-Host
+			Stop-WebSite -Name $name
+		}
+		else
+		{
+			"WebSite not in Started state ($status): " + $name | Write-Host
+		}
+	}
+	catch
+	{
+		"Error Stopping WebSite: " + $name | Write-Host
+	}
 }
 
 function CheckIfWebApplicationExists ([string]$webSite, [string]$appName) 
@@ -79,7 +133,6 @@ function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
 {
 	$tempApp = Get-WebVirtualDirectory -Site $webSite | where-object {$_.path.contains($virtualDir) } 
 	$tempApp -ne $NULL
-	
 }
 
 function CheckIfSslBindingExists ([string]$webSite, [string]$hostHeader) 

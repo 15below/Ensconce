@@ -96,6 +96,7 @@ function StopAppPool([string]$name)
 	$appPool = get-wmiobject -namespace "root\MicrosoftIISv2" -class "IIsApplicationPool" | where-object {$_.Name -eq "W3SVC/AppPools/$name"}
 	if ($appPool)
 	{
+		"Stopping AppPool: " + $name | Write-Host
 		$appPool.Stop()
 	}
 }
@@ -105,6 +106,7 @@ function StartAppPool([string]$name)
 	$appPool = get-wmiobject -namespace "root\MicrosoftIISv2" -class "IIsApplicationPool" | where-object {$_.Name -eq "W3SVC/AppPools/$name"}
 	if ($appPool)
 	{
+		"Starting AppPool: " + $name | Write-Host
 		$appPool.Start()
 	}
 }
@@ -114,8 +116,21 @@ function RestartAppPool([string]$name)
 	$appPool = get-wmiobject -namespace "root\MicrosoftIISv2" -class "IIsApplicationPool" | where-object {$_.Name -eq "W3SVC/AppPools/$name"}
 	if ($appPool)
 	{
+		"Restarting AppPool: " + $name | Write-Host
 		$appPool.Stop()
 		$appPool.Start()
+	}
+}
+
+function StopWebSite([string]$name)
+{
+	"Stopping WebSite: " + $name | Write-Host
+	$iis = [ADSI]"IIS://localhost/W3SVC"
+	$website = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer" -AND $_.ServerComment -eq $name }
+	if ($website -ne $NULL)
+	{
+		$website.serverState = 4
+		$website.setInfo()
 	}
 }
 
