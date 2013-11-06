@@ -134,6 +134,18 @@ function StopWebSite([string]$name)
 	}
 }
 
+function StartWebSite([string]$name)
+{
+	"Starting WebSite: " + $name | Write-Host
+	$iis = [ADSI]"IIS://localhost/W3SVC"
+	$website = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer" -AND $_.ServerComment -eq $name }
+	if ($website -ne $NULL)
+	{
+		$website.serverState = 2
+		$website.setInfo()
+	}
+}
+
 function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation)
 {
 	# check if web site exists and delete it - for testing purposes
