@@ -123,6 +123,30 @@ function StopWebSite([string]$name)
 	}
 }
 
+function StartWebSite([string]$name)
+{
+	$status = "Unknown"
+	
+	try
+	{
+		$status = (Get-WebsiteState -Name $name).Value
+
+		if ($status -ne "Started")
+		{
+			"Starting WebSite: " + $name | Write-Host
+			Start-WebSite -Name $name
+		}
+		else
+		{
+			"WebSite already in Started state: " + $name | Write-Host
+		}
+	}
+	catch
+	{
+		"Error Starting WebSite: " + $name | Write-Host
+	}
+}
+
 function CheckIfWebApplicationExists ([string]$webSite, [string]$appName) 
 {
 	$tempApp = Get-WebApplication -Site $webSite | where-object {$_.path.contains($appName) } 
