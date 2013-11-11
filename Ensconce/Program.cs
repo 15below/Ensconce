@@ -11,6 +11,7 @@ using System.Text;
 using FifteenBelow.Deployment;
 using FifteenBelow.Deployment.Update;
 using ICSharpCode.SharpZipLib.Zip;
+using LibGit2Sharp;
 using Mono.Options;
 using SearchOption = System.IO.SearchOption;
 
@@ -509,18 +510,18 @@ namespace Ensconce
             }
         }
 
-        private static LibGit2Sharp.Repository GetOrCreateFinaliseRepository(string directory)
+        private static Repository GetOrCreateFinaliseRepository(string directory)
         {
-            LibGit2Sharp.Repository repo = null;
+            Repository repo = null;
 
             try
             {
-                repo = new LibGit2Sharp.Repository(directory);
+                repo = new Repository(directory);
             }
             catch (Exception)
             {
-                LibGit2Sharp.Repository.Init(directory);
-                repo = new LibGit2Sharp.Repository(directory);
+                Repository.Init(directory);
+                repo = new Repository(directory);
             }
 
             return repo;
@@ -575,7 +576,7 @@ namespace Ensconce
 
                     Log("Committing changes");
 
-                    var author = new LibGit2Sharp.Signature("Finalise2", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
+                    var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
                     var commit = repo.Commit(message, author, author);
 
                     Log("Finalise complete");
@@ -639,7 +640,7 @@ namespace Ensconce
 
             using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
             {
-                LibGit2Sharp.Tag tag = repo.Tags.FirstOrDefault(where => where.Name.Equals(version, StringComparison.CurrentCultureIgnoreCase));
+                Tag tag = repo.Tags.FirstOrDefault(where => where.Name.Equals(version, StringComparison.CurrentCultureIgnoreCase));
 
                 if (tag != null)
                 {
