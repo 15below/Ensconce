@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -11,22 +12,22 @@ using FifteenBelow.Deployment;
 using FifteenBelow.Deployment.Update;
 using ICSharpCode.SharpZipLib.Zip;
 using Mono.Options;
-using NGit.Api;
-using NGit.Dircache;
-using Sharpen;
 using SearchOption = System.IO.SearchOption;
 
 namespace Ensconce
 {
     internal static class Program
     {
+        private static DateTime started = DateTime.Now;
         private static bool readFromStdIn;
         private static string configUrl = "{{ DeployService }}{{ ClientCode }}/{{ Environment }}";
         private static string databaseName;
         private static string connectionString;
         private static string fixedPath = @"D:\FixedStructure\structure.xml";
         private static string substitutionPath = "substitutions.xml";
-        private static bool finalisePath;
+        private static string finaliseDirectory;
+        private static bool finaliseRequired;
+        private static string tagVersion;
         private static string scanDirForChanges;
         private static bool scanForChanges;
         private static string databaseRepository = "";
@@ -40,12 +41,12 @@ namespace Ensconce
         private static bool warnOnOneTimeScriptChanges;
         private static bool withTransaction = true;
         private static bool quiet;
-        private static bool nobackup;
         private static bool dropDatabase;
         private static bool dropDatabaseConfirm;
         private static readonly Lazy<TagDictionary> LazyTags = new Lazy<TagDictionary>(BuildTagDictionary);
         private const string CachedResultPath = "_cachedConfigurationResults.xml";
-        
+        private const string GitIgnoreContents = "\r\n*.zip\r\n*.bak\r\n";
+
         private static int Main(string[] args)
         {
             try
@@ -69,6 +70,9 @@ namespace Ensconce
             Environment.SetEnvironmentVariable("HOMEPATH", Directory.GetCurrentDirectory());
 
             SetUpAndParseOptions(args);
+
+            finaliseDirectory = finaliseDirectory.Render();
+            scanDirForChanges = scanDirForChanges.Render();
 
             if (scanForChanges)
             {
@@ -99,7 +103,7 @@ namespace Ensconce
                     {
                         encoding = readStream.CurrentEncoding;
                         template = readStream.ReadToEnd();
-                        
+
                     }
                     using (var writeStream = new StreamWriter(templateFile.FullName, false, encoding))
                     {
@@ -111,24 +115,19 @@ namespace Ensconce
             if (!string.IsNullOrEmpty(connectionString) || !string.IsNullOrEmpty(databaseName))
             {
                 SqlConnectionStringBuilder connStr = null;
-                
+
                 if (!string.IsNullOrEmpty(connectionString))
                 {
                     connStr = new SqlConnectionStringBuilder(connectionString.RenderTemplate(LazyTags.Value));
-				}
-				else if (!string.IsNullOrEmpty(databaseName))
-				{
+                }
+                else if (!string.IsNullOrEmpty(databaseName))
+                {
                     connStr = Database.GetLocalConnectionStringFromDatabaseName(databaseName.RenderTemplate(LazyTags.Value));
-				}
+                }
                 Log("Deploying scripts from {0} using connection string {1}", deployFrom, connStr.ConnectionString);
                 var database = new Database(connStr, new LegacyFolderStructure(), warnOnOneTimeScriptChanges);
                 database.WithTransaction = withTransaction;
                 database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value), dropDatabase);
-            }
-
-            if (replace)
-            {
-                DeployTo.ForEach(BackupDirectory);
             }
 
             if (replace)
@@ -141,17 +140,23 @@ namespace Ensconce
                 DeployTo.ForEach(dt => CopyDirectory(deployFrom, dt));
             }
 
-            if (finalisePath)
+            if (finaliseRequired
+                || ((copyTo || replace)
+                    && !String.IsNullOrEmpty(finaliseDirectory)
+                    && DeployTo.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase))
+                    )
+                )
             {
-                foreach (var deployDir in DeployTo)
+                if (Directory.Exists(finaliseDirectory))
                 {
-                    if (!Directory.Exists(deployDir))
-                    {
-                        throw new InvalidPathException(deployDir);
-                    }
-
-                    Finalise(deployDir);
+                    RemoveSubRepositories(finaliseDirectory);
+                    Finalise(finaliseDirectory);
                 }
+            }
+
+            if (!String.IsNullOrEmpty(tagVersion))
+            {
+                TagVersion(finaliseDirectory, tagVersion);
             }
         }
 
@@ -178,9 +183,24 @@ namespace Ensconce
                                 s => substitutionPath = string.IsNullOrEmpty(s) ? substitutionPath : s
                                 },
                             {
+                                "finaliseDirectory=",
+                                "Top-most directory to create or commit to a git repository containing all changes",
+                                s =>    {
+                                            finaliseDirectory = s;
+                                        }
+                                },
+                            {
                                 "x|finalisePath",
-                                "NOTE! Will ignore all other options except webservice",
-                                s => finalisePath = s != null
+                                "DEPRECATED: Please use finaliseDirectory and specify your root directory for the finalise versioning process",
+                                s =>    {
+                                            // Doesn't throw exception, this is just a warning
+                                            Console.Error.WriteLine("finalisePath has been deprecated");
+                                        }
+                                },
+                            {
+                                "tagVersion=",
+                                "Create a tag with the version number specified in the finalise git repository",
+                                s => tagVersion = s
                                 },
                             {
                                 "scanDirForChanges=",
@@ -211,7 +231,8 @@ namespace Ensconce
                                 , s => RawToDirectories.Add(s)
                                 },
                             {
-                                "f|deployFrom=", "Path to deploy from. Required for the copyTo and databaseName options",
+                                "f|deployFrom=",
+                                "Path to deploy from. Required for the copyTo and databaseName options",
                                 s => deployFrom = s
                                 },
                             {
@@ -220,30 +241,33 @@ namespace Ensconce
                                 , s => copyTo = s != null
                                 },
                             {
-                                "r|replace", "Replace the current contents of the deployTo directories",
+                                "r|replace",
+                                "Replace the current contents of the deployTo directories",
                                 s => replace = s != null
                                 },
                             {
-                                "u|updateConfig", "Update config", s => updateConfig = s != null
+                                "u|updateConfig",
+                                "Update config",
+                                s => updateConfig = s != null
                                 }, 
                             {
-                                "q|quiet", "Turn off logging output (default=False, but always True if -i set)",
+                                "q|quiet",
+                                "Turn off logging output (default=False, but always True if -i set)",
                                 s => quiet = s != null
                                 }, 
                             {
-                                "nobackup", "Turn off back up before copyTo or replace, useful if you are running ensconce several times in one deployment package.",
-                                s => nobackup = s != null
-                                }, 
-                            {
-                                "treatAsTemplateFilter=", "File filter for files in the deploy from directory to treat as templates. These will be updated after config and before deployment.",
+                                "treatAsTemplateFilter=",
+                                "File filter for files in the deploy from directory to treat as templates. These will be updated after config and before deployment.",
                                 s => templateFilters = s
                                },
 							{
-                                "warnOnOneTimeScriptChanges=", "If one-time-scripts have had changes, only treat them as warnings, not as errors. Defaults to False.",
+                                "warnOnOneTimeScriptChanges=",
+                                "If one-time-scripts have had changes, only treat them as warnings, not as errors. Defaults to False.",
                                 s => warnOnOneTimeScriptChanges = Convert.ToBoolean(s)
                                },
 							{
-                                "withTransaction=", "Execute RoundhousE in transactional mode. Defaults to True.",
+                                "withTransaction=",
+                                "Execute RoundhousE in transactional mode. Defaults to True.",
                                 s => withTransaction = Convert.ToBoolean(s)
                                },
                             {
@@ -258,18 +282,27 @@ namespace Ensconce
                                 },
                         };
 
-			var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
-			if (!string.IsNullOrEmpty(envWarnOnOneTimeScriptChanges))
-			{
-				// Will be overridden by command-line option
-				warnOnOneTimeScriptChanges = Convert.ToBoolean(envWarnOnOneTimeScriptChanges);
-			}
+            var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
+            if (!string.IsNullOrEmpty(envWarnOnOneTimeScriptChanges))
+            {
+                // Will be overridden by command-line option
+                warnOnOneTimeScriptChanges = Convert.ToBoolean(envWarnOnOneTimeScriptChanges);
+            }
+
+            var envFinaliseDirectory = Environment.GetEnvironmentVariable("FinaliseDirectory");
+            if (!string.IsNullOrEmpty(envFinaliseDirectory))
+            {
+                // Will be overridden by command-line option
+                finaliseDirectory = envFinaliseDirectory;
+            }
 
             p.Parse(args);
 
             var filesToBeMovedOrChanged = (updateConfig || copyTo || replace || !string.IsNullOrEmpty(templateFilters));
             var databaseOperation = (!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString));
-            var operationRequested = (filesToBeMovedOrChanged || databaseOperation || finalisePath || readFromStdIn || scanForChanges);
+            var tagOperation = !string.IsNullOrEmpty(tagVersion);
+            var finaliseOperation = !string.IsNullOrEmpty(finaliseDirectory);
+            var operationRequested = (filesToBeMovedOrChanged || databaseOperation || readFromStdIn || scanForChanges || tagOperation || finaliseOperation);
 
             if (showHelp || !(operationRequested))
             {
@@ -332,13 +365,29 @@ namespace Ensconce
         private static void Log(string message, params object[] values)
         {
             if (quiet || readFromStdIn) return;
+            Console.Write("+{0:mm\\:ss\\.ff} - ", DateTime.Now - started);
             Console.WriteLine(message, values);
         }
 
         private static void CopyDirectory(string from, string to)
         {
             Log("Copying from {0} to {1}", from, to);
-            new Microsoft.VisualBasic.Devices.Computer().FileSystem.CopyDirectory(from, to, true);
+
+            try
+            {
+                new Microsoft.VisualBasic.Devices.Computer().FileSystem.CopyDirectory(from, to, true);
+            }
+            catch (Exception ex)
+            {
+                var i = 1;
+
+                foreach (DictionaryEntry data in ex.Data)
+                {
+                    Log("Exception Data {0}: {1} = {2}", i++, data.Key, data.Value);
+                }
+
+                throw;
+            }
         }
 
         public class ServiceDetails
@@ -398,7 +447,7 @@ namespace Ensconce
                             };
                 foreach (var item in query)
                 {
-                    if(!string.IsNullOrEmpty(item.Path) && Path.GetFullPath(item.Path).Contains(new DirectoryInfo(directory).FullName))
+                    if (!string.IsNullOrEmpty(item.Path) && Path.GetFullPath(item.Path).Contains(new DirectoryInfo(directory).FullName))
                     {
                         item.Process.Kill();
                         item.Process.WaitForExit();
@@ -428,33 +477,114 @@ namespace Ensconce
             directory.Delete(true);
         }
 
+        private static void RemoveSubRepositories(string directory)
+        {
+            var rootGitDirectory = new DirectoryInfo(Path.Combine(directory, ".git"));
+
+            foreach (var gitFolder in Directory.EnumerateDirectories(directory, ".git", SearchOption.AllDirectories))
+            {
+                var gitDirectory = new DirectoryInfo(gitFolder);
+
+                if (gitDirectory.FullName.Equals(rootGitDirectory.FullName, StringComparison.CurrentCultureIgnoreCase) == false)
+                {
+                    Log("Removing sub repository: {0}", gitFolder);
+
+                    // Disable any read-only flags
+                    gitDirectory.Attributes &= ~FileAttributes.ReadOnly;
+
+                    foreach (var subDir in gitDirectory.EnumerateDirectories("*", SearchOption.AllDirectories))
+                    {
+                        subDir.Attributes &= ~FileAttributes.ReadOnly;
+                    }
+
+                    foreach (var subFile in gitDirectory.EnumerateFiles("*", SearchOption.AllDirectories))
+                    {
+                        subFile.Attributes &= ~FileAttributes.ReadOnly;
+                    }
+
+                    // Delete directory tree
+                    Log("Delete directory tree: {0}", gitFolder);
+                    gitDirectory.Delete(true);
+                }
+            }
+        }
+
+        private static LibGit2Sharp.Repository GetOrCreateFinaliseRepository(string directory)
+        {
+            LibGit2Sharp.Repository repo = null;
+
+            try
+            {
+                repo = new LibGit2Sharp.Repository(directory);
+            }
+            catch (Exception)
+            {
+                LibGit2Sharp.Repository.Init(directory);
+                repo = new LibGit2Sharp.Repository(directory);
+            }
+
+            return repo;
+        }
+
         private static void Finalise(string directory)
         {
             Log("Finalising {0}", directory);
-            var filePath = new FilePath(directory);
-            Git repo;
-            try
+
+            using (var repo = GetOrCreateFinaliseRepository(directory))
             {
-                repo = Git.Open(filePath);
+                var directoryInfo = new DirectoryInfo(directory);
+                if (directoryInfo.EnumerateFiles(".gitignore", SearchOption.TopDirectoryOnly).Any() == false)
+                {
+                    File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
+                }
+
+                Log("Retrieving status");
+
+                var status = repo.Index.RetrieveStatus();
+
+                Log("Adding items to staging area");
+
+                bool filesStaged = false;
+
+                Action<IEnumerable<string>> stageFiles = (files) =>
+                {
+                    if (files.Any())
+                    {
+                        repo.Index.Stage(files);
+                        filesStaged = true;
+                    }
+                };
+
+                stageFiles(status.Added);
+                stageFiles(status.Modified);
+                stageFiles(status.Missing);
+                stageFiles(status.Removed);
+                stageFiles(status.Untracked);
+
+                if (filesStaged)
+                {
+                    string message;
+                    try
+                    {
+                        message = string.Format("Package {{ PackageNameAndVersion }} has finalised directory {0}".Render(), directory);
+                    }
+                    catch (Exception)
+                    {
+                        message = string.Format("Unknown package has finalised directory {0}", directory);
+                    }
+
+                    Log("Committing changes");
+
+                    var author = new LibGit2Sharp.Signature("Finalise2", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
+                    var commit = repo.Commit(message, author, author);
+
+                    Log("Finalise complete");
+                }
+                else
+                {
+                    Log("Nothing to finalise");
+                }
             }
-            catch (Exception)
-            {
-                repo = Git.Init().SetBare(false).SetDirectory(filePath).Call();
-            }
-            repo.Add().AddFilepattern(".").Call();
-            string message;
-            try
-            {
-                message = string.Format("Package {{ PackageNameAndVersion }} has finalised directory {0}".Render(), directory);
-            }
-            catch (Exception)
-            {
-                message = string.Format("Unknown package has finalised directory {0}", directory);
-            }
-            repo.Commit().SetMessage(message).SetAuthor(
-                "Ensconce",
-                "Deployment@15below.com").Call();
-            repo.GetRepository().Close();
         }
 
         private static void ScanForChanges(string rootDirectory)
@@ -462,29 +592,33 @@ namespace Ensconce
             var gitFolders = Directory.GetDirectories(rootDirectory, ".git", SearchOption.AllDirectories);
             int i = 0;
 
-            var changeDetected = new Action<string, string, string>((changeType, repoDir, file) =>
+            Action<string, string, IEnumerable<string>> reportChangesDetected = (changeType, repoDir, files) =>
                 {
-                    i++;
-                    Console.Error.WriteLine("Change detected: ({0}) {1}", changeType, Path.Combine(repoDir, file));
-                });
+                    foreach (var file in files)
+                    {
+                        i++;
+                        Console.Error.WriteLine("Change detected: ({0}) {1}", changeType, Path.Combine(repoDir, file));
+                    }
+                };
 
             foreach (var gitFolder in gitFolders)
             {
                 var repoDir = new DirectoryInfo(gitFolder).Parent.FullName;
 
-                try
+                using (var repo = GetOrCreateFinaliseRepository(repoDir))
                 {
-                    Git repo = Git.Open(new FilePath(repoDir));
-                    var status = repo.Status().Call();
-
-                    status.GetModified().ToList().ForEach(file => changeDetected("modified", repoDir, file));
-                    status.GetChanged().ToList().ForEach(file => changeDetected("changed", repoDir, file));
-                    status.GetAdded().ToList().ForEach(file => changeDetected("added", repoDir, file));
-                    status.GetMissing().ToList().ForEach(file => changeDetected("missing", repoDir, file));
-                    status.GetUntracked().ToList().ForEach(file => changeDetected("untracked", repoDir, file));
-                }
-                catch (Exception)
-                {
+                    try
+                    {
+                        var status = repo.Index.RetrieveStatus();
+                        reportChangesDetected("added", repoDir, status.Added);
+                        reportChangesDetected("modified", repoDir, status.Modified);
+                        reportChangesDetected("missing", repoDir, status.Missing);
+                        reportChangesDetected("removed", repoDir, status.Removed);
+                        reportChangesDetected("untracked", repoDir, status.Untracked);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
             }
 
@@ -498,6 +632,24 @@ namespace Ensconce
             }
         }
 
+        private static void TagVersion(string finaliseDirectory, string tagVersion)
+        {
+            var version = tagVersion.Render();
+            Log("Tagging version {1} in {0}", finaliseDirectory, version);
+
+            using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
+            {
+                LibGit2Sharp.Tag tag = repo.Tags.FirstOrDefault(where => where.Name.Equals(version, StringComparison.CurrentCultureIgnoreCase));
+
+                if (tag != null)
+                {
+                    repo.Tags.Remove(tag);
+                }
+
+                repo.Tags.Add(version, repo.Head.Tip);
+            }
+        }
+
         private static void ShowHelp(OptionSet optionSet)
         {
             Console.WriteLine("Configuration update console wrapper. See https://github.com/15below/Ensconce for details.");
@@ -507,8 +659,10 @@ namespace Ensconce
         private static void DefaultUpdate()
         {
             Log("Updating config with substitution file {0}", substitutionPath);
+
             var tags = LazyTags.Value;
             var updatedContents = UpdateFile.UpdateAll(substitutionPath, tags);
+
             foreach (var updatedContent in updatedContents)
             {
                 using (var fs = new StreamWriter(updatedContent.Item1))
@@ -516,24 +670,11 @@ namespace Ensconce
                     fs.Write(updatedContent.Item2);
                 }
             }
-        }
 
-        private static void BackupDirectory(string dirPath)
-        {
-            if (nobackup) return;
-            if (!Directory.Exists(dirPath)) return;
-            Log("Backing up {0}", dirPath);
-
-            var dirPathTrimmed = dirPath.TrimEnd('\\', '/');
-
-            var dir = new DirectoryInfo(dirPathTrimmed);
-            var dirLength = dirPathTrimmed.Length + 1;
-            var parent = Directory.GetParent(dirPathTrimmed);
-            var backupName = dir.Name + ".old.zip";
-            using (var zipStream = new ZipOutputStream(File.Create(Path.Combine(parent.FullName, backupName))))
+            if (!String.IsNullOrEmpty(finaliseDirectory)
+                && updatedContents.Any(where => where.Item1.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase)))
             {
-                CompressDir(zipStream, dir, dirLength);
-                zipStream.IsStreamOwner = true;
+                finaliseRequired = true;
             }
         }
 
@@ -597,7 +738,7 @@ namespace Ensconce
             else
             {
                 // If calling out to config web service, cache results and reuse if less than 1 hour old.
-                if(File.Exists(CachedResultPath))
+                if (File.Exists(CachedResultPath))
                 {
                     var fi = new FileInfo(CachedResultPath);
                     if (DateTime.Now - fi.CreationTime < TimeSpan.FromHours(1))

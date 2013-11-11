@@ -68,7 +68,7 @@ namespace FifteenBelow.Deployment.Update
         {
             if (replacementValue.Contains(ErrorGuid))
             {
-                var attemptedRender = replacementValue.Replace(ErrorGuid, "ERROR OCCURRED HERE");
+                var attemptedRender = replacementValue.Replace(ErrorGuid, "[ERROR OCCURRED HERE]");
                 throw new ArgumentException(
                     string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}",
                                   template, attemptedRender));

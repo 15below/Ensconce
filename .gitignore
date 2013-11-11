@@ -36,6 +36,7 @@ buildOutput
 *.mrx
 Nuget/
 NugetFeed/
+NuSpecsTemp/
 Packages/
 _TeamCity.*
 TestResults.xml
