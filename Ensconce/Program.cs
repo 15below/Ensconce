@@ -27,7 +27,7 @@ namespace Ensconce
         private static string fixedPath = @"D:\FixedStructure\structure.xml";
         private static string substitutionPath = "substitutions.xml";
         private static string finaliseDirectory;
-        private static bool finaliseRequired;
+        private static bool finalisePath;
         private static string tagVersion;
         private static string scanDirForChanges;
         private static bool scanForChanges;
@@ -141,12 +141,24 @@ namespace Ensconce
                 DeployTo.ForEach(dt => CopyDirectory(deployFrom, dt));
             }
 
-            if (finaliseRequired
-                || ((copyTo || replace)
-                    && !String.IsNullOrEmpty(finaliseDirectory)
-                    && DeployTo.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase))
-                    )
-                )
+            if (finalisePath)
+            {
+                foreach (var deployDir in DeployTo)
+                {
+                    if (!Directory.Exists(deployDir))
+                    {
+                        throw new DirectoryNotFoundException(deployDir);
+                    }
+
+                    if (String.IsNullOrEmpty(finaliseDirectory) || deployDir.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase) == false)
+                    {
+                        // Only finalise those paths that aren't a sub-directory of the finaliseDirectory root, as that will be done next
+                        Finalise(deployDir);
+                    }
+                }
+            }
+
+            if (!String.IsNullOrEmpty(finaliseDirectory))
             {
                 if (Directory.Exists(finaliseDirectory))
                 {
@@ -192,10 +204,11 @@ namespace Ensconce
                                 },
                             {
                                 "x|finalisePath",
-                                "DEPRECATED: Please use finaliseDirectory and specify your root directory for the finalise versioning process",
+                                "OBSOLETE: Please use finaliseDirectory and specify your root directory for the finalise versioning process",
                                 s =>    {
                                             // Doesn't throw exception, this is just a warning
-                                            Console.Error.WriteLine("finalisePath has been deprecated");
+                                            Console.Error.WriteLine("finalisePath has been marked as obsolete");
+                                            finalisePath = s != null;
                                         }
                                 },
                             {
@@ -302,7 +315,7 @@ namespace Ensconce
             var filesToBeMovedOrChanged = (updateConfig || copyTo || replace || !string.IsNullOrEmpty(templateFilters));
             var databaseOperation = (!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString));
             var tagOperation = !string.IsNullOrEmpty(tagVersion);
-            var finaliseOperation = !string.IsNullOrEmpty(finaliseDirectory);
+            var finaliseOperation = !string.IsNullOrEmpty(finaliseDirectory) || finalisePath;
             var operationRequested = (filesToBeMovedOrChanged || databaseOperation || readFromStdIn || scanForChanges || tagOperation || finaliseOperation);
 
             if (showHelp || !(operationRequested))
@@ -670,12 +683,6 @@ namespace Ensconce
                 {
                     fs.Write(updatedContent.Item2);
                 }
-            }
-
-            if (!String.IsNullOrEmpty(finaliseDirectory)
-                && updatedContents.Any(where => where.Item1.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase)))
-            {
-                finaliseRequired = true;
             }
         }
 
