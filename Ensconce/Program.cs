@@ -34,6 +34,7 @@ namespace Ensconce
         private static string databaseRepository = "";
         private static readonly List<string> RawToDirectories = new List<string>();
         private static readonly List<string> DeployTo = new List<string>();
+        private static readonly List<string> SubstitutedFiles = new List<string>();
         private static string deployFrom;
         private static bool copyTo;
         private static bool replace;
@@ -164,19 +165,22 @@ namespace Ensconce
                 }
             }
 
-            if (!String.IsNullOrEmpty(finaliseDirectory))
+            if (!String.IsNullOrEmpty(finaliseDirectory) &&
+                Directory.Exists(finaliseDirectory) &&
+                (   SubstitutedFiles.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase)) ||
+                    DeployTo.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase))
+                ))
             {
-                if (Directory.Exists(finaliseDirectory))
-                {
-                    RemoveSubRepositories(finaliseDirectory);
-                    Finalise(finaliseDirectory);
-                }
+                RemoveSubRepositories(finaliseDirectory);
+                Finalise(finaliseDirectory);
             }
 
             if (!String.IsNullOrEmpty(tagVersion))
             {
                 TagVersion(finaliseDirectory, tagVersion);
             }
+
+            Log("Ensconce operation complete");
         }
 
         private static void SetUpAndParseOptions(string[] args)
@@ -454,6 +458,7 @@ namespace Ensconce
         {
             Log("Stopping processes in directory: {0}", directory);
             var wmiQueryString = "SELECT ProcessId, ExecutablePath, CommandLine FROM Win32_Process";
+
             using (var searcher = new ManagementObjectSearcher(wmiQueryString))
             using (var results = searcher.Get())
             {
@@ -474,27 +479,20 @@ namespace Ensconce
                     }
                 }
             }
-
         }
 
-        private static void DeleteDirectory(string dir)
+        private static void DeleteDirectory(string directory)
         {
+            if (!Directory.Exists(directory)) return;
+
             // Check for and uninstall services installed in directory
-            StopAndDeleteServicesInDirectory(dir);
+            StopAndDeleteServicesInDirectory(directory);
 
             // Try and kill processes we know about in the dir
-            StopProcessesInDirectory(dir);
+            StopProcessesInDirectory(directory);
 
-            if (!Directory.Exists(dir)) return;
-            Log("Deleting from {0}", dir);
-            var directory = new DirectoryInfo(dir) { Attributes = FileAttributes.Normal };
-
-            foreach (var info in directory.GetFileSystemInfos("*", SearchOption.AllDirectories))
-            {
-                info.Attributes = FileAttributes.Normal;
-            }
-
-            directory.Delete(true);
+            Log("Deleting from {0}", directory);
+            PerformDelete(new DirectoryInfo(directory));
         }
 
         private static void RemoveSubRepositories(string directory)
@@ -503,30 +501,33 @@ namespace Ensconce
 
             foreach (var gitFolder in Directory.EnumerateDirectories(directory, ".git", SearchOption.AllDirectories))
             {
-                var gitDirectory = new DirectoryInfo(gitFolder);
+                var dirInfo = new DirectoryInfo(gitFolder);
 
-                if (gitDirectory.FullName.Equals(rootGitDirectory.FullName, StringComparison.CurrentCultureIgnoreCase) == false)
+                if (dirInfo.FullName.Equals(rootGitDirectory.FullName, StringComparison.CurrentCultureIgnoreCase) == false)
                 {
                     Log("Removing sub repository: {0}", gitFolder);
-
-                    // Disable any read-only flags
-                    gitDirectory.Attributes &= ~FileAttributes.ReadOnly;
-
-                    foreach (var subDir in gitDirectory.EnumerateDirectories("*", SearchOption.AllDirectories))
-                    {
-                        subDir.Attributes &= ~FileAttributes.ReadOnly;
-                    }
-
-                    foreach (var subFile in gitDirectory.EnumerateFiles("*", SearchOption.AllDirectories))
-                    {
-                        subFile.Attributes &= ~FileAttributes.ReadOnly;
-                    }
-
-                    // Delete directory tree
-                    Log("Delete directory tree: {0}", gitFolder);
-                    gitDirectory.Delete(true);
+                    PerformDelete(dirInfo);
                 }
             }
+        }
+
+        private static void PerformDelete(DirectoryInfo directory)
+        {
+            // Disable any read-only flags
+            directory.Attributes = FileAttributes.Normal;
+
+            foreach (var dir in directory.EnumerateDirectories("*", SearchOption.AllDirectories))
+            {
+                dir.Attributes = FileAttributes.Normal;
+            }
+
+            foreach (var file in directory.EnumerateFiles("*", SearchOption.AllDirectories))
+            {
+                file.Attributes = FileAttributes.Normal;
+            }
+
+            // Delete directory tree
+            directory.Delete(true);
         }
 
         private static Repository GetOrCreateFinaliseRepository(string directory)
@@ -688,6 +689,7 @@ namespace Ensconce
                 using (var fs = new StreamWriter(updatedContent.Item1))
                 {
                     fs.Write(updatedContent.Item2);
+                    SubstitutedFiles.Add(updatedContent.Item1);
                 }
             }
         }
