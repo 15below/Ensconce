@@ -72,20 +72,26 @@ namespace Ensconce
 
             SetUpAndParseOptions(args);
 
-            finaliseDirectory = finaliseDirectory.Render();
-            scanDirForChanges = scanDirForChanges.Render();
-
-            if (scanForChanges)
-            {
-                ScanForChanges(scanDirForChanges);
-            }
-
             if (readFromStdIn)
             {
                 using (var input = Console.In)
                 {
                     Console.Out.Write(input.ReadToEnd().Render());
                 }
+
+                // No other operations can be performed when reading from stdin
+                return;
+            }
+
+            finaliseDirectory = finaliseDirectory.Render();
+            if (finaliseDirectory.EndsWith(@"\") == false) finaliseDirectory = finaliseDirectory + @"\";
+
+            scanDirForChanges = scanDirForChanges.Render();
+            if (scanDirForChanges.EndsWith(@"\") == false) scanDirForChanges = scanDirForChanges + @"\";
+
+            if (scanForChanges)
+            {
+                ScanForChanges(scanDirForChanges);
             }
 
             if (updateConfig)
