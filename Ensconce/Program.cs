@@ -32,9 +32,11 @@ namespace Ensconce
         private static string scanDirForChanges;
         private static bool scanForChanges;
         private static string databaseRepository = "";
-        private static readonly List<string> RawToDirectories = new List<string>();
-        private static readonly List<string> DeployTo = new List<string>();
-        private static readonly List<string> SubstitutedFiles = new List<string>();
+        private static List<string> RawToDirectories = new List<string>();
+        private static List<string> DeployTo = new List<string>();
+        private static List<string> SubstitutedFiles = new List<string>();
+        private static List<string> DeletedFiles = new List<string>();
+        private static List<string> CopiedFiles = new List<string>();
         private static string deployFrom;
         private static bool copyTo;
         private static bool replace;
@@ -399,7 +401,22 @@ namespace Ensconce
 
             try
             {
-                new Microsoft.VisualBasic.Devices.Computer().FileSystem.CopyDirectory(from, to, true);
+                if (from.EndsWith(@"\") == false) from = from + @"\";
+
+                foreach (var file in Directory.EnumerateFiles(from, "*", SearchOption.AllDirectories))
+                {
+                    var destination = new FileInfo(Path.Combine(to, file.Substring(from.Length)));
+
+                    if (destination.Directory.Exists == false)
+                    {
+                        destination.Directory.Create();
+                    }
+
+                    File.Copy(file, destination.FullName, true);
+                    
+                    // Record copied files for later finalising
+                    CopiedFiles.Add(destination.FullName);
+                }
             }
             catch (Exception ex)
             {
@@ -491,6 +508,12 @@ namespace Ensconce
             // Try and kill processes we know about in the dir
             StopProcessesInDirectory(directory);
 
+            foreach (var file in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))
+            {
+                // Record deleted files for later finalising
+                DeletedFiles.Add(file);
+            }
+
             Log("Deleting from {0}", directory);
             PerformDelete(new DirectoryInfo(directory));
         }
@@ -559,28 +582,24 @@ namespace Ensconce
                     File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
                 }
 
-                Log("Retrieving status");
-
-                var status = repo.Index.RetrieveStatus();
-
                 Log("Adding items to staging area");
 
                 bool filesStaged = false;
 
                 Action<IEnumerable<string>> stageFiles = (files) =>
                 {
-                    if (files.Any())
+                    var filesInThisRepo = files.Where(f => f.StartsWith(directory, StringComparison.CurrentCultureIgnoreCase));
+
+                    if (filesInThisRepo.Any())
                     {
-                        repo.Index.Stage(files);
+                        repo.Index.Stage(filesInThisRepo);
                         filesStaged = true;
                     }
                 };
 
-                stageFiles(status.Added);
-                stageFiles(status.Modified);
-                stageFiles(status.Missing);
-                stageFiles(status.Removed);
-                stageFiles(status.Untracked);
+                stageFiles(DeletedFiles);
+                stageFiles(CopiedFiles);
+                stageFiles(SubstitutedFiles);
 
                 if (filesStaged)
                 {
@@ -689,6 +708,8 @@ namespace Ensconce
                 using (var fs = new StreamWriter(updatedContent.Item1))
                 {
                     fs.Write(updatedContent.Item2);
+
+                    // Record substituted files for later finalising
                     SubstitutedFiles.Add(updatedContent.Item1);
                 }
             }
