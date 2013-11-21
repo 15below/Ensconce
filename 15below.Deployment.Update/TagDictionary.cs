@@ -234,13 +234,27 @@ namespace FifteenBelow.Deployment.Update
                 var wantedKey = key.ToString();
                 if (wantedKey.StartsWith("Octopus"))
                 {
-                    wantedKey = wantedKey
-                        .Split(new[] { "Octopus" }, 2, StringSplitOptions.RemoveEmptyEntries).Last();
-                    if (wantedKey.EndsWith("Name"))
-                        wantedKey = wantedKey.Substring(0, wantedKey.Length - "Name".Length);
+                    wantedKey = GetOctopusVariable(wantedKey);
                 }
                 AddOrDiscard(wantedKey, env[key].ToString());
             }
+        }
+
+        private static string GetOctopusVariable(string variableName)
+        {
+            if (variableName.Contains("."))
+            {
+                variableName = variableName.Split(new[] { '.' },2,StringSplitOptions.RemoveEmptyEntries).Last().Replace(".",String.Empty);
+            }
+            else 
+            {
+                variableName = variableName.Split(new[] { "Octopus" }, 2, StringSplitOptions.RemoveEmptyEntries).Last();
+            }
+            if (variableName.EndsWith("Name"))
+            {
+                variableName = variableName.Substring(0, variableName.Length - "Name".Length);
+            }
+            return variableName;
         }
 
         public void AddOrDiscard(string key, string value, bool idSpecific = false)
