@@ -218,8 +218,8 @@ namespace Ensconce
                                 "x|finalisePath",
                                 "OBSOLETE: Please use finaliseDirectory and specify your root directory for the finalise versioning process",
                                 s =>    {
-                                            // Doesn't throw exception, this is just a warning
-                                            Console.Error.WriteLine("finalisePath has been marked as obsolete");
+                                            // Doesn't throw exception, this is just a notice
+                                            Console.Out.WriteLine("INFO: finalisePath has been marked as obsolete");
                                             finalisePath = s != null;
                                         }
                                 },
