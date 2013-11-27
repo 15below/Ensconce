@@ -150,32 +150,7 @@ namespace Ensconce
                 DeployTo.ForEach(dt => CopyDirectory(deployFrom, dt));
             }
 
-            if (finalisePath)
-            {
-                foreach (var deployDir in DeployTo)
-                {
-                    if (!Directory.Exists(deployDir))
-                    {
-                        throw new DirectoryNotFoundException(deployDir);
-                    }
-
-                    if (String.IsNullOrEmpty(finaliseDirectory) || deployDir.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase) == false)
-                    {
-                        // Only finalise those paths that aren't a sub-directory of the finaliseDirectory root, as that will be done next
-                        Finalise(deployDir);
-                    }
-                }
-            }
-
-            if (!String.IsNullOrEmpty(finaliseDirectory) &&
-                Directory.Exists(finaliseDirectory) &&
-                (   SubstitutedFiles.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase)) ||
-                    DeployTo.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase))
-                ))
-            {
-                RemoveSubRepositories(finaliseDirectory);
-                Finalise(finaliseDirectory);
-            }
+            FinaliseAll();
 
             if (!String.IsNullOrEmpty(tagVersion))
             {
@@ -568,6 +543,33 @@ namespace Ensconce
             }
 
             return repo;
+        }
+
+        private static void FinaliseAll()
+        {
+            foreach (var deployDir in DeployTo)
+            {
+                if (!Directory.Exists(deployDir))
+                {
+                    throw new DirectoryNotFoundException(deployDir);
+                }
+
+                if (String.IsNullOrEmpty(finaliseDirectory) || deployDir.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase) == false)
+                {
+                    // Only finalise those paths that aren't a sub-directory of the finaliseDirectory root, as that will be done next
+                    Finalise(deployDir);
+                }
+            }
+
+            if (!String.IsNullOrEmpty(finaliseDirectory) &&
+                Directory.Exists(finaliseDirectory) &&
+                (SubstitutedFiles.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase)) ||
+                    DeployTo.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase))
+                ))
+            {
+                RemoveSubRepositories(finaliseDirectory);
+                Finalise(finaliseDirectory);
+            }
         }
 
         private static void Finalise(string directory)
