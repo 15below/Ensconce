@@ -75,6 +75,28 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void LoadFromOctopus1XEnvironment()
+        {
+            var environment = "LOC";
+            Environment.SetEnvironmentVariable("Environment","");
+            Environment.SetEnvironmentVariable("OctopusEnvironmentName",environment);
+            var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
+            Assert.AreEqual(environment, loader["Environment"]);
+            Environment.SetEnvironmentVariable("OctopusEnvironmentName","");
+        }
+
+        [Test]
+        public void LoadFromOctopus2XEnvironment()
+        {
+            var environment = "DEV";
+            Environment.SetEnvironmentVariable("Environment", "");
+            Environment.SetEnvironmentVariable("Octopus.Environment.Name", environment);
+            var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
+            Assert.AreEqual(environment, loader["Environment"]);
+            Environment.SetEnvironmentVariable("Octopus.Environment.Name", "");
+        }
+
+        [Test]
         public void LoadFromXmlData()
         {
             var loader = new TagDictionary("ident",
