@@ -629,6 +629,72 @@ namespace Ensconce
             }
         }
 
+		private static void FinaliseAllUncommitted(string directory)
+		{
+			Log("Finalising All Uncommitted {0}", directory);
+
+			using (var repo = GetOrCreateFinaliseRepository(directory))
+			{
+				var directoryInfo = new DirectoryInfo(directory);
+				if (directoryInfo.EnumerateFiles(".gitignore", SearchOption.TopDirectoryOnly).Any() == false)
+				{
+					File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
+				}
+
+				bool filesStaged = false;
+
+				Action<IEnumerable<string>> stageFiles = (files) =>
+				{
+					if (files.Any())
+					{
+						repo.Index.Stage(files);
+						filesStaged = true;
+					}
+				};
+
+				try
+				{
+					Log("Retrieving status");
+					var status = repo.Index.RetrieveStatus();
+
+					Log("Adding items to staging area");
+					stageFiles(status.Added);
+					stageFiles(status.Modified);
+					stageFiles(status.Missing);
+					stageFiles(status.Removed);
+					stageFiles(status.Untracked);
+				}
+				catch (Exception ex)
+				{
+					Log(ex.ToString());
+				}
+
+				if (filesStaged)
+				{
+					string message;
+					try
+					{
+						message = string.Format("Package {{ PackageNameAndVersion }} has finalised directory {0}".Render(), directory);
+					}
+					catch (Exception)
+					{
+						message = string.Format("Unknown package has finalised directory {0}", directory);
+					}
+
+					Log("Committing changes");
+
+					var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
+					var commit = repo.Commit(message, author, author);
+
+					Log("Finalise complete");
+				}
+				else
+				{
+					Log("Nothing to finalise");
+				}
+			}
+		}
+
         private static void ScanForChanges(string rootDirectory)
         {
             var gitFolders = Directory.GetDirectories(rootDirectory, ".git", SearchOption.AllDirectories);
@@ -676,10 +742,13 @@ namespace Ensconce
 
         private static void TagVersion(string finaliseDirectory, string tagVersion)
         {
-            var version = tagVersion.Render();
-            Log("Tagging version {1} in {0}", finaliseDirectory, version);
+			FinaliseAllUncommitted(finaliseDirectory);
 
-            using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
+			var version = tagVersion.Render();
+
+			Log("Tagging version {1} in {0}", finaliseDirectory, version);
+
+			using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
             {
                 Tag tag = repo.Tags.FirstOrDefault(where => where.Name.Equals(version, StringComparison.CurrentCultureIgnoreCase));
 
