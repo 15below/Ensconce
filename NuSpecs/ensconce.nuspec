@@ -15,6 +15,7 @@
 	
 	<files>
 		<file src="..\Ensconce\bin\Release\*" target="Content" />
+		<file src="..\THIRDPARTYLIBRARIES\NativeBinaries\**" target="Content\NativeBinaries" />
 		<file src="..\deployHelp.ps1" target="Content" />
 		<file src="..\createWebSite.ps1" target="Content" />
 		<file src="..\createiis6app.ps1" target="Content" />

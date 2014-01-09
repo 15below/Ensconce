@@ -91,6 +91,9 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\THIRDPARTYLIBRARIES\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="LibGit2Sharp">
+      <HintPath>..\THIRDPARTYLIBRARIES\LibGit2Sharp.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\THIRDPARTYLIBRARIES\log4net.dll</HintPath>
     </Reference>
@@ -106,9 +109,6 @@
     </Reference>
     <Reference Include="NDjangoFilters.NDjangoExtension40">
       <HintPath>..\THIRDPARTYLIBRARIES\NDjangoFilters.NDjangoExtension40.dll</HintPath>
-    </Reference>
-    <Reference Include="NGit">
-      <HintPath>..\THIRDPARTYLIBRARIES\NGit.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\THIRDPARTYLIBRARIES\NHibernate.dll</HintPath>
