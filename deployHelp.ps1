@@ -6,7 +6,7 @@ if (Test-Path variable:\OctopusParameters)
     {
         if (!($kp -like '*Octopus.Step*'))
         {
-            Set-Content ("env:\" + $kp.Key) ($kp.Value) -Force
+            Set-Content ("env:\" + $kp.Key.replace("[","-").replace("]","")) ($kp.Value) -Force
         }
     }
 }
