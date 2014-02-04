@@ -128,19 +128,19 @@ let MoveNuget (info:FileInfo) name =
     sprintf "Pushed File: %s to: %s" info.Name directory    
     
 FinalTarget "FileCopyNugetsAndArtifacts" (fun _ ->
-	ReportProgressStart "Push Nugets"
+    ReportProgressStart "Push Nugets"
     !! (outputDirectory @@ "**\*.nupkg")
     |> Seq.map (fun fileName -> new FileInfo(fileName))
     |> Seq.map (fun info -> info, (getPackageName info.Name))
     |> Seq.map (fun (info, name) -> MoveNuget info name)
     |> Log ""
 
-	ReportProgressFinish "Push Nugets"
+    ReportProgressFinish "Push Nugets"
     PublishArticfact (outputDirectory @@ "Ensconce.*.nupkg")  
     )
 
 FinalTarget "PushNugetsAndArtifacts" (fun _ ->
-	ReportProgressStart "Push Nugets"
+    ReportProgressStart "Push Nugets"
     !! (outputDirectory @@ "**\*.nupkg")
     |> Seq.map (fun fileName -> new FileInfo(fileName))
     |> Seq.map (fun info -> info, (getPackageName info.Name))
@@ -154,7 +154,7 @@ FinalTarget "PushNugetsAndArtifacts" (fun _ ->
             sprintf "%s" info.FullName)
     |> Log "Pushing file: "
 
-	ReportProgressFinish "Push Nugets"
+    ReportProgressFinish "Push Nugets"
     PublishArticfact (outputDirectory @@ "Ensconce.*.nupkg")
     )
 
