@@ -16,9 +16,12 @@ let core_version_number = environVarOrDefault "core_version_number" "0.0.0"
 let build_number = environVarOrDefault "build_number" "0"
 let teamcity_build_branch = environVarOrDefault "teamcity_build_branch" (sprintf "%s/release" core_version_number)
 let vcsroot_branch = environVarOrDefault "vcsroot_branch" "development"
+let pushUsingNugetWebService = environVarOrDefault "nuget_web_service_push" "true"
 let nugetWebserviceDirectory = environVarOrDefault "nuget_repository_path" ""
+let nugetWebService = environVarOrDefault "nuget_repository" "http://btn-tc01:8083"
 let tempNuspecDir = currentDirectory @@ "NuSpecsTemp"
 let outputDirectory = currentDirectory @@ "NugetFeed"
+let toolPath = currentDirectory @@ "FakeBuild" @@ "NuGet.exe"
 
 Target "UpdateVersions" (fun _ ->
     ReportProgressStart "Update Versions"
@@ -70,7 +73,6 @@ Target "CreateNugets" (fun _ ->
     // you are using Nuget files as designed, not
     // building octopus packages.
 
-    let toolPath = currentDirectory @@ "FakeBuild" @@ "NuGet.exe"
     let nuspecDirectory = currentDirectory @@ "NuSpecsTemp"
     let nuspecs = !! (sprintf @"%s\*.nuspec" nuspecDirectory)
     let timeOut = TimeSpan.FromMinutes 5.
@@ -88,7 +90,9 @@ Target "CreateNugets" (fun _ ->
     nuspecs |> Seq.map packNuspec |> Async.Parallel |> Async.RunSynchronously |> ignore
 
     if buildServer = TeamCity then
-        ActivateFinalTarget "PushNugetsAndArtifacts"
+        match pushUsingNugetWebService with
+        | "true" -> ActivateFinalTarget "PushNugetsAndArtifacts"
+        |_ -> ActivateFinalTarget "FileCopyNugetsAndArtifacts"
 
 
 //    // This will only do anything if the build is running on TeamCity
@@ -112,31 +116,47 @@ Target "RunUnitTests" (fun _ ->
     ReportProgressFinish "Run Unit Tests"
 )
 
-FinalTarget "PushNugetsAndArtifacts" (fun _ ->
-    let getPackageName (nuspecFileName : string) =
-        let postfix = sprintf ".%s.nupkg" (environVar "NugetVersion")
-        nuspecFileName.Replace(postfix, "")
-    let toolPath = currentDirectory @@ "FakeBuild" @@ "NuGet.exe"
+let getPackageName (nuspecFileName : string) =
+    let postfix = sprintf ".%s.nupkg" (environVar "NugetVersion")
+    nuspecFileName.Replace(postfix, "")
 
-    ReportProgressStart "Push Nugets"
-    !! (outputDirectory @@ "*.nupkg")
+let MoveNuget (info:FileInfo) name =
+    let directory = sprintf "%s\%s" nugetWebserviceDirectory name
+    if (not (Directory.Exists(directory))) then 
+        Directory.CreateDirectory(directory) |> ignore
+    let file = info.CopyTo(sprintf "%s\%s" directory info.Name, true)
+    sprintf "Pushed File: %s to: %s" info.Name directory    
+    
+FinalTarget "FileCopyNugetsAndArtifacts" (fun _ ->
+	ReportProgressStart "Push Nugets"
+    !! (outputDirectory @@ "**\*.nupkg")
     |> Seq.map (fun fileName -> new FileInfo(fileName))
     |> Seq.map (fun info -> info, (getPackageName info.Name))
-    |> Seq.map (fun (info, name) -> 
-            let args = sprintf @"push ""%s"" -ApiKey ""%s"" -Source %s" (info.FullName) "ATest" "http://btn-tc01:8083"
+    |> Seq.map (fun (info, name) -> MoveNuget info name)
+    |> Log ""
+
+	ReportProgressFinish "Push Nugets"
+    PublishArticfact (outputDirectory @@ "Ensconce.*.nupkg")  
+    )
+
+FinalTarget "PushNugetsAndArtifacts" (fun _ ->
+	ReportProgressStart "Push Nugets"
+    !! (outputDirectory @@ "**\*.nupkg")
+    |> Seq.map (fun fileName -> new FileInfo(fileName))
+    |> Seq.map (fun info -> info, (getPackageName info.Name))
+    |> doParallelWithThrottle 4 (fun (info, name) -> 
+            let args = sprintf @"push ""%s"" -ApiKey ""%s"" -Source %s" (info.FullName) "ATest" nugetWebService
             let result =
                     ExecProcess (fun info ->
                                     info.FileName <- toolPath
                                     info.Arguments <- args) (TimeSpan.FromMinutes 20.)
-            if result <> 0 then failwithf "Error during Nuget creation. %s %s" toolPath args 
+            if result <> 0 then failwithf "Error during Nuget push. %s %s" toolPath args 
             sprintf "%s" info.FullName)
     |> Log "Pushing file: "
 
-    // Create Ensconce Nuget build artifact
+	ReportProgressFinish "Push Nugets"
     PublishArticfact (outputDirectory @@ "Ensconce.*.nupkg")
-
-    ReportProgressFinish "Push Nugets"
-)
+    )
 
 Target "Default" DoNothing
 
