@@ -387,7 +387,7 @@ namespace Ensconce
                         destination.Directory.Create();
                     }
 
-                    File.Copy(file, destination.FullName, true);
+                    Retry.Do(() => File.Copy(file, destination.FullName, true),TimeSpan.FromMilliseconds(500));
                     
                     // Record copied files for later finalising
                     CopiedFiles.Add(destination.FullName);
