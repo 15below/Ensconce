@@ -8,6 +8,7 @@ using System.Linq;
 using System.Management;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using FifteenBelow.Deployment;
 using FifteenBelow.Deployment.Update;
 using ICSharpCode.SharpZipLib.Zip;
@@ -143,6 +144,7 @@ namespace Ensconce
             if (replace)
             {
                 DeployTo.ForEach(DeleteDirectory);
+                Thread.Sleep(500); //Allow for the delete to complete.
             }
 
             if (copyTo || replace)
