@@ -8,6 +8,7 @@ using System.Linq;
 using System.Management;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using FifteenBelow.Deployment;
 using FifteenBelow.Deployment.Update;
 using ICSharpCode.SharpZipLib.Zip;
@@ -143,6 +144,7 @@ namespace Ensconce
             if (replace)
             {
                 DeployTo.ForEach(DeleteDirectory);
+                Thread.Sleep(500); //Allow for the delete to complete.
             }
 
             if (copyTo || replace)
@@ -378,16 +380,14 @@ namespace Ensconce
             {
                 if (from.EndsWith(@"\") == false) from = from + @"\";
 
-                foreach (var file in Directory.EnumerateFiles(from, "*", SearchOption.AllDirectories))
+                var fromDirectory = new DirectoryInfo(from);
+
+                foreach (var file in fromDirectory.EnumerateFiles("*", SearchOption.AllDirectories))
                 {
-                    var destination = new FileInfo(Path.Combine(to, file.Substring(from.Length)));
+                    var destination = new FileInfo(Path.Combine(to, file.Name));
 
-                    if (destination.Directory.Exists == false)
-                    {
-                        destination.Directory.Create();
-                    }
-
-                    Retry.Do(() => File.Copy(file, destination.FullName, true),TimeSpan.FromMilliseconds(500));
+                    var currentFile = file;
+                    Retry.Do(() => CheckDirectoryAndCopyFile(destination, currentFile), TimeSpan.FromMilliseconds(500));
                     
                     // Record copied files for later finalising
                     CopiedFiles.Add(destination.FullName);
@@ -404,6 +404,16 @@ namespace Ensconce
 
                 throw;
             }
+        }
+
+        private static void CheckDirectoryAndCopyFile(FileInfo sourceFileInfo, FileInfo destinationFileInfo)
+        {
+            if (destinationFileInfo.Directory != null && !destinationFileInfo.Directory.Exists)
+            {
+                destinationFileInfo.Directory.Create();
+            }
+
+            sourceFileInfo.CopyTo(destinationFileInfo.FullName, true);
         }
 
         public class ServiceDetails
