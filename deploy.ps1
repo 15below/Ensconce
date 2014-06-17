@@ -7,4 +7,4 @@ if(!(Test-Path $DeployToolsDir))
     New-Item $DeployToolsDir -Type container
 }
 
-Copy-Item "$scriptDir\..\Content\*" $DeployToolsDir -Force -Recurse
+Copy-Item "$scriptDir\Content\*" $DeployToolsDir -Force -Recurse
