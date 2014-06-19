@@ -384,7 +384,7 @@ namespace Ensconce
 
                 foreach (var file in fromDirectory.EnumerateFiles("*", SearchOption.AllDirectories))
                 {
-                    var destination = new FileInfo(Path.Combine(to, file.Name));
+                    var destination = new FileInfo(Path.Combine(to, file.FullName.Substring(from.Length)));
 
                     var currentFile = file;
                     Retry.Do(() => CheckDirectoryAndCopyFile(currentFile, destination), TimeSpan.FromMilliseconds(500));
