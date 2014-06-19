@@ -387,7 +387,7 @@ namespace Ensconce
                     var destination = new FileInfo(Path.Combine(to, file.Name));
 
                     var currentFile = file;
-                    Retry.Do(() => CheckDirectoryAndCopyFile(destination, currentFile), TimeSpan.FromMilliseconds(500));
+                    Retry.Do(() => CheckDirectoryAndCopyFile(currentFile, destination), TimeSpan.FromMilliseconds(500));
                     
                     // Record copied files for later finalising
                     CopiedFiles.Add(destination.FullName);
