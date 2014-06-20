@@ -378,20 +378,18 @@ namespace Ensconce
 
             try
             {
-                if (from.EndsWith(@"\") == false) from = from + @"\";
+				if (from.EndsWith(@"\") == false) from = from + @"\";
 
-                var fromDirectory = new DirectoryInfo(from);
+				foreach (var file in Directory.EnumerateFiles(from, "*", SearchOption.AllDirectories))
+				{
+					var source = new FileInfo(file);
+					var destination = new FileInfo(Path.Combine(to, file.Substring(from.Length)));
 
-                foreach (var file in fromDirectory.EnumerateFiles("*", SearchOption.AllDirectories))
-                {
-                    var destination = new FileInfo(Path.Combine(to, file.FullName.Substring(from.Length)));
+					Retry.Do(() => CheckDirectoryAndCopyFile(source, destination), TimeSpan.FromMilliseconds(500));
 
-                    var currentFile = file;
-                    Retry.Do(() => CheckDirectoryAndCopyFile(currentFile, destination), TimeSpan.FromMilliseconds(500));
-                    
-                    // Record copied files for later finalising
-                    CopiedFiles.Add(destination.FullName);
-                }
+					// Record copied files for later finalising
+					CopiedFiles.Add(destination.FullName);
+				}
             }
             catch (Exception ex)
             {
