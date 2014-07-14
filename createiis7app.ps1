@@ -351,3 +351,8 @@ function DefaultApplicationPoolGroup ()
 {
 	"IIS_IUSRS"
 }
+
+function EnableBasicAuthentication([string] $websiteName)
+{
+	Set-WebConfigurationProperty -filter "/system.webServer/security/authentication/basicAuthentication" -name enabled -value true -PSPath "IIS:\" -location $websiteName
+}
