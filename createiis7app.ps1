@@ -356,3 +356,8 @@ function EnableBasicAuthentication([string] $websiteName)
 {
 	Set-WebConfigurationProperty -filter "/system.webServer/security/authentication/basicAuthentication" -name enabled -value true -PSPath "IIS:\" -location $websiteName
 }
+
+function SetMaxRequestEntityAllowed([string] $websiteName, [int] $maxRequestEntityAllowedValue)
+{
+	Set-WebConfigurationProperty -Filter "//asp/limits" -name maxRequestEntityAllowed -PSPath "IIS:\" -value $maxRequestEntityAllowedValue -location $websiteName
+}
