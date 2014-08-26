@@ -343,10 +343,15 @@ function EnableParentPaths ([string] $websiteName)
 
 function Enable32BitApps ([string] $appPoolName)
 {
-	"The Enable32BirApps function does nothing in IIS6" | Write-Host
+	"The Enable32BitApps function does nothing in IIS6" | Write-Host
 }
 
 function DefaultApplicationPoolGroup ()
 {
 	"IIS_WPG"
+}
+
+function SetMaxRequestEntityAllowed([string] $websiteName, [int] $maxRequestEntityAllowedValue)
+{
+	"The SetMaxRequestEntityAllowed function does nothing in IIS6" | Write-Host
 }
