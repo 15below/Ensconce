@@ -46,6 +46,12 @@
       <Password>Some high entrophy random text</Password>
     </DbLogin>
     <DbLogin>
+      <Key>LOGIN</Key>
+      <Name>ZZ-ENV-LOGIN</Name>
+      <DefaultDb>ZZ-ENV-LOGIN</DefaultDb>
+      <Password>Some high entrophy random text</Password>
+    </DbLogin>
+    <DbLogin>
       <Name>ConnectionString</Name>
       <ConnectionString>Actual ConnectionString</ConnectionString>
     </DbLogin>
