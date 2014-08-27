@@ -207,6 +207,18 @@ namespace FifteenBelow.Deployment.Update.Tests
             Assert.IsFalse(string.IsNullOrEmpty(login.Value.ConnectionString));
         }
 
+
+        [Test]
+        public void DbLoginWithKey()
+        {
+            var sut = new TagDictionary("ident", XmlData);
+            Assert.True(sut.DbLogins.ContainsKey("LOGIN"));
+            var login = sut.DbLogins["LOGIN"];
+            Assert.IsFalse(string.IsNullOrEmpty(login.ConnectionString));
+            Assert.AreEqual("ZZ-ENV-LOGIN", login.Username);
+            Assert.AreEqual("ZZ-ENV-LOGIN", login.DefaultDb);
+        }
+
         [Test]
         public void DbLoginSuppliesConnectionStringWithSubbedValues()
         {

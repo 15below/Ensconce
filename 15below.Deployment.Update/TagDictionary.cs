@@ -182,10 +182,18 @@ namespace FifteenBelow.Deployment.Update
                 doc.XPathSelectElements("/Structure/DbLogins/DbLogin");
             foreach (var dbLoginElement in dbLoginElements)
             {
-                var fullname = dbLoginElement.XPathSelectElement("Name").Value;
-                const string prefix = "tagClientCode-tagEnvironment-";
-                var key = fullname.StartsWith(prefix) ? fullname.Substring(prefix.Length) : fullname;
-                if (!DbLogins.ContainsKey(key))
+                var username = dbLoginElement.XPathSelectElement("Name").Value;
+                string dbKey;
+                if (dbLoginElement.XPathSelectElement("Key") != null && !string.IsNullOrWhiteSpace(dbLoginElement.XPathSelectElement("Key").Value))
+                {
+                    dbKey = dbLoginElement.XPathSelectElement("Key").Value;
+                }
+                else
+                {
+                    dbKey = username.StartsWith("tagClientCode-tagEnvironment-") ? username.Substring(29) : username;
+                }
+
+                if (!DbLogins.ContainsKey(dbKey))
                 {
                     string password = string.Empty;
                     string defaultDb = string.Empty;
@@ -195,17 +203,17 @@ namespace FifteenBelow.Deployment.Update
                     {
                         password = dbLoginElement.XPathSelectElement("Password").Value;
                         defaultDb = dbLoginElement.XPathSelectElement("DefaultDb").Value;
-                        connectionString = string.Format("Data Source={{{{ DbServer }}}}; Initial Catalog={0}; User ID={1}; Password={2};",dbLoginElement.XPathSelectElement("DefaultDb").Value, fullname,dbLoginElement.XPathSelectElement("Password").Value);
+                        connectionString = string.Format("Data Source={{{{ DbServer }}}}; Initial Catalog={0}; User ID={1}; Password={2};", dbLoginElement.XPathSelectElement("DefaultDb").Value, username, dbLoginElement.XPathSelectElement("Password").Value);
                     }
                     else
                     {
                         connectionString = dbLoginElement.XPathSelectElement("ConnectionString").Value;
                     }
 
-                    DbLogins.Add(key,
+                    DbLogins.Add(dbKey,
                     new DbLogin
                         {
-                            Username = fullname,
+                            Username = username,
                             Password = password,
                             DefaultDb = defaultDb,
                             ConnectionString = connectionString
@@ -244,9 +252,9 @@ namespace FifteenBelow.Deployment.Update
         {
             if (variableName.Contains("."))
             {
-                variableName = variableName.Split(new[] { '.' },2,StringSplitOptions.RemoveEmptyEntries).Last().Replace(".",String.Empty);
+                variableName = variableName.Split(new[] { '.' }, 2, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".", String.Empty);
             }
-            else 
+            else
             {
                 variableName = variableName.Split(new[] { "Octopus" }, 2, StringSplitOptions.RemoveEmptyEntries).Last();
             }
