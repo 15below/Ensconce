@@ -10,6 +10,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using FifteenBelow.Deployment;
+using FifteenBelow.Deployment.ReportingServices;
 using FifteenBelow.Deployment.Update;
 using ICSharpCode.SharpZipLib.Zip;
 using LibGit2Sharp;
@@ -34,6 +35,7 @@ namespace Ensconce
         private static bool scanForChanges;
         private static string databaseRepository = "";
         private static List<string> RawToDirectories = new List<string>();
+        private static Dictionary<string, string> ReportingServiceVariables = new Dictionary<string, string>();
         private static List<string> DeployTo = new List<string>();
         private static List<string> SubstitutedFiles = new List<string>();
         private static List<string> DeletedFiles = new List<string>();
@@ -48,6 +50,8 @@ namespace Ensconce
         private static bool quiet;
         private static bool dropDatabase;
         private static bool dropDatabaseConfirm;
+        private static bool deployReports;
+        private static bool deployReportingRole;
         private static readonly Lazy<TagDictionary> LazyTags = new Lazy<TagDictionary>(BuildTagDictionary);
         private const string CachedResultPath = "_cachedConfigurationResults.xml";
         private const string GitIgnoreContents = "\r\n*.zip\r\n*.bak\r\n";
@@ -84,6 +88,13 @@ namespace Ensconce
                 }
 
                 // No other operations can be performed when reading from stdin
+                return;
+            }
+
+            if (deployReports || deployReportingRole)
+            {
+                RunReportingServices();
+                // No other operations can be performed when deploying reports
                 return;
             }
 
@@ -159,8 +170,12 @@ namespace Ensconce
                 TagVersion(finaliseDirectory, tagVersion);
             }
 
+
+
             Log("Ensconce operation complete");
         }
+
+
 
         private static void SetUpAndParseOptions(string[] args)
         {
@@ -283,6 +298,31 @@ namespace Ensconce
                                 "Drop database Confirmation, used to confirm that database is to be dropped (for safety)", 
                                 s => dropDatabaseConfirm = s != null
                                 },
+                                {
+                                "dr|deployReports",
+                                "Deploy Reporting service reports. See reportVariable help for example usage."
+                                , s =>
+                                    {
+                                        deployReports = s != null;
+                                    }
+                                },
+                                {
+                                "drr|deployReportingRole",
+                                "Deploy Reporting service role for User. See reportVariable help for example usage."
+                                , s =>
+                                    {
+                                        deployReportingRole = s != null;
+                                    }
+                                },
+                                {
+                                "rsv|reportVariable=",
+                                FifteenBelow.Deployment.ReportingServices.DeployHelp.ExampleUsage
+                                , s =>
+                                    {
+                                        var reportingServiceVariables = s.Split('=');
+                                        ReportingServiceVariables.Add(reportingServiceVariables[0], reportingServiceVariables[1]);
+                                    }
+                                }
                         };
 
             var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
@@ -305,7 +345,8 @@ namespace Ensconce
             var databaseOperation = (!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString));
             var tagOperation = !string.IsNullOrEmpty(tagVersion);
             var finaliseOperation = !string.IsNullOrEmpty(finaliseDirectory) || finalisePath;
-            var operationRequested = (filesToBeMovedOrChanged || databaseOperation || readFromStdIn || scanForChanges || tagOperation || finaliseOperation);
+            var reportOperation = (deployReports || deployReportingRole);
+            var operationRequested = (filesToBeMovedOrChanged || databaseOperation || readFromStdIn || scanForChanges || tagOperation || finaliseOperation || reportOperation);
 
             if (showHelp || !(operationRequested))
             {
@@ -354,6 +395,13 @@ namespace Ensconce
             {
                 throw new OptionException("Error: You cannot drop a database without specifying the drop database confirm argument", "dropDatabaseConfirm");
             }
+
+            if (reportOperation)
+            {
+                if (!ReportingServiceVariables.Any())
+                    throw new OptionException("Error: You cannot deploy any reports to a reporting service instance with no variables", "reportVariable");
+
+            }
         }
 
         private static void ProcessRawDirectories(IEnumerable<string> rawNames, List<string> processedNameList)
@@ -378,18 +426,18 @@ namespace Ensconce
 
             try
             {
-				if (from.EndsWith(@"\") == false) from = from + @"\";
+                if (from.EndsWith(@"\") == false) from = from + @"\";
 
-				foreach (var file in Directory.EnumerateFiles(from, "*", SearchOption.AllDirectories))
-				{
-					var source = new FileInfo(file);
-					var destination = new FileInfo(Path.Combine(to, file.Substring(from.Length)));
+                foreach (var file in Directory.EnumerateFiles(from, "*", SearchOption.AllDirectories))
+                {
+                    var source = new FileInfo(file);
+                    var destination = new FileInfo(Path.Combine(to, file.Substring(from.Length)));
 
-					Retry.Do(() => CheckDirectoryAndCopyFile(source, destination), TimeSpan.FromMilliseconds(500));
+                    Retry.Do(() => CheckDirectoryAndCopyFile(source, destination), TimeSpan.FromMilliseconds(500));
 
-					// Record copied files for later finalising
-					CopiedFiles.Add(destination.FullName);
-				}
+                    // Record copied files for later finalising
+                    CopiedFiles.Add(destination.FullName);
+                }
             }
             catch (Exception ex)
             {
@@ -637,71 +685,71 @@ namespace Ensconce
             }
         }
 
-		private static void FinaliseAllUncommitted(string directory)
-		{
-			Log("Finalising All Uncommitted {0}", directory);
+        private static void FinaliseAllUncommitted(string directory)
+        {
+            Log("Finalising All Uncommitted {0}", directory);
 
-			using (var repo = GetOrCreateFinaliseRepository(directory))
-			{
-				var directoryInfo = new DirectoryInfo(directory);
-				if (directoryInfo.EnumerateFiles(".gitignore", SearchOption.TopDirectoryOnly).Any() == false)
-				{
-					File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
-				}
+            using (var repo = GetOrCreateFinaliseRepository(directory))
+            {
+                var directoryInfo = new DirectoryInfo(directory);
+                if (directoryInfo.EnumerateFiles(".gitignore", SearchOption.TopDirectoryOnly).Any() == false)
+                {
+                    File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
+                }
 
-				bool filesStaged = false;
+                bool filesStaged = false;
 
-				Action<IEnumerable<string>> stageFiles = (files) =>
-				{
-					if (files.Any())
-					{
-						repo.Index.Stage(files);
-						filesStaged = true;
-					}
-				};
+                Action<IEnumerable<string>> stageFiles = (files) =>
+                {
+                    if (files.Any())
+                    {
+                        repo.Index.Stage(files);
+                        filesStaged = true;
+                    }
+                };
 
-				try
-				{
-					Log("Retrieving status");
-					var status = repo.Index.RetrieveStatus();
+                try
+                {
+                    Log("Retrieving status");
+                    var status = repo.Index.RetrieveStatus();
 
-					Log("Adding items to staging area");
-					stageFiles(status.Added);
-					stageFiles(status.Modified);
-					stageFiles(status.Missing);
-					stageFiles(status.Removed);
-					stageFiles(status.Untracked);
-				}
-				catch (Exception ex)
-				{
-					Log(ex.ToString());
-				}
+                    Log("Adding items to staging area");
+                    stageFiles(status.Added);
+                    stageFiles(status.Modified);
+                    stageFiles(status.Missing);
+                    stageFiles(status.Removed);
+                    stageFiles(status.Untracked);
+                }
+                catch (Exception ex)
+                {
+                    Log(ex.ToString());
+                }
 
-				if (filesStaged)
-				{
-					string message;
-					try
-					{
-						message = string.Format("Package {{ PackageNameAndVersion }} has finalised directory {0}".Render(), directory);
-					}
-					catch (Exception)
-					{
-						message = string.Format("Unknown package has finalised directory {0}", directory);
-					}
+                if (filesStaged)
+                {
+                    string message;
+                    try
+                    {
+                        message = string.Format("Package {{ PackageNameAndVersion }} has finalised directory {0}".Render(), directory);
+                    }
+                    catch (Exception)
+                    {
+                        message = string.Format("Unknown package has finalised directory {0}", directory);
+                    }
 
-					Log("Committing changes");
+                    Log("Committing changes");
 
-					var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
-					var commit = repo.Commit(message, author, author);
+                    var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
+                    var commit = repo.Commit(message, author, author);
 
-					Log("Finalise complete");
-				}
-				else
-				{
-					Log("Nothing to finalise");
-				}
-			}
-		}
+                    Log("Finalise complete");
+                }
+                else
+                {
+                    Log("Nothing to finalise");
+                }
+            }
+        }
 
         private static void ScanForChanges(string rootDirectory)
         {
@@ -750,13 +798,13 @@ namespace Ensconce
 
         private static void TagVersion(string finaliseDirectory, string tagVersion)
         {
-			FinaliseAllUncommitted(finaliseDirectory);
+            FinaliseAllUncommitted(finaliseDirectory);
 
-			var version = tagVersion.Render();
+            var version = tagVersion.Render();
 
-			Log("Tagging version {1} in {0}", finaliseDirectory, version);
+            Log("Tagging version {1} in {0}", finaliseDirectory, version);
 
-			using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
+            using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
             {
                 Tag tag = repo.Tags.FirstOrDefault(where => where.Name.Equals(version, StringComparison.CurrentCultureIgnoreCase));
 
@@ -877,6 +925,49 @@ namespace Ensconce
             }
             tags = new TagDictionary(instanceName, configXml);
             return tags;
+        }
+
+        private static void RunReportingServices()
+        {
+            var reportingServicesUrl = GetReportingVariable("reportingServicesUrl");
+            var networkDomain = GetReportingVariable("networkDomain");
+            var networkLogin = GetReportingVariable("networkLogin");
+            var networkPassword = GetReportingVariable("networkPassword");
+            var msreports = new MsReportingServices(reportingServicesUrl, networkDomain, networkLogin, networkPassword);
+            
+            if (deployReportingRole)
+                DeployReportingServiceRole(msreports);
+            if (deployReports)
+                PublishReports(msreports);
+
+        }
+
+        private static void PublishReports(MsReportingServices msreports)
+        {
+            var parentFolder = GetReportingVariable("parentFolder");
+            var subFolder = GetReportingVariable("subFolder");
+            var dataSourceName = GetReportingVariable("dataSourceName");
+            var dataSourceConnectionString = GetReportingVariable("dataSourceConnectionString");
+            var dataSourceUserName = GetReportingVariable("dataSourceUserName");
+            var dataSourcePassword = GetReportingVariable("dataSourcePassword");
+            var reportSourceFolder = GetReportingVariable("reportSourceFolder");
+            msreports.PublishReports(parentFolder, subFolder, dataSourceName, dataSourceConnectionString, dataSourceUserName, dataSourcePassword, reportSourceFolder);
+        }
+
+        private static void DeployReportingServiceRole(MsReportingServices msreports)
+        {
+            var itemPath = GetReportingVariable("itemPath");
+            var reportingUserToAddRoleFor = GetReportingVariable("reportingUserToAddRoleFor");
+            var reportingRoleToAdd = GetReportingVariable("reportingRoleToAdd");
+            msreports.AddRole(itemPath, reportingUserToAddRoleFor, reportingRoleToAdd);
+        }
+
+        private static string GetReportingVariable(string key)
+        {
+            if (!ReportingServiceVariables.ContainsKey(key))
+                throw new KeyNotFoundException(string.Format("required key: {0} not found in supplied reporting service variables.", key));
+
+            return ReportingServiceVariables[key];
         }
     }
 }
