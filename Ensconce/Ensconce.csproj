@@ -143,6 +143,10 @@
       <Project>{3BF706C4-851B-4502-9F09-E74FCC92C379}</Project>
       <Name>15below.Deployment.Database</Name>
     </ProjectReference>
+    <ProjectReference Include="..\15below.Deployment.ReportingServices\15below.Deployment.ReportingServices.csproj">
+      <Project>{442013d9-845f-47c9-b529-0426193559a8}</Project>
+      <Name>15below.Deployment.ReportingServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\15below.Deployment.Update\15below.Deployment.Update.csproj">
       <Project>{A59B1375-DC78-47D2-8930-746CD88863AF}</Project>
       <Name>15below.Deployment.Update</Name>

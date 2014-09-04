@@ -15,6 +15,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FakeBuild", "FakeBuild\Fake
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.StructureEditor", "Ensconce.StructureEditor\Ensconce.StructureEditor.csproj", "{D54DA365-E316-444D-A323-3667DE9BB1EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.ReportingServices", "15below.Deployment.ReportingServices\15below.Deployment.ReportingServices.csproj", "{442013D9-845F-47C9-B529-0426193559A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,16 @@ Global
 		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Release|Mixed Platforms.Build.0 = Release|x86
 		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Release|x86.ActiveCfg = Release|x86
 		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Release|x86.Build.0 = Release|x86
+		{442013D9-845F-47C9-B529-0426193559A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{442013D9-845F-47C9-B529-0426193559A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{442013D9-845F-47C9-B529-0426193559A8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{442013D9-845F-47C9-B529-0426193559A8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{442013D9-845F-47C9-B529-0426193559A8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{442013D9-845F-47C9-B529-0426193559A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{442013D9-845F-47C9-B529-0426193559A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{442013D9-845F-47C9-B529-0426193559A8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{442013D9-845F-47C9-B529-0426193559A8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{442013D9-845F-47C9-B529-0426193559A8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
