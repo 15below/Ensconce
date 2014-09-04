@@ -14,7 +14,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         public MsReportingServices(string reportingServicesUrl, string networkDomain, string networkLogin, string networkPassword)
         {
-            Console.WriteLine("Creating MsReportingServices instance");
+            Log("Creating MsReportingServices instance");
             if (!Uri.TryCreate(reportingServicesUrl, UriKind.RelativeOrAbsolute, out reportingServicesUri))
                 throw new UriFormatException(string.Format("reporting services uri of '{0}' is invalid!", reportingServicesUri));
 
@@ -44,7 +44,7 @@ namespace FifteenBelow.Deployment.ReportingServices
         {
             try
             {
-                var supportedRoles = new []{"Browser", "Content Manager", "My Reports", "Publisher", "Report Builder"};
+                var supportedRoles = new[] { "Browser", "Content Manager", "My Reports", "Publisher", "Report Builder" };
 
                 if (string.IsNullOrWhiteSpace(itemPath) || !itemPath.StartsWith("/"))
                 {
@@ -59,12 +59,12 @@ namespace FifteenBelow.Deployment.ReportingServices
                 {
                     throw new ArgumentException(string.Format("reportingRoleToAdd: '{0}' cannot be null or empty", reportingRoleToAdd));
                 }
-                if (supportedRoles.Contains(reportingRoleToAdd))
+                if (!supportedRoles.Contains(reportingRoleToAdd))
                 {
-                    throw new ArgumentOutOfRangeException(string.Format("reportingRoleToAdd: '{0}' is not supported. Only '{1}' are supported.", reportingRoleToAdd,String.Join(",",supportedRoles)));
+                    throw new ArgumentOutOfRangeException(string.Format("reportingRoleToAdd: '{0}' is not supported. Only '{1}' are supported.", reportingRoleToAdd, string.Join(", ", supportedRoles)));
                 }
-             
-                Console.WriteLine("Attempting to retrieve a list of all existing policies for itemPath: '{0}'", itemPath);
+
+                Log("Attempting to retrieve a list of all existing policies for itemPath: '{0}'", itemPath);
 
                 bool inheritParent;
                 Policy policy = null;
@@ -77,7 +77,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
                 if (policy == null)
                 {
-                    Console.WriteLine("Adding new policy for User: '{0}' to existing policy list", reportingUserToAddRoleFor);
+                    Log("Adding new policy for User: '{0}' to existing policy list", reportingUserToAddRoleFor);
 
                     policy = new Policy()
                         {
@@ -89,10 +89,10 @@ namespace FifteenBelow.Deployment.ReportingServices
                 }
                 else
                 {
-                    Console.WriteLine("User: '{0}' already has a policy list, so using this", reportingUserToAddRoleFor);
+                    Log("User: '{0}' already has a policy list, so using this", reportingUserToAddRoleFor);
                 }
 
-                Console.WriteLine("Attempting to select the role of: '{0}' for GroupUserName: '{1}'", reportingRoleToAdd,
+                Log("Attempting to select the role of: '{0}' for GroupUserName: '{1}'", reportingRoleToAdd,
                                   reportingUserToAddRoleFor);
                 Role[] existingRoles = policy.Roles;
                 Role role = null;
@@ -104,7 +104,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
                 if (role == null)
                 {
-                    Console.WriteLine("Adding new role of: '{0}' for User: '{1}'.", reportingRoleToAdd, reportingUserToAddRoleFor);
+                    Log("Adding new role of: '{0}' for User: '{1}'.", reportingRoleToAdd, reportingUserToAddRoleFor);
                     role = new Role()
                         {
                             Name = reportingRoleToAdd
@@ -113,16 +113,16 @@ namespace FifteenBelow.Deployment.ReportingServices
                 }
                 else
                 {
-                    Console.WriteLine("User: '{0}' already has a role of type: '{1}', nothing to add.", reportingUserToAddRoleFor, reportingRoleToAdd);
+                    Log("User: '{0}' already has a role of type: '{1}', nothing to add.", reportingUserToAddRoleFor, reportingRoleToAdd);
                 }
 
-                Console.WriteLine("Setting policy role of: '{0}' for user: '{1}' for itemPath: '{2}'", reportingRoleToAdd, reportingUserToAddRoleFor, itemPath);
+                Log("Setting policy role of: '{0}' for user: '{1}' for itemPath: '{2}'", reportingRoleToAdd, reportingUserToAddRoleFor, itemPath);
                 rs.SetPolicies(itemPath, existingPolicies);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred whilst attempting to set roles for user in Reporting Services!");
-                Console.WriteLine("Message: {0}", ex.Message);
+                Log("An error occurred whilst attempting to set roles for user in Reporting Services!");
+                Log("Message: {0}", ex.Message);
                 throw;
             }
             finally
@@ -168,8 +168,8 @@ namespace FifteenBelow.Deployment.ReportingServices
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred whilst attempting to publish reports to Reporting Services!");
-                Console.WriteLine("Message: {0}", ex.Message);
+                Log("An error occurred whilst attempting to publish reports to Reporting Services!");
+                Log("Message: {0}", ex.Message);
                 throw;
             }
             finally
@@ -182,6 +182,12 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         #region Private Helper Methods
 
+        private void Log(string message, params object[] values)
+        {
+            Console.WriteLine(message, values);
+            Console.Out.Flush();
+        }
+
         private void CreateParentFolder(string parentFolder)
         {
             CatalogItem[] items = rs.ListChildren("/", false);
@@ -191,13 +197,13 @@ namespace FifteenBelow.Deployment.ReportingServices
 
             if (parentFolderExists)
             {
-                Console.WriteLine("Folder '{0}' already exists", parentFolder);
+                Log("Folder '{0}' already exists", parentFolder);
             }
             else
             {
-                Console.WriteLine("Creating folder '{0}'", parentFolder);
+                Log("Creating folder '{0}'", parentFolder);
                 rs.CreateFolder(parentFolder, "/", null);
-                Console.WriteLine("Created folder '{0}'", parentFolder);
+                Log("Created folder '{0}'", parentFolder);
             }
         }
 
@@ -210,13 +216,13 @@ namespace FifteenBelow.Deployment.ReportingServices
 
             if (subFolderExists)
             {
-                Console.WriteLine(@"Deleting sub folder '{0}\{1}'.", parentFolder, subFolder);
+                Log(@"Deleting sub folder '{0}\{1}'.", parentFolder, subFolder);
                 rs.DeleteItem(string.Format("/{0}/{1}", parentFolder, subFolder));
-                Console.WriteLine(@"Deleted sub folder '{0}\{1}'.", parentFolder, subFolder);
+                Log(@"Deleted sub folder '{0}\{1}'.", parentFolder, subFolder);
             }
             else
             {
-                Console.WriteLine(@"Sub folder '{0}\{1}' does not exist.", parentFolder, subFolder);
+                Log(@"Sub folder '{0}\{1}' does not exist.", parentFolder, subFolder);
             }
         }
 
@@ -238,9 +244,9 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         private void CreateSubFolder(string parentFolder, string subFolder)
         {
-            Console.WriteLine(@"Creating sub folder '{0}\{1}'.", parentFolder, subFolder);
+            Log(@"Creating sub folder '{0}\{1}'.", parentFolder, subFolder);
             rs.CreateFolder(subFolder, "/" + parentFolder, null);
-            Console.WriteLine(@"Created sub folder '{0}\{1}'.", parentFolder, subFolder);
+            Log(@"Created sub folder '{0}\{1}'.", parentFolder, subFolder);
         }
 
         private void CreateDataSource(string parentFolder, string subFolder, string dataSourceName, string dataSourceConnectionString, string dataSourceUserName, string dataSourcePassWord)
@@ -260,9 +266,9 @@ namespace FifteenBelow.Deployment.ReportingServices
                 Password = dataSourcePassWord
             };
 
-            Console.WriteLine("Creating data source {0}", dataSourceName);
+            Log("Creating data source {0}", dataSourceName);
             rs.CreateDataSource(dataSourceName, string.Format("/{0}/{1}", parentFolder, subFolder), true, definition, null);
-            Console.WriteLine("Created data source {0}", dataSourceName);
+            Log("Created data source {0}", dataSourceName);
         }
 
         private void CreateReportsAndSubscriptions(string parentFolder, string subFolder, string reportSourceFolder, string dataSourceName)
@@ -284,16 +290,16 @@ namespace FifteenBelow.Deployment.ReportingServices
             Byte[] reportDefinition = GetReportDefinition(reportName, sourceFolder);
             CatalogItem catalogItem = null;
             Warning[] warnings = null;
-            Console.WriteLine("Creating report '{0}'", reportName);
+            Log("Creating report '{0}'", reportName);
             catalogItem = rs.CreateCatalogItem("Report", reportName, targetFolder, true, reportDefinition, null, out warnings);
 
             if (catalogItem == null)
             {
-                Console.WriteLine("Report '{0}' not created ", reportName);
+                Log("Report '{0}' not created ", reportName);
             }
             else
             {
-                Console.WriteLine("Created report '{0}'", reportName);
+                Log("Created report '{0}'", reportName);
             }
             PrintWarnings(warnings);
         }
@@ -312,28 +318,28 @@ namespace FifteenBelow.Deployment.ReportingServices
         {
             if ((warnings != null))
             {
-                Console.WriteLine("There were {0} warnings", warnings.Length);
+                Log("There were {0} warnings", warnings.Length);
                 int count = 0;
                 foreach (Warning warning in warnings)
                 {
                     count = count + 1;
-                    Console.WriteLine("{0}) {1}", count, warning.Message);
+                    Log("{0}) {1}", count, warning.Message);
                 }
             }
             else
             {
-                Console.WriteLine("There were no warnings.");
+                Log("There were no warnings.");
             }
         }
 
         private void SetReportDataSource(string reportName, string dataSourceName, string targetFolder)
         {
-            Console.WriteLine("Setting DataSource For Report: " + reportName);
+            Log("Setting DataSource For Report: " + reportName);
 
             var reference = new DataSourceReference { Reference = targetFolder + "/" + dataSourceName };
             var dataSource = rs.GetItemDataSources(targetFolder + "/" + reportName);
 
-            Console.WriteLine("Report '{0}' has {1} data sources", reportName, dataSource.Length);
+            Log("Report '{0}' has {1} data sources", reportName, dataSource.Length);
 
             var dataSources = new DataSource[dataSource.Length];
             var i = 0;
@@ -342,7 +348,7 @@ namespace FifteenBelow.Deployment.ReportingServices
             {
                 var ds = new DataSource { Item = reference, Name = dataSource[i].Name };
                 dataSources[i] = ds;
-                Console.WriteLine("Report '{0}' setting data source '{1}' to '{2}'", reportName, ds.Name, dataSourceName);
+                Log("Report '{0}' setting data source '{1}' to '{2}'", reportName, ds.Name, dataSourceName);
             }
 
             rs.SetItemDataSources(targetFolder + "/" + reportName, dataSources);
@@ -355,7 +361,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
             if (subscriptionFileInfos.Length == 0)
             {
-                Console.WriteLine("No subscription files found for report '{0}'", reportName);
+                Log("No subscription files found for report '{0}'", reportName);
             }
             else
             {
@@ -389,14 +395,14 @@ namespace FifteenBelow.Deployment.ReportingServices
                 {
                     string[] reportParameterParts = reportParameters.Split(';');
                     reportParameterValues = new ParameterValue[reportParameterParts.Length];
-                    Console.WriteLine("Found {0} report parameter values to set", reportParameterParts.Length);
+                    Log("Found {0} report parameter values to set", reportParameterParts.Length);
 
                     for (int i = 0; i <= reportParameterParts.Length - 1; i++)
                     {
                         var reportValue = new ParameterValue();
                         var parameterKeyValues = reportParameterParts[i].Split('=');
 
-                        Console.WriteLine("Setting parameter '{0}', with '{1}'", parameterKeyValues[0], parameterKeyValues[1]);
+                        Log("Setting parameter '{0}', with '{1}'", parameterKeyValues[0], parameterKeyValues[1]);
 
                         reportValue.Name = parameterKeyValues[0];
                         reportValue.Value = parameterKeyValues[1];
@@ -405,16 +411,16 @@ namespace FifteenBelow.Deployment.ReportingServices
                 }
                 else
                 {
-                    Console.WriteLine("Subscription report parameters not found in '{0}'", subscriptionFile.Name);
+                    Log("Subscription report parameters not found in '{0}'", subscriptionFile.Name);
                 }
 
-                Console.WriteLine("Creating subscription '{0}'", subscriptionFile.Name);
+                Log("Creating subscription '{0}'", subscriptionFile.Name);
                 rs.CreateSubscription(reportPath, extSettings, subscriptionFile.Name + " - Subscription", eventType, scheduleXml, reportParameterValues);
-                Console.WriteLine("Created subscription '{0}'", subscriptionFile.Name);
+                Log("Created subscription '{0}'", subscriptionFile.Name);
             }
             else
             {
-                Console.WriteLine("Subscription not set to 'On' for '{0}'", subscriptionFile.Name);
+                Log("Subscription not set to 'On' for '{0}'", subscriptionFile.Name);
             }
         }
 
