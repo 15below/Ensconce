@@ -266,7 +266,7 @@ namespace FifteenBelow.Deployment.ReportingServices
                 Password = dataSourcePassWord
             };
 
-            Log("Creating data source {0}", dataSourceName);
+            Log("Creating data source {0} with value: {1}", dataSourceName, dataSourceConnectionString);
             rs.CreateDataSource(dataSourceName, string.Format("/{0}/{1}", parentFolder, subFolder), true, definition, null);
             Log("Created data source {0}", dataSourceName);
         }

@@ -319,7 +319,7 @@ namespace Ensconce
                                 FifteenBelow.Deployment.ReportingServices.DeployHelp.ExampleUsage
                                 , s =>
                                     {
-                                        var reportingServiceVariables = s.Split('=');
+                                        var reportingServiceVariables = s.Split(separator: new [] { '=' }, count: 2);
                                         ReportingServiceVariables.Add(reportingServiceVariables[0], reportingServiceVariables[1]);
                                     }
                                 }
