@@ -442,7 +442,7 @@ namespace FifteenBelow.Deployment.ReportingServices
                     extensionParams[1] = new ParameterValue
                         {
                             Name = "FILENAME",
-                            Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FileName") + "-@timestamp"
+                            Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FileName") + "_@timestamp"
                         };
                     // Add a file extension always
                     extensionParams[2] = new ParameterValue { Name = "FILEEXTN", Value = "True" };
