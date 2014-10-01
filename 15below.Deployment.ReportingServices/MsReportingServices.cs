@@ -430,6 +430,8 @@ namespace FifteenBelow.Deployment.ReportingServices
             switch (SubscriptionInfo(subscriptionInfoText, "subscriptionType"))
             {
 
+                case "FILESHARE":
+                case "fileshare":
                 case "CSV":
                 case "csv":
                     extensionParams = new ParameterValue[7];
@@ -456,7 +458,12 @@ namespace FifteenBelow.Deployment.ReportingServices
                             Name = "PASSWORD",
                             Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_Password")
                         };
-                    extensionParams[5] = new ParameterValue { Name = "RENDER_FORMAT", Value = "CSV" };
+                    var subscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
+                    extensionParams[5] = new ParameterValue
+                        {
+                            Name = "RENDER_FORMAT",
+                            Value = !string.IsNullOrEmpty(subscriptionRenderFormat) ? subscriptionRenderFormat : "CSV"
+                        };
                     extensionParams[6] = new ParameterValue { Name = "WRITEMODE", Value = "Overwrite" };
                     return extensionParams;
                 default:
