@@ -486,6 +486,8 @@ namespace Ensconce
 
         public static IEnumerable<ServiceDetails> GetServicesInstalledInDirectory(string directory)
         {
+            if (!directory.EndsWith(@"\")) directory = directory + @"\";
+
             var wqlObjectQuery = new WqlObjectQuery("SELECT * FROM Win32_Service");
             var managementObjectSearcher = new ManagementObjectSearcher(wqlObjectQuery);
             var managementObjectCollection = managementObjectSearcher.Get();
