@@ -458,6 +458,8 @@ namespace Ensconce
 
         private static void StopProcessesInDirectory(string directory)
         {
+            if (!directory.EndsWith(@"\")) directory = directory + @"\";
+
             Log("Stopping processes in directory: {0}", directory);
             var wmiQueryString = "SELECT ProcessId, ExecutablePath, CommandLine FROM Win32_Process";
 
