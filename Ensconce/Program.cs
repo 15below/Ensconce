@@ -372,24 +372,31 @@ namespace Ensconce
             Console.WriteLine(message, values);
         }
 
+        private static void LogError(string message, params object[] values)
+        {
+            if (quiet || readFromStdIn) return;
+            Console.Error.Write("+{0:mm\\:ss\\.ff} - ", DateTime.Now - started);
+            Console.Error.WriteLine(message, values);
+        }
+
         private static void CopyDirectory(string from, string to)
         {
             Log("Copying from {0} to {1}", from, to);
 
             try
             {
-				if (from.EndsWith(@"\") == false) from = from + @"\";
+                if (from.EndsWith(@"\") == false) from = from + @"\";
 
-				foreach (var file in Directory.EnumerateFiles(from, "*", SearchOption.AllDirectories))
-				{
-					var source = new FileInfo(file);
-					var destination = new FileInfo(Path.Combine(to, file.Substring(from.Length)));
+                foreach (var file in Directory.EnumerateFiles(from, "*", SearchOption.AllDirectories))
+                {
+                    var source = new FileInfo(file);
+                    var destination = new FileInfo(Path.Combine(to, file.Substring(from.Length)));
 
-					Retry.Do(() => CheckDirectoryAndCopyFile(source, destination), TimeSpan.FromMilliseconds(500));
+                    Retry.Do(() => CheckDirectoryAndCopyFile(source, destination), TimeSpan.FromMilliseconds(500));
 
-					// Record copied files for later finalising
-					CopiedFiles.Add(destination.FullName);
-				}
+                    // Record copied files for later finalising
+                    CopiedFiles.Add(destination.FullName);
+                }
             }
             catch (Exception ex)
             {
@@ -431,8 +438,55 @@ namespace Ensconce
                     Log("Stopping service {0}", serviceDetails.DisplayName);
                     service.Stop();
                 }
+
+                VerifyServiceStopped(serviceDetails.DisplayName, 30);
+
                 Log("Uninstalling service {0}", serviceDetails.DisplayName);
                 Process.Start("sc", string.Format("delete \"{0}\"", serviceDetails.ServiceName)).WaitForExit();
+
+                VerifyServiceUninstall(serviceDetails.DisplayName, 30);
+            }
+        }
+
+        private static void VerifyServiceStopped(string serviceName, int maxWait)
+        {
+            var waitAttempt = 0;
+            while (waitAttempt < maxWait)
+            {
+                if (ServiceController.GetServices().First(svc => svc.DisplayName == serviceName).Status == ServiceControllerStatus.Stopped)
+                {
+                    break;
+                }
+
+                Log("Still waiting for service {0} to stop", serviceName);
+                Thread.Sleep(1000);
+                waitAttempt++;
+            }
+
+            if (waitAttempt >= maxWait)
+            {
+                LogError("Service {0} didn't stop in {1} seconds!", serviceName, maxWait);
+            }
+        }
+
+        private static void VerifyServiceUninstall(string serviceName, int maxWait)
+        {
+            var waitAttempt = 0;
+            while (waitAttempt < maxWait)
+            {
+                if (!ServiceController.GetServices().Any(svc => svc.DisplayName == serviceName))
+                {
+                    break;
+                }
+
+                Log("Still waiting for service {0} to be removed", serviceName);
+                Thread.Sleep(1000);                
+                waitAttempt++;
+            }
+
+            if (waitAttempt >= maxWait)
+            {
+                LogError("Service {0} still installed after {1} seconds!", serviceName, maxWait);
             }
         }
 
@@ -641,71 +695,71 @@ namespace Ensconce
             }
         }
 
-		private static void FinaliseAllUncommitted(string directory)
-		{
-			Log("Finalising All Uncommitted {0}", directory);
+        private static void FinaliseAllUncommitted(string directory)
+        {
+            Log("Finalising All Uncommitted {0}", directory);
 
-			using (var repo = GetOrCreateFinaliseRepository(directory))
-			{
-				var directoryInfo = new DirectoryInfo(directory);
-				if (directoryInfo.EnumerateFiles(".gitignore", SearchOption.TopDirectoryOnly).Any() == false)
-				{
-					File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
-				}
+            using (var repo = GetOrCreateFinaliseRepository(directory))
+            {
+                var directoryInfo = new DirectoryInfo(directory);
+                if (directoryInfo.EnumerateFiles(".gitignore", SearchOption.TopDirectoryOnly).Any() == false)
+                {
+                    File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
+                }
 
-				bool filesStaged = false;
+                bool filesStaged = false;
 
-				Action<IEnumerable<string>> stageFiles = (files) =>
-				{
-					if (files.Any())
-					{
-						repo.Index.Stage(files);
-						filesStaged = true;
-					}
-				};
+                Action<IEnumerable<string>> stageFiles = (files) =>
+                {
+                    if (files.Any())
+                    {
+                        repo.Index.Stage(files);
+                        filesStaged = true;
+                    }
+                };
 
-				try
-				{
-					Log("Retrieving status");
-					var status = repo.Index.RetrieveStatus();
+                try
+                {
+                    Log("Retrieving status");
+                    var status = repo.Index.RetrieveStatus();
 
-					Log("Adding items to staging area");
-					stageFiles(status.Added);
-					stageFiles(status.Modified);
-					stageFiles(status.Missing);
-					stageFiles(status.Removed);
-					stageFiles(status.Untracked);
-				}
-				catch (Exception ex)
-				{
-					Log(ex.ToString());
-				}
+                    Log("Adding items to staging area");
+                    stageFiles(status.Added);
+                    stageFiles(status.Modified);
+                    stageFiles(status.Missing);
+                    stageFiles(status.Removed);
+                    stageFiles(status.Untracked);
+                }
+                catch (Exception ex)
+                {
+                    Log(ex.ToString());
+                }
 
-				if (filesStaged)
-				{
-					string message;
-					try
-					{
-						message = string.Format("Package {{ PackageNameAndVersion }} has finalised directory {0}".Render(), directory);
-					}
-					catch (Exception)
-					{
-						message = string.Format("Unknown package has finalised directory {0}", directory);
-					}
+                if (filesStaged)
+                {
+                    string message;
+                    try
+                    {
+                        message = string.Format("Package {{ PackageNameAndVersion }} has finalised directory {0}".Render(), directory);
+                    }
+                    catch (Exception)
+                    {
+                        message = string.Format("Unknown package has finalised directory {0}", directory);
+                    }
 
-					Log("Committing changes");
+                    Log("Committing changes");
 
-					var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
-					var commit = repo.Commit(message, author, author);
+                    var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
+                    var commit = repo.Commit(message, author, author);
 
-					Log("Finalise complete");
-				}
-				else
-				{
-					Log("Nothing to finalise");
-				}
-			}
-		}
+                    Log("Finalise complete");
+                }
+                else
+                {
+                    Log("Nothing to finalise");
+                }
+            }
+        }
 
         private static void ScanForChanges(string rootDirectory)
         {
@@ -754,13 +808,13 @@ namespace Ensconce
 
         private static void TagVersion(string finaliseDirectory, string tagVersion)
         {
-			FinaliseAllUncommitted(finaliseDirectory);
+            FinaliseAllUncommitted(finaliseDirectory);
 
-			var version = tagVersion.Render();
+            var version = tagVersion.Render();
 
-			Log("Tagging version {1} in {0}", finaliseDirectory, version);
+            Log("Tagging version {1} in {0}", finaliseDirectory, version);
 
-			using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
+            using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
             {
                 Tag tag = repo.Tags.FirstOrDefault(where => where.Name.Equals(version, StringComparison.CurrentCultureIgnoreCase));
 
