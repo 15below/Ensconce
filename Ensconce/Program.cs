@@ -420,6 +420,13 @@ namespace Ensconce
             Console.WriteLine(message, values);
         }
 
+        private static void LogError(string message, params object[] values)
+        {
+            if (quiet || readFromStdIn) return;
+            Console.Error.Write("+{0:mm\\:ss\\.ff} - ", DateTime.Now - started);
+            Console.Error.WriteLine(message, values);
+        }
+
         private static void CopyDirectory(string from, string to)
         {
             Log("Copying from {0} to {1}", from, to);
@@ -479,8 +486,55 @@ namespace Ensconce
                     Log("Stopping service {0}", serviceDetails.DisplayName);
                     service.Stop();
                 }
+
+                VerifyServiceStopped(serviceDetails.DisplayName, 30);
+
                 Log("Uninstalling service {0}", serviceDetails.DisplayName);
                 Process.Start("sc", string.Format("delete \"{0}\"", serviceDetails.ServiceName)).WaitForExit();
+
+                VerifyServiceUninstall(serviceDetails.DisplayName, 30);
+            }
+        }
+
+        private static void VerifyServiceStopped(string serviceName, int maxWait)
+        {
+            var waitAttempt = 0;
+            while (waitAttempt < maxWait)
+            {
+                if (ServiceController.GetServices().First(svc => svc.DisplayName == serviceName).Status == ServiceControllerStatus.Stopped)
+                {
+                    break;
+                }
+
+                Log("Still waiting for service {0} to stop", serviceName);
+                Thread.Sleep(1000);
+                waitAttempt++;
+            }
+
+            if (waitAttempt >= maxWait)
+            {
+                LogError("Service {0} didn't stop in {1} seconds!", serviceName, maxWait);
+            }
+        }
+
+        private static void VerifyServiceUninstall(string serviceName, int maxWait)
+        {
+            var waitAttempt = 0;
+            while (waitAttempt < maxWait)
+            {
+                if (!ServiceController.GetServices().Any(svc => svc.DisplayName == serviceName))
+                {
+                    break;
+                }
+
+                Log("Still waiting for service {0} to be removed", serviceName);
+                Thread.Sleep(1000);                
+                waitAttempt++;
+            }
+
+            if (waitAttempt >= maxWait)
+            {
+                LogError("Service {0} still installed after {1} seconds!", serviceName, maxWait);
             }
         }
 
