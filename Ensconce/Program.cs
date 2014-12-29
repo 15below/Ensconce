@@ -10,6 +10,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using FifteenBelow.Deployment;
+using FifteenBelow.Deployment.ReportingServices;
 using FifteenBelow.Deployment.Update;
 using ICSharpCode.SharpZipLib.Zip;
 using LibGit2Sharp;
@@ -34,6 +35,7 @@ namespace Ensconce
         private static bool scanForChanges;
         private static string databaseRepository = "";
         private static List<string> RawToDirectories = new List<string>();
+        private static Dictionary<string, string> ReportingServiceVariables = new Dictionary<string, string>();
         private static List<string> DeployTo = new List<string>();
         private static List<string> SubstitutedFiles = new List<string>();
         private static List<string> DeletedFiles = new List<string>();
@@ -48,6 +50,8 @@ namespace Ensconce
         private static bool quiet;
         private static bool dropDatabase;
         private static bool dropDatabaseConfirm;
+        private static bool deployReports;
+        private static bool deployReportingRole;
         private static readonly Lazy<TagDictionary> LazyTags = new Lazy<TagDictionary>(BuildTagDictionary);
         private const string CachedResultPath = "_cachedConfigurationResults.xml";
         private const string GitIgnoreContents = "\r\n*.zip\r\n*.bak\r\n";
@@ -84,6 +88,13 @@ namespace Ensconce
                 }
 
                 // No other operations can be performed when reading from stdin
+                return;
+            }
+
+            if (deployReports || deployReportingRole)
+            {
+                RunReportingServices();
+                // No other operations can be performed when deploying reports
                 return;
             }
 
@@ -159,8 +170,12 @@ namespace Ensconce
                 TagVersion(finaliseDirectory, tagVersion);
             }
 
+
+
             Log("Ensconce operation complete");
         }
+
+
 
         private static void SetUpAndParseOptions(string[] args)
         {
@@ -283,6 +298,31 @@ namespace Ensconce
                                 "Drop database Confirmation, used to confirm that database is to be dropped (for safety)", 
                                 s => dropDatabaseConfirm = s != null
                                 },
+                                {
+                                "dr|deployReports",
+                                "Deploy Reporting service reports. See reportVariable help for example usage."
+                                , s =>
+                                    {
+                                        deployReports = s != null;
+                                    }
+                                },
+                                {
+                                "drr|deployReportingRole",
+                                "Deploy Reporting service role for User. See reportVariable help for example usage."
+                                , s =>
+                                    {
+                                        deployReportingRole = s != null;
+                                    }
+                                },
+                                {
+                                "rsv|reportVariable=",
+                                FifteenBelow.Deployment.ReportingServices.DeployHelp.ExampleUsage
+                                , s =>
+                                    {
+                                        var reportingServiceVariables = s.Split(separator: new [] { '=' }, count: 2);
+                                        ReportingServiceVariables.Add(reportingServiceVariables[0], reportingServiceVariables[1]);
+                                    }
+                                }
                         };
 
             var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
@@ -305,7 +345,8 @@ namespace Ensconce
             var databaseOperation = (!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString));
             var tagOperation = !string.IsNullOrEmpty(tagVersion);
             var finaliseOperation = !string.IsNullOrEmpty(finaliseDirectory) || finalisePath;
-            var operationRequested = (filesToBeMovedOrChanged || databaseOperation || readFromStdIn || scanForChanges || tagOperation || finaliseOperation);
+            var reportOperation = (deployReports || deployReportingRole);
+            var operationRequested = (filesToBeMovedOrChanged || databaseOperation || readFromStdIn || scanForChanges || tagOperation || finaliseOperation || reportOperation);
 
             if (showHelp || !(operationRequested))
             {
@@ -353,6 +394,13 @@ namespace Ensconce
             if (dropDatabase && !dropDatabaseConfirm)
             {
                 throw new OptionException("Error: You cannot drop a database without specifying the drop database confirm argument", "dropDatabaseConfirm");
+            }
+
+            if (reportOperation)
+            {
+                if (!ReportingServiceVariables.Any())
+                    throw new OptionException("Error: You cannot deploy any reports to a reporting service instance with no variables", "reportVariable");
+
             }
         }
 
@@ -935,6 +983,49 @@ namespace Ensconce
             }
             tags = new TagDictionary(instanceName, configXml);
             return tags;
+        }
+
+        private static void RunReportingServices()
+        {
+            var reportingServicesUrl = GetReportingVariable("reportingServicesUrl");
+            var networkDomain = GetReportingVariable("networkDomain");
+            var networkLogin = GetReportingVariable("networkLogin");
+            var networkPassword = GetReportingVariable("networkPassword");
+            var msreports = new MsReportingServices(reportingServicesUrl, networkDomain, networkLogin, networkPassword);
+            
+            if (deployReportingRole)
+                DeployReportingServiceRole(msreports);
+            if (deployReports)
+                PublishReports(msreports);
+
+        }
+
+        private static void PublishReports(MsReportingServices msreports)
+        {
+            var parentFolder = GetReportingVariable("parentFolder");
+            var subFolder = GetReportingVariable("subFolder");
+            var dataSourceName = GetReportingVariable("dataSourceName");
+            var dataSourceConnectionString = GetReportingVariable("dataSourceConnectionString");
+            var dataSourceUserName = GetReportingVariable("dataSourceUserName");
+            var dataSourcePassword = GetReportingVariable("dataSourcePassword");
+            var reportSourceFolder = GetReportingVariable("reportSourceFolder");
+            msreports.PublishReports(parentFolder, subFolder, dataSourceName, dataSourceConnectionString, dataSourceUserName, dataSourcePassword, reportSourceFolder);
+        }
+
+        private static void DeployReportingServiceRole(MsReportingServices msreports)
+        {
+            var itemPath = GetReportingVariable("itemPath");
+            var reportingUserToAddRoleFor = GetReportingVariable("reportingUserToAddRoleFor");
+            var reportingRoleToAdd = GetReportingVariable("reportingRoleToAdd");
+            msreports.AddRole(itemPath, reportingUserToAddRoleFor, reportingRoleToAdd);
+        }
+
+        private static string GetReportingVariable(string key)
+        {
+            if (!ReportingServiceVariables.ContainsKey(key))
+                throw new KeyNotFoundException(string.Format("required key: {0} not found in supplied reporting service variables.", key));
+
+            return ReportingServiceVariables[key];
         }
     }
 }
