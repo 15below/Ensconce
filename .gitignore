@@ -21,6 +21,7 @@ test-results.xml
 *test-results.xml
 *.testrunconfig
 _UpgradeReport_Files/
+UpgradeLog.htm
 Backup*/
 *.vsmdi
 UpgradeLog*.XML
