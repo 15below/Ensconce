@@ -467,7 +467,7 @@ namespace FifteenBelow.Deployment.ReportingServices
                     extensionParams[6] = new ParameterValue { Name = "WRITEMODE", Value = "Overwrite" };
                     return extensionParams;
                 default:
-                    extensionParams = new ParameterValue[9];
+                    extensionParams = new ParameterValue[10];
                     extensionParams[0] = new ParameterValue
                         {
                             Name = "TO",
@@ -489,12 +489,15 @@ namespace FifteenBelow.Deployment.ReportingServices
                     extensionParams[6] = new ParameterValue
                         {
                             Name = "Subject",
-                            Value =
-                                SubscriptionInfo(subscriptionInfoText, "subjectPrefix") +
-                                " - @ReportName executed at @ExecutionTime"
+                            Value = SubscriptionInfo(subscriptionInfoText, "subjectPrefix") + " - @ReportName executed at @ExecutionTime"
                         };
-                    extensionParams[7] = new ParameterValue { Name = "IncludeLink", Value = "False" };
-                    extensionParams[8] = new ParameterValue { Name = "Priority", Value = "NORMAL" };
+                    extensionParams[7] = new ParameterValue
+                        {
+                            Name = "Comment",
+                            Value = SubscriptionInfo(subscriptionInfoText, "emailBodyText")
+                        };
+                    extensionParams[8] = new ParameterValue { Name = "IncludeLink", Value = "False" };
+                    extensionParams[9] = new ParameterValue { Name = "Priority", Value = "NORMAL" };
                     return extensionParams;
             }
         }
