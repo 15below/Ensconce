@@ -1,26 +1,40 @@
 function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 {                                                                               
-  $result = dnscmd $dnsServer /EnumRecords $domain $lookupName
+	$result = dnscmd $dnsServer /EnumRecords $domain $lookupName
 	$outcome = $False
 	foreach ($item in $result)
 	{
-		if ($item.Contains("3600 CNAME"))
+		if (($item.Contains("3600 CNAME") -or ($item.Contains("3600 A")))
 		{
 			$outcome = $True
 		}
 	}
-	$outcome
-	
+	$outcome	
 }
 
 function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 {
-	write-host "Creating dns CNAME record for $name.$domain pointing at $server"
+	write-host "Creating DNS CNAME record for $name.$domain pointing at $server"
 	$result = dnscmd $dnsServer /recordAdd $domain $name CNAME $server 
 	$outcome = $false
 	foreach ($item in $result)
 	{
 		if ($item.Contains("3600 CNAME") -And $item.Contains("Command completed successfully"))
+		{
+			$outcome = $true
+		}
+	}
+	$outcome
+}
+
+function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
+{
+	write-host "Creating DNS A record for $name.$domain pointing at $ipAddress"
+	$result = dnscmd $dnsServer /recordAdd $domain $name A $ipAddress 
+	$outcome = $false
+	foreach ($item in $result)
+	{
+		if ($item.Contains("3600 A") -And $item.Contains("Command completed successfully"))
 		{
 			$outcome = $true
 		}
@@ -34,11 +48,14 @@ function CheckHostsEntry ([string]$Address, [string]$FullyQualifiedName)
 	$checkEntry = "^\s*$Address\s+$FullyQualifiedName\s*$"
 
 	$matches = (Get-Content "$env:windir\System32\drivers\etc\hosts") -match $checkEntry 
-	If ($matches.Count -gt 0)
-	{ $True}
+	if ($matches.Count -gt 0)
+	{
+		$true
+	}
 	else
-	{ $False}
-		
+	{
+		$false
+	}		
 }
 
 function AddHostsEntry ([string]$Address, [string]$FullyQualifiedName)
