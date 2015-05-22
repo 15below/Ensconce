@@ -4,7 +4,7 @@ function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 	$outcome = $False
 	foreach ($item in $result)
 	{
-		if (($item.Contains("3600 CNAME") -or ($item.Contains("3600 A")))
+		if ($item.Contains("3600 CNAME") -or ($item.Contains("3600 A")))
 		{
 			$outcome = $True
 		}
