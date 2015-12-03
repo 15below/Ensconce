@@ -660,17 +660,20 @@ namespace Ensconce
 
         private static void FinaliseAll()
         {
-            foreach (var deployDir in DeployTo)
+            if (finalisePath)
             {
-                if (!Directory.Exists(deployDir))
+                foreach (var deployDir in DeployTo)
                 {
-                    throw new DirectoryNotFoundException(deployDir);
-                }
+                    if (!Directory.Exists(deployDir))
+                    {
+                        throw new DirectoryNotFoundException(deployDir);
+                    }
 
-                if (String.IsNullOrEmpty(finaliseDirectory) || deployDir.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase) == false)
-                {
-                    // Only finalise those paths that aren't a sub-directory of the finaliseDirectory root, as that will be done next
-                    Finalise(deployDir);
+                    if (String.IsNullOrEmpty(finaliseDirectory) || deployDir.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase) == false)
+                    {
+                        // Only finalise those paths that aren't a sub-directory of the finaliseDirectory root, as that will be done next
+                        Finalise(deployDir);
+                    }
                 }
             }
 
