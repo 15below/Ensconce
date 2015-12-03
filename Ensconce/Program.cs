@@ -209,6 +209,11 @@ namespace Ensconce
                                 s => finaliseDirectory = s
                             },
                             {
+                                "x|finalisePath",
+                                "UNSUPPORTED: Please use finaliseDirectory and specify your root directory for the finalise versioning process",
+                                s => { }
+                            },
+                            {
                                 "tagVersion=",
                                 "Create a tag with the version number specified in the finalise git repository",
                                 s => tagVersion = s
