@@ -182,147 +182,146 @@ namespace Ensconce
             var showHelp = false;
             var p = new OptionSet
                         {
-                            {"i|stdin", "Read template string from StdIn", s => readFromStdIn = s != null},
-                            {"h|help", "Show this message and exit", s => showHelp = s != null},
+                            {
+                                "i|stdin",
+                                "Read template string from StdIn",
+                                s => readFromStdIn = s != null
+                            },
+                            {
+                                "h|help",
+                                "Show this message and exit",
+                                s => showHelp = s != null
+                            },
                             {
                                 "w|webservice=",
                                 @"NOTE! Ignored if env:/FixedStructure is true. Url of webservice to retrieve a structure.xml file from (can be tagged with environment variables, default=""{{ DeployService }}{{ ClientCode }}/{{ Environment }}"")",
                                 s => configUrl = string.IsNullOrEmpty(s) ? configUrl : s
-                                }, 
+                            },
                             {
                                 "fixedPath=",
                                 @"NOTE! Ignored if env:/FixedStructure is false or env:/FixedPath is set. Override path to structure.xml relative to executable (default=""D:\FixedStructure\structure.xml"")",
                                 s => fixedPath = string.IsNullOrEmpty(s) ? fixedPath : s
-                                },
+                            },
                             {
                                 "s|substitutionPath=",
                                 "Path to substition file, relative to executable. (default=\"substitutions.xml\")",
                                 s => substitutionPath = string.IsNullOrEmpty(s) ? substitutionPath : s
-                                },
+                            },
                             {
                                 "finaliseDirectory=",
                                 "Top-most directory to create or commit to a git repository containing all changes",
-                                s =>    {
-                                            finaliseDirectory = s;
-                                        }
-                                },
+                                s => finaliseDirectory = s
+                            },
                             {
                                 "x|finalisePath",
                                 "OBSOLETE: Please use finaliseDirectory and specify your root directory for the finalise versioning process",
-                                s =>    {
-                                            // Doesn't throw exception, this is just a notice
-                                            Console.Out.WriteLine("INFO: finalisePath has been marked as obsolete");
-                                            finalisePath = s != null;
-                                        }
-                                },
+                                s => {
+                                    // Doesn't throw exception, this is just a notice
+                                    Console.Out.WriteLine("INFO: finalisePath has been marked as obsolete");
+                                    finalisePath = s != null;
+                                }
+                            },
                             {
                                 "tagVersion=",
                                 "Create a tag with the version number specified in the finalise git repository",
                                 s => tagVersion = s
-                                },
+                            },
                             {
                                 "scanDirForChanges=",
                                 "Scan a directory for any un-finalised changes in the directory hierarchy. If changes are detected, Ensconce will return an error code.",
-                                s =>    {
-                                            scanForChanges = String.IsNullOrEmpty(s) == false;
-                                            scanDirForChanges = s;
-                                        }
-                                },
+                                s => {
+                                    scanForChanges = String.IsNullOrEmpty(s) == false;
+                                    scanDirForChanges = s;
+                                }
+                            },
                             {
                                 "d|databaseName="
                                 ,"The name of the database to be deployed, assumes that the process is running on the destination server. Requires the deployFrom option. Can optionally provide the databaseRepository option.",
                                 s => databaseName = s
-                                },
+                            },
                             {
                                 "connectionString="
                                 ,"The connection string for the database to be deployed, Requires the deployFrom option. Can optionally provide the databaseRepository option.",
                                 s => connectionString = s
-                                },
+                            },
                             {
                                 "databaseRepository="
                                 ,"The entry to be made in the repository field in the RoundhousE version table. If not provided defaults to an empty string. NOTE! Ignored if databaseName is not provided.",
                                 s => databaseRepository = string.IsNullOrEmpty(s) ? databaseRepository : s
-                                },
+                            },
                             {
                                 "t|deployTo=",
-                                "Path to deploy to. Required for the finalisePath and copyToPath options, multiple values can be specified."
-                                , s => RawToDirectories.Add(s)
-                                },
+                                "Path to deploy to. Required for the finalisePath and copyToPath options, multiple values can be specified.",
+                                s => RawToDirectories.Add(s)
+                            },
                             {
                                 "f|deployFrom=",
                                 "Path to deploy from. Required for the copyTo and databaseName options",
                                 s => deployFrom = s
-                                },
+                            },
                             {
                                 "c|copyTo",
-                                "Add the contents of the deployFrom directory to the deployTo directories, replacing files with the same name"
-                                , s => copyTo = s != null
-                                },
+                                "Add the contents of the deployFrom directory to the deployTo directories, replacing files with the same name",
+                                s => copyTo = s != null
+                            },
                             {
                                 "r|replace",
                                 "Replace the current contents of the deployTo directories",
                                 s => replace = s != null
-                                },
+                            },
                             {
                                 "u|updateConfig",
                                 "Update config",
                                 s => updateConfig = s != null
-                                }, 
+                            },
                             {
                                 "q|quiet",
                                 "Turn off logging output (default=False, but always True if -i set)",
                                 s => quiet = s != null
-                                }, 
+                            },
                             {
                                 "treatAsTemplateFilter=",
                                 "File filter for files in the deploy from directory to treat as templates. These will be updated after config and before deployment.",
                                 s => templateFilters = s
-                               },
-							{
+                            },
+                            {
                                 "warnOnOneTimeScriptChanges=",
                                 "If one-time-scripts have had changes, only treat them as warnings, not as errors. Defaults to False.",
                                 s => warnOnOneTimeScriptChanges = Convert.ToBoolean(s)
-                               },
-							{
+                            },
+                            {
                                 "withTransaction=",
                                 "Execute RoundhousE in transactional mode. Defaults to True.",
                                 s => withTransaction = Convert.ToBoolean(s)
-                               },
+                            },
                             {
                                 "dropDatabase",
-                                "Drop database, useful if you need to test installations on a fresh database or need control of databases for performance/load tests.", 
+                                "Drop database, useful if you need to test installations on a fresh database or need control of databases for performance/load tests.",
                                 s => dropDatabase = s != null
-                                },
+                            },
                             {
                                 "dropDatabaseConfirm",
-                                "Drop database Confirmation, used to confirm that database is to be dropped (for safety)", 
+                                "Drop database Confirmation, used to confirm that database is to be dropped (for safety)",
                                 s => dropDatabaseConfirm = s != null
-                                },
-                                {
+                            },
+                            {
                                 "dr|deployReports",
-                                "Deploy Reporting service reports. See reportVariable help for example usage."
-                                , s =>
-                                    {
-                                        deployReports = s != null;
-                                    }
-                                },
-                                {
+                                "Deploy Reporting service reports. See reportVariable help for example usage.",
+                                s =>  deployReports = s != null
+                            },
+                            {
                                 "drr|deployReportingRole",
-                                "Deploy Reporting service role for User. See reportVariable help for example usage."
-                                , s =>
-                                    {
-                                        deployReportingRole = s != null;
-                                    }
-                                },
-                                {
+                                "Deploy Reporting service role for User. See reportVariable help for example usage.",
+                                s => deployReportingRole = s != null
+                            },
+                            {
                                 "rsv|reportVariable=",
-                                FifteenBelow.Deployment.ReportingServices.DeployHelp.ExampleUsage
-                                , s =>
-                                    {
-                                        var reportingServiceVariables = s.Split(separator: new [] { '=' }, count: 2);
-                                        ReportingServiceVariables.Add(reportingServiceVariables[0], reportingServiceVariables[1]);
-                                    }
+                                FifteenBelow.Deployment.ReportingServices.DeployHelp.ExampleUsage,
+                                s => {
+                                    var reportingServiceVariables = s.Split(separator: new [] { '=' }, count: 2);
+                                    ReportingServiceVariables.Add(reportingServiceVariables[0], reportingServiceVariables[1]);
                                 }
+                            }
                         };
 
             var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
@@ -528,7 +527,7 @@ namespace Ensconce
                 }
 
                 Log("Still waiting for service {0} to be removed", serviceName);
-                Thread.Sleep(1000);                
+                Thread.Sleep(1000);
                 waitAttempt++;
             }
 
@@ -815,13 +814,13 @@ namespace Ensconce
             int i = 0;
 
             Action<string, string, IEnumerable<string>> reportChangesDetected = (changeType, repoDir, files) =>
+            {
+                foreach (var file in files)
                 {
-                    foreach (var file in files)
-                    {
-                        i++;
-                        Console.Error.WriteLine("Change detected: ({0}) {1}", changeType, Path.Combine(repoDir, file));
-                    }
-                };
+                    i++;
+                    Console.Error.WriteLine("Change detected: ({0}) {1}", changeType, Path.Combine(repoDir, file));
+                }
+            };
 
             foreach (var gitFolder in gitFolders)
             {
@@ -945,13 +944,16 @@ namespace Ensconce
             var fixedStructure = Convert.ToBoolean(Environment.GetEnvironmentVariable("FixedStructure"));
             var tags = new TagDictionary(instanceName);
             var configXml = "";
+
             if (fixedStructure)
             {
                 var pathEnvVariable = Environment.GetEnvironmentVariable("FixedPath");
                 if (pathEnvVariable != null)
                     fixedPath = pathEnvVariable.RenderTemplate(tags);
                 if (File.Exists(fixedPath))
+                {
                     configXml = File.ReadAllText(fixedPath);
+                }
                 else
                 {
                     Log("No structure file found at: {0}", Path.GetFullPath(fixedPath));
@@ -981,6 +983,7 @@ namespace Ensconce
                     File.WriteAllText(CachedResultPath, configXml);
                 }
             }
+
             tags = new TagDictionary(instanceName, configXml);
             return tags;
         }
@@ -992,7 +995,7 @@ namespace Ensconce
             var networkLogin = GetReportingVariable("networkLogin");
             var networkPassword = GetReportingVariable("networkPassword");
             var msreports = new MsReportingServices(reportingServicesUrl, networkDomain, networkLogin, networkPassword);
-            
+
             if (deployReportingRole)
                 DeployReportingServiceRole(msreports);
             if (deployReports)
