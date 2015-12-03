@@ -26,6 +26,7 @@ namespace Ensconce
         private static string configUrl = "{{ DeployService }}{{ ClientCode }}/{{ Environment }}";
         private static string databaseName;
         private static string connectionString;
+        private static bool fixedStructure = false;
         private static string fixedPath = @"D:\FixedStructure\structure.xml";
         private static string substitutionPath = "substitutions.xml";
         private static string finaliseDirectory;
@@ -170,8 +171,6 @@ namespace Ensconce
                 TagVersion(finaliseDirectory, tagVersion);
             }
 
-
-
             Log("Ensconce operation complete");
         }
 
@@ -196,6 +195,11 @@ namespace Ensconce
                                 "w|webservice=",
                                 @"NOTE! Ignored if env:/FixedStructure is true. Url of webservice to retrieve a structure.xml file from (can be tagged with environment variables, default=""{{ DeployService }}{{ ClientCode }}/{{ Environment }}"")",
                                 s => configUrl = string.IsNullOrEmpty(s) ? configUrl : s
+                            },
+                            {
+                                "fixedStructure=",
+                                @"NOTE! Overrides env:/FixedStructure",
+                                s => fixedStructure = Convert.ToBoolean(s)
                             },
                             {
                                 "fixedPath=",
@@ -329,6 +333,20 @@ namespace Ensconce
             {
                 // Will be overridden by command-line option
                 warnOnOneTimeScriptChanges = Convert.ToBoolean(envWarnOnOneTimeScriptChanges);
+            }
+
+            var envFixedStructure = Environment.GetEnvironmentVariable("FixedStructure");
+            if (!string.IsNullOrEmpty(envFixedStructure))
+            {
+                // Will be overridden by command-line option
+                fixedStructure = Convert.ToBoolean(envFixedStructure);
+            }
+
+            var envFixedPath = Environment.GetEnvironmentVariable("FixedPath");
+            if (!string.IsNullOrEmpty(envFixedPath))
+            {
+                // Will be overridden by command-line option
+                fixedPath = envFixedPath;
             }
 
             var envFinaliseDirectory = Environment.GetEnvironmentVariable("FinaliseDirectory");
@@ -944,15 +962,12 @@ namespace Ensconce
         private static TagDictionary BuildTagDictionary()
         {
             var instanceName = Environment.GetEnvironmentVariable("InstanceName");
-            var fixedStructure = Convert.ToBoolean(Environment.GetEnvironmentVariable("FixedStructure"));
             var tags = new TagDictionary(instanceName);
             var configXml = "";
 
             if (fixedStructure)
             {
-                var pathEnvVariable = Environment.GetEnvironmentVariable("FixedPath");
-                if (pathEnvVariable != null)
-                    fixedPath = pathEnvVariable.RenderTemplate(tags);
+                fixedPath = fixedPath.RenderTemplate(tags);
                 if (File.Exists(fixedPath))
                 {
                     configXml = File.ReadAllText(fixedPath);
