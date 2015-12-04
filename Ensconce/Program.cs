@@ -23,10 +23,8 @@ namespace Ensconce
     {
         private static DateTime started = DateTime.Now;
         private static bool readFromStdIn;
-        private static string configUrl = "{{ DeployService }}{{ ClientCode }}/{{ Environment }}";
         private static string databaseName;
         private static string connectionString;
-        private static bool fixedStructure = false;
         private static string fixedPath = @"D:\FixedStructure\structure.xml";
         private static string substitutionPath = "substitutions.xml";
         private static string finaliseDirectory;
@@ -192,18 +190,8 @@ namespace Ensconce
                                 s => showHelp = s != null
                             },
                             {
-                                "w|webservice=",
-                                @"NOTE! Ignored if env:/FixedStructure is true. Url of webservice to retrieve a structure.xml file from (can be tagged with environment variables, default=""{{ DeployService }}{{ ClientCode }}/{{ Environment }}"")",
-                                s => configUrl = string.IsNullOrEmpty(s) ? configUrl : s
-                            },
-                            {
-                                "fixedStructure=",
-                                @"NOTE! Overrides env:/FixedStructure",
-                                s => fixedStructure = Convert.ToBoolean(s)
-                            },
-                            {
                                 "fixedPath=",
-                                @"NOTE! Ignored if env:/FixedStructure is false or env:/FixedPath is set. Override path to structure.xml relative to executable (default=""D:\FixedStructure\structure.xml"")",
+                                @"Override path to structure.xml relative to executable (default=""D:\FixedStructure\structure.xml"")",
                                 s => fixedPath = string.IsNullOrEmpty(s) ? fixedPath : s
                             },
                             {
@@ -333,13 +321,6 @@ namespace Ensconce
             {
                 // Will be overridden by command-line option
                 warnOnOneTimeScriptChanges = Convert.ToBoolean(envWarnOnOneTimeScriptChanges);
-            }
-
-            var envFixedStructure = Environment.GetEnvironmentVariable("FixedStructure");
-            if (!string.IsNullOrEmpty(envFixedStructure))
-            {
-                // Will be overridden by command-line option
-                fixedStructure = Convert.ToBoolean(envFixedStructure);
             }
 
             var envFixedPath = Environment.GetEnvironmentVariable("FixedPath");
@@ -965,41 +946,14 @@ namespace Ensconce
             var tags = new TagDictionary(instanceName);
             var configXml = "";
 
-            if (fixedStructure)
+            fixedPath = fixedPath.RenderTemplate(tags);
+            if (File.Exists(fixedPath))
             {
-                fixedPath = fixedPath.RenderTemplate(tags);
-                if (File.Exists(fixedPath))
-                {
-                    configXml = File.ReadAllText(fixedPath);
-                }
-                else
-                {
-                    Log("No structure file found at: {0}", Path.GetFullPath(fixedPath));
-                }
+                configXml = File.ReadAllText(fixedPath);
             }
             else
             {
-                // If calling out to config web service, cache results and reuse if less than 1 hour old.
-                if (File.Exists(CachedResultPath))
-                {
-                    var fi = new FileInfo(CachedResultPath);
-                    if (DateTime.Now - fi.CreationTime < TimeSpan.FromHours(1))
-                    {
-                        configXml = File.ReadAllText(CachedResultPath);
-                    }
-                }
-                else
-                {
-                    var uri = new Uri(configUrl.RenderTemplate(tags));
-                    var request = System.Net.WebRequest.Create(uri);
-                    request.Method = "GET";
-                    var response = request.GetResponse();
-                    using (var stream = response.GetResponseStream())
-                    {
-                        configXml = new StreamReader(stream).ReadToEnd();
-                    }
-                    File.WriteAllText(CachedResultPath, configXml);
-                }
+                Log("No structure file found at: {0}", Path.GetFullPath(fixedPath));
             }
 
             tags = new TagDictionary(instanceName, configXml);
