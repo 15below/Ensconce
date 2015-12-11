@@ -23,6 +23,7 @@ namespace FifteenBelow.Deployment.Update
             public string AppendAfter;
             public bool HasAppendAfter;
             public string AddChildContent;
+            public string AddChildContentIfNotExists;
             public bool HasAddChildContent;
         }
 
@@ -141,8 +142,12 @@ namespace FifteenBelow.Deployment.Update
 
         private static void AddChildContentToActive(IDictionary<string, object> tagValues, XElement activeNode, Substitution sub)
         {
-            var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
-            activeNode.Add(fakeRoot.Elements());
+            if (sub.AddChildContentIfNotExists == null ||
+                activeNode.Document.XPathSelectElement(sub.AddChildContentIfNotExists) == null)
+            {
+                var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
+                activeNode.Add(fakeRoot.Elements());
+            }
         }
 
         private static void ReplaceChildNodes(IDictionary<string, object> tagValues, XElement activeNode,
@@ -179,6 +184,16 @@ namespace FifteenBelow.Deployment.Update
             {
                 sub.AddChildContent = addChildContent.Value;
                 sub.HasAddChildContent = true;
+
+                var ifNotExists = addChildContent.Attribute("ifNotExists");
+                if (ifNotExists != null)
+                {
+                    sub.AddChildContentIfNotExists = ifNotExists.Value;
+                }
+                else
+                {
+                    sub.AddChildContentIfNotExists = null;
+                }
             }
             var appendAfter = change.XPathSelectElement("s:AppendAfter", nsm);
             if(appendAfter == null)
