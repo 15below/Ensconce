@@ -161,7 +161,7 @@ namespace FifteenBelow.Deployment.Update.Tests
             var newConfig = XDocument.Parse(UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution15.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>{{"newValue", "after"}}
                 ));
-            Assert.IsTrue(newConfig.XPathSelectElements("/root/value/NewTag").Count() == 1);
+            Assert.AreEqual(1, newConfig.XPathSelectElements("/root/value/NewTag").Count());
         }
 
         [Test]

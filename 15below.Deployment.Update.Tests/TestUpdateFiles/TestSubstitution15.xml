@@ -6,7 +6,13 @@
       <Changes>
         <Change>
           <XPath>/root/value</XPath>
-          <AddChildContent>
+          <AddChildContent ifNotExists="/root/value/NewTag">
+            <![CDATA[<NewTag/>]]>
+          </AddChildContent>
+        </Change>
+        <Change>
+          <XPath>/root/value</XPath>
+          <AddChildContent ifNotExists="/root/value/NewTag">
             <![CDATA[<NewTag/>]]>
           </AddChildContent>
         </Change>

@@ -39,7 +39,15 @@
                               <xs:sequence>
                                 <xs:element name="XPath" type="xs:string"/>
                                 <xs:element name="ReplacementContent" type="xs:string" minOccurs="0"/>
-                                <xs:element name="AddChildContent" type="xs:string" minOccurs="0" />                                  
+                                <xs:element name="AddChildContent" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="ifNotExists" type="xs:string" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
                                 <xs:element name="AppendAfter" type="xs:string" minOccurs="0"/>
                                 <xs:element name="RemoveCurrentAttributes" type="xs:boolean" default="false" minOccurs="0"/>
                                 <xs:element name="ChangeAttribute" minOccurs="0" maxOccurs="unbounded">
