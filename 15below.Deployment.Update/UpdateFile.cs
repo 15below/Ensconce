@@ -143,7 +143,7 @@ namespace FifteenBelow.Deployment.Update
         private static void AddChildContentToActive(IDictionary<string, object> tagValues, XElement activeNode, Substitution sub)
         {
             if (sub.AddChildContentIfNotExists == null ||
-                activeNode.Document.XPathSelectElement(sub.AddChildContentIfNotExists) == null)
+                activeNode.Document.XPathSelectElement(sub.AddChildContentIfNotExists.RenderTemplate(tagValues)) == null)
             {
                 var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
                 activeNode.Add(fakeRoot.Elements());
