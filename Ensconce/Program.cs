@@ -637,7 +637,7 @@ namespace Ensconce
             }
 
             // Delete directory tree
-            directory.Delete(true);
+            Retry.Do(() => directory.Delete(true), TimeSpan.FromMilliseconds(1000));
         }
 
         private static Repository GetOrCreateFinaliseRepository(string directory)
