@@ -2,12 +2,12 @@
 
 namespace FifteenBelow.Deployment.Update.NDjangoExpansions
 {
-    [Name("any")]
-    public class AnyFilter : ISimpleFilter
+    [Name("exists")]
+    public class ExistsFilter : ISimpleFilter
     {
         private readonly string templateStringIfInvalid;
 
-        public AnyFilter(string templateStringIfInvalid)
+        public ExistsFilter(string templateStringIfInvalid)
         {
             this.templateStringIfInvalid = templateStringIfInvalid;
         }

@@ -300,31 +300,31 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
-        public void AnyFilterWorksWhenTagExists()
+        public void ExistsFilterWorksWhenTagExists()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            Assert.AreEqual("LOC", "{% if Environment|any %}{{ Environment }}{% endif %}".RenderTemplate(sut));
+            Assert.AreEqual("LOC", "{% if Environment|exists %}{{ Environment }}{% endif %}".RenderTemplate(sut));
         }
 
         [Test]
-        public void AnyFilterWorksWhenTagDoesNotExist()
+        public void ExistsFilterWorksWhenTagDoesNotExist()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            Assert.AreEqual(String.Empty, "{% if DoesNotExist|any %}{{ DoesNotExist }}{% endif %}".RenderTemplate(sut));
+            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{{ DoesNotExist }}{% endif %}".RenderTemplate(sut));
         }
 
         [Test]
-        public void ForLoopWithAnyWorksWhenTagExists()
+        public void ForLoopWithExistsWorksWhenTagExists()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            Assert.AreEqual("myIdmyId2", "{% if GDS|any %}{% for instance in GDS %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
+            Assert.AreEqual("myIdmyId2", "{% if GDS|exists %}{% for instance in GDS %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
         }
 
         [Test]
-        public void ForLoopWithAnyDoesNothingWhenTagDoesNotExist()
+        public void ForLoopWithExistsDoesNothingWhenTagDoesNotExist()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            Assert.AreEqual(String.Empty, "{% if DoesNotExist|any %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
+            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
         }
     }
 }

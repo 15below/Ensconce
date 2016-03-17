@@ -22,7 +22,7 @@ namespace FifteenBelow.Deployment.Update
                     .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
                     .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
                     .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
-                    .WithFilter("any", new NDjangoExpansions.AnyFilter(ErrorGuid))
+                    .WithFilter("exists", new NDjangoExpansions.ExistsFilter(ErrorGuid))
                 );
 
         private static readonly Lazy<TemplateManagerProvider> XmlSafeInstance =
@@ -35,7 +35,7 @@ namespace FifteenBelow.Deployment.Update
                     .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
                     .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
                     .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
-                    .WithFilter("any", new NDjangoExpansions.AnyFilter(ErrorGuid))
+                    .WithFilter("exists", new NDjangoExpansions.ExistsFilter(ErrorGuid))
                 );
 
         static NDjangoWrapper()
