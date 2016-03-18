@@ -298,5 +298,33 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
             Assert.AreEqual("SYS", "{% with GDS|first as instance %}{{ instance.IsSys }}{% endwith %}".RenderTemplate(sut));
         }
+
+        [Test]
+        public void ExistsFilterWorksWhenTagExists()
+        {
+            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            Assert.AreEqual("LOC", "{% if Environment|exists %}{{ Environment }}{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void ExistsFilterWorksWhenTagDoesNotExist()
+        {
+            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{{ DoesNotExist }}{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void ForLoopWithExistsWorksWhenTagExists()
+        {
+            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            Assert.AreEqual("myIdmyId2", "{% if GDS|exists %}{% for instance in GDS %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void ForLoopWithExistsDoesNothingWhenTagDoesNotExist()
+        {
+            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
+        }
     }
 }
