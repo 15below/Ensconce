@@ -170,7 +170,7 @@ function CheckIfWebSiteExists ([string]$name)
 	Test-Path "IIS:\Sites\$name"
 }
 
-function CreateAppPool ([string]$name)
+function CreateAppPool ([string]$name, [string]$periodicRestart="02:00:00", [int32]$privateMemory=1048576 )
 {
 	try
 	{
@@ -181,6 +181,8 @@ function CreateAppPool ([string]$name)
 	 # Assume it doesn't exist. Create it.
 	 New-WebAppPool -Name $name
 	 Set-ItemProperty IIS:\AppPools\$name managedRuntimeVersion v4.0
+	 Set-ItemProperty IIS:\AppPools\$name Recycling.periodicRestart.time -Value $periodicRestart
+	 Set-ItemProperty IIS:\AppPools\$name Recycling.periodicRestart.privateMemory -Value $privateMemory
 	}
 }
 
