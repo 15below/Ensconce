@@ -69,9 +69,11 @@ function StopAppPool([string]$name)
 	}
 }
 
-function StartAppPool([string]$name)
+function StartAppPool([string]$name, [string]$periodicRestart="02:00:00", [int32]$privateMemory=1048576)
 {
 	$status = (Get-WebAppPoolState -Name $name).Value
+	Set-ItemProperty IIS:\AppPools\$name Recycling.periodicRestart.time -Value $periodicRestart
+	Set-ItemProperty IIS:\AppPools\$name Recycling.periodicRestart.privateMemory -Value $privateMemory
 	
 	if ($status -ne "Started")
 	{
@@ -170,7 +172,7 @@ function CheckIfWebSiteExists ([string]$name)
 	Test-Path "IIS:\Sites\$name"
 }
 
-function CreateAppPool ([string]$name, [string]$periodicRestart="02:00:00", [int32]$privateMemory=1048576 )
+function CreateAppPool ([string]$name)
 {
 	try
 	{
@@ -181,8 +183,6 @@ function CreateAppPool ([string]$name, [string]$periodicRestart="02:00:00", [int
 	 # Assume it doesn't exist. Create it.
 	 New-WebAppPool -Name $name
 	 Set-ItemProperty IIS:\AppPools\$name managedRuntimeVersion v4.0
-	 Set-ItemProperty IIS:\AppPools\$name Recycling.periodicRestart.time -Value $periodicRestart
-	 Set-ItemProperty IIS:\AppPools\$name Recycling.periodicRestart.privateMemory -Value $privateMemory
 	}
 }
 
