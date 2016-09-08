@@ -46,6 +46,7 @@ namespace Ensconce
         private static string templateFilters;
         private static bool warnOnOneTimeScriptChanges;
         private static bool withTransaction = true;
+        private static string roundhouseOutputPath = @"E:\RH\";
         private static bool quiet;
         private static bool dropDatabase;
         private static bool dropDatabaseConfirm;
@@ -148,6 +149,7 @@ namespace Ensconce
                 Log("Deploying scripts from {0} using connection string {1}", deployFrom, connStr.ConnectionString);
                 var database = new Database(connStr, new LegacyFolderStructure(), warnOnOneTimeScriptChanges);
                 database.WithTransaction = withTransaction;
+                database.OutputPath = roundhouseOutputPath;
                 database.Deploy(deployFrom, databaseRepository.RenderTemplate(LazyTags.Value), dropDatabase);
             }
 
@@ -287,6 +289,11 @@ namespace Ensconce
                                 s => withTransaction = Convert.ToBoolean(s)
                             },
                             {
+                                "roundhouseOutputPath=",
+                                @"Specify a directory for RoundhousE to store SQL files. Defaults to E:\RH\",
+                                s => roundhouseOutputPath = s
+                            },
+                            {
                                 "dropDatabase",
                                 "Drop database, useful if you need to test installations on a fresh database or need control of databases for performance/load tests.",
                                 s => dropDatabase = s != null
@@ -335,6 +342,13 @@ namespace Ensconce
             {
                 // Will be overridden by command-line option
                 finaliseDirectory = envFinaliseDirectory;
+            }
+
+            var envRoundhouseOutputPath = Environment.GetEnvironmentVariable("RoundhouseOutputPath");
+            if (!string.IsNullOrEmpty(envRoundhouseOutputPath))
+            {
+                // Will be overridden by command-line option
+                roundhouseOutputPath = envRoundhouseOutputPath;
             }
 
             p.Parse(args);
