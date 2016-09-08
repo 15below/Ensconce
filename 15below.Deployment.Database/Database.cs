@@ -17,6 +17,7 @@ namespace FifteenBelow.Deployment
         public string ConnectionString { get; protected set; }
         public bool WarnOnOneTimeScriptChanges { get; private set; }
         public bool WithTransaction { get; set; }
+        public string OutputPath { get; set; }
 
         public Database(DbConnectionStringBuilder connectionStringBuilder)
             : this(connectionStringBuilder, null)
@@ -62,6 +63,7 @@ namespace FifteenBelow.Deployment
                 .Set(x => x.VersionFile = Path.Combine(schemaScriptsFolder, "_BuildInfo.txt"))
                 .Set(x => x.WithTransaction = WithTransaction)
                 .Set(x => x.Silent = true)
+                .Set(x => x.OutputPath = string.IsNullOrEmpty(OutputPath) ? x.OutputPath : OutputPath)
                 .Set(x => x.RecoveryMode = RecoveryMode.NoChange)
                 .Set(x => x.RepositoryPath = repository)
 				.Set(x => x.WarnOnOneTimeScriptChanges = WarnOnOneTimeScriptChanges)
