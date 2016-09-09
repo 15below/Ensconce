@@ -25,7 +25,7 @@ namespace FifteenBelow.Deployment
         }
 
         public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, bool warnOnOneTimeScriptChanges = false)
-			: this(connectionStringBuilder, databaseFolderStructure, null, null, warnOnOneTimeScriptChanges)
+            : this(connectionStringBuilder, databaseFolderStructure, null, null, warnOnOneTimeScriptChanges)
         {
         }
 
@@ -35,7 +35,7 @@ namespace FifteenBelow.Deployment
             this.DatabaseFolderStructure = databaseFolderStructure;
             this.databaseRestoreOptions = databaseRestoreOptions;
             this.logger = logger ?? new roundhouse.infrastructure.logging.custom.ConsoleLogger();
-			this.WarnOnOneTimeScriptChanges = warnOnOneTimeScriptChanges;
+            this.WarnOnOneTimeScriptChanges = warnOnOneTimeScriptChanges;
             this.WithTransaction = true;
         }
 
@@ -46,14 +46,14 @@ namespace FifteenBelow.Deployment
 
         public void Deploy(string schemaScriptsFolder, string repository = "", bool dropDatabase = false)
         {
-            if (schemaScriptsFolder == string.Empty) 
+            if (schemaScriptsFolder == string.Empty)
                 schemaScriptsFolder = Assembly.GetExecutingAssembly().Directory();
 
             if (!Directory.Exists(schemaScriptsFolder))
                 throw new DirectoryNotFoundException(
                     string.Format(
                         "Database schema scripts folder {0}\r\ndoes not exist", schemaScriptsFolder));
-            
+
             var roundhouseMigrate = new Migrate();
             if (DatabaseFolderStructure != null) DatabaseFolderStructure.SetMigrateFolders(roundhouseMigrate, schemaScriptsFolder);
             if (databaseRestoreOptions != null) databaseRestoreOptions.SetRunRestoreOptions(roundhouseMigrate);
@@ -63,15 +63,29 @@ namespace FifteenBelow.Deployment
                 .Set(x => x.VersionFile = Path.Combine(schemaScriptsFolder, "_BuildInfo.txt"))
                 .Set(x => x.WithTransaction = WithTransaction)
                 .Set(x => x.Silent = true)
-                .Set(x => x.OutputPath = string.IsNullOrEmpty(OutputPath) ? x.OutputPath : OutputPath)
+                .Set(x =>
+                {
+                    if (!string.IsNullOrEmpty(OutputPath))
+                    {
+                        x.OutputPath = OutputPath;
+                    }
+                })
+                .Set(x =>
+                {
+                    var createDatabaseCustomScript = Path.Combine(schemaScriptsFolder, "CreateDatabase.sql");
+                    if (File.Exists(createDatabaseCustomScript))
+                    {
+                        x.CreateDatabaseCustomScript = createDatabaseCustomScript;
+                    }
+                })
                 .Set(x => x.RecoveryMode = RecoveryMode.NoChange)
                 .Set(x => x.RepositoryPath = repository)
-				.Set(x => x.WarnOnOneTimeScriptChanges = WarnOnOneTimeScriptChanges)
+                .Set(x => x.WarnOnOneTimeScriptChanges = WarnOnOneTimeScriptChanges)
                 .Set(x => x.DisableTokenReplacement = true)
                 .Set(x => x.Drop = dropDatabase)
                 .SetCustomLogging(logger);
 
-            if(databaseRestoreOptions!=null)
+            if (databaseRestoreOptions != null)
             {
                 roundhouseMigrate.RunRestore();
             }
