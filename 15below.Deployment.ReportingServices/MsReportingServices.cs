@@ -71,9 +71,18 @@ namespace FifteenBelow.Deployment.ReportingServices
 
                 Policy[] existingPolicies = rs.GetPolicies(itemPath, out inheritParent);
 
-                policy = existingPolicies.FirstOrDefault(p => p != null &&
-                    p.GroupUserName.ToUpperInvariant() == reportingUserToAddRoleFor.ToUpperInvariant()
-                );
+                if (reportingUserToAddRoleFor.Contains("\\"))
+                {
+                    policy = existingPolicies.FirstOrDefault(p => p != null &&
+                        p.GroupUserName.ToUpperInvariant() == reportingUserToAddRoleFor.ToUpperInvariant()
+                    );
+                }
+                else
+                {
+                    policy = existingPolicies.FirstOrDefault(p => p != null &&
+                        p.GroupUserName.ToUpperInvariant().Split('\\')[1] == reportingUserToAddRoleFor.ToUpperInvariant()
+                    );
+                }
 
                 if (policy == null)
                 {
