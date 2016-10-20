@@ -83,6 +83,7 @@ namespace FifteenBelow.Deployment
                 .Set(x => x.WarnOnOneTimeScriptChanges = WarnOnOneTimeScriptChanges)
                 .Set(x => x.DisableTokenReplacement = true)
                 .Set(x => x.Drop = dropDatabase)
+                .Set(x => x.DisableOutput = true)
                 .SetCustomLogging(logger);
 
             if (databaseRestoreOptions != null)
