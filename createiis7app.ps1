@@ -69,6 +69,12 @@ function StopAppPool([string]$name)
 	}
 }
 
+function UpdateAppPoolRecycling([string]$name, [string]$periodicRestart="02:00:00", [int32]$privateMemory=1048576)
+{
+	Set-ItemProperty IIS:\AppPools\$name Recycling.periodicRestart.time -Value $periodicRestart
+	Set-ItemProperty IIS:\AppPools\$name Recycling.periodicRestart.privateMemory -Value $privateMemory
+}
+
 function StartAppPool([string]$name)
 {
 	$status = (Get-WebAppPoolState -Name $name).Value
