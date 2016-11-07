@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="LabelEnumeration.cs" />
     <Compile Include="NDjangoExpansions\ConcatFilter.cs" />
+    <Compile Include="NDjangoExpansions\EmptyFilter.cs" />
     <Compile Include="NDjangoExpansions\ExistsFilter.cs" />
     <Compile Include="NDjangoExpansions\DefaultFilter.cs" />
     <Compile Include="NDjangoWrapper.cs" />
