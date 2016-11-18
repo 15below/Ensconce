@@ -4,7 +4,7 @@ if (Test-Path variable:\OctopusParameters)
 {
     foreach($kp in $OctopusParameters.GetEnumerator())
     {
-        if (!($kp -like '*Octopus.Step*') -and !($kp -like '*Octopus.Action*') -and !($kp -like '*Octopus.Only*'))
+        if (!($kp -like '*Octopus.Only*'))
         {
             Set-Content ("env:\" + $kp.Key.replace("[","-").replace("]","")) ($kp.Value) -Force
         }
