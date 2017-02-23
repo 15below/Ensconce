@@ -12,6 +12,34 @@ function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 	$outcome	
 }
 
+function CheckCNameValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
+{                                                                               
+	$result = dnscmd $dnsServer /EnumRecords $domain $name
+	$outcome = $False
+	foreach ($item in $result)
+	{
+		if ($item.Contains("3600 CNAME") -and ($item.ToLower().Contains($server.ToLower())))
+		{
+			$outcome = $True
+		}
+	}
+	$outcome
+}
+
+function CheckARecordValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
+{                                                                               
+	$result = dnscmd $dnsServer /EnumRecords $domain $name
+	$outcome = $False
+	foreach ($item in $result)
+	{
+		if ($item.Contains("3600 A") -and ($item.Contains($ipAddress)))
+		{
+			$outcome = $True
+		}
+	}
+	$outcome
+}
+
 function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 {
 	write-host "Creating DNS CNAME record for $name.$domain pointing at $server"
