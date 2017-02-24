@@ -36,22 +36,45 @@ namespace FifteenBelow.Deployment.Update
 
         private TagDictionary(string identifier, bool isLabel, params Tuple<string, TagSource>[] sources)
         {
-            if (sources.Length == 0) { sources = new[] { Tuple.Create("", TagSource.Environment) }; }
-            foreach (var source in sources)
+            if (sources.Length == 0)
             {
-                switch (source.Item2)
-                {
-                    case TagSource.Environment:
-                        LoadEnviroment();
-                        break;
-                    case TagSource.XmlFileName:
-                        LoadXmlFileName(source.Item1, identifier);
-                        break;
-                    case TagSource.XmlData:
-                        LoadXmlData(source.Item1, identifier);
-                        break;
-                }
+                sources = new[] { Tuple.Create("", TagSource.Environment) };
             }
+            else if (sources.Any(x => x.Item2 == TagSource.XmlFileName))
+            {
+            	//convert xmlFileName to be xmlData
+                var newSources = new List<Tuple<string, TagSource>>();
+                newSources.AddRange(sources.Where(x => x.Item2 == TagSource.Environment || x.Item2 == TagSource.XmlData));
+                
+                foreach (var source in sources.Where(x => x.Item2 == TagSource.XmlFileName))
+                {
+                    XDocument doc;
+                    try
+                    {
+                        doc = XDocument.Load(new FileStream(source.Item1, FileMode.Open, FileAccess.Read));
+                    }
+                    catch (Exception)
+                    {
+                        doc = new XDocument();
+                    }
+                    newSources.Add(new Tuple<string, TagSource>(doc.ToString(), TagSource.XmlData));
+                }
+
+                sources = newSources.ToArray();
+            }
+
+            //Load environment 1st
+            if (sources.Any(x => x.Item2 == TagSource.Environment))
+            {
+                LoadEnviroment();
+            }
+
+            //Load by xml data 2nd
+            foreach (var source in sources.Where(x => x.Item2 == TagSource.XmlData))
+            {
+                LoadXmlData(source.Item1, identifier);
+            }
+
             this.ToList().ForEach(pair => this[pair.Key] = GetExpandedPropertyValue(pair.Value.ToString()));
             var expandedLogins = new Dictionary<string, DbLogin>();
             foreach (var name in DbLogins.Keys)
@@ -93,20 +116,6 @@ namespace FifteenBelow.Deployment.Update
             this(identifier, Tuple.Create("", TagSource.Environment), Tuple.Create(xmlData, TagSource.XmlData))
         { }
 
-        private void LoadXmlFileName(string fileName, string identifier)
-        {
-            XDocument doc;
-            try
-            {
-                doc = XDocument.Load(new FileStream(fileName, FileMode.Open, FileAccess.Read));
-            }
-            catch (Exception)
-            {
-                doc = new XDocument();
-            }
-            PropertiesFromXml(identifier, doc);
-        }
-
         private void LoadXmlData(string xml, string identifier)
         {
             if (string.IsNullOrEmpty(xml)) return;
@@ -131,7 +140,7 @@ namespace FifteenBelow.Deployment.Update
         }
 
         private void PropertiesFromXml(string identifier, XDocument doc)
-        {
+        {            
             if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
             ValidTagsInProperties
                 .Select(str => GetTagInPropertyValue(doc, str))
@@ -212,12 +221,12 @@ namespace FifteenBelow.Deployment.Update
 
                     DbLogins.Add(dbKey,
                     new DbLogin
-                        {
-                            Username = username,
-                            Password = password,
-                            DefaultDb = defaultDb,
-                            ConnectionString = connectionString
-                        });
+                    {
+                        Username = username,
+                        Password = password,
+                        DefaultDb = defaultDb,
+                        ConnectionString = connectionString
+                    });
                 }
             }
         }
