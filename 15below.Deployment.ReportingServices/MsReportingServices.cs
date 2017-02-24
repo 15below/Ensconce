@@ -311,11 +311,11 @@ namespace FifteenBelow.Deployment.ReportingServices
             PrintWarnings(warnings);
         }
 
-        private byte[] GetReportDefinition(string reportName, string sourceFolder)
+        private Byte[] GetReportDefinition(string reportName, string sourceFolder)
         {
-            byte[] definition;
+            Byte[] definition;
             var stream = File.OpenRead(sourceFolder + "\\" + reportName + ".rdl");
-            definition = new byte[stream.Length];
+            definition = new Byte[stream.Length];
             stream.Read(definition, 0, Convert.ToInt32(stream.Length));
             stream.Close();
             return definition;
