@@ -310,7 +310,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void ExistsFilterWorksWhenTagDoesNotExist()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{{ DoesNotExist }}{% endif %}".RenderTemplate(sut));
+            Assert.AreEqual(string.Empty, "{% if DoesNotExist|exists %}{{ DoesNotExist }}{% endif %}".RenderTemplate(sut));
         }
 
         [Test]
@@ -324,7 +324,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void ForLoopWithExistsDoesNothingWhenTagDoesNotExist()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
+            Assert.AreEqual(string.Empty, "{% if DoesNotExist|exists %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
         }
     }
 }

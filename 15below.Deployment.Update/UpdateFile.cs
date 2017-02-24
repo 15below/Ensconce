@@ -114,7 +114,7 @@ namespace FifteenBelow.Deployment.Update
 
 				if (activeNode == null)
 				{
-					throw new ApplicationException(String.Format("XPath select of {0} returned null", sub.XPath));
+					throw new ApplicationException(string.Format("XPath select of {0} returned null", sub.XPath));
 				}
 
                 if (sub.HasReplacementContent)

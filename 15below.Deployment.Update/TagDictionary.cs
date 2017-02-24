@@ -261,7 +261,7 @@ namespace FifteenBelow.Deployment.Update
         {
             if (variableName.Contains("."))
             {
-                variableName = variableName.Split(new[] { '.' }, 2, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".", String.Empty);
+                variableName = variableName.Split(new[] { '.' }, 2, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".", string.Empty);
             }
             else
             {
