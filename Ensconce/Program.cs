@@ -78,6 +78,8 @@ namespace Ensconce
 
             SetUpAndParseOptions(args);
 
+            Log("Arguments parsed");
+
             if (readFromStdIn)
             {
                 using (var input = Console.In)
@@ -96,14 +98,14 @@ namespace Ensconce
                 return;
             }
 
-            finaliseDirectory = finaliseDirectory.Render();
-            if (finaliseDirectory.EndsWith(@"\") == false) finaliseDirectory = finaliseDirectory + @"\";
-
-            scanDirForChanges = scanDirForChanges.Render();
-            if (scanDirForChanges.EndsWith(@"\") == false) scanDirForChanges = scanDirForChanges + @"\";
-
             if (scanForChanges)
             {
+                if (!string.IsNullOrWhiteSpace(scanDirForChanges))
+                {
+                    scanDirForChanges = scanDirForChanges.Render();
+                    if (scanDirForChanges.EndsWith(@"\") == false) scanDirForChanges = scanDirForChanges + @"\";
+                }
+
                 ScanForChanges(scanDirForChanges);
             }
 
@@ -123,7 +125,6 @@ namespace Ensconce
                     {
                         encoding = readStream.CurrentEncoding;
                         template = readStream.ReadToEnd();
-
                     }
                     using (var writeStream = new StreamWriter(templateFile.FullName, false, encoding))
                     {
@@ -164,16 +165,9 @@ namespace Ensconce
 
             FinaliseAll();
 
-            if (!String.IsNullOrEmpty(tagVersion))
-            {
-                TagVersion(finaliseDirectory, tagVersion);
-            }
-
             Log("Ensconce operation complete");
         }
-
-
-
+        
         private static void SetUpAndParseOptions(string[] args)
         {
             var showHelp = false;
@@ -222,7 +216,7 @@ namespace Ensconce
                                 "scanDirForChanges=",
                                 "Scan a directory for any un-finalised changes in the directory hierarchy. If changes are detected, Ensconce will return an error code.",
                                 s => {
-                                    scanForChanges = String.IsNullOrEmpty(s) == false;
+                                    scanForChanges = string.IsNullOrEmpty(s) == false;
                                     scanDirForChanges = s;
                                 }
                             },
@@ -671,31 +665,43 @@ namespace Ensconce
 
         private static void FinaliseAll()
         {
-            if (finalisePath)
+            if (!string.IsNullOrWhiteSpace(finaliseDirectory))
             {
-                foreach (var deployDir in DeployTo)
-                {
-                    if (!Directory.Exists(deployDir))
-                    {
-                        throw new DirectoryNotFoundException(deployDir);
-                    }
+                finaliseDirectory = finaliseDirectory.Render();
+                if (finaliseDirectory.EndsWith(@"\") == false) finaliseDirectory = finaliseDirectory + @"\";
 
-                    if (String.IsNullOrEmpty(finaliseDirectory) || deployDir.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase) == false)
+                if (finalisePath)
+                {
+                    foreach (var deployDir in DeployTo)
                     {
-                        // Only finalise those paths that aren't a sub-directory of the finaliseDirectory root, as that will be done next
-                        Finalise(deployDir);
+                        if (!Directory.Exists(deployDir))
+                        {
+                            throw new DirectoryNotFoundException(deployDir);
+                        }
+
+                        if (String.IsNullOrEmpty(finaliseDirectory) || deployDir.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase) == false)
+                        {
+                            // Only finalise those paths that aren't a sub-directory of the finaliseDirectory root, as that will be done next
+                            Finalise(deployDir);
+                        }
                     }
                 }
-            }
 
-            if (!String.IsNullOrEmpty(finaliseDirectory) &&
-                Directory.Exists(finaliseDirectory) &&
-                (SubstitutedFiles.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase)) ||
-                    DeployTo.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase))
-                ))
-            {
-                RemoveSubRepositories(finaliseDirectory);
-                Finalise(finaliseDirectory);
+                if (!String.IsNullOrEmpty(finaliseDirectory) &&
+                    Directory.Exists(finaliseDirectory) &&
+                    (SubstitutedFiles.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase)) ||
+                        DeployTo.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase))
+                    ))
+                {
+                    RemoveSubRepositories(finaliseDirectory);
+                    Finalise(finaliseDirectory);
+                }
+
+
+                if (!String.IsNullOrEmpty(tagVersion))
+                {
+                    TagVersion(finaliseDirectory, tagVersion);
+                }
             }
         }
 
@@ -713,7 +719,7 @@ namespace Ensconce
 
                 Log("Adding items to staging area");
 
-                bool filesStaged = false;
+                var filesStaged = false;
 
                 Action<IEnumerable<string>> stageFiles = (files) =>
                 {
@@ -768,7 +774,7 @@ namespace Ensconce
                     File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
                 }
 
-                bool filesStaged = false;
+                var filesStaged = false;
 
                 Action<IEnumerable<string>> stageFiles = (files) =>
                 {
@@ -825,7 +831,7 @@ namespace Ensconce
         private static void ScanForChanges(string rootDirectory)
         {
             var gitFolders = Directory.GetDirectories(rootDirectory, ".git", SearchOption.AllDirectories);
-            int i = 0;
+            var i = 0;
 
             Action<string, string, IEnumerable<string>> reportChangesDetected = (changeType, repoDir, files) =>
             {
@@ -877,7 +883,7 @@ namespace Ensconce
 
             using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
             {
-                Tag tag = repo.Tags.FirstOrDefault(where => where.Name.Equals(version, StringComparison.CurrentCultureIgnoreCase));
+                var tag = repo.Tags.FirstOrDefault(where => where.Name.Equals(version, StringComparison.CurrentCultureIgnoreCase));
 
                 if (tag != null)
                 {
@@ -898,8 +904,7 @@ namespace Ensconce
         {
             Log("Updating config with substitution file {0}", substitutionPath);
 
-            var tags = LazyTags.Value;
-            var updatedContents = UpdateFile.UpdateAll(substitutionPath, tags);
+            var updatedContents = UpdateFile.UpdateAll(substitutionPath, LazyTags.Value);
 
             foreach (var updatedContent in updatedContents)
             {
@@ -920,21 +925,23 @@ namespace Ensconce
 
         private static TagDictionary BuildTagDictionary()
         {
+            Log("Building Tag Dictionary");
             var instanceName = Environment.GetEnvironmentVariable("InstanceName");
             var tags = new TagDictionary(instanceName);
-            var configXml = "";
-
+            
             fixedPath = fixedPath.RenderTemplate(tags);
             if (File.Exists(fixedPath))
             {
-                configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(5));
+                Log("Reloading tags using config file {0}", Path.GetFullPath(fixedPath));
+                var configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(5));
+                Log("Re-Building Tag Dictionary (Using Config File)");
+                tags = new TagDictionary(instanceName, configXml);
             }
             else
             {
                 Log("No structure file found at: {0}", Path.GetFullPath(fixedPath));
             }
-
-            tags = new TagDictionary(instanceName, configXml);
+            
             return tags;
         }
 
