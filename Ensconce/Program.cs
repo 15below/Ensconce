@@ -963,7 +963,7 @@ namespace Ensconce
             fixedPath = fixedPath.RenderTemplate(tags);
             if (File.Exists(fixedPath))
             {
-                configXml = File.ReadAllText(fixedPath);
+                configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(5));
             }
             else
             {
