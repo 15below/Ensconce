@@ -12,7 +12,6 @@ using System.Threading;
 using FifteenBelow.Deployment;
 using FifteenBelow.Deployment.ReportingServices;
 using FifteenBelow.Deployment.Update;
-using ICSharpCode.SharpZipLib.Zip;
 using LibGit2Sharp;
 using Mono.Options;
 using SearchOption = System.IO.SearchOption;
@@ -21,7 +20,7 @@ namespace Ensconce
 {
     internal static class Program
     {
-        private static DateTime started = DateTime.Now;
+        private static readonly DateTime started = DateTime.Now;
         private static bool readFromStdIn;
         private static string databaseName;
         private static string connectionString;
@@ -33,12 +32,12 @@ namespace Ensconce
         private static string scanDirForChanges;
         private static bool scanForChanges;
         private static string databaseRepository = "";
-        private static List<string> RawToDirectories = new List<string>();
-        private static Dictionary<string, string> ReportingServiceVariables = new Dictionary<string, string>();
-        private static List<string> DeployTo = new List<string>();
-        private static List<string> SubstitutedFiles = new List<string>();
-        private static List<string> DeletedFiles = new List<string>();
-        private static List<string> CopiedFiles = new List<string>();
+        private static readonly List<string> RawToDirectories = new List<string>();
+        private static readonly Dictionary<string, string> ReportingServiceVariables = new Dictionary<string, string>();
+        private static readonly List<string> DeployTo = new List<string>();
+        private static readonly List<string> SubstitutedFiles = new List<string>();
+        private static readonly List<string> DeletedFiles = new List<string>();
+        private static readonly List<string> CopiedFiles = new List<string>();
         private static string deployFrom;
         private static bool copyTo;
         private static bool replace;
@@ -53,7 +52,6 @@ namespace Ensconce
         private static bool deployReports;
         private static bool deployReportingRole;
         private static readonly Lazy<TagDictionary> LazyTags = new Lazy<TagDictionary>(BuildTagDictionary);
-        private const string CachedResultPath = "_cachedConfigurationResults.xml";
         private const string GitIgnoreContents = "\r\n*.zip\r\n*.bak\r\n";
 
         private static int Main(string[] args)
@@ -315,7 +313,7 @@ namespace Ensconce
                             },
                             {
                                 "rsv|reportVariable=",
-                                FifteenBelow.Deployment.ReportingServices.DeployHelp.ExampleUsage,
+                                DeployHelp.ExampleUsage,
                                 s => {
                                     var reportingServiceVariables = s.Split(separator: new [] { '=' }, count: 2);
                                     ReportingServiceVariables.Add(reportingServiceVariables[0], reportingServiceVariables[1]);
@@ -353,14 +351,14 @@ namespace Ensconce
 
             p.Parse(args);
 
-            var filesToBeMovedOrChanged = (updateConfig || copyTo || replace || !string.IsNullOrEmpty(templateFilters));
-            var databaseOperation = (!string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString));
+            var filesToBeMovedOrChanged = updateConfig || copyTo || replace || !string.IsNullOrEmpty(templateFilters);
+            var databaseOperation = !string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString);
             var tagOperation = !string.IsNullOrEmpty(tagVersion);
             var finaliseOperation = !string.IsNullOrEmpty(finaliseDirectory) || finalisePath;
-            var reportOperation = (deployReports || deployReportingRole);
-            var operationRequested = (filesToBeMovedOrChanged || databaseOperation || readFromStdIn || scanForChanges || tagOperation || finaliseOperation || reportOperation);
+            var reportOperation = deployReports || deployReportingRole;
+            var operationRequested = filesToBeMovedOrChanged || databaseOperation || readFromStdIn || scanForChanges || tagOperation || finaliseOperation || reportOperation;
 
-            if (showHelp || !(operationRequested))
+            if (showHelp || !operationRequested)
             {
                 ShowHelp(p);
                 if (!showHelp) throw new OptionException("Invalid combination of options given, showing help.", "help");
@@ -656,7 +654,7 @@ namespace Ensconce
 
         private static Repository GetOrCreateFinaliseRepository(string directory)
         {
-            Repository repo = null;
+            Repository repo;
 
             try
             {
@@ -747,7 +745,7 @@ namespace Ensconce
                     Log("Committing changes");
 
                     var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
-                    var commit = repo.Commit(message, author, author);
+                    repo.Commit(message, author, author);
 
                     Log("Finalise complete");
                 }
@@ -813,7 +811,7 @@ namespace Ensconce
                     Log("Committing changes");
 
                     var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
-                    var commit = repo.Commit(message, author, author);
+                    repo.Commit(message, author, author);
 
                     Log("Finalise complete");
                 }
@@ -912,40 +910,6 @@ namespace Ensconce
                     // Record substituted files for later finalising
                     SubstitutedFiles.Add(updatedContent.Item1);
                 }
-            }
-        }
-
-        private static void CompressDir(ZipOutputStream zipStream, DirectoryInfo dir, int dirLength)
-        {
-            var files = dir.GetFiles();
-            foreach (var file in files)
-            {
-                var zipEntry = new ZipEntry(ZipEntry.CleanName(file.FullName.Substring(dirLength)));
-                zipEntry.DateTime = file.LastWriteTime;
-                zipEntry.Size = file.Length;
-                zipStream.PutNextEntry(zipEntry);
-
-                var buffer = new byte[4096];
-                using (var streamReader = File.OpenRead(file.FullName))
-                {
-                    while (true)
-                    {
-                        var bytes = streamReader.Read(buffer, 0, buffer.Length);
-                        if (bytes > 0)
-                        {
-                            zipStream.Write(buffer, 0, bytes);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-                zipStream.CloseEntry();
-            }
-            foreach (var directory in dir.GetDirectories())
-            {
-                CompressDir(zipStream, directory, dirLength);
             }
         }
 

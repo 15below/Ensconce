@@ -12,7 +12,7 @@ namespace FifteenBelow.Deployment
     {
         protected IDatabaseFolderStructure DatabaseFolderStructure;
         private readonly IDatabaseRestoreOptions databaseRestoreOptions;
-        private Logger logger;
+        private readonly Logger logger;
 
         public string ConnectionString { get; protected set; }
         public bool WarnOnOneTimeScriptChanges { get; private set; }
@@ -31,17 +31,17 @@ namespace FifteenBelow.Deployment
 
         public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger, bool warnOnOneTimeScriptChanges = false)
         {
-            this.ConnectionString = connectionStringBuilder.ToString();
-            this.DatabaseFolderStructure = databaseFolderStructure;
+            ConnectionString = connectionStringBuilder.ToString();
+            DatabaseFolderStructure = databaseFolderStructure;
             this.databaseRestoreOptions = databaseRestoreOptions;
             this.logger = logger ?? new roundhouse.infrastructure.logging.custom.ConsoleLogger();
-            this.WarnOnOneTimeScriptChanges = warnOnOneTimeScriptChanges;
-            this.WithTransaction = true;
+            WarnOnOneTimeScriptChanges = warnOnOneTimeScriptChanges;
+            WithTransaction = true;
         }
 
         public virtual void Deploy()
         {
-            this.Deploy(Directory.GetCurrentDirectory());
+            Deploy(Directory.GetCurrentDirectory());
         }
 
         public void Deploy(string schemaScriptsFolder, string repository = "", bool dropDatabase = false)
@@ -58,7 +58,7 @@ namespace FifteenBelow.Deployment
             if (DatabaseFolderStructure != null) DatabaseFolderStructure.SetMigrateFolders(roundhouseMigrate, schemaScriptsFolder);
             if (databaseRestoreOptions != null) databaseRestoreOptions.SetRunRestoreOptions(roundhouseMigrate);
 
-            roundhouseMigrate.Set(x => x.ConnectionString = this.ConnectionString)
+            roundhouseMigrate.Set(x => x.ConnectionString = ConnectionString)
                 .Set(x => x.SqlFilesDirectory = schemaScriptsFolder)
                 .Set(x => x.VersionFile = Path.Combine(schemaScriptsFolder, "_BuildInfo.txt"))
                 .Set(x => x.WithTransaction = WithTransaction)

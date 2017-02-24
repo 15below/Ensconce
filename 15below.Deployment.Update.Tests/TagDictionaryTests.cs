@@ -238,7 +238,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void LoadLabelledGroupsValuesAndNormalIdentityValuesAvailable()
         {
             var sut = new TagDictionary("ident", Tuple.Create("structure.xml", TagSource.XmlFileName));
-            Assert.AreEqual("SYS", ((IEnumerable<IDictionary<string, object>>)(sut["GDS"])).First()["IsSys"]);
+            Assert.AreEqual("SYS", ((IEnumerable<IDictionary<string, object>>)sut["GDS"]).First()["IsSys"]);
             Assert.AreEqual("SomeUserName", sut["DbUser"]);
             Assert.AreEqual("notSYS", sut["IsSys"].ToString());
         }
@@ -247,7 +247,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void LoadLabelledGroupsBuildsEnumeratorCorrectly()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            var isSysCollection = ((IEnumerable<IDictionary<string, object>>) (sut["GDS"])).Select(gds => gds[IsSys].ToString());
+            var isSysCollection = ((IEnumerable<IDictionary<string, object>>) sut["GDS"]).Select(gds => gds[IsSys].ToString());
             Assert.IsTrue(new HashSet<string>{"SYS", "SYS2"}.IsSupersetOf(new HashSet<string>(isSysCollection)));
         }
 
@@ -263,7 +263,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void InstanceNameIsAccessibleWhileEnumerating()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            var isSysCollection = ((IEnumerable<IDictionary<string, object>>) (sut["GDS"])).Select(gds => gds["identity"].ToString());
+            var isSysCollection = ((IEnumerable<IDictionary<string, object>>) sut["GDS"]).Select(gds => gds["identity"].ToString());
             Assert.IsTrue(new HashSet<string>{"myId", "myId2"}.IsSupersetOf(new HashSet<string>(isSysCollection)));
         }
 

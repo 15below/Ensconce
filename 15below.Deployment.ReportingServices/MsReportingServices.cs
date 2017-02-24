@@ -6,14 +6,13 @@ using FifteenBelow.Deployment.ReportingServices.SSRS2010;
 
 namespace FifteenBelow.Deployment.ReportingServices
 {
-
     public class MsReportingServices
     {
-        private ReportingService2010 rs;
-        private Uri reportingServicesUri;
+        private readonly ReportingService2010 rs;
 
         public MsReportingServices(string reportingServicesUrl, string networkDomain, string networkLogin, string networkPassword)
         {
+            Uri reportingServicesUri;
             Log("Creating MsReportingServices instance");
             if (!Uri.TryCreate(reportingServicesUrl, UriKind.RelativeOrAbsolute, out reportingServicesUri))
                 throw new UriFormatException(string.Format("reporting services uri of '{0}' is invalid!", reportingServicesUri));
@@ -67,7 +66,7 @@ namespace FifteenBelow.Deployment.ReportingServices
                 Log("Attempting to retrieve a list of all existing policies for itemPath: '{0}'", itemPath);
 
                 bool inheritParent;
-                Policy policy = null;
+                Policy policy;
 
                 Policy[] existingPolicies = rs.GetPolicies(itemPath, out inheritParent);
 
@@ -104,7 +103,7 @@ namespace FifteenBelow.Deployment.ReportingServices
                 Log("Attempting to select the role of: '{0}' for GroupUserName: '{1}'", reportingRoleToAdd,
                                   reportingUserToAddRoleFor);
                 Role[] existingRoles = policy.Roles;
-                Role role = null;
+                Role role;
 
                 role = existingRoles.FirstOrDefault(r =>
                     r != null &&
@@ -297,10 +296,9 @@ namespace FifteenBelow.Deployment.ReportingServices
         private void CreateReport(string reportName, string sourceFolder, string targetFolder)
         {
             Byte[] reportDefinition = GetReportDefinition(reportName, sourceFolder);
-            CatalogItem catalogItem = null;
-            Warning[] warnings = null;
+            Warning[] warnings;
             Log("Creating report '{0}'", reportName);
-            catalogItem = rs.CreateCatalogItem("Report", reportName, targetFolder, true, reportDefinition, null, out warnings);
+            var catalogItem = rs.CreateCatalogItem("Report", reportName, targetFolder, true, reportDefinition, null, out warnings);
 
             if (catalogItem == null)
             {
@@ -315,7 +313,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         private Byte[] GetReportDefinition(string reportName, string sourceFolder)
         {
-            Byte[] definition = null;
+            Byte[] definition;
             FileStream stream = File.OpenRead(sourceFolder + "\\" + reportName + ".rdl");
             definition = new Byte[stream.Length];
             stream.Read(definition, 0, Convert.ToInt32(stream.Length));
@@ -325,7 +323,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         private void PrintWarnings(Warning[] warnings)
         {
-            if ((warnings != null))
+            if (warnings != null)
             {
                 Log("There were {0} warnings", warnings.Length);
                 int count = 0;
@@ -351,7 +349,7 @@ namespace FifteenBelow.Deployment.ReportingServices
             Log("Report '{0}' has {1} data sources", reportName, dataSource.Length);
 
             var dataSources = new DataSource[dataSource.Length];
-            var i = 0;
+            int i;
 
             for (i = 0; i <= dataSource.Length - 1; i++)
             {

@@ -87,11 +87,11 @@ namespace FifteenBelow.Deployment
         {
             using (var cnn = new SqlConnection(masterDatabaseConnectionString))
             {
-                string sql = string.Format("SELECT name FROM master.dbo.sysdatabases WHERE ([name] = N'{0}')", this.DatabaseName);
+                string sql = string.Format("SELECT name FROM master.dbo.sysdatabases WHERE ([name] = N'{0}')", DatabaseName);
                 cnn.Open();
                 using (var cmd = new SqlCommand(sql, cnn))
                 {
-                    return Convert.ToString(cmd.ExecuteScalar()) == this.DatabaseName;
+                    return Convert.ToString(cmd.ExecuteScalar()) == DatabaseName;
                 }
             }
         }

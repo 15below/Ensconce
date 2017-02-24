@@ -31,8 +31,8 @@ namespace FifteenBelow.Deployment.Update
         public Dictionary<string, DbLogin> DbLogins = new Dictionary<string, DbLogin>();
         // These values (and no others) can be used as tags in property values
         private static readonly string[] ValidTagsInProperties = new[] { "ClientCode", "Environment", "DbServer" };
-        private HashSet<string> idSpecificValues = new HashSet<string>();
-        private Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
+        private readonly HashSet<string> idSpecificValues = new HashSet<string>();
+        private readonly Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
 
         private TagDictionary(string identifier, bool isLabel, params Tuple<string, TagSource>[] sources)
         {
@@ -206,7 +206,7 @@ namespace FifteenBelow.Deployment.Update
                 {
                     string password = string.Empty;
                     string defaultDb = string.Empty;
-                    string connectionString = string.Empty;
+                    string connectionString;
 
                     if (string.IsNullOrWhiteSpace(dbLoginElement.TryXPathValueWithDefault("ConnectionString", "")))
                     {

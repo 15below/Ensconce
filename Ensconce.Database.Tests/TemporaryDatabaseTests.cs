@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -70,7 +69,7 @@ namespace Ensconce.Database.Tests
         {
             // This version number is set in _BuildInfo.txt which lives at the root of the database scripts
             const string currentVersion = "1.1.1.2";
-            System.Environment.SetEnvironmentVariable("PackageVersion", currentVersion);
+            Environment.SetEnvironmentVariable("PackageVersion", currentVersion);
             using (var sut = new TemporaryDatabase())
             {
                 sut.Deploy(Path.Combine(Assembly.GetExecutingAssembly().Directory(), "Scripts1"));
