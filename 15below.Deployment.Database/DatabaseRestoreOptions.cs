@@ -19,7 +19,7 @@ namespace FifteenBelow.Deployment
 
             if (!string.IsNullOrWhiteSpace(restorePath))
             {
-                string database = Path.GetFileNameWithoutExtension(restorePath);
+                var database = Path.GetFileNameWithoutExtension(restorePath);
                 migrateSettings.Set(x => x.RestoreFromPath = restorePath)
                     .Set(x => x.Restore = !string.IsNullOrWhiteSpace(restorePath))
                     .Set(x => x.RestoreCustomOptions = string.Format(@", MOVE '{0}' TO '{1}{0}.mdf', MOVE '{0}_log' TO '{1}\{0}_log.LDF'", database, @"c:\Temp"));

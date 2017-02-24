@@ -30,7 +30,7 @@ namespace Ensconce.StructureEditor
 
             if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.SavedConfigs))
             {
-                foreach (string filePath in Properties.Settings.Default.SavedConfigs.Split(','))
+                foreach (var filePath in Properties.Settings.Default.SavedConfigs.Split(','))
                 {
                     savedConfigs.Add(filePath);
                 }

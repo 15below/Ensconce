@@ -706,7 +706,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "talogItem", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("ItemInfo")]
         public CatalogItem CreateCatalogItem(string ItemType, string Name, string Parent, bool Overwrite, [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")] byte[] Definition, Property[] Properties, out Warning[] Warnings) {
-            object[] results = this.Invoke("CreateCatalogItem", new object[] {
+            var results = this.Invoke("CreateCatalogItem", new object[] {
                         ItemType,
                         Name,
                         Parent,
@@ -738,7 +738,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateCatalogItemOperationCompleted(object arg) {
             if ((this.CreateCatalogItemCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateCatalogItemCompleted(this, new CreateCatalogItemCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -750,7 +750,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "efinition", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Warnings")]
         public Warning[] SetItemDefinition(string ItemPath, [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")] byte[] Definition, Property[] Properties) {
-            object[] results = this.Invoke("SetItemDefinition", new object[] {
+            var results = this.Invoke("SetItemDefinition", new object[] {
                         ItemPath,
                         Definition,
                         Properties});
@@ -775,7 +775,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetItemDefinitionOperationCompleted(object arg) {
             if ((this.SetItemDefinitionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetItemDefinitionCompleted(this, new SetItemDefinitionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -787,7 +787,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "efinition", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Definition", DataType="base64Binary")]
         public byte[] GetItemDefinition(string ItemPath) {
-            object[] results = this.Invoke("GetItemDefinition", new object[] {
+            var results = this.Invoke("GetItemDefinition", new object[] {
                         ItemPath});
             return ((byte[])(results[0]));
         }
@@ -808,7 +808,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetItemDefinitionOperationCompleted(object arg) {
             if ((this.GetItemDefinitionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetItemDefinitionCompleted(this, new GetItemDefinitionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -820,7 +820,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ype", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Type")]
         public string GetItemType(string ItemPath) {
-            object[] results = this.Invoke("GetItemType", new object[] {
+            var results = this.Invoke("GetItemType", new object[] {
                         ItemPath});
             return ((string)(results[0]));
         }
@@ -841,7 +841,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetItemTypeOperationCompleted(object arg) {
             if ((this.GetItemTypeCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetItemTypeCompleted(this, new GetItemTypeCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -872,7 +872,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnDeleteItemOperationCompleted(object arg) {
             if ((this.DeleteItemCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteItemCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -905,7 +905,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnMoveItemOperationCompleted(object arg) {
             if ((this.MoveItemCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.MoveItemCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -936,7 +936,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnInheritParentSecurityOperationCompleted(object arg) {
             if ((this.InheritParentSecurityCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.InheritParentSecurityCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -948,7 +948,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "History", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("ItemHistory")]
         public ItemHistorySnapshot[] ListItemHistory(string ItemPath) {
-            object[] results = this.Invoke("ListItemHistory", new object[] {
+            var results = this.Invoke("ListItemHistory", new object[] {
                         ItemPath});
             return ((ItemHistorySnapshot[])(results[0]));
         }
@@ -969,7 +969,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListItemHistoryOperationCompleted(object arg) {
             if ((this.ListItemHistoryCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListItemHistoryCompleted(this, new ListItemHistoryCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -981,7 +981,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "dren", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("CatalogItems")]
         public CatalogItem[] ListChildren(string ItemPath, bool Recursive) {
-            object[] results = this.Invoke("ListChildren", new object[] {
+            var results = this.Invoke("ListChildren", new object[] {
                         ItemPath,
                         Recursive});
             return ((CatalogItem[])(results[0]));
@@ -1004,7 +1004,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListChildrenOperationCompleted(object arg) {
             if ((this.ListChildrenCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListChildrenCompleted(this, new ListChildrenCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1016,7 +1016,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ndentItems", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("CatalogItems")]
         public CatalogItem[] ListDependentItems(string ItemPath) {
-            object[] results = this.Invoke("ListDependentItems", new object[] {
+            var results = this.Invoke("ListDependentItems", new object[] {
                         ItemPath});
             return ((CatalogItem[])(results[0]));
         }
@@ -1037,7 +1037,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListDependentItemsOperationCompleted(object arg) {
             if ((this.ListDependentItemsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListDependentItemsCompleted(this, new ListDependentItemsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1049,7 +1049,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "s", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Items")]
         public CatalogItem[] FindItems(string Folder, BooleanOperatorEnum BooleanOperator, Property[] SearchOptions, SearchCondition[] SearchConditions) {
-            object[] results = this.Invoke("FindItems", new object[] {
+            var results = this.Invoke("FindItems", new object[] {
                         Folder,
                         BooleanOperator,
                         SearchOptions,
@@ -1076,7 +1076,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnFindItemsOperationCompleted(object arg) {
             if ((this.FindItemsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.FindItemsCompleted(this, new FindItemsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1087,7 +1087,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListPare" +
             "nts", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public CatalogItem[] ListParents(string ItemPath) {
-            object[] results = this.Invoke("ListParents", new object[] {
+            var results = this.Invoke("ListParents", new object[] {
                         ItemPath});
             return ((CatalogItem[])(results[0]));
         }
@@ -1108,7 +1108,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListParentsOperationCompleted(object arg) {
             if ((this.ListParentsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListParentsCompleted(this, new ListParentsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1120,7 +1120,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "lder", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("ItemInfo")]
         public CatalogItem CreateFolder(string Folder, string Parent, Property[] Properties) {
-            object[] results = this.Invoke("CreateFolder", new object[] {
+            var results = this.Invoke("CreateFolder", new object[] {
                         Folder,
                         Parent,
                         Properties});
@@ -1145,7 +1145,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateFolderOperationCompleted(object arg) {
             if ((this.CreateFolderCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateFolderCompleted(this, new CreateFolderCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1178,7 +1178,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetPropertiesOperationCompleted(object arg) {
             if ((this.SetPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetPropertiesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1191,7 +1191,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "rties", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Values")]
         public Property[] GetProperties(string ItemPath, Property[] Properties) {
-            object[] results = this.Invoke("GetProperties", new object[] {
+            var results = this.Invoke("GetProperties", new object[] {
                         ItemPath,
                         Properties});
             return ((Property[])(results[0]));
@@ -1214,7 +1214,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetPropertiesOperationCompleted(object arg) {
             if ((this.GetPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetPropertiesCompleted(this, new GetPropertiesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1247,7 +1247,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetItemReferencesOperationCompleted(object arg) {
             if ((this.SetItemReferencesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetItemReferencesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1259,7 +1259,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "eferences", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("ItemReferences")]
         public ItemReferenceData[] GetItemReferences(string ItemPath, string ReferenceItemType) {
-            object[] results = this.Invoke("GetItemReferences", new object[] {
+            var results = this.Invoke("GetItemReferences", new object[] {
                         ItemPath,
                         ReferenceItemType});
             return ((ItemReferenceData[])(results[0]));
@@ -1282,7 +1282,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetItemReferencesOperationCompleted(object arg) {
             if ((this.GetItemReferencesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetItemReferencesCompleted(this, new GetItemReferencesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1293,7 +1293,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListItem" +
             "Types", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListItemTypes() {
-            object[] results = this.Invoke("ListItemTypes", new object[0]);
+            var results = this.Invoke("ListItemTypes", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -1312,7 +1312,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListItemTypesOperationCompleted(object arg) {
             if ((this.ListItemTypesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListItemTypesCompleted(this, new ListItemTypesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1353,7 +1353,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetSubscriptionPropertiesOperationCompleted(object arg) {
             if ((this.SetSubscriptionPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetSubscriptionPropertiesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1365,7 +1365,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "riptionProperties", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Owner")]
         public string GetSubscriptionProperties(string SubscriptionID, out ExtensionSettings ExtensionSettings, out string Description, out ActiveState Active, out string Status, out string EventType, out string MatchData, out ParameterValue[] Parameters) {
-            object[] results = this.Invoke("GetSubscriptionProperties", new object[] {
+            var results = this.Invoke("GetSubscriptionProperties", new object[] {
                         SubscriptionID});
             ExtensionSettings = ((ExtensionSettings)(results[1]));
             Description = ((string)(results[2]));
@@ -1393,7 +1393,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetSubscriptionPropertiesOperationCompleted(object arg) {
             if ((this.GetSubscriptionPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetSubscriptionPropertiesCompleted(this, new GetSubscriptionPropertiesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1436,7 +1436,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetDataDrivenSubscriptionPropertiesOperationCompleted(object arg) {
             if ((this.SetDataDrivenSubscriptionPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetDataDrivenSubscriptionPropertiesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1448,7 +1448,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "rivenSubscriptionProperties", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Owner")]
         public string GetDataDrivenSubscriptionProperties(string DataDrivenSubscriptionID, out ExtensionSettings ExtensionSettings, out DataRetrievalPlan DataRetrievalPlan, out string Description, out ActiveState Active, out string Status, out string EventType, out string MatchData, out ParameterValueOrFieldReference[] Parameters) {
-            object[] results = this.Invoke("GetDataDrivenSubscriptionProperties", new object[] {
+            var results = this.Invoke("GetDataDrivenSubscriptionProperties", new object[] {
                         DataDrivenSubscriptionID});
             ExtensionSettings = ((ExtensionSettings)(results[1]));
             DataRetrievalPlan = ((DataRetrievalPlan)(results[2]));
@@ -1477,7 +1477,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetDataDrivenSubscriptionPropertiesOperationCompleted(object arg) {
             if ((this.GetDataDrivenSubscriptionPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetDataDrivenSubscriptionPropertiesCompleted(this, new GetDataDrivenSubscriptionPropertiesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1508,7 +1508,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnDeleteSubscriptionOperationCompleted(object arg) {
             if ((this.DeleteSubscriptionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteSubscriptionCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1520,7 +1520,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "bscription", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("SubscriptionID")]
         public string CreateSubscription(string ItemPath, ExtensionSettings ExtensionSettings, string Description, string EventType, string MatchData, ParameterValue[] Parameters) {
-            object[] results = this.Invoke("CreateSubscription", new object[] {
+            var results = this.Invoke("CreateSubscription", new object[] {
                         ItemPath,
                         ExtensionSettings,
                         Description,
@@ -1551,7 +1551,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateSubscriptionOperationCompleted(object arg) {
             if ((this.CreateSubscriptionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateSubscriptionCompleted(this, new CreateSubscriptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1563,7 +1563,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "taDrivenSubscription", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("SubscriptionID")]
         public string CreateDataDrivenSubscription(string ItemPath, ExtensionSettings ExtensionSettings, DataRetrievalPlan DataRetrievalPlan, string Description, string EventType, string MatchData, ParameterValueOrFieldReference[] Parameters) {
-            object[] results = this.Invoke("CreateDataDrivenSubscription", new object[] {
+            var results = this.Invoke("CreateDataDrivenSubscription", new object[] {
                         ItemPath,
                         ExtensionSettings,
                         DataRetrievalPlan,
@@ -1596,7 +1596,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateDataDrivenSubscriptionOperationCompleted(object arg) {
             if ((this.CreateDataDrivenSubscriptionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateDataDrivenSubscriptionCompleted(this, new CreateDataDrivenSubscriptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1608,7 +1608,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "sionSettings", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("ExtensionParameters")]
         public ExtensionParameter[] GetExtensionSettings(string Extension) {
-            object[] results = this.Invoke("GetExtensionSettings", new object[] {
+            var results = this.Invoke("GetExtensionSettings", new object[] {
                         Extension});
             return ((ExtensionParameter[])(results[0]));
         }
@@ -1629,7 +1629,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetExtensionSettingsOperationCompleted(object arg) {
             if ((this.GetExtensionSettingsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetExtensionSettingsCompleted(this, new GetExtensionSettingsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1641,7 +1641,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ExtensionSettings", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("ParameterErrors")]
         public ExtensionParameter[] ValidateExtensionSettings(string Extension, ParameterValueOrFieldReference[] ParameterValues, string SiteUrl) {
-            object[] results = this.Invoke("ValidateExtensionSettings", new object[] {
+            var results = this.Invoke("ValidateExtensionSettings", new object[] {
                         Extension,
                         ParameterValues,
                         SiteUrl});
@@ -1666,7 +1666,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnValidateExtensionSettingsOperationCompleted(object arg) {
             if ((this.ValidateExtensionSettingsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ValidateExtensionSettingsCompleted(this, new ValidateExtensionSettingsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1678,7 +1678,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "criptions", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("SubscriptionItems")]
         public Subscription[] ListSubscriptions(string ItemPathOrSiteURL) {
-            object[] results = this.Invoke("ListSubscriptions", new object[] {
+            var results = this.Invoke("ListSubscriptions", new object[] {
                         ItemPathOrSiteURL});
             return ((Subscription[])(results[0]));
         }
@@ -1699,7 +1699,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListSubscriptionsOperationCompleted(object arg) {
             if ((this.ListSubscriptionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListSubscriptionsCompleted(this, new ListSubscriptionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1711,7 +1711,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "bscriptions", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("SubscriptionItems")]
         public Subscription[] ListMySubscriptions(string ItemPathOrSiteURL) {
-            object[] results = this.Invoke("ListMySubscriptions", new object[] {
+            var results = this.Invoke("ListMySubscriptions", new object[] {
                         ItemPathOrSiteURL});
             return ((Subscription[])(results[0]));
         }
@@ -1732,7 +1732,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListMySubscriptionsOperationCompleted(object arg) {
             if ((this.ListMySubscriptionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListMySubscriptionsCompleted(this, new ListMySubscriptionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1744,7 +1744,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "criptionsUsingDataSource", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("SubscriptionItems")]
         public Subscription[] ListSubscriptionsUsingDataSource(string DataSource) {
-            object[] results = this.Invoke("ListSubscriptionsUsingDataSource", new object[] {
+            var results = this.Invoke("ListSubscriptionsUsingDataSource", new object[] {
                         DataSource});
             return ((Subscription[])(results[0]));
         }
@@ -1765,7 +1765,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListSubscriptionsUsingDataSourceOperationCompleted(object arg) {
             if ((this.ListSubscriptionsUsingDataSourceCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListSubscriptionsUsingDataSourceCompleted(this, new ListSubscriptionsUsingDataSourceCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1798,7 +1798,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnChangeSubscriptionOwnerOperationCompleted(object arg) {
             if ((this.ChangeSubscriptionOwnerCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ChangeSubscriptionOwnerCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1810,7 +1810,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "taSource", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("ItemInfo")]
         public CatalogItem CreateDataSource(string DataSource, string Parent, bool Overwrite, DataSourceDefinition Definition, Property[] Properties) {
-            object[] results = this.Invoke("CreateDataSource", new object[] {
+            var results = this.Invoke("CreateDataSource", new object[] {
                         DataSource,
                         Parent,
                         Overwrite,
@@ -1839,7 +1839,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateDataSourceOperationCompleted(object arg) {
             if ((this.CreateDataSourceCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateDataSourceCompleted(this, new CreateDataSourceCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1851,7 +1851,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "uery", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("DataSettings")]
         public DataSetDefinition PrepareQuery(DataSource DataSource, DataSetDefinition DataSet, out bool Changed, out string[] ParameterNames) {
-            object[] results = this.Invoke("PrepareQuery", new object[] {
+            var results = this.Invoke("PrepareQuery", new object[] {
                         DataSource,
                         DataSet});
             Changed = ((bool)(results[1]));
@@ -1876,7 +1876,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnPrepareQueryOperationCompleted(object arg) {
             if ((this.PrepareQueryCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.PrepareQueryCompleted(this, new PrepareQueryCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1907,7 +1907,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnEnableDataSourceOperationCompleted(object arg) {
             if ((this.EnableDataSourceCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.EnableDataSourceCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1938,7 +1938,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnDisableDataSourceOperationCompleted(object arg) {
             if ((this.DisableDataSourceCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DisableDataSourceCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1971,7 +1971,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetDataSourceContentsOperationCompleted(object arg) {
             if ((this.SetDataSourceContentsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetDataSourceContentsCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1983,7 +1983,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ourceContents", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Definition")]
         public DataSourceDefinition GetDataSourceContents(string DataSource) {
-            object[] results = this.Invoke("GetDataSourceContents", new object[] {
+            var results = this.Invoke("GetDataSourceContents", new object[] {
                         DataSource});
             return ((DataSourceDefinition)(results[0]));
         }
@@ -2004,7 +2004,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetDataSourceContentsOperationCompleted(object arg) {
             if ((this.GetDataSourceContentsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetDataSourceContentsCompleted(this, new GetDataSourceContentsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2015,7 +2015,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListData" +
             "baseCredentialRetrievalOptions", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListDatabaseCredentialRetrievalOptions() {
-            object[] results = this.Invoke("ListDatabaseCredentialRetrievalOptions", new object[0]);
+            var results = this.Invoke("ListDatabaseCredentialRetrievalOptions", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -2034,7 +2034,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListDatabaseCredentialRetrievalOptionsOperationCompleted(object arg) {
             if ((this.ListDatabaseCredentialRetrievalOptionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListDatabaseCredentialRetrievalOptionsCompleted(this, new ListDatabaseCredentialRetrievalOptionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2067,7 +2067,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetItemDataSourcesOperationCompleted(object arg) {
             if ((this.SetItemDataSourcesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetItemDataSourcesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2079,7 +2079,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ataSources", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("DataSources")]
         public DataSource[] GetItemDataSources(string ItemPath) {
-            object[] results = this.Invoke("GetItemDataSources", new object[] {
+            var results = this.Invoke("GetItemDataSources", new object[] {
                         ItemPath});
             return ((DataSource[])(results[0]));
         }
@@ -2100,7 +2100,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetItemDataSourcesOperationCompleted(object arg) {
             if ((this.GetItemDataSourcesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetItemDataSourcesCompleted(this, new GetItemDataSourcesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2111,7 +2111,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/TestConn" +
             "ectForDataSourceDefinition", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public bool TestConnectForDataSourceDefinition(DataSourceDefinition DataSourceDefinition, string UserName, string Password, out string ConnectError) {
-            object[] results = this.Invoke("TestConnectForDataSourceDefinition", new object[] {
+            var results = this.Invoke("TestConnectForDataSourceDefinition", new object[] {
                         DataSourceDefinition,
                         UserName,
                         Password});
@@ -2137,7 +2137,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnTestConnectForDataSourceDefinitionOperationCompleted(object arg) {
             if ((this.TestConnectForDataSourceDefinitionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.TestConnectForDataSourceDefinitionCompleted(this, new TestConnectForDataSourceDefinitionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2148,7 +2148,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/TestConn" +
             "ectForItemDataSource", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public bool TestConnectForItemDataSource(string ItemPath, string DataSourceName, string UserName, string Password, out string ConnectError) {
-            object[] results = this.Invoke("TestConnectForItemDataSource", new object[] {
+            var results = this.Invoke("TestConnectForItemDataSource", new object[] {
                         ItemPath,
                         DataSourceName,
                         UserName,
@@ -2176,7 +2176,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnTestConnectForItemDataSourceOperationCompleted(object arg) {
             if ((this.TestConnectForItemDataSourceCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.TestConnectForItemDataSourceCompleted(this, new TestConnectForItemDataSourceCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2211,7 +2211,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateRoleOperationCompleted(object arg) {
             if ((this.CreateRoleCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateRoleCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2246,7 +2246,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetRolePropertiesOperationCompleted(object arg) {
             if ((this.SetRolePropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetRolePropertiesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2258,7 +2258,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "roperties", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("TaskIDs")]
         public string[] GetRoleProperties(string Name, string SiteUrl, out string Description) {
-            object[] results = this.Invoke("GetRoleProperties", new object[] {
+            var results = this.Invoke("GetRoleProperties", new object[] {
                         Name,
                         SiteUrl});
             Description = ((string)(results[1]));
@@ -2282,7 +2282,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetRolePropertiesOperationCompleted(object arg) {
             if ((this.GetRolePropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetRolePropertiesCompleted(this, new GetRolePropertiesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2313,7 +2313,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnDeleteRoleOperationCompleted(object arg) {
             if ((this.DeleteRoleCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteRoleCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2325,7 +2325,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "s", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Roles")]
         public Role[] ListRoles(string SecurityScope, string SiteUrl) {
-            object[] results = this.Invoke("ListRoles", new object[] {
+            var results = this.Invoke("ListRoles", new object[] {
                         SecurityScope,
                         SiteUrl});
             return ((Role[])(results[0]));
@@ -2348,7 +2348,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListRolesOperationCompleted(object arg) {
             if ((this.ListRolesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListRolesCompleted(this, new ListRolesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2360,7 +2360,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "s", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Tasks")]
         public Task[] ListTasks(string SecurityScope) {
-            object[] results = this.Invoke("ListTasks", new object[] {
+            var results = this.Invoke("ListTasks", new object[] {
                         SecurityScope});
             return ((Task[])(results[0]));
         }
@@ -2381,7 +2381,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListTasksOperationCompleted(object arg) {
             if ((this.ListTasksCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListTasksCompleted(this, new ListTasksCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2414,7 +2414,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetPoliciesOperationCompleted(object arg) {
             if ((this.SetPoliciesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetPoliciesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2426,7 +2426,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ies", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Policies")]
         public Policy[] GetPolicies(string ItemPath, out bool InheritParent) {
-            object[] results = this.Invoke("GetPolicies", new object[] {
+            var results = this.Invoke("GetPolicies", new object[] {
                         ItemPath});
             InheritParent = ((bool)(results[1]));
             return ((Policy[])(results[0]));
@@ -2448,7 +2448,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetPoliciesOperationCompleted(object arg) {
             if ((this.GetPoliciesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetPoliciesCompleted(this, new GetPoliciesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2460,7 +2460,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ataSourcePrompts", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("DataSourcePrompts")]
         public DataSourcePrompt[] GetItemDataSourcePrompts(string ItemPath) {
-            object[] results = this.Invoke("GetItemDataSourcePrompts", new object[] {
+            var results = this.Invoke("GetItemDataSourcePrompts", new object[] {
                         ItemPath});
             return ((DataSourcePrompt[])(results[0]));
         }
@@ -2481,7 +2481,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetItemDataSourcePromptsOperationCompleted(object arg) {
             if ((this.GetItemDataSourcePromptsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetItemDataSourcePromptsCompleted(this, new GetItemDataSourcePromptsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2493,7 +2493,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "Model", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("ItemInfo")]
         public CatalogItem GenerateModel(string DataSource, string Model, string Parent, Property[] Properties, out Warning[] Warnings) {
-            object[] results = this.Invoke("GenerateModel", new object[] {
+            var results = this.Invoke("GenerateModel", new object[] {
                         DataSource,
                         Model,
                         Parent,
@@ -2521,7 +2521,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGenerateModelOperationCompleted(object arg) {
             if ((this.GenerateModelCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GenerateModelCompleted(this, new GenerateModelCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2533,7 +2533,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ItemPermissions", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Permissions")]
         public string[] GetModelItemPermissions(string Model, string ModelItemID) {
-            object[] results = this.Invoke("GetModelItemPermissions", new object[] {
+            var results = this.Invoke("GetModelItemPermissions", new object[] {
                         Model,
                         ModelItemID});
             return ((string[])(results[0]));
@@ -2556,7 +2556,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetModelItemPermissionsOperationCompleted(object arg) {
             if ((this.GetModelItemPermissionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetModelItemPermissionsCompleted(this, new GetModelItemPermissionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2591,7 +2591,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetModelItemPoliciesOperationCompleted(object arg) {
             if ((this.SetModelItemPoliciesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetModelItemPoliciesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2603,7 +2603,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ItemPolicies", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Policies")]
         public Policy[] GetModelItemPolicies(string Model, string ModelItemID, out bool InheritParent) {
-            object[] results = this.Invoke("GetModelItemPolicies", new object[] {
+            var results = this.Invoke("GetModelItemPolicies", new object[] {
                         Model,
                         ModelItemID});
             InheritParent = ((bool)(results[1]));
@@ -2627,7 +2627,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetModelItemPoliciesOperationCompleted(object arg) {
             if ((this.GetModelItemPoliciesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetModelItemPoliciesCompleted(this, new GetModelItemPoliciesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2639,7 +2639,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "odel", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Definition", DataType="base64Binary")]
         public byte[] GetUserModel(string Model, string Perspective) {
-            object[] results = this.Invoke("GetUserModel", new object[] {
+            var results = this.Invoke("GetUserModel", new object[] {
                         Model,
                         Perspective});
             return ((byte[])(results[0]));
@@ -2662,7 +2662,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetUserModelOperationCompleted(object arg) {
             if ((this.GetUserModelCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetUserModelCompleted(this, new GetUserModelCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2695,7 +2695,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnInheritModelItemParentSecurityOperationCompleted(object arg) {
             if ((this.InheritModelItemParentSecurityCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.InheritModelItemParentSecurityCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2730,7 +2730,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetModelDrillthroughReportsOperationCompleted(object arg) {
             if ((this.SetModelDrillthroughReportsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetModelDrillthroughReportsCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2742,7 +2742,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "lDrillthroughReports", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Reports")]
         public ModelDrillthroughReport[] ListModelDrillthroughReports(string Model, string ModelItemID) {
-            object[] results = this.Invoke("ListModelDrillthroughReports", new object[] {
+            var results = this.Invoke("ListModelDrillthroughReports", new object[] {
                         Model,
                         ModelItemID});
             return ((ModelDrillthroughReport[])(results[0]));
@@ -2765,7 +2765,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListModelDrillthroughReportsOperationCompleted(object arg) {
             if ((this.ListModelDrillthroughReportsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListModelDrillthroughReportsCompleted(this, new ListModelDrillthroughReportsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2777,7 +2777,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "lItemChildren", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("ModelItems")]
         public ModelItem[] ListModelItemChildren(string Model, string ModelItemID, bool Recursive) {
-            object[] results = this.Invoke("ListModelItemChildren", new object[] {
+            var results = this.Invoke("ListModelItemChildren", new object[] {
                         Model,
                         ModelItemID,
                         Recursive});
@@ -2802,7 +2802,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListModelItemChildrenOperationCompleted(object arg) {
             if ((this.ListModelItemChildrenCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListModelItemChildrenCompleted(this, new ListModelItemChildrenCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2813,7 +2813,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListMode" +
             "lItemTypes", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListModelItemTypes() {
-            object[] results = this.Invoke("ListModelItemTypes", new object[0]);
+            var results = this.Invoke("ListModelItemTypes", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -2832,7 +2832,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListModelItemTypesOperationCompleted(object arg) {
             if ((this.ListModelItemTypesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListModelItemTypesCompleted(this, new ListModelItemTypesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2844,7 +2844,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "lPerspectives", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("ModelCatalogItems")]
         public ModelCatalogItem[] ListModelPerspectives(string Model) {
-            object[] results = this.Invoke("ListModelPerspectives", new object[] {
+            var results = this.Invoke("ListModelPerspectives", new object[] {
                         Model});
             return ((ModelCatalogItem[])(results[0]));
         }
@@ -2865,7 +2865,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListModelPerspectivesOperationCompleted(object arg) {
             if ((this.ListModelPerspectivesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListModelPerspectivesCompleted(this, new ListModelPerspectivesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2877,7 +2877,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "teModel", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Warnings")]
         public Warning[] RegenerateModel(string Model) {
-            object[] results = this.Invoke("RegenerateModel", new object[] {
+            var results = this.Invoke("RegenerateModel", new object[] {
                         Model});
             return ((Warning[])(results[0]));
         }
@@ -2898,7 +2898,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnRegenerateModelOperationCompleted(object arg) {
             if ((this.RegenerateModelCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.RegenerateModelCompleted(this, new RegenerateModelCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2929,7 +2929,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnRemoveAllModelItemPoliciesOperationCompleted(object arg) {
             if ((this.RemoveAllModelItemPoliciesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.RemoveAllModelItemPoliciesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2941,7 +2941,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "hedule", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("ScheduleID")]
         public string CreateSchedule(string Name, ScheduleDefinition ScheduleDefinition, string SiteUrl) {
-            object[] results = this.Invoke("CreateSchedule", new object[] {
+            var results = this.Invoke("CreateSchedule", new object[] {
                         Name,
                         ScheduleDefinition,
                         SiteUrl});
@@ -2966,7 +2966,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateScheduleOperationCompleted(object arg) {
             if ((this.CreateScheduleCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateScheduleCompleted(this, new CreateScheduleCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -2997,7 +2997,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnDeleteScheduleOperationCompleted(object arg) {
             if ((this.DeleteScheduleCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteScheduleCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3009,7 +3009,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "dules", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Schedules")]
         public Schedule[] ListSchedules(string SiteUrl) {
-            object[] results = this.Invoke("ListSchedules", new object[] {
+            var results = this.Invoke("ListSchedules", new object[] {
                         SiteUrl});
             return ((Schedule[])(results[0]));
         }
@@ -3030,7 +3030,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListSchedulesOperationCompleted(object arg) {
             if ((this.ListSchedulesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListSchedulesCompleted(this, new ListSchedulesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3042,7 +3042,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "uleProperties", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Schedule")]
         public Schedule GetScheduleProperties(string ScheduleID) {
-            object[] results = this.Invoke("GetScheduleProperties", new object[] {
+            var results = this.Invoke("GetScheduleProperties", new object[] {
                         ScheduleID});
             return ((Schedule)(results[0]));
         }
@@ -3063,7 +3063,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetSchedulePropertiesOperationCompleted(object arg) {
             if ((this.GetSchedulePropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetSchedulePropertiesCompleted(this, new GetSchedulePropertiesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3074,7 +3074,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListSche" +
             "duleStates", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListScheduleStates() {
-            object[] results = this.Invoke("ListScheduleStates", new object[0]);
+            var results = this.Invoke("ListScheduleStates", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -3093,7 +3093,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListScheduleStatesOperationCompleted(object arg) {
             if ((this.ListScheduleStatesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListScheduleStatesCompleted(this, new ListScheduleStatesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3124,7 +3124,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnPauseScheduleOperationCompleted(object arg) {
             if ((this.PauseScheduleCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.PauseScheduleCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3155,7 +3155,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnResumeScheduleOperationCompleted(object arg) {
             if ((this.ResumeScheduleCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ResumeScheduleCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3190,7 +3190,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetSchedulePropertiesOperationCompleted(object arg) {
             if ((this.SetSchedulePropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetSchedulePropertiesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3202,7 +3202,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "duledItems", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Items")]
         public CatalogItem[] ListScheduledItems(string ScheduleID) {
-            object[] results = this.Invoke("ListScheduledItems", new object[] {
+            var results = this.Invoke("ListScheduledItems", new object[] {
                         ScheduleID});
             return ((CatalogItem[])(results[0]));
         }
@@ -3223,7 +3223,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListScheduledItemsOperationCompleted(object arg) {
             if ((this.ListScheduledItemsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListScheduledItemsCompleted(this, new ListScheduledItemsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3256,7 +3256,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetItemParametersOperationCompleted(object arg) {
             if ((this.SetItemParametersCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetItemParametersCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3268,7 +3268,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "arameters", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Parameters")]
         public ItemParameter[] GetItemParameters(string ItemPath, string HistoryID, bool ForRendering, ParameterValue[] Values, DataSourceCredentials[] Credentials) {
-            object[] results = this.Invoke("GetItemParameters", new object[] {
+            var results = this.Invoke("GetItemParameters", new object[] {
                         ItemPath,
                         HistoryID,
                         ForRendering,
@@ -3297,7 +3297,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetItemParametersOperationCompleted(object arg) {
             if ((this.GetItemParametersCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetItemParametersCompleted(this, new GetItemParametersCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3308,7 +3308,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListPara" +
             "meterTypes", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListParameterTypes() {
-            object[] results = this.Invoke("ListParameterTypes", new object[0]);
+            var results = this.Invoke("ListParameterTypes", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -3327,7 +3327,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListParameterTypesOperationCompleted(object arg) {
             if ((this.ListParameterTypesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListParameterTypesCompleted(this, new ListParameterTypesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3338,7 +3338,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListPara" +
             "meterStates", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListParameterStates() {
-            object[] results = this.Invoke("ListParameterStates", new object[0]);
+            var results = this.Invoke("ListParameterStates", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -3357,7 +3357,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListParameterStatesOperationCompleted(object arg) {
             if ((this.ListParameterStatesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListParameterStatesCompleted(this, new ListParameterStatesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3369,7 +3369,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "portEditSession", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("EditSessionID")]
         public string CreateReportEditSession(string Report, string Parent, [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")] byte[] Definition, out Warning[] Warnings) {
-            object[] results = this.Invoke("CreateReportEditSession", new object[] {
+            var results = this.Invoke("CreateReportEditSession", new object[] {
                         Report,
                         Parent,
                         Definition});
@@ -3395,7 +3395,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateReportEditSessionOperationCompleted(object arg) {
             if ((this.CreateReportEditSessionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateReportEditSessionCompleted(this, new CreateReportEditSessionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3432,7 +3432,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateLinkedItemOperationCompleted(object arg) {
             if ((this.CreateLinkedItemCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateLinkedItemCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3465,7 +3465,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetItemLinkOperationCompleted(object arg) {
             if ((this.SetItemLinkCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetItemLinkCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3477,7 +3477,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ink", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Link")]
         public string GetItemLink(string ItemPath) {
-            object[] results = this.Invoke("GetItemLink", new object[] {
+            var results = this.Invoke("GetItemLink", new object[] {
                         ItemPath});
             return ((string)(results[0]));
         }
@@ -3498,7 +3498,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetItemLinkOperationCompleted(object arg) {
             if ((this.GetItemLinkCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetItemLinkCompleted(this, new GetItemLinkCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3509,7 +3509,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListExec" +
             "utionSettings", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListExecutionSettings() {
-            object[] results = this.Invoke("ListExecutionSettings", new object[0]);
+            var results = this.Invoke("ListExecutionSettings", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -3528,7 +3528,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListExecutionSettingsOperationCompleted(object arg) {
             if ((this.ListExecutionSettingsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListExecutionSettingsCompleted(this, new ListExecutionSettingsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3563,7 +3563,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetExecutionOptionsOperationCompleted(object arg) {
             if ((this.SetExecutionOptionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetExecutionOptionsCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3575,7 +3575,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "tionOptions", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("ExecutionSetting")]
         public string GetExecutionOptions(string ItemPath, [System.Xml.Serialization.XmlElementAttribute("NoSchedule", typeof(NoSchedule))] [System.Xml.Serialization.XmlElementAttribute("ScheduleDefinition", typeof(ScheduleDefinition))] [System.Xml.Serialization.XmlElementAttribute("ScheduleReference", typeof(ScheduleReference))] out ScheduleDefinitionOrReference Item) {
-            object[] results = this.Invoke("GetExecutionOptions", new object[] {
+            var results = this.Invoke("GetExecutionOptions", new object[] {
                         ItemPath});
             Item = ((ScheduleDefinitionOrReference)(results[1]));
             return ((string)(results[0]));
@@ -3597,7 +3597,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetExecutionOptionsOperationCompleted(object arg) {
             if ((this.GetExecutionOptionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetExecutionOptionsCompleted(this, new GetExecutionOptionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3628,7 +3628,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnUpdateItemExecutionSnapshotOperationCompleted(object arg) {
             if ((this.UpdateItemExecutionSnapshotCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.UpdateItemExecutionSnapshotCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3663,7 +3663,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetCacheOptionsOperationCompleted(object arg) {
             if ((this.SetCacheOptionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetCacheOptionsCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3675,7 +3675,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "Options", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("CacheItem")]
         public bool GetCacheOptions(string ItemPath, [System.Xml.Serialization.XmlElementAttribute("ScheduleExpiration", typeof(ScheduleExpiration))] [System.Xml.Serialization.XmlElementAttribute("TimeExpiration", typeof(TimeExpiration))] out ExpirationDefinition Item) {
-            object[] results = this.Invoke("GetCacheOptions", new object[] {
+            var results = this.Invoke("GetCacheOptions", new object[] {
                         ItemPath});
             Item = ((ExpirationDefinition)(results[1]));
             return ((bool)(results[0]));
@@ -3697,7 +3697,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetCacheOptionsOperationCompleted(object arg) {
             if ((this.GetCacheOptionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetCacheOptionsCompleted(this, new GetCacheOptionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3728,7 +3728,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnFlushCacheOperationCompleted(object arg) {
             if ((this.FlushCacheCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.FlushCacheCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3740,7 +3740,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "emHistorySnapshot", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("HistoryID")]
         public string CreateItemHistorySnapshot(string ItemPath, out Warning[] Warnings) {
-            object[] results = this.Invoke("CreateItemHistorySnapshot", new object[] {
+            var results = this.Invoke("CreateItemHistorySnapshot", new object[] {
                         ItemPath});
             Warnings = ((Warning[])(results[1]));
             return ((string)(results[0]));
@@ -3762,7 +3762,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateItemHistorySnapshotOperationCompleted(object arg) {
             if ((this.CreateItemHistorySnapshotCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateItemHistorySnapshotCompleted(this, new CreateItemHistorySnapshotCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3795,7 +3795,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnDeleteItemHistorySnapshotOperationCompleted(object arg) {
             if ((this.DeleteItemHistorySnapshotCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteItemHistorySnapshotCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3830,7 +3830,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetItemHistoryLimitOperationCompleted(object arg) {
             if ((this.SetItemHistoryLimitCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetItemHistoryLimitCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3842,7 +3842,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "istoryLimit", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("HistoryLimit")]
         public int GetItemHistoryLimit(string ItemPath, out bool IsSystem, out int SystemLimit) {
-            object[] results = this.Invoke("GetItemHistoryLimit", new object[] {
+            var results = this.Invoke("GetItemHistoryLimit", new object[] {
                         ItemPath});
             IsSystem = ((bool)(results[1]));
             SystemLimit = ((int)(results[2]));
@@ -3865,7 +3865,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetItemHistoryLimitOperationCompleted(object arg) {
             if ((this.GetItemHistoryLimitCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetItemHistoryLimitCompleted(this, new GetItemHistoryLimitCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3902,7 +3902,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetItemHistoryOptionsOperationCompleted(object arg) {
             if ((this.SetItemHistoryOptionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetItemHistoryOptionsCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3914,7 +3914,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "istoryOptions", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("EnableManualSnapshotCreation")]
         public bool GetItemHistoryOptions(string ItemPath, out bool KeepExecutionSnapshots, [System.Xml.Serialization.XmlElementAttribute("NoSchedule", typeof(NoSchedule))] [System.Xml.Serialization.XmlElementAttribute("ScheduleDefinition", typeof(ScheduleDefinition))] [System.Xml.Serialization.XmlElementAttribute("ScheduleReference", typeof(ScheduleReference))] out ScheduleDefinitionOrReference Item) {
-            object[] results = this.Invoke("GetItemHistoryOptions", new object[] {
+            var results = this.Invoke("GetItemHistoryOptions", new object[] {
                         ItemPath});
             KeepExecutionSnapshots = ((bool)(results[1]));
             Item = ((ScheduleDefinitionOrReference)(results[2]));
@@ -3937,7 +3937,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetItemHistoryOptionsOperationCompleted(object arg) {
             if ((this.GetItemHistoryOptionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetItemHistoryOptionsCompleted(this, new GetItemHistoryOptionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3949,7 +3949,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "tServerConfigInfo", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("ServerConfigInfo")]
         public string GetReportServerConfigInfo(bool ScaleOut) {
-            object[] results = this.Invoke("GetReportServerConfigInfo", new object[] {
+            var results = this.Invoke("GetReportServerConfigInfo", new object[] {
                         ScaleOut});
             return ((string)(results[0]));
         }
@@ -3970,7 +3970,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetReportServerConfigInfoOperationCompleted(object arg) {
             if ((this.GetReportServerConfigInfoCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetReportServerConfigInfoCompleted(this, new GetReportServerConfigInfoCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -3981,7 +3981,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/IsSSLReq" +
             "uired", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public bool IsSSLRequired() {
-            object[] results = this.Invoke("IsSSLRequired", new object[0]);
+            var results = this.Invoke("IsSSLRequired", new object[0]);
             return ((bool)(results[0]));
         }
         
@@ -4000,7 +4000,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnIsSSLRequiredOperationCompleted(object arg) {
             if ((this.IsSSLRequiredCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.IsSSLRequiredCompleted(this, new IsSSLRequiredCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4031,7 +4031,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetSystemPropertiesOperationCompleted(object arg) {
             if ((this.SetSystemPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetSystemPropertiesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4043,7 +4043,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "mProperties", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Values")]
         public Property[] GetSystemProperties(Property[] Properties) {
-            object[] results = this.Invoke("GetSystemProperties", new object[] {
+            var results = this.Invoke("GetSystemProperties", new object[] {
                         Properties});
             return ((Property[])(results[0]));
         }
@@ -4064,7 +4064,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetSystemPropertiesOperationCompleted(object arg) {
             if ((this.GetSystemPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetSystemPropertiesCompleted(this, new GetSystemPropertiesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4095,7 +4095,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetSystemPoliciesOperationCompleted(object arg) {
             if ((this.SetSystemPoliciesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetSystemPoliciesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4107,7 +4107,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "mPolicies", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Policies")]
         public Policy[] GetSystemPolicies() {
-            object[] results = this.Invoke("GetSystemPolicies", new object[0]);
+            var results = this.Invoke("GetSystemPolicies", new object[0]);
             return ((Policy[])(results[0]));
         }
         
@@ -4126,7 +4126,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetSystemPoliciesOperationCompleted(object arg) {
             if ((this.GetSystemPoliciesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetSystemPoliciesCompleted(this, new GetSystemPoliciesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4138,7 +4138,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "nsions", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Extensions")]
         public Extension[] ListExtensions(string ExtensionType) {
-            object[] results = this.Invoke("ListExtensions", new object[] {
+            var results = this.Invoke("ListExtensions", new object[] {
                         ExtensionType});
             return ((Extension[])(results[0]));
         }
@@ -4159,7 +4159,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListExtensionsOperationCompleted(object arg) {
             if ((this.ListExtensionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListExtensionsCompleted(this, new ListExtensionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4170,7 +4170,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListExte" +
             "nsionTypes", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListExtensionTypes() {
-            object[] results = this.Invoke("ListExtensionTypes", new object[0]);
+            var results = this.Invoke("ListExtensionTypes", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -4189,7 +4189,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListExtensionTypesOperationCompleted(object arg) {
             if ((this.ListExtensionTypesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListExtensionTypesCompleted(this, new ListExtensionTypesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4201,7 +4201,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "ts", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Events")]
         public Event[] ListEvents() {
-            object[] results = this.Invoke("ListEvents", new object[0]);
+            var results = this.Invoke("ListEvents", new object[0]);
             return ((Event[])(results[0]));
         }
         
@@ -4220,7 +4220,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListEventsOperationCompleted(object arg) {
             if ((this.ListEventsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListEventsCompleted(this, new ListEventsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4255,7 +4255,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnFireEventOperationCompleted(object arg) {
             if ((this.FireEventCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.FireEventCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4267,7 +4267,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("Jobs")]
         public Job[] ListJobs() {
-            object[] results = this.Invoke("ListJobs", new object[0]);
+            var results = this.Invoke("ListJobs", new object[0]);
             return ((Job[])(results[0]));
         }
         
@@ -4286,7 +4286,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListJobsOperationCompleted(object arg) {
             if ((this.ListJobsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListJobsCompleted(this, new ListJobsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4297,7 +4297,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListJobT" +
             "ypes", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListJobTypes() {
-            object[] results = this.Invoke("ListJobTypes", new object[0]);
+            var results = this.Invoke("ListJobTypes", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -4316,7 +4316,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListJobTypesOperationCompleted(object arg) {
             if ((this.ListJobTypesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListJobTypesCompleted(this, new ListJobTypesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4327,7 +4327,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListJobA" +
             "ctions", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListJobActions() {
-            object[] results = this.Invoke("ListJobActions", new object[0]);
+            var results = this.Invoke("ListJobActions", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -4346,7 +4346,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListJobActionsOperationCompleted(object arg) {
             if ((this.ListJobActionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListJobActionsCompleted(this, new ListJobActionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4357,7 +4357,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListJobS" +
             "tates", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListJobStates() {
-            object[] results = this.Invoke("ListJobStates", new object[0]);
+            var results = this.Invoke("ListJobStates", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -4376,7 +4376,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListJobStatesOperationCompleted(object arg) {
             if ((this.ListJobStatesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListJobStatesCompleted(this, new ListJobStatesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4387,7 +4387,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/CancelJo" +
             "b", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public bool CancelJob(string JobID) {
-            object[] results = this.Invoke("CancelJob", new object[] {
+            var results = this.Invoke("CancelJob", new object[] {
                         JobID});
             return ((bool)(results[0]));
         }
@@ -4408,7 +4408,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCancelJobOperationCompleted(object arg) {
             if ((this.CancelJobCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CancelJobCompleted(this, new CancelJobCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4420,7 +4420,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "cheRefreshPlan", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("CacheRefreshPlanID")]
         public string CreateCacheRefreshPlan(string ItemPath, string Description, string EventType, string MatchData, ParameterValue[] Parameters) {
-            object[] results = this.Invoke("CreateCacheRefreshPlan", new object[] {
+            var results = this.Invoke("CreateCacheRefreshPlan", new object[] {
                         ItemPath,
                         Description,
                         EventType,
@@ -4449,7 +4449,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnCreateCacheRefreshPlanOperationCompleted(object arg) {
             if ((this.CreateCacheRefreshPlanCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateCacheRefreshPlanCompleted(this, new CreateCacheRefreshPlanCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4488,7 +4488,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnSetCacheRefreshPlanPropertiesOperationCompleted(object arg) {
             if ((this.SetCacheRefreshPlanPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SetCacheRefreshPlanPropertiesCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4500,7 +4500,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "RefreshPlanProperties", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Description")]
         public string GetCacheRefreshPlanProperties(string CacheRefreshPlanID, out string LastRunStatus, out CacheRefreshPlanState State, out string EventType, out string MatchData, out ParameterValue[] Parameters) {
-            object[] results = this.Invoke("GetCacheRefreshPlanProperties", new object[] {
+            var results = this.Invoke("GetCacheRefreshPlanProperties", new object[] {
                         CacheRefreshPlanID});
             LastRunStatus = ((string)(results[1]));
             State = ((CacheRefreshPlanState)(results[2]));
@@ -4526,7 +4526,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetCacheRefreshPlanPropertiesOperationCompleted(object arg) {
             if ((this.GetCacheRefreshPlanPropertiesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetCacheRefreshPlanPropertiesCompleted(this, new GetCacheRefreshPlanPropertiesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4557,7 +4557,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnDeleteCacheRefreshPlanOperationCompleted(object arg) {
             if ((this.DeleteCacheRefreshPlanCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteCacheRefreshPlanCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4569,7 +4569,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
             "eRefreshPlans", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlArrayAttribute("CacheRefreshPlans")]
         public CacheRefreshPlan[] ListCacheRefreshPlans(string ItemPath) {
-            object[] results = this.Invoke("ListCacheRefreshPlans", new object[] {
+            var results = this.Invoke("ListCacheRefreshPlans", new object[] {
                         ItemPath});
             return ((CacheRefreshPlan[])(results[0]));
         }
@@ -4590,7 +4590,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListCacheRefreshPlansOperationCompleted(object arg) {
             if ((this.ListCacheRefreshPlansCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListCacheRefreshPlansCompleted(this, new ListCacheRefreshPlansCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4625,7 +4625,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnLogonUserOperationCompleted(object arg) {
             if ((this.LogonUserCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.LogonUserCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4653,7 +4653,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnLogoffOperationCompleted(object arg) {
             if ((this.LogoffCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.LogoffCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4666,7 +4666,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [return: System.Xml.Serialization.XmlArrayAttribute("Permissions")]
         [return: System.Xml.Serialization.XmlArrayItemAttribute("Operation")]
         public string[] GetPermissions(string ItemPath) {
-            object[] results = this.Invoke("GetPermissions", new object[] {
+            var results = this.Invoke("GetPermissions", new object[] {
                         ItemPath});
             return ((string[])(results[0]));
         }
@@ -4687,7 +4687,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetPermissionsOperationCompleted(object arg) {
             if ((this.GetPermissionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetPermissionsCompleted(this, new GetPermissionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4700,7 +4700,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [return: System.Xml.Serialization.XmlArrayAttribute("Permissions")]
         [return: System.Xml.Serialization.XmlArrayItemAttribute("Operation")]
         public string[] GetSystemPermissions() {
-            object[] results = this.Invoke("GetSystemPermissions", new object[0]);
+            var results = this.Invoke("GetSystemPermissions", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -4719,7 +4719,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnGetSystemPermissionsOperationCompleted(object arg) {
             if ((this.GetSystemPermissionsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetSystemPermissionsCompleted(this, new GetSystemPermissionsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4730,7 +4730,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/ListSecu" +
             "rityScopes", RequestNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ResponseNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] ListSecurityScopes() {
-            object[] results = this.Invoke("ListSecurityScopes", new object[0]);
+            var results = this.Invoke("ListSecurityScopes", new object[0]);
             return ((string[])(results[0]));
         }
         
@@ -4749,7 +4749,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
         
         private void OnListSecurityScopesOperationCompleted(object arg) {
             if ((this.ListSecurityScopesCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ListSecurityScopesCompleted(this, new ListSecurityScopesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -4764,7 +4764,7 @@ namespace FifteenBelow.Deployment.ReportingServices.SSRS2010 {
                         || (url == string.Empty))) {
                 return false;
             }
-            System.Uri wsUri = new System.Uri(url);
+            var wsUri = new System.Uri(url);
             if (((wsUri.Port >= 1024) 
                         && (string.Compare(wsUri.Host, "localHost", System.StringComparison.OrdinalIgnoreCase) == 0))) {
                 return true;

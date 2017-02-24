@@ -22,7 +22,7 @@ namespace Ensconce
         {
             var exceptions = new List<Exception>();
 
-            for (int retry = 0; retry < retryCount; retry++)
+            for (var retry = 0; retry < retryCount; retry++)
             {
                 try
                 {

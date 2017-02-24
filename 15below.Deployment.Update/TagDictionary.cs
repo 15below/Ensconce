@@ -204,8 +204,8 @@ namespace FifteenBelow.Deployment.Update
 
                 if (!DbLogins.ContainsKey(dbKey))
                 {
-                    string password = string.Empty;
-                    string defaultDb = string.Empty;
+                    var password = string.Empty;
+                    var defaultDb = string.Empty;
                     string connectionString;
 
                     if (string.IsNullOrWhiteSpace(dbLoginElement.TryXPathValueWithDefault("ConnectionString", "")))

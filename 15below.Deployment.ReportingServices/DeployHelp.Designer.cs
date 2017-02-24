@@ -39,7 +39,7 @@ namespace FifteenBelow.Deployment.ReportingServices {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FifteenBelow.Deployment.ReportingServices.DeployHelp", typeof(DeployHelp).Assembly);
+                    var temp = new global::System.Resources.ResourceManager("FifteenBelow.Deployment.ReportingServices.DeployHelp", typeof(DeployHelp).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

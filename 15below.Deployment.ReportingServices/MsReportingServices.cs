@@ -68,7 +68,7 @@ namespace FifteenBelow.Deployment.ReportingServices
                 bool inheritParent;
                 Policy policy;
 
-                Policy[] existingPolicies = rs.GetPolicies(itemPath, out inheritParent);
+                var existingPolicies = rs.GetPolicies(itemPath, out inheritParent);
 
                 if (reportingUserToAddRoleFor.Contains("\\"))
                 {
@@ -102,7 +102,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
                 Log("Attempting to select the role of: '{0}' for GroupUserName: '{1}'", reportingRoleToAdd,
                                   reportingUserToAddRoleFor);
-                Role[] existingRoles = policy.Roles;
+                var existingRoles = policy.Roles;
                 Role role;
 
                 role = existingRoles.FirstOrDefault(r =>
@@ -198,7 +198,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         private void CreateParentFolder(string parentFolder)
         {
-            CatalogItem[] items = rs.ListChildren("/", false);
+            var items = rs.ListChildren("/", false);
             var parentFolderExists = items.Any(catalogItem =>
                 catalogItem.Name.ToUpperInvariant() == parentFolder.ToUpperInvariant() &&
                 catalogItem.TypeName.ToUpperInvariant() == "FOLDER");
@@ -217,7 +217,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         private void DeleteSubFolderIfExists(string parentFolder, string subFolder)
         {
-            CatalogItem[] items = rs.ListChildren("/" + parentFolder, false);
+            var items = rs.ListChildren("/" + parentFolder, false);
             var subFolderExists = items.Any(catalogItem =>
                 catalogItem.Name.ToUpperInvariant() == subFolder.ToUpperInvariant() &&
                 catalogItem.TypeName.ToUpperInvariant() == "FOLDER");
@@ -239,8 +239,8 @@ namespace FifteenBelow.Deployment.ReportingServices
             var createSubFolder = false;
             if (Directory.Exists(reportSourceFolder))
             {
-                DirectoryInfo reportsDirectoryInfo = new DirectoryInfo(reportSourceFolder);
-                FileInfo[] reportFiles = reportsDirectoryInfo.GetFiles("*.rdl");
+                var reportsDirectoryInfo = new DirectoryInfo(reportSourceFolder);
+                var reportFiles = reportsDirectoryInfo.GetFiles("*.rdl");
 
                 if (reportFiles.Length > 0)
                 {
@@ -284,9 +284,9 @@ namespace FifteenBelow.Deployment.ReportingServices
             var reportsDirectoryInfo = new DirectoryInfo(reportSourceFolder);
             var reportFiles = reportsDirectoryInfo.GetFiles("*.rdl");
             var targetFolder = string.Format("/{0}/{1}", parentFolder, subFolder);
-            foreach (FileInfo fileInfo in reportFiles)
+            foreach (var fileInfo in reportFiles)
             {
-                string reportName = fileInfo.Name.Replace(".rdl", "");
+                var reportName = fileInfo.Name.Replace(".rdl", "");
                 CreateReport(reportName, reportSourceFolder, targetFolder);
                 SetReportDataSource(reportName, dataSourceName, targetFolder);
                 CreateSubscriptions(reportName, targetFolder + "/" + reportName, reportSourceFolder);
@@ -295,7 +295,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         private void CreateReport(string reportName, string sourceFolder, string targetFolder)
         {
-            Byte[] reportDefinition = GetReportDefinition(reportName, sourceFolder);
+            var reportDefinition = GetReportDefinition(reportName, sourceFolder);
             Warning[] warnings;
             Log("Creating report '{0}'", reportName);
             var catalogItem = rs.CreateCatalogItem("Report", reportName, targetFolder, true, reportDefinition, null, out warnings);
@@ -314,7 +314,7 @@ namespace FifteenBelow.Deployment.ReportingServices
         private Byte[] GetReportDefinition(string reportName, string sourceFolder)
         {
             Byte[] definition;
-            FileStream stream = File.OpenRead(sourceFolder + "\\" + reportName + ".rdl");
+            var stream = File.OpenRead(sourceFolder + "\\" + reportName + ".rdl");
             definition = new Byte[stream.Length];
             stream.Read(definition, 0, Convert.ToInt32(stream.Length));
             stream.Close();
@@ -326,8 +326,8 @@ namespace FifteenBelow.Deployment.ReportingServices
             if (warnings != null)
             {
                 Log("There were {0} warnings", warnings.Length);
-                int count = 0;
-                foreach (Warning warning in warnings)
+                var count = 0;
+                foreach (var warning in warnings)
                 {
                     count = count + 1;
                     Log("{0}) {1}", count, warning.Message);
@@ -381,7 +381,7 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         private void CreateSubscription(FileInfo subscriptionFile, string reportPath)
         {
-            string[] subscriptionInfoText = File.ReadAllLines(subscriptionFile.FullName);
+            var subscriptionInfoText = File.ReadAllLines(subscriptionFile.FullName);
 
             if (SubscriptionInfo(subscriptionInfoText, "subscriptionOn").ToLower() == "true")
             {
@@ -396,15 +396,15 @@ namespace FifteenBelow.Deployment.ReportingServices
                     };
 
                 ParameterValue[] reportParameterValues = null;
-                string reportParameters = SubscriptionInfo(subscriptionInfoText, "reportParameters");
+                var reportParameters = SubscriptionInfo(subscriptionInfoText, "reportParameters");
 
                 if (!string.IsNullOrEmpty(reportParameters))
                 {
-                    string[] reportParameterParts = reportParameters.Split(';');
+                    var reportParameterParts = reportParameters.Split(';');
                     reportParameterValues = new ParameterValue[reportParameterParts.Length];
                     Log("Found {0} report parameter values to set", reportParameterParts.Length);
 
-                    for (int i = 0; i <= reportParameterParts.Length - 1; i++)
+                    for (var i = 0; i <= reportParameterParts.Length - 1; i++)
                     {
                         var reportValue = new ParameterValue();
                         var parameterKeyValues = reportParameterParts[i].Split('=');
@@ -511,9 +511,9 @@ namespace FifteenBelow.Deployment.ReportingServices
 
         private string SubscriptionInfo(string[] subscriptionInfoText, string key)
         {
-            foreach (string subInfoLine in subscriptionInfoText)
+            foreach (var subInfoLine in subscriptionInfoText)
             {
-                string[] subInfoLineParts = subInfoLine.Split(',');
+                var subInfoLineParts = subInfoLine.Split(',');
                 if (subInfoLineParts[0] == key)
                 {
                     return subInfoLineParts[1];

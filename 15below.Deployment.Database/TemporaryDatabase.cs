@@ -87,7 +87,7 @@ namespace FifteenBelow.Deployment
         {
             using (var cnn = new SqlConnection(masterDatabaseConnectionString))
             {
-                string sql = string.Format("SELECT name FROM master.dbo.sysdatabases WHERE ([name] = N'{0}')", DatabaseName);
+                var sql = string.Format("SELECT name FROM master.dbo.sysdatabases WHERE ([name] = N'{0}')", DatabaseName);
                 cnn.Open();
                 using (var cmd = new SqlCommand(sql, cnn))
                 {
@@ -100,7 +100,7 @@ namespace FifteenBelow.Deployment
         {
             using (var cnn = new SqlConnection(database.ConnectionString))
             {
-                string sql = "SELECT Table_Name from information_schema.tables WHERE table_type = 'base table'";
+                var sql = "SELECT Table_Name from information_schema.tables WHERE table_type = 'base table'";
                 cnn.Open();
                 using (var cmd = new SqlCommand(sql, cnn))
                 {

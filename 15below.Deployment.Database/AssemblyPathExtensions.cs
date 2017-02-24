@@ -8,7 +8,7 @@ namespace FifteenBelow.Deployment
     {
         public static string Directory(this Assembly assembly)
         {
-            string exePath = new Uri(assembly.CodeBase).LocalPath;
+            var exePath = new Uri(assembly.CodeBase).LocalPath;
             return Path.GetDirectoryName(exePath);
         }
     }
