@@ -34,17 +34,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.PowerPack">
-      <HintPath>..\THIRDPARTYLIBRARIES\FSharp.PowerPack.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\THIRDPARTYLIBRARIES\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -73,6 +66,7 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="App.config" />
+    <None Include="paket.references" />
     <None Include="TestUpdateFiles\PlainText02.txt">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -213,4 +207,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+      <Paket>True</Paket>
+    </Reference>
+  </ItemGroup>
 </Project>

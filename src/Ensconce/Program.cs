@@ -12,7 +12,6 @@ using System.Threading;
 using FifteenBelow.Deployment;
 using FifteenBelow.Deployment.ReportingServices;
 using FifteenBelow.Deployment.Update;
-using LibGit2Sharp;
 using Mono.Options;
 using SearchOption = System.IO.SearchOption;
 
@@ -26,11 +25,6 @@ namespace Ensconce
         private static string connectionString;
         private static string fixedPath = @"D:\FixedStructure\structure.xml";
         private static string substitutionPath = "substitutions.xml";
-        private static string finaliseDirectory;
-        private static bool finalisePath;
-        private static string tagVersion;
-        private static string scanDirForChanges;
-        private static bool scanForChanges;
         private static string databaseRepository = "";
         private static readonly List<string> RawToDirectories = new List<string>();
         private static readonly Dictionary<string, string> ReportingServiceVariables = new Dictionary<string, string>();
@@ -98,17 +92,6 @@ namespace Ensconce
                 return;
             }
 
-            if (scanForChanges)
-            {
-                if (!string.IsNullOrWhiteSpace(scanDirForChanges))
-                {
-                    scanDirForChanges = scanDirForChanges.Render();
-                    if (scanDirForChanges.EndsWith(@"\") == false) scanDirForChanges = scanDirForChanges + @"\";
-                }
-
-                ScanForChanges(scanDirForChanges);
-            }
-
             if (updateConfig)
             {
                 DefaultUpdate();
@@ -163,8 +146,6 @@ namespace Ensconce
                 DeployTo.ForEach(dt => CopyDirectory(deployFrom, dt));
             }
 
-            FinaliseAll();
-
             Log("Ensconce operation complete");
         }
         
@@ -192,33 +173,6 @@ namespace Ensconce
                                 "s|substitutionPath=",
                                 "Path to substition file, relative to executable. (default=\"substitutions.xml\")",
                                 s => substitutionPath = string.IsNullOrEmpty(s) ? substitutionPath : s
-                            },
-                            {
-                                "finaliseDirectory=",
-                                "Top-most directory to create or commit to a git repository containing all changes",
-                                s => finaliseDirectory = s
-                            },
-                            {
-                                "x|finalisePath",
-                                "OBSOLETE: Please use finaliseDirectory and specify your root directory for the finalise versioning process",
-                                s => {
-                                    // Doesn't throw exception, this is just a notice
-                                    Console.Out.WriteLine("INFO: finalisePath has been marked as obsolete");
-                                    finalisePath = s != null;
-                                }
-                            },
-                            {
-                                "tagVersion=",
-                                "Create a tag with the version number specified in the finalise git repository",
-                                s => tagVersion = s
-                            },
-                            {
-                                "scanDirForChanges=",
-                                "Scan a directory for any un-finalised changes in the directory hierarchy. If changes are detected, Ensconce will return an error code.",
-                                s => {
-                                    scanForChanges = string.IsNullOrEmpty(s) == false;
-                                    scanDirForChanges = s;
-                                }
                             },
                             {
                                 "d|databaseName="
@@ -329,13 +283,6 @@ namespace Ensconce
                 fixedPath = envFixedPath;
             }
 
-            var envFinaliseDirectory = Environment.GetEnvironmentVariable("FinaliseDirectory");
-            if (!string.IsNullOrEmpty(envFinaliseDirectory))
-            {
-                // Will be overridden by command-line option
-                finaliseDirectory = envFinaliseDirectory;
-            }
-
             var envRoundhouseOutputPath = Environment.GetEnvironmentVariable("RoundhouseOutputPath");
             if (!string.IsNullOrEmpty(envRoundhouseOutputPath))
             {
@@ -347,10 +294,8 @@ namespace Ensconce
 
             var filesToBeMovedOrChanged = updateConfig || copyTo || replace || !string.IsNullOrEmpty(templateFilters);
             var databaseOperation = !string.IsNullOrEmpty(databaseName) || !string.IsNullOrEmpty(connectionString);
-            var tagOperation = !string.IsNullOrEmpty(tagVersion);
-            var finaliseOperation = !string.IsNullOrEmpty(finaliseDirectory) || finalisePath;
             var reportOperation = deployReports || deployReportingRole;
-            var operationRequested = filesToBeMovedOrChanged || databaseOperation || readFromStdIn || scanForChanges || tagOperation || finaliseOperation || reportOperation;
+            var operationRequested = filesToBeMovedOrChanged || databaseOperation || readFromStdIn || reportOperation;
 
             if (showHelp || !operationRequested)
             {
@@ -644,254 +589,6 @@ namespace Ensconce
 
             // Delete directory tree
             Retry.Do(() => directory.Delete(true), TimeSpan.FromMilliseconds(1000));
-        }
-
-        private static Repository GetOrCreateFinaliseRepository(string directory)
-        {
-            Repository repo;
-
-            try
-            {
-                repo = new Repository(directory);
-            }
-            catch (Exception)
-            {
-                Repository.Init(directory);
-                repo = new Repository(directory);
-            }
-
-            return repo;
-        }
-
-        private static void FinaliseAll()
-        {
-            if (!string.IsNullOrWhiteSpace(finaliseDirectory))
-            {
-                finaliseDirectory = finaliseDirectory.Render();
-                if (finaliseDirectory.EndsWith(@"\") == false) finaliseDirectory = finaliseDirectory + @"\";
-
-                if (finalisePath)
-                {
-                    foreach (var deployDir in DeployTo)
-                    {
-                        if (!Directory.Exists(deployDir))
-                        {
-                            throw new DirectoryNotFoundException(deployDir);
-                        }
-
-                        if (String.IsNullOrEmpty(finaliseDirectory) || deployDir.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase) == false)
-                        {
-                            // Only finalise those paths that aren't a sub-directory of the finaliseDirectory root, as that will be done next
-                            Finalise(deployDir);
-                        }
-                    }
-                }
-
-                if (!String.IsNullOrEmpty(finaliseDirectory) &&
-                    Directory.Exists(finaliseDirectory) &&
-                    (SubstitutedFiles.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase)) ||
-                        DeployTo.Any(where => where.StartsWith(finaliseDirectory, StringComparison.CurrentCultureIgnoreCase))
-                    ))
-                {
-                    RemoveSubRepositories(finaliseDirectory);
-                    Finalise(finaliseDirectory);
-                }
-
-
-                if (!String.IsNullOrEmpty(tagVersion))
-                {
-                    TagVersion(finaliseDirectory, tagVersion);
-                }
-            }
-        }
-
-        private static void Finalise(string directory)
-        {
-            Log("Finalising {0}", directory);
-
-            using (var repo = GetOrCreateFinaliseRepository(directory))
-            {
-                var directoryInfo = new DirectoryInfo(directory);
-                if (directoryInfo.EnumerateFiles(".gitignore", SearchOption.TopDirectoryOnly).Any() == false)
-                {
-                    File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
-                }
-
-                Log("Adding items to staging area");
-
-                var filesStaged = false;
-
-                Action<IEnumerable<string>> stageFiles = (files) =>
-                {
-                    var filesInThisRepo = files.Where(f => f.StartsWith(directory, StringComparison.CurrentCultureIgnoreCase));
-
-                    if (filesInThisRepo.Any())
-                    {
-                        repo.Index.Stage(filesInThisRepo);
-                        filesStaged = true;
-                    }
-                };
-
-                stageFiles(DeletedFiles);
-                stageFiles(CopiedFiles);
-                stageFiles(SubstitutedFiles);
-
-                if (filesStaged)
-                {
-                    string message;
-                    try
-                    {
-                        message = string.Format("Package {{ PackageNameAndVersion }} has finalised directory {0}".Render(), directory);
-                    }
-                    catch (Exception)
-                    {
-                        message = string.Format("Unknown package has finalised directory {0}", directory);
-                    }
-
-                    Log("Committing changes");
-
-                    var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
-                    repo.Commit(message, author, author);
-
-                    Log("Finalise complete");
-                }
-                else
-                {
-                    Log("Nothing to finalise");
-                }
-            }
-        }
-
-        private static void FinaliseAllUncommitted(string directory)
-        {
-            Log("Finalising All Uncommitted {0}", directory);
-
-            using (var repo = GetOrCreateFinaliseRepository(directory))
-            {
-                var directoryInfo = new DirectoryInfo(directory);
-                if (directoryInfo.EnumerateFiles(".gitignore", SearchOption.TopDirectoryOnly).Any() == false)
-                {
-                    File.WriteAllText(Path.Combine(directory, ".gitignore"), GitIgnoreContents);
-                }
-
-                var filesStaged = false;
-
-                Action<IEnumerable<string>> stageFiles = (files) =>
-                {
-                    if (files.Any())
-                    {
-                        repo.Index.Stage(files);
-                        filesStaged = true;
-                    }
-                };
-
-                try
-                {
-                    Log("Retrieving status");
-                    var status = repo.Index.RetrieveStatus();
-
-                    Log("Adding items to staging area");
-                    stageFiles(status.Added);
-                    stageFiles(status.Modified);
-                    stageFiles(status.Missing);
-                    stageFiles(status.Removed);
-                    stageFiles(status.Untracked);
-                }
-                catch (Exception ex)
-                {
-                    Log(ex.ToString());
-                }
-
-                if (filesStaged)
-                {
-                    string message;
-                    try
-                    {
-                        message = string.Format("Package {{ PackageNameAndVersion }} has finalised directory {0}".Render(), directory);
-                    }
-                    catch (Exception)
-                    {
-                        message = string.Format("Unknown package has finalised directory {0}", directory);
-                    }
-
-                    Log("Committing changes");
-
-                    var author = new Signature("Ensconce", "deployment@15below.com", new DateTimeOffset(DateTime.Now));
-                    repo.Commit(message, author, author);
-
-                    Log("Finalise complete");
-                }
-                else
-                {
-                    Log("Nothing to finalise");
-                }
-            }
-        }
-
-        private static void ScanForChanges(string rootDirectory)
-        {
-            var gitFolders = Directory.GetDirectories(rootDirectory, ".git", SearchOption.AllDirectories);
-            var i = 0;
-
-            Action<string, string, IEnumerable<string>> reportChangesDetected = (changeType, repoDir, files) =>
-            {
-                foreach (var file in files)
-                {
-                    i++;
-                    Console.Error.WriteLine("Change detected: ({0}) {1}", changeType, Path.Combine(repoDir, file));
-                }
-            };
-
-            foreach (var gitFolder in gitFolders)
-            {
-                var repoDir = new DirectoryInfo(gitFolder).Parent.FullName;
-
-                using (var repo = GetOrCreateFinaliseRepository(repoDir))
-                {
-                    try
-                    {
-                        var status = repo.Index.RetrieveStatus();
-                        reportChangesDetected("added", repoDir, status.Added);
-                        reportChangesDetected("modified", repoDir, status.Modified);
-                        reportChangesDetected("missing", repoDir, status.Missing);
-                        reportChangesDetected("removed", repoDir, status.Removed);
-                        reportChangesDetected("untracked", repoDir, status.Untracked);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            }
-
-            if (i > 0)
-            {
-                throw new ApplicationException(i.ToString() + " changes have been detected in: " + rootDirectory);
-            }
-            else
-            {
-                Console.Out.WriteLine("No changes detected");
-            }
-        }
-
-        private static void TagVersion(string finaliseDirectory, string tagVersion)
-        {
-            FinaliseAllUncommitted(finaliseDirectory);
-
-            var version = tagVersion.Render();
-
-            Log("Tagging version {1} in {0}", finaliseDirectory, version);
-
-            using (var repo = GetOrCreateFinaliseRepository(finaliseDirectory))
-            {
-                var tag = repo.Tags.FirstOrDefault(where => where.Name.Equals(version, StringComparison.CurrentCultureIgnoreCase));
-
-                if (tag != null)
-                {
-                    repo.Tags.Remove(tag);
-                }
-
-                repo.Tags.Add(version, repo.Head.Tip);
-            }
         }
 
         private static void ShowHelp(OptionSet optionSet)

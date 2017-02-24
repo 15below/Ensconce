@@ -1,8 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{293126C5-4E8E-4167-993B-C91607B73228}"
+	ProjectSection(SolutionItems) = preProject
+		..\paket.dependencies = ..\paket.dependencies
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce", "Ensconce\Ensconce.csproj", "{0B5FD6CF-76AE-4599-9661-4489B62D2851}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Update", "15below.Deployment.Update\15below.Deployment.Update.csproj", "{A59B1375-DC78-47D2-8930-746CD88863AF}"
@@ -12,10 +17,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Database", "15below.Deployment.Database\15below.Deployment.Database.csproj", "{3BF706C4-851B-4502-9F09-E74FCC92C379}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Database.Tests", "Ensconce.Database.Tests\Ensconce.Database.Tests.csproj", "{4E884DFE-E8D7-4742-AA5A-618FECE890CD}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FakeBuild", "FakeBuild\FakeBuild.fsproj", "{67560FA4-B1C4-444C-9162-B47F84A6D372}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.StructureEditor", "Ensconce.StructureEditor\Ensconce.StructureEditor.csproj", "{D54DA365-E316-444D-A323-3667DE9BB1EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.ReportingServices", "15below.Deployment.ReportingServices\15below.Deployment.ReportingServices.csproj", "{442013D9-845F-47C9-B529-0426193559A8}"
 EndProject
@@ -81,26 +82,6 @@ Global
 		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4E884DFE-E8D7-4742-AA5A-618FECE890CD}.Release|x86.ActiveCfg = Release|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{67560FA4-B1C4-444C-9162-B47F84A6D372}.Release|x86.ActiveCfg = Release|Any CPU
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Debug|x86.ActiveCfg = Debug|x86
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Debug|x86.Build.0 = Debug|x86
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Release|Any CPU.ActiveCfg = Release|x86
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Release|Mixed Platforms.Build.0 = Release|x86
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Release|x86.ActiveCfg = Release|x86
-		{D54DA365-E316-444D-A323-3667DE9BB1EA}.Release|x86.Build.0 = Release|x86
 		{442013D9-845F-47C9-B529-0426193559A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{442013D9-845F-47C9-B529-0426193559A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{442013D9-845F-47C9-B529-0426193559A8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

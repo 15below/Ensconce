@@ -15,14 +15,13 @@
 	
 	<files>
 		<file src="..\Ensconce\bin\Release\*" target="Content" />
-		<file src="..\THIRDPARTYLIBRARIES\NativeBinaries\**" target="Content\NativeBinaries" />
-		<file src="..\deployHelp.ps1" target="Content" />
-		<file src="..\createWebSite.ps1" target="Content" />
-		<file src="..\createiis6app.ps1" target="Content" />
-		<file src="..\createiis7app.ps1" target="Content" />
-		<file src="..\dnsHelper.ps1" target="Content" />
-		<file src="..\UserManagement.ps1" target="Content" />
-		<file src="..\Grant.exe" target="Content" />
-		<file src="..\deploy.ps1" target="deploy.ps1" />	
+		<file src="..\Scripts\deployHelp.ps1" target="Content" />
+		<file src="..\Scripts\createWebSite.ps1" target="Content" />
+		<file src="..\Scripts\createiis6app.ps1" target="Content" />
+		<file src="..\Scripts\createiis7app.ps1" target="Content" />
+		<file src="..\Scripts\dnsHelper.ps1" target="Content" />
+		<file src="..\Scripts\UserManagement.ps1" target="Content" />
+		<file src="..\ExternalDeployTools\Grant\Grant.exe" target="Content" />
+		<file src="deploy.ps1" target="deploy.ps1" />	
 	</files>
 </package>
