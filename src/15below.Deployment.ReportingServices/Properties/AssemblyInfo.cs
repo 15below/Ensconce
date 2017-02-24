@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("15below.Deployment.ReportingServices")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyConfiguration("Release")]
 [assembly: AssemblyCompany("15below Ltd")]
 [assembly: AssemblyProduct("15below.Deployment.ReportingServices")]
 [assembly: AssemblyCopyright("Copyright © 15below Ltd 2014")]

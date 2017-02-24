@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("ConfigurationUpdater")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyConfiguration("Release")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ConfigurationUpdater")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
