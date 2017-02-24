@@ -2,19 +2,19 @@
 
 namespace FifteenBelow.Deployment.Update.NDjangoExpansions
 {
-    [Name("exists")]
-    public class ExistsFilter : ISimpleFilter
+    [Name("empty")]
+    public class EmptyFilter : ISimpleFilter
     {
         private readonly string templateStringIfInvalid;
 
-        public ExistsFilter(string templateStringIfInvalid)
+        public EmptyFilter(string templateStringIfInvalid)
         {
             this.templateStringIfInvalid = templateStringIfInvalid;
         }
 
         public object Perform(object value)
         {
-            return value.ToString() != templateStringIfInvalid;
+            return string.IsNullOrWhiteSpace(value.ToString()) || value.ToString() == templateStringIfInvalid;
         }
     }
 }
