@@ -1,1 +1,2 @@
-.\FakeBuild\FAKE\FAKE.exe .\FakeBuild\build.fsx
+REM LEGACY FOR CI UNTIL THIS IS MASTER
+call build.bat
