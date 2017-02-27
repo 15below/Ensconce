@@ -31,7 +31,7 @@ namespace Ensconce
                     template = readStream.ReadToEnd();
                 }
 
-                File.WriteAllText(templateFile.FullName, template, encoding);
+                File.WriteAllText(templateFile.FullName, template.Render(), encoding);
             }
         }
     }
