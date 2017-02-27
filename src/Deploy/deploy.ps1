@@ -3,7 +3,7 @@ $scriptDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Pa
 if(Test-Path $DeployToolsDir)
 {
     Write-Host "Removing Deploy Tools Directory Found at $DeployToolsDir"
-    Remove-Item $DeployToolsDir
+    Remove-Item $DeployToolsDir -force
 }
 
 Write-Host "Creating Deploy Tools Directory at $DeployToolsDir"
