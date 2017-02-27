@@ -68,14 +68,6 @@
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="15below.Deployment.Database, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\15below.Deployment.Database\bin\Debug\15below.Deployment.Database.dll</HintPath>
-    </Reference>
-    <Reference Include="15below.Deployment.Update, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\15below.Deployment.Update\bin\Debug\15below.Deployment.Update.dll</HintPath>
-    </Reference>
     <Reference Include="FSharp.PowerPack, Version=4.0.0.1, Culture=neutral, PublicKeyToken=f536804aa0eb945b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\FSharp.PowerPack.dll</HintPath>
@@ -139,13 +131,21 @@
     <Compile Include="TextRendering.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\15below.Deployment.Database\15below.Deployment.Database.csproj">
+      <Project>{3bf706c4-851b-4502-9f09-e74fcc92c379}</Project>
+      <Name>15below.Deployment.Database</Name>
+    </ProjectReference>
     <ProjectReference Include="..\15below.Deployment.ReportingServices\15below.Deployment.ReportingServices.csproj">
       <Project>{442013d9-845f-47c9-b529-0426193559a8}</Project>
       <Name>15below.Deployment.ReportingServices</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\15below.Deployment.Update\15below.Deployment.Update.csproj">
+      <Project>{a59b1375-dc78-47d2-8930-746cd88863af}</Project>
+      <Name>15below.Deployment.Update</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
