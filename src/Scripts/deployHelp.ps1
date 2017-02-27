@@ -21,14 +21,14 @@ function ensconce
     if (@($input).Count -ne 0)
     {
         $input.Reset()
-        $results = $input | & "$deployToolsDir\ensconce.exe" $args
+        $results = $input | & "$deployToolsDir\Tools\Ensconce\ensconce.exe" $args
     }
     else {
-        $results = & "$deployToolsDir\ensconce.exe" $args
+        $results = & "$deployToolsDir\Tools\Ensconce\ensconce.exe" $args
     }
     if ($LASTEXITCODE -ne 0)
     {
-        Write-Host "##teamcity[buildStatus status='FAILURE' text='{build.status.text}; Ensconce failure']"
+        Write-Host "Ensconce failure"
         $results
         exit $LASTEXITCODE
     }
