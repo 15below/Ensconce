@@ -31,9 +31,6 @@ namespace FifteenBelow.Deployment.Update
 
         public static string RenderTemplate(this string template, IDictionary<string, object> values)
         {
-            if (!template.Contains("{{") && !template.Contains("{%"))
-                return template;
-
             var replacementValue = LazyTemplateManager.Value.RenderTemplate(StringProvider + template, values).ReadToEnd();
             CheckForTagError(template, replacementValue);
             return replacementValue;
@@ -41,9 +38,6 @@ namespace FifteenBelow.Deployment.Update
 
         public static string RenderXmlTemplate(this string template, IDictionary<string, object> values)
         {
-            if (!template.Contains("{{") && !template.Contains("{%"))
-                return template;
-
             var replacementValue = LazyXmlSafeTemplateManager.Value.RenderTemplate(StringProvider + template, values).ReadToEnd();
             CheckForTagError(template, replacementValue);
             return replacementValue;
