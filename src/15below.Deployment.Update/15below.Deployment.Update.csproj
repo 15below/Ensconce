@@ -34,6 +34,20 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FSharp.PowerPack">
+      <HintPath>..\References\FSharp.PowerPack.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack.Compatibility">
+      <HintPath>..\References\FSharp.PowerPack.Compatibility.dll</HintPath>
+    </Reference>
+    <Reference Include="NDjango.Core40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\NDjango.Core40.dll</HintPath>
+    </Reference>
+    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\NDjangoFilters.NDjangoExtension40.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -58,9 +72,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="paket.references" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -69,127 +80,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5')">
-      <ItemGroup>
-        <Reference Include="FSharp.PowerPack">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\Net20\FSharp.PowerPack.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="FSharp.PowerPack.Linq">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\Net20\FSharp.PowerPack.Linq.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="FSharp.PowerPack.Metadata">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\Net20\FSharp.PowerPack.Metadata.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
-      <ItemGroup>
-        <Reference Include="FSharp.PowerPack">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\Net40\FSharp.PowerPack.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="FSharp.PowerPack.Linq">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\Net40\FSharp.PowerPack.Linq.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="FSharp.PowerPack.Metadata">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\Net40\FSharp.PowerPack.Metadata.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="FSharp.PowerPack.Parallel.Seq">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\Net40\FSharp.PowerPack.Parallel.Seq.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="$(TargetFrameworkIdentifier) == 'Silverlight' And $(TargetFrameworkVersion) == 'v3.0'">
-      <ItemGroup>
-        <Reference Include="FSharp.PowerPack">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\sl3\FSharp.PowerPack.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="FSharp.PowerPack.Compatibility">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\sl3\FSharp.PowerPack.Compatibility.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="$(TargetFrameworkIdentifier) == 'Silverlight' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v5.0')">
-      <ItemGroup>
-        <Reference Include="FSharp.PowerPack">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\sl4\FSharp.PowerPack.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="FSharp.PowerPack.Compatibility">
-          <HintPath>..\..\packages\FSPowerPack.Community\Lib\sl4\FSharp.PowerPack.Compatibility.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="ASPMVCIntegration.NDjangoExtension35">
-          <HintPath>..\..\packages\ndjango\lib\Net35\ASPMVCIntegration.NDjangoExtension35.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="ASPMVCSampleLibrary.NDjangoExtension35">
-          <HintPath>..\..\packages\ndjango\lib\Net35\ASPMVCSampleLibrary.NDjangoExtension35.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="NDjango.Core35">
-          <HintPath>..\..\packages\ndjango\lib\Net35\NDjango.Core35.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="NDjangoFilters.NDjangoExtension35">
-          <HintPath>..\..\packages\ndjango\lib\Net35\NDjangoFilters.NDjangoExtension35.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
-      <ItemGroup>
-        <Reference Include="ASPMVCIntegration.NDjangoExtension40">
-          <HintPath>..\..\packages\ndjango\lib\Net40\ASPMVCIntegration.NDjangoExtension40.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="ASPMVCSampleLibrary.NDjangoExtension40">
-          <HintPath>..\..\packages\ndjango\lib\Net40\ASPMVCSampleLibrary.NDjangoExtension40.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="NDjango.Core40">
-          <HintPath>..\..\packages\ndjango\lib\Net40\NDjango.Core40.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="NDjangoFilters.NDjangoExtension40">
-          <HintPath>..\..\packages\ndjango\lib\Net40\NDjangoFilters.NDjangoExtension40.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
 </Project>

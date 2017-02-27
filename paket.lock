@@ -2,23 +2,11 @@ REDIRECTS: ON
 NUGET
   remote: https://api.nuget.org/v3/index.json
     FAKE (4.50.1)
-    FluentNHibernate (1.3.0.717)
-      NHibernate (>= 3.2.0.4000)
-    FSPowerPack.Community (2.1.2.1)
-    Iesi.Collections (4.0.1.4000)
-    log4net (1.2.10)
-    ndjango (0.9.9)
-    NHibernate (4.1.1.4000)
-      Iesi.Collections (>= 4.0 < 5.0)
     NuGet.CommandLine (2.8.3)
     NUnit (2.6.4) - redirects: off
     NUnit.Runners (2.6.4)
     OctoPack (3.5)
     RhinoMocks (3.6)
-    roundhouse.lib (0.8.6)
-      FluentNHibernate (>= 1.3.0.717)
-      log4net (1.2.10)
-    structuremap (2.6.3)
 GITHUB
   remote: 15below/Build.Tools
     FULLPROJECT (3660e7adb3f1729e7b4c5eeb501f28308d9094d1)
