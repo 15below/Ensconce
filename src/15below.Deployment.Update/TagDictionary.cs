@@ -104,6 +104,14 @@ namespace FifteenBelow.Deployment.Update
                     this[label] = labelEnumerable;
                 }
             }
+
+            if (ContainsKey("Environment") && ((string) this["Environment"]).StartsWith("DR-"))
+            {
+                if (ContainsKey("IsDRMachine") && ((string) this["IsDRMachine"]).ToLower() == "true")
+                {
+                    this["Environment"] = ((string) this["Environment"]).Substring(3);
+                }
+            }
         }
 
         public TagDictionary(string identifier, params Tuple<string, TagSource>[] sources)

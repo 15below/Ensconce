@@ -326,5 +326,23 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
             Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
         }
+
+        [Test]
+        public void UpdateDREnvironment_WithNotDRMachine()
+        {
+            Environment.SetEnvironmentVariable("Environment", "DR-LOC");
+            var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
+            Assert.AreEqual("DR-LOC", loader["Environment"]);
+        }
+
+        [Test]
+        public void UpdateDREnvironment_WithDRMachineSet()
+        {
+            Environment.SetEnvironmentVariable("Environment", "DR-LOC");
+            Environment.SetEnvironmentVariable("IsDRMachine", "true");
+            var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
+            Assert.AreEqual("LOC", loader["Environment"]);
+            Environment.SetEnvironmentVariable("IsDRMachine", "");
+        }
     }
 }
