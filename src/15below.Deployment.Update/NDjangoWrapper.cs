@@ -12,39 +12,21 @@ namespace FifteenBelow.Deployment.Update
         private const string ErrorGuid = "{668B7536-C32B-4D86-B065-70C143EB4AD9}";
         private const string StringProvider = "string://";
 
-        private static readonly Lazy<TemplateManagerProvider> Instance =
-            new Lazy<TemplateManagerProvider>(
-                () =>
-                new TemplateManagerProvider()
-                    .WithLoader(new StringLoader())
-                    .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
-                    .WithSetting(Constants.DEFAULT_AUTOESCAPE, false)
-                    .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
-                    .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
-                    .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
-                    .WithFilter("exists", new NDjangoExpansions.ExistsFilter(ErrorGuid))
-                    .WithFilter("empty", new NDjangoExpansions.EmptyFilter(ErrorGuid))
-                );
+        private static readonly Lazy<ITemplateManager> LazyTemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(false));
+        private static readonly Lazy<ITemplateManager> LazyXmlSafeTemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(true));
 
-        private static readonly Lazy<TemplateManagerProvider> XmlSafeInstance =
-            new Lazy<TemplateManagerProvider>(
-                () =>
-                new TemplateManagerProvider()
-                    .WithLoader(new StringLoader())
-                    .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
-                    .WithSetting(Constants.DEFAULT_AUTOESCAPE, true)
-                    .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
-                    .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
-                    .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
-                    .WithFilter("exists", new NDjangoExpansions.ExistsFilter(ErrorGuid))
-                    .WithFilter("empty", new NDjangoExpansions.EmptyFilter(ErrorGuid))
-                );
-
-        private static readonly Lazy<ITemplateManager> LazyTemplateManager = new Lazy<ITemplateManager>(Instance.Value.GetNewManager);
-        private static readonly Lazy<ITemplateManager> LazyXmlSafeTemplateManager = new Lazy<ITemplateManager>(XmlSafeInstance.Value.GetNewManager);
-
-        static NDjangoWrapper()
+        private static ITemplateManager GetTemplateManager(bool autoEscape)
         {
+            return new TemplateManagerProvider().WithLoader(new StringLoader())
+                                                .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
+                                                .WithSetting(Constants.DEFAULT_AUTOESCAPE, autoEscape)
+                                                .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
+                                                .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
+                                                .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
+                                                .WithFilter("exists", new NDjangoExpansions.ExistsFilter(ErrorGuid))
+                                                .WithFilter("empty", new NDjangoExpansions.EmptyFilter(ErrorGuid))
+                                                .GetNewManager();
+
         }
 
         public static string RenderTemplate(this string template, IDictionary<string, object> values)
