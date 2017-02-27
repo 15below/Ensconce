@@ -20,6 +20,7 @@ namespace Ensconce
             Logging.Log("Building Tag Dictionary");
             var instanceName = Environment.GetEnvironmentVariable("InstanceName");
             var tags = new TagDictionary(instanceName);
+            Logging.Log("Build Tag Dictionary (Pass 1)");
 
             Arguments.FixedPath = Arguments.FixedPath.RenderTemplate(tags);
             if (File.Exists(Arguments.FixedPath))
@@ -28,6 +29,7 @@ namespace Ensconce
                 var configXml = Retry.Do(() => File.ReadAllText(Arguments.FixedPath), TimeSpan.FromSeconds(5));
                 Logging.Log("Re-Building Tag Dictionary (Using Config File)");
                 tags = new TagDictionary(instanceName, configXml);
+                Logging.Log("Build Tag Dictionary (Using Config File)");
             }
             else
             {

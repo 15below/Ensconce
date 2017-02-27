@@ -14,10 +14,7 @@ namespace Ensconce
 
             foreach (var updatedContent in updatedContents)
             {
-                using (var fs = new StreamWriter(updatedContent.Item1))
-                {
-                    fs.Write(updatedContent.Item2);
-                }
+                File.WriteAllText(updatedContent.Item1, updatedContent.Item2);
             }
         }
 
@@ -33,10 +30,8 @@ namespace Ensconce
                     encoding = readStream.CurrentEncoding;
                     template = readStream.ReadToEnd();
                 }
-                using (var writeStream = new StreamWriter(templateFile.FullName, false, encoding))
-                {
-                    writeStream.Write(template.Render());
-                }
+
+                File.WriteAllText(templateFile.FullName, template, encoding);
             }
         }
     }
