@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using NUnit.Framework;
 
 namespace FifteenBelow.Deployment.Update.Tests
@@ -9,11 +10,17 @@ namespace FifteenBelow.Deployment.Update.Tests
     [TestFixture]
     public class TagDictionaryTests
     {
+        public TagDictionaryTests()
+        {
+            testLock = new Mutex();
+        }
+
         #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
+            testLock.WaitOne();
             var testEnv = new Dictionary<string, string>
                               {
                                   {IsSys, IsSys},
@@ -30,10 +37,12 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void TearDown()
         {
             Directory.SetCurrentDirectory("..");
+            testLock.ReleaseMutex();
         }
 
         #endregion
 
+        private Mutex testLock;
         private const string EnvEnvironment = "LOC";
         private const string EnvClientCode = "FAA";
         private const string IsSys = "IsSys";
@@ -43,7 +52,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         private const string Avalue = "avalue";
         private const string Idvalue = "idvalue";
 
-        private readonly Lazy<string> xml = new Lazy<string>(() => new StreamReader(File.OpenRead(@"webservice-structure.xml")).ReadToEnd()); 
+        private readonly Lazy<string> xml = new Lazy<string>(() => new StreamReader(File.OpenRead(@"webservice-structure.xml")).ReadToEnd());
 
         private string XmlData
         {
@@ -78,11 +87,11 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void LoadFromOctopus1XEnvironment()
         {
             var environment = "LOC";
-            Environment.SetEnvironmentVariable("Environment","");
-            Environment.SetEnvironmentVariable("OctopusEnvironmentName",environment);
+            Environment.SetEnvironmentVariable("Environment", "");
+            Environment.SetEnvironmentVariable("OctopusEnvironmentName", environment);
             var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
             Assert.AreEqual(environment, loader["Environment"]);
-            Environment.SetEnvironmentVariable("OctopusEnvironmentName","");
+            Environment.SetEnvironmentVariable("OctopusEnvironmentName", "");
         }
 
         [Test]
@@ -196,7 +205,7 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", XmlData);
             Assert.IsTrue(sut.DbLogins.Values.Select(login => login.Username).Contains("ConnectionString"));
             var correctDbLogin = sut.DbLogins.First(login => login.Key == "ConnectionString");
-            Assert.AreEqual("Actual ConnectionString",correctDbLogin.Value.ConnectionString);
+            Assert.AreEqual("Actual ConnectionString", correctDbLogin.Value.ConnectionString);
         }
 
         [Test]
@@ -247,8 +256,8 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void LoadLabelledGroupsBuildsEnumeratorCorrectly()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            var isSysCollection = ((IEnumerable<IDictionary<string, object>>) sut["GDS"]).Select(gds => gds[IsSys].ToString());
-            Assert.IsTrue(new HashSet<string>{"SYS", "SYS2"}.IsSupersetOf(new HashSet<string>(isSysCollection)));
+            var isSysCollection = ((IEnumerable<IDictionary<string, object>>)sut["GDS"]).Select(gds => gds[IsSys].ToString());
+            Assert.IsTrue(new HashSet<string> { "SYS", "SYS2" }.IsSupersetOf(new HashSet<string>(isSysCollection)));
         }
 
         [Test]
@@ -263,8 +272,8 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void InstanceNameIsAccessibleWhileEnumerating()
         {
             var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
-            var isSysCollection = ((IEnumerable<IDictionary<string, object>>) sut["GDS"]).Select(gds => gds["identity"].ToString());
-            Assert.IsTrue(new HashSet<string>{"myId", "myId2"}.IsSupersetOf(new HashSet<string>(isSysCollection)));
+            var isSysCollection = ((IEnumerable<IDictionary<string, object>>)sut["GDS"]).Select(gds => gds["identity"].ToString());
+            Assert.IsTrue(new HashSet<string> { "myId", "myId2" }.IsSupersetOf(new HashSet<string>(isSysCollection)));
         }
 
         [TestCase("OctopusEnvironmentName", "DIF", "Environment")]
@@ -331,6 +340,8 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void UpdateDREnvironment_WithNotDRMachine()
         {
             Environment.SetEnvironmentVariable("Environment", "DR-LOC");
+            Environment.SetEnvironmentVariable("OctopusEnvironmentName", "DR-LOC");
+            Environment.SetEnvironmentVariable("IsDRMachine", "");
             var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
             Assert.AreEqual("DR-LOC", loader["Environment"]);
         }
@@ -339,10 +350,10 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void UpdateDREnvironment_WithDRMachineSet()
         {
             Environment.SetEnvironmentVariable("Environment", "DR-LOC");
+            Environment.SetEnvironmentVariable("OctopusEnvironmentName", "DR-LOC");
             Environment.SetEnvironmentVariable("IsDRMachine", "true");
             var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
             Assert.AreEqual("LOC", loader["Environment"]);
-            Environment.SetEnvironmentVariable("IsDRMachine", "");
         }
     }
 }
