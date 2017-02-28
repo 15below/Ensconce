@@ -4,6 +4,7 @@ if(Test-Path $DeployToolsDir)
 {
     Write-Host "Removing Deploy Tools Directory Found at $DeployToolsDir"
     Remove-Item $DeployToolsDir -Force -Recurse
+    Start-Sleep -s 2
 }
 
 Write-Host "Creating Deploy Tools Directory at $DeployToolsDir"
