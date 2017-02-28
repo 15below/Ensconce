@@ -98,7 +98,7 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 		AddUserToGroup $name "administrators"
 	}
 	
-	$exe = "$deployToolsDir\Tools\Grant\Grant.exe"
+	$exe = "$deployToolsDir\Grant.exe"
 	$userName = "$env:computername\$name"
 	&$exe ADD SeServiceLogonRight $userName
 }
