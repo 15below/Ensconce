@@ -40,23 +40,30 @@ namespace FifteenBelow.Deployment.Update
                     .WithFilter("empty", new NDjangoExpansions.EmptyFilter(ErrorGuid))
                 );
 
-        private static readonly Lazy<ITemplateManager> LazyTemplateManager = new Lazy<ITemplateManager>(Instance.Value.GetNewManager);
-        private static readonly Lazy<ITemplateManager> LazyXmlSafeTemplateManager = new Lazy<ITemplateManager>(XmlSafeInstance.Value.GetNewManager);
-
         static NDjangoWrapper()
         {
         }
 
+        private static ITemplateManager GetTemplateManager()
+        {
+            return Instance.Value.GetNewManager();
+        }
+        
+        private static ITemplateManager GetXmlSafeTemplateManager()
+        {
+            return XmlSafeInstance.Value.GetNewManager();
+        }
+
         public static string RenderTemplate(this string template, IDictionary<string, object> values)
         {
-            var replacementValue = LazyTemplateManager.Value.RenderTemplate(StringProvider + template, values).ReadToEnd();
+            var replacementValue = GetTemplateManager().RenderTemplate(StringProvider + template, values).ReadToEnd();
             CheckForTagError(template, replacementValue);
             return replacementValue;
         }
 
         public static string RenderXmlTemplate(this string template, IDictionary<string, object> values)
         {
-            var replacementValue = LazyXmlSafeTemplateManager.Value.RenderTemplate(StringProvider + template, values).ReadToEnd();
+            var replacementValue = GetXmlSafeTemplateManager().RenderTemplate(StringProvider + template, values).ReadToEnd();
             CheckForTagError(template, replacementValue);
             return replacementValue;
         }
