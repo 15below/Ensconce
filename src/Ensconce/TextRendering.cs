@@ -7,12 +7,12 @@ namespace Ensconce
 {
     internal static class TextRendering
     {
-        private static readonly Lazy<TagDictionary> LazyTags = new Lazy<TagDictionary>(BuildTagDictionary);
+        private static readonly Lazy<TagDictionary> LazyTags = new Lazy<TagDictionary>(() => Retry.Do(BuildTagDictionary, TimeSpan.FromSeconds(5)));
         public static IDictionary<string, object> TagDictionary { get { return LazyTags.Value; } }
 
         internal static string Render(this string s)
         {
-            return s.RenderTemplate(LazyTags.Value);
+            return s.RenderTemplate(TagDictionary);
         }
 
         private static TagDictionary BuildTagDictionary()
