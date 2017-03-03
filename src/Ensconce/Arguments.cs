@@ -9,26 +9,26 @@ namespace Ensconce
 {
     internal static class Arguments
     {
-        internal static bool ReadFromStdIn;
-        internal static string DatabaseName;
-        internal static string ConnectionString;
-        internal static string FixedPath;
-        internal static string SubstitutionPath;
-        internal static string DatabaseRepository;
-        internal static readonly Dictionary<string, string> ReportingServiceVariables = new Dictionary<string, string>();
-        internal static readonly List<string> DeployTo = new List<string>();
-        internal static string DeployFrom;
-        internal static bool CopyTo;
-        internal static bool Replace;
-        internal static bool UpdateConfig;
-        internal static string TemplateFilters;
-        internal static bool WarnOnOneTimeScriptChanges;
-        internal static bool WithTransaction;
-        internal static string RoundhouseOutputPath;
-        internal static bool Quiet;
-        internal static bool DropDatabase;
-        internal static bool DeployReports;
-        internal static bool DeployReportingRole;
+        internal static bool ReadFromStdIn { get; private set; }
+        internal static string DatabaseName { get; private set; }
+        internal static string ConnectionString { get; private set; }
+        internal static string FixedPath { get; private set; }
+        internal static string SubstitutionPath { get; private set; }
+        internal static string DatabaseRepository { get; private set; }
+        internal static Dictionary<string, string> ReportingServiceVariables { get; private set; } = new Dictionary<string, string>();
+        internal static List<string> DeployTo { get; private set; } = new List<string>();
+        internal static string DeployFrom { get; private set; }
+        internal static bool CopyTo { get; private set; }
+        internal static bool Replace { get; private set; }
+        internal static bool UpdateConfig { get; private set; }
+        internal static string TemplateFilters { get; private set; }
+        internal static bool WarnOnOneTimeScriptChanges { get; private set; }
+        internal static bool WithTransaction { get; private set; }
+        internal static string RoundhouseOutputPath { get; private set; }
+        internal static bool Quiet { get; private set; }
+        internal static bool DropDatabase { get; private set; }
+        internal static bool DeployReports { get; private set; }
+        internal static bool DeployReportingRole { get; private set; }
 
         private static bool showHelp;
         private static bool dropDatabaseConfirm;

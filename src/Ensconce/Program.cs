@@ -63,7 +63,7 @@ namespace Ensconce
             if (Arguments.Replace)
             {
                 Arguments.DeployTo.ForEach(FileInteraction.DeleteDirectory);
-                Thread.Sleep(500); //Allow for the delete to complete.
+                Thread.Sleep(500); // Allow for the delete to complete
             }
 
             if (Arguments.CopyTo || Arguments.Replace)

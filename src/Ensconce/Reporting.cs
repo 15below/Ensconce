@@ -13,11 +13,8 @@ namespace Ensconce
             var networkPassword = GetReportingVariable("networkPassword");
             var msreports = new MsReportingServices(reportingServicesUrl, networkDomain, networkLogin, networkPassword);
 
-            if (Arguments.DeployReportingRole)
-                DeployReportingServiceRole(msreports);
-            if (Arguments.DeployReports)
-                PublishReports(msreports);
-
+            if (Arguments.DeployReportingRole) DeployReportingServiceRole(msreports);
+            if (Arguments.DeployReports) PublishReports(msreports);
         }
 
         private static void PublishReports(MsReportingServices msreports)

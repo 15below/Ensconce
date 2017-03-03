@@ -23,18 +23,19 @@ namespace Ensconce
             var tags = new TagDictionary(instanceName);
             Logging.Log("Built Tag Dictionary ({0})", instanceName);
 
-            Arguments.FixedPath = Arguments.FixedPath.RenderTemplate(tags);
-            if (File.Exists(Arguments.FixedPath))
+            var renderedFixedPath = Arguments.FixedPath.RenderTemplate(tags);
+
+            if (File.Exists(renderedFixedPath))
             {
-                Logging.Log("Loading xml config from file {0}", Path.GetFullPath(Arguments.FixedPath));
-                var configXml = Retry.Do(() => File.ReadAllText(Arguments.FixedPath), TimeSpan.FromSeconds(5));
+                Logging.Log("Loading xml config from file {0}", Path.GetFullPath(renderedFixedPath));
+                var configXml = Retry.Do(() => File.ReadAllText(renderedFixedPath), TimeSpan.FromSeconds(5));
                 Logging.Log("Re-Building Tag Dictionary (Using Config File)");
                 tags = new TagDictionary(instanceName, configXml);
                 Logging.Log("Built Tag Dictionary (Using Config File)");
             }
             else
             {
-                Logging.Log("No structure file found at: {0}", Path.GetFullPath(Arguments.FixedPath));
+                Logging.Log("No structure file found at: {0}", Path.GetFullPath(renderedFixedPath));
             }
 
             return tags;

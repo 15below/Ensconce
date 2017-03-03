@@ -17,13 +17,16 @@ namespace Ensconce
             {
                 connStr = Database.GetLocalConnectionStringFromDatabaseName(Arguments.DatabaseName.Render());
             }
+
             Logging.Log("Deploying scripts from {0} using connection string {1}", Arguments.DeployFrom, connStr.ConnectionString);
 
-            new Database(connStr, new LegacyFolderStructure(), Arguments.WarnOnOneTimeScriptChanges)
+            var database = new Database(connStr, new LegacyFolderStructure(), Arguments.WarnOnOneTimeScriptChanges)
             {
                 WithTransaction = Arguments.WithTransaction,
                 OutputPath = Arguments.RoundhouseOutputPath
-            }.Deploy(Arguments.DeployFrom, Arguments.DatabaseRepository.Render(), Arguments.DropDatabase);
+            };
+            
+            database.Deploy(Arguments.DeployFrom, Arguments.DatabaseRepository.Render(), Arguments.DropDatabase);
         }
     }
 }
