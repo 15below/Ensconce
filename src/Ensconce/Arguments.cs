@@ -202,22 +202,21 @@ namespace Ensconce
                 {
                     throw new OptionException("Error: You must specify at least one deployTo directory to use the copyTo or replace options.", "deployTo");
                 }
+
                 if (!Directory.Exists(DeployFrom))
                 {
                     throw new OptionException(string.Format("Error: You must specify an existing from directory to use the copyTo or replace options. Couldn't find directory: {0}", DeployFrom), "deployFrom");
                 }
+
                 if (CopyTo && Replace)
                 {
                     throw new OptionException("Error: You cannot specify both the replace and copyTo options.", "deployTo and deployFrom");
                 }
 
-                if (RawToDirectories.Count > 0)
+                foreach (var to in RawToDirectories)
                 {
-                    foreach (var to in RawToDirectories)
-                    {
-                        var tempList = to.Render().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        DeployTo.AddRange(tempList);
-                    }
+                    var tempList = to.Render().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    DeployTo.AddRange(tempList);
                 }
             }
 
@@ -241,10 +240,9 @@ namespace Ensconce
                 throw new OptionException("Error: You cannot drop a database without specifying the drop database confirm argument", "dropDatabaseConfirm");
             }
 
-            if (reportOperation)
+            if (reportOperation && !ReportingServiceVariables.Any())
             {
-                if (!ReportingServiceVariables.Any())
-                    throw new OptionException("Error: You cannot deploy any reports to a reporting service instance with no variables", "reportVariable");
+                throw new OptionException("Error: You cannot deploy any reports to a reporting service instance with no variables", "reportVariable");
             }
         }
     }

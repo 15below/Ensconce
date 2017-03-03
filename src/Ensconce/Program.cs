@@ -24,10 +24,6 @@ namespace Ensconce
 
         private static void MainLogic(string[] args)
         {
-            // Set up some environment variables required on 2k8 servers: as a bonus, ensure NGit doesn't find any actual users settings...
-            Environment.SetEnvironmentVariable("HOMEDRIVE", Path.GetPathRoot(Directory.GetCurrentDirectory()));
-            Environment.SetEnvironmentVariable("HOMEPATH", Directory.GetCurrentDirectory());
-
             Arguments.SetUpAndParseOptions(args);
 
             Logging.Log("Arguments parsed");
