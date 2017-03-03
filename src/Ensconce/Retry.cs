@@ -18,6 +18,7 @@ namespace Ensconce
                 return null;
             }, retryInterval, retryCount);
         }
+
         public static T Do<T>(Func<T> action, TimeSpan retryInterval, int retryCount = 3)
         {
             var exceptions = new List<Exception>();
@@ -30,7 +31,7 @@ namespace Ensconce
                 }
                 catch (Exception ex)
                 {
-                    Console.Out.WriteLine("Something went wrong, but we're going to try again. ;(");
+                    Console.Out.WriteLine("Something went wrong, but we're going to try again...");
                     Console.Out.WriteLine(ex.Message);
                     exceptions.Add(ex);
                     Thread.Sleep(retryInterval);

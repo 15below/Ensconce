@@ -9,26 +9,26 @@ namespace Ensconce
 {
     internal static class Arguments
     {
-        internal static bool ReadFromStdIn;
-        internal static string DatabaseName;
-        internal static string ConnectionString;
-        internal static string FixedPath;
-        internal static string SubstitutionPath;
-        internal static string DatabaseRepository;
-        internal static readonly Dictionary<string, string> ReportingServiceVariables = new Dictionary<string, string>();
-        internal static readonly List<string> DeployTo = new List<string>();
-        internal static string DeployFrom;
-        internal static bool CopyTo;
-        internal static bool Replace;
-        internal static bool UpdateConfig;
-        internal static string TemplateFilters;
-        internal static bool WarnOnOneTimeScriptChanges;
-        internal static bool WithTransaction;
-        internal static string RoundhouseOutputPath;
-        internal static bool Quiet;
-        internal static bool DropDatabase;
-        internal static bool DeployReports;
-        internal static bool DeployReportingRole;
+        internal static bool ReadFromStdIn { get; private set; }
+        internal static string DatabaseName { get; private set; }
+        internal static string ConnectionString { get; private set; }
+        internal static string FixedPath { get; private set; }
+        internal static string SubstitutionPath { get; private set; }
+        internal static string DatabaseRepository { get; private set; }
+        internal static Dictionary<string, string> ReportingServiceVariables { get; private set; } = new Dictionary<string, string>();
+        internal static List<string> DeployTo { get; private set; } = new List<string>();
+        internal static string DeployFrom { get; private set; }
+        internal static bool CopyTo { get; private set; }
+        internal static bool Replace { get; private set; }
+        internal static bool UpdateConfig { get; private set; }
+        internal static string TemplateFilters { get; private set; }
+        internal static bool WarnOnOneTimeScriptChanges { get; private set; }
+        internal static bool WithTransaction { get; private set; }
+        internal static string RoundhouseOutputPath { get; private set; }
+        internal static bool Quiet { get; private set; }
+        internal static bool DropDatabase { get; private set; }
+        internal static bool DeployReports { get; private set; }
+        internal static bool DeployReportingRole { get; private set; }
 
         private static bool showHelp;
         private static bool dropDatabaseConfirm;
@@ -202,22 +202,21 @@ namespace Ensconce
                 {
                     throw new OptionException("Error: You must specify at least one deployTo directory to use the copyTo or replace options.", "deployTo");
                 }
+
                 if (!Directory.Exists(DeployFrom))
                 {
                     throw new OptionException(string.Format("Error: You must specify an existing from directory to use the copyTo or replace options. Couldn't find directory: {0}", DeployFrom), "deployFrom");
                 }
+
                 if (CopyTo && Replace)
                 {
                     throw new OptionException("Error: You cannot specify both the replace and copyTo options.", "deployTo and deployFrom");
                 }
 
-                if (RawToDirectories.Count > 0)
+                foreach (var to in RawToDirectories)
                 {
-                    foreach (var to in RawToDirectories)
-                    {
-                        var tempList = to.Render().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        DeployTo.AddRange(tempList);
-                    }
+                    var tempList = to.Render().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    DeployTo.AddRange(tempList);
                 }
             }
 
@@ -241,10 +240,9 @@ namespace Ensconce
                 throw new OptionException("Error: You cannot drop a database without specifying the drop database confirm argument", "dropDatabaseConfirm");
             }
 
-            if (reportOperation)
+            if (reportOperation && !ReportingServiceVariables.Any())
             {
-                if (!ReportingServiceVariables.Any())
-                    throw new OptionException("Error: You cannot deploy any reports to a reporting service instance with no variables", "reportVariable");
+                throw new OptionException("Error: You cannot deploy any reports to a reporting service instance with no variables", "reportVariable");
             }
         }
     }
