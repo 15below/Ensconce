@@ -34,6 +34,12 @@ namespace FifteenBelow.Deployment.Update
         private readonly HashSet<string> idSpecificValues = new HashSet<string>();
         private readonly Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
 
+        public TagDictionary(string identifier, params Tuple<string, TagSource>[] sources) : this(identifier, false, sources)
+        { }
+
+        public TagDictionary(string identifier, string xmlData) : this(identifier, Tuple.Create("", TagSource.Environment), Tuple.Create(xmlData, TagSource.XmlData))
+        { }
+
         private TagDictionary(string identifier, bool isLabel, params Tuple<string, TagSource>[] sources)
         {
             if (sources.Length == 0)
@@ -113,16 +119,6 @@ namespace FifteenBelow.Deployment.Update
                 }
             }
         }
-
-        public TagDictionary(string identifier, params Tuple<string, TagSource>[] sources)
-            : this(identifier, false, sources)
-        {
-
-        }
-
-        public TagDictionary(string identifier, string xmlData) :
-            this(identifier, Tuple.Create("", TagSource.Environment), Tuple.Create(xmlData, TagSource.XmlData))
-        { }
 
         private void LoadXmlData(string xml, string identifier)
         {
