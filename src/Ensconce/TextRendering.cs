@@ -17,11 +17,10 @@ namespace Ensconce
 
         private static TagDictionary BuildTagDictionary()
         {
-            Logging.Log("Building Tag Dictionary");
             var instanceName = Environment.GetEnvironmentVariable("InstanceName");
-            Logging.Log("Building Tag Dictionary ({0})", instanceName);
+            Logging.Log("Building Tag Dictionary {0}", instanceName);
             var tags = new TagDictionary(instanceName);
-            Logging.Log("Built Tag Dictionary ({0})", instanceName);
+            Logging.Log("Built Tag Dictionary {0}", instanceName);
 
             var renderedFixedPath = Arguments.FixedPath.RenderTemplate(tags);
 
