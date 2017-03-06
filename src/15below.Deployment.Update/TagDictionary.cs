@@ -50,6 +50,7 @@ namespace FifteenBelow.Deployment.Update
         private void LoadDictionary(string identifier, Dictionary<TagSource, string> sources)
         {
             if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
+            Add("DbLogins", DbLogins);
 
             //Load environment 1st
             if (sources.ContainsKey(TagSource.Environment))
@@ -78,8 +79,6 @@ namespace FifteenBelow.Deployment.Update
             }
 
             ExpandDictionaryValues();
-
-            Add("DbLogins", DbLogins);
         }
 
         private void LoadEnvironment()
@@ -211,7 +210,14 @@ namespace FifteenBelow.Deployment.Update
 
         private void ExpandDictionaryValues()
         {
-            this.ToList().ForEach(pair => this[pair.Key] = GetExpandedPropertyValue(pair.Value.ToString()));
+            foreach (var source in this.ToList())
+            {
+                var valueAsString = source.Value as string;
+                if (valueAsString != null)
+                {
+                    this[source.Key] = GetExpandedPropertyValue(valueAsString);
+                }
+            }
 
             foreach (var dbLogin in DbLogins.Values)
             {
