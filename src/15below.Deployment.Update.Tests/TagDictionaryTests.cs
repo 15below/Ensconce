@@ -232,6 +232,14 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void DBLoginsWork()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var login = sut.DbLogins["LOGIN"];
+            Assert.AreEqual(login.Username, "{{ DbLogins.LOGIN.Username }}".RenderTemplate(sut));
+        }
+
+        [Test]
         public void LoadLabelledGroups()
         {
             var sut = new TagDictionary("ident", XmlData);

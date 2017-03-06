@@ -28,8 +28,6 @@ namespace FifteenBelow.Deployment.Update
 
             LoadDictionary(identifier, sources);
 
-            ExpandDictionaryValues();
-
             if (!isLabel)
             {
                 foreach (var label in labelsAndIdentities.Keys)
@@ -52,7 +50,6 @@ namespace FifteenBelow.Deployment.Update
         private void LoadDictionary(string identifier, Dictionary<TagSource, string> sources)
         {
             if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
-            Add("DbLogins", DbLogins);
 
             //Load environment 1st
             if (sources.ContainsKey(TagSource.Environment))
@@ -79,6 +76,10 @@ namespace FifteenBelow.Deployment.Update
                     this["Environment"] = ((string)this["Environment"]).Substring(3);
                 }
             }
+
+            ExpandDictionaryValues();
+
+            Add("DbLogins", DbLogins);
         }
 
         private void LoadEnvironment()
