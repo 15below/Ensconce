@@ -10,7 +10,6 @@ namespace FifteenBelow.Deployment.Update
     public class TagDictionary : Dictionary<string, object>
     {
         public Dictionary<string, DbLogin> DbLogins = new Dictionary<string, DbLogin>();
-        // These values (and no others) can be used as tags in property values
         private readonly HashSet<string> idSpecificValues = new HashSet<string>();
         private readonly Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
 
@@ -116,15 +115,29 @@ namespace FifteenBelow.Deployment.Update
             }
         }
 
-        private void ExpandDictionaryValues()
+        private void LoadEnvironment()
         {
-            this.ToList().ForEach(pair => this[pair.Key] = GetExpandedPropertyValue(pair.Value.ToString()));
-
-            foreach (var dbLogin in DbLogins.Values)
+            var env = Environment.GetEnvironmentVariables();
+            foreach (string key in env.Keys)
             {
-                dbLogin.DefaultDb = GetExpandedPropertyValue(dbLogin.DefaultDb);
-                dbLogin.Username = GetExpandedPropertyValue(dbLogin.Username);
-                dbLogin.ConnectionString = GetExpandedPropertyValue(dbLogin.ConnectionString);
+                var wantedKey = key;
+                if (wantedKey.StartsWith("Octopus"))
+                {
+                    if (wantedKey.Contains("."))
+                    {
+                        wantedKey = wantedKey.Split(new[] { '.' }, 2, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".", String.Empty);
+                    }
+                    else
+                    {
+                        wantedKey = wantedKey.Split(new[] { "Octopus" }, 2, StringSplitOptions.RemoveEmptyEntries).Last();
+                    }
+
+                    if (wantedKey.EndsWith("Name"))
+                    {
+                        wantedKey = wantedKey.Substring(0, wantedKey.Length - "Name".Length);
+                    }
+                }
+                AddOrDiscard(wantedKey, env[key].ToString());
             }
         }
 
@@ -219,6 +232,18 @@ namespace FifteenBelow.Deployment.Update
             }
         }
 
+        private void ExpandDictionaryValues()
+        {
+            this.ToList().ForEach(pair => this[pair.Key] = GetExpandedPropertyValue(pair.Value.ToString()));
+
+            foreach (var dbLogin in DbLogins.Values)
+            {
+                dbLogin.DefaultDb = GetExpandedPropertyValue(dbLogin.DefaultDb);
+                dbLogin.Username = GetExpandedPropertyValue(dbLogin.Username);
+                dbLogin.ConnectionString = GetExpandedPropertyValue(dbLogin.ConnectionString);
+            }
+        }
+
         private string GetExpandedPropertyValue(string baseValue)
         {
             // TODO: Remove this replacement set once move to delimetered tags complete
@@ -227,39 +252,6 @@ namespace FifteenBelow.Deployment.Update
                                             .Replace("tagEnvironment", "{{ Environment }}");
 
             return djangoStyleValue.Contains("{") ? djangoStyleValue.RenderTemplate(this) : baseValue;
-        }
-
-        private void LoadEnvironment()
-        {
-            var env = Environment.GetEnvironmentVariables();
-            foreach (string key in env.Keys)
-            {
-                var wantedKey = key;
-                if (wantedKey.StartsWith("Octopus"))
-                {
-                    wantedKey = GetOctopusVariable(wantedKey);
-                }
-                AddOrDiscard(wantedKey, env[key].ToString());
-            }
-        }
-
-        private static string GetOctopusVariable(string variableName)
-        {
-            if (variableName.Contains("."))
-            {
-                variableName = variableName.Split(new[] { '.' }, 2, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".", String.Empty);
-            }
-            else
-            {
-                variableName = variableName.Split(new[] { "Octopus" }, 2, StringSplitOptions.RemoveEmptyEntries).Last();
-            }
-
-            if (variableName.EndsWith("Name"))
-            {
-                variableName = variableName.Substring(0, variableName.Length - "Name".Length);
-            }
-
-            return variableName;
         }
 
         public void AddOrDiscard(string key, string value, bool idSpecific = false)
