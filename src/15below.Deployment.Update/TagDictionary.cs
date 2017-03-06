@@ -210,12 +210,12 @@ namespace FifteenBelow.Deployment.Update
 
         private void ExpandDictionaryValues()
         {
-            foreach (var source in this.ToList())
+            foreach (var key in Keys.ToList())
             {
-                var valueAsString = source.Value as string;
+                var valueAsString = this[key] as string;
                 if (valueAsString != null)
                 {
-                    this[source.Key] = GetExpandedPropertyValue(valueAsString);
+                    this[key] = GetExpandedPropertyValue(valueAsString);
                 }
             }
 
