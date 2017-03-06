@@ -12,42 +12,30 @@ namespace FifteenBelow.Deployment.Update
         private const string ErrorGuid = "{668B7536-C32B-4D86-B065-70C143EB4AD9}";
         private const string StringProvider = "string://";
 
-        private static readonly Lazy<TemplateManagerProvider> Instance = new Lazy<TemplateManagerProvider>(() => new TemplateManagerProvider().WithLoader(new StringLoader())
-                                                                                                                                              .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
-                                                                                                                                              .WithSetting(Constants.DEFAULT_AUTOESCAPE, false)
-                                                                                                                                              .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
-                                                                                                                                              .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
-                                                                                                                                              .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
-                                                                                                                                              .WithFilter("exists", new NDjangoExpansions.ExistsFilter(ErrorGuid))
-                                                                                                                                              .WithFilter("empty", new NDjangoExpansions.EmptyFilter(ErrorGuid)));
+        private static readonly Lazy<ITemplateManager> TemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(false));
+        private static readonly Lazy<ITemplateManager> XmlTemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(true));
 
-        private static readonly Lazy<TemplateManagerProvider> XmlSafeInstance = new Lazy<TemplateManagerProvider>(() => new TemplateManagerProvider().WithLoader(new StringLoader())
-                                                                                                                                                     .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
-                                                                                                                                                     .WithSetting(Constants.DEFAULT_AUTOESCAPE, true)
-                                                                                                                                                     .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
-                                                                                                                                                     .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
-                                                                                                                                                     .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
-                                                                                                                                                     .WithFilter("exists", new NDjangoExpansions.ExistsFilter(ErrorGuid))
-                                                                                                                                                     .WithFilter("empty", new NDjangoExpansions.EmptyFilter(ErrorGuid)));
-
-        private static ITemplateManager GetTemplateManager()
+        private static ITemplateManager GetTemplateManager(bool xmlSafe)
         {
-            return Instance.Value.GetNewManager();
-        }
-
-        private static ITemplateManager GetXmlSafeTemplateManager()
-        {
-            return XmlSafeInstance.Value.GetNewManager();
+            return new TemplateManagerProvider().WithLoader(new StringLoader())
+                                                .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
+                                                .WithSetting(Constants.DEFAULT_AUTOESCAPE, xmlSafe)
+                                                .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
+                                                .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
+                                                .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
+                                                .WithFilter("exists", new NDjangoExpansions.ExistsFilter(ErrorGuid))
+                                                .WithFilter("empty", new NDjangoExpansions.EmptyFilter(ErrorGuid))
+                                                .GetNewManager();
         }
 
         public static string RenderTemplate(this string template, IDictionary<string, object> values)
         {
-            return Render(template, values, GetTemplateManager());
+            return Render(template, values, TemplateManager.Value);
         }
 
         public static string RenderXmlTemplate(this string template, IDictionary<string, object> values)
         {
-            return Render(template, values, GetXmlSafeTemplateManager());
+            return Render(template, values, XmlTemplateManager.Value);
         }
 
         private static string Render(string template, IDictionary<string, object> values, ITemplateManager templateManager)
@@ -62,9 +50,7 @@ namespace FifteenBelow.Deployment.Update
             if (replacementValue.Contains(ErrorGuid))
             {
                 var attemptedRender = replacementValue.Replace(ErrorGuid, "[ERROR OCCURRED HERE]");
-                throw new ArgumentException(
-                    string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}",
-                                  template, attemptedRender));
+                throw new ArgumentException(string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}", template, attemptedRender));
             }
         }
 
