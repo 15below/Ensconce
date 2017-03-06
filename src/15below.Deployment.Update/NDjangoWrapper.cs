@@ -42,14 +42,17 @@ namespace FifteenBelow.Deployment.Update
 
         public static string RenderTemplate(this string template, IDictionary<string, object> values)
         {
-            var replacementValue = GetTemplateManager().RenderTemplate(StringProvider + template, values).ReadToEnd();
-            CheckForTagError(template, replacementValue);
-            return replacementValue;
+            return Render(template, values, GetTemplateManager());
         }
 
         public static string RenderXmlTemplate(this string template, IDictionary<string, object> values)
         {
-            var replacementValue = GetXmlSafeTemplateManager().RenderTemplate(StringProvider + template, values).ReadToEnd();
+            return Render(template, values, GetXmlSafeTemplateManager());
+        }
+
+        private static string Render(string template, IDictionary<string, object> values, ITemplateManager templateManager)
+        {
+            var replacementValue = templateManager.RenderTemplate(StringProvider + template, values).ReadToEnd();
             CheckForTagError(template, replacementValue);
             return replacementValue;
         }
