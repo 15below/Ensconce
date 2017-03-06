@@ -14,9 +14,6 @@ namespace FifteenBelow.Deployment.Update
         private readonly HashSet<string> idSpecificValues = new HashSet<string>();
         private readonly Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
 
-        private readonly string[] validTagsInProperties = { "ClientCode", "Environment", "DbServer" };
-        private readonly Dictionary<string, object> propertyTagDictionary = new Dictionary<string, object>();
-
         public TagDictionary(string identifier, params Tuple<string, TagSource>[] sources) : this(identifier, false, sources)
         { }
 
@@ -27,6 +24,8 @@ namespace FifteenBelow.Deployment.Update
         {
             sources = FixSources(sources);
 
+            if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
+
             //Load environment 1st
             if (sources.Any(x => x.Item2 == TagSource.Environment))
             {
@@ -34,18 +33,19 @@ namespace FifteenBelow.Deployment.Update
             }
 
             //Load by xml data 2nd
-            foreach (var source in sources.Where(x => x.Item2 == TagSource.XmlData))
+            foreach (var source in sources.Where(x => !string.IsNullOrEmpty(x.Item1) && x.Item2 == TagSource.XmlData))
             {
-                if (string.IsNullOrEmpty(source.Item1)) return;
-                XDocument doc;
+                XDocument doc = null;
+
                 try
                 {
                     doc = XDocument.Parse(source.Item1);
                 }
                 catch (Exception)
                 {
-                    doc = new XDocument();
+                    break;
                 }
+
                 PropertiesFromXml(identifier, doc);
             }
 
@@ -56,12 +56,7 @@ namespace FifteenBelow.Deployment.Update
                     this["Environment"] = ((string)this["Environment"]).Substring(3);
                 }
             }
-
-            foreach (var key in validTagsInProperties.Where(Keys.Contains))
-            {
-                propertyTagDictionary.Add(key, this[key]);
-            }
-
+            
             this.ToList().ForEach(pair => this[pair.Key] = GetExpandedPropertyValue(pair.Value.ToString()));
 
             var expandedLogins = new Dictionary<string, DbLogin>();
@@ -133,8 +128,6 @@ namespace FifteenBelow.Deployment.Update
 
         private void PropertiesFromXml(string identifier, XDocument doc)
         {
-            if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
-
             var environmentNode = doc.XPathSelectElement("/Structure/Environment");
             if(environmentNode != null) AddOrDiscard("Environment", environmentNode.Value);
 
@@ -231,12 +224,7 @@ namespace FifteenBelow.Deployment.Update
                                             .Replace("tagClientCode", "{{ ClientCode }}")
                                             .Replace("tagEnvironment", "{{ Environment }}");
 
-            if (djangoStyleValue.Contains("{"))
-            {
-                return djangoStyleValue.RenderTemplate(propertyTagDictionary);
-            }
-
-            return baseValue;
+            return djangoStyleValue.Contains("{") ? djangoStyleValue.RenderTemplate(this) : baseValue;
         }
 
         private void LoadEnvironment()

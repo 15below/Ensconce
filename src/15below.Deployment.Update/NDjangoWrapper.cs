@@ -10,6 +10,7 @@ namespace FifteenBelow.Deployment.Update
     public static class NDjangoWrapper
     {
         private const string ErrorGuid = "{668B7536-C32B-4D86-B065-70C143EB4AD9}";
+        private const string ErrorText = "[ERROR OCCURRED HERE]";
         private const string StringProvider = "string://";
 
         private static readonly Lazy<ITemplateManager> TemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(false));
@@ -41,17 +42,14 @@ namespace FifteenBelow.Deployment.Update
         private static string Render(string template, IDictionary<string, object> values, ITemplateManager templateManager)
         {
             var replacementValue = templateManager.RenderTemplate(StringProvider + template, values).ReadToEnd();
-            CheckForTagError(template, replacementValue);
-            return replacementValue;
-        }
 
-        private static void CheckForTagError(string template, string replacementValue)
-        {
             if (replacementValue.Contains(ErrorGuid))
             {
-                var attemptedRender = replacementValue.Replace(ErrorGuid, "[ERROR OCCURRED HERE]");
+                var attemptedRender = replacementValue.Replace(ErrorGuid, ErrorText);
                 throw new ArgumentException(string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}", template, attemptedRender));
             }
+
+            return replacementValue;
         }
 
         public class StringLoader : ITemplateLoader
@@ -71,6 +69,5 @@ namespace FifteenBelow.Deployment.Update
                 return true;
             }
         }
-
     }
 }
