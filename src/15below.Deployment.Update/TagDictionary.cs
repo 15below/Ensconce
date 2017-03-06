@@ -25,44 +25,28 @@ namespace FifteenBelow.Deployment.Update
 
         private TagDictionary(string identifier, bool isLabel, params Tuple<string, TagSource>[] sources)
         {
-            if (sources.Length == 0)
-            {
-                sources = new[] { Tuple.Create("", TagSource.Environment) };
-            }
-            else if (sources.Any(x => x.Item2 == TagSource.XmlFileName))
-            {
-                //convert xmlFileName to be xmlData
-                var newSources = new List<Tuple<string, TagSource>>();
-                newSources.AddRange(sources.Where(x => x.Item2 == TagSource.Environment || x.Item2 == TagSource.XmlData));
-
-                foreach (var source in sources.Where(x => x.Item2 == TagSource.XmlFileName))
-                {
-                    XDocument doc;
-                    try
-                    {
-                        doc = XDocument.Load(new FileStream(source.Item1, FileMode.Open, FileAccess.Read));
-                    }
-                    catch (Exception)
-                    {
-                        doc = new XDocument();
-                    }
-
-                    newSources.Add(new Tuple<string, TagSource>(doc.ToString(), TagSource.XmlData));
-                }
-
-                sources = newSources.ToArray();
-            }
+            sources = FixSources(sources);
 
             //Load environment 1st
             if (sources.Any(x => x.Item2 == TagSource.Environment))
             {
-                LoadEnviroment();
+                LoadEnvironment();
             }
 
             //Load by xml data 2nd
             foreach (var source in sources.Where(x => x.Item2 == TagSource.XmlData))
             {
-                LoadXmlData(source.Item1, identifier);
+                if (string.IsNullOrEmpty(source.Item1)) return;
+                XDocument doc;
+                try
+                {
+                    doc = XDocument.Parse(source.Item1);
+                }
+                catch (Exception)
+                {
+                    doc = new XDocument();
+                }
+                PropertiesFromXml(identifier, doc);
             }
 
             if (ContainsKey("Environment") && ((string)this["Environment"]).StartsWith("DR-"))
@@ -115,34 +99,47 @@ namespace FifteenBelow.Deployment.Update
             }
         }
 
-        private void LoadXmlData(string xml, string identifier)
+        private static Tuple<string, TagSource>[] FixSources(Tuple<string, TagSource>[] sources)
         {
-            if (string.IsNullOrEmpty(xml)) return;
-            XDocument doc;
-            try
+            if (sources.Length == 0)
             {
-                doc = XDocument.Parse(xml);
+                sources = new[] {Tuple.Create("", TagSource.Environment)};
             }
-            catch (Exception)
+            else if (sources.Any(x => x.Item2 == TagSource.XmlFileName))
             {
-                doc = new XDocument();
-            }
-            PropertiesFromXml(identifier, doc);
-        }
+                //convert xmlFileName to be xmlData
+                var newSources = new List<Tuple<string, TagSource>>();
+                newSources.AddRange(sources.Where(x => x.Item2 == TagSource.Environment || x.Item2 == TagSource.XmlData));
 
-        private static Tuple<string, string> GetTagInPropertyValue(XDocument doc, string propName)
-        {
-            var xEl = doc.XPathSelectElement(string.Format("Structure/{0}", propName)) ?? doc.XPathSelectElements("/Structure/Properties/Property").FirstOrDefault(el => el.Attribute("name").Value == propName);
-            return Tuple.Create(propName, xEl == null ? "" : xEl.Value);
+                foreach (var source in sources.Where(x => x.Item2 == TagSource.XmlFileName))
+                {
+                    XDocument doc;
+                    try
+                    {
+                        doc = XDocument.Load(new FileStream(source.Item1, FileMode.Open, FileAccess.Read));
+                    }
+                    catch (Exception)
+                    {
+                        doc = new XDocument();
+                    }
+
+                    newSources.Add(new Tuple<string, TagSource>(doc.ToString(), TagSource.XmlData));
+                }
+
+                sources = newSources.ToArray();
+            }
+            return sources;
         }
 
         private void PropertiesFromXml(string identifier, XDocument doc)
         {
             if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
 
-            validTagsInProperties.Select(str => GetTagInPropertyValue(doc, str))
-                                 .ToList()
-                                 .ForEach(tuple => AddOrDiscard(tuple.Item1, tuple.Item2));
+            var environmentNode = doc.XPathSelectElement("/Structure/Environment");
+            if(environmentNode != null) AddOrDiscard("Environment", environmentNode.Value);
+
+            var clientCode = doc.XPathSelectElement("/Structure/ClientCode");
+            if (clientCode != null) AddOrDiscard("ClientCode", clientCode.Value);
 
             var matchingGroupProperties = doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup")
                                              .Where(p => p.Name == "PropertyGroup")
@@ -234,15 +231,20 @@ namespace FifteenBelow.Deployment.Update
                                             .Replace("tagClientCode", "{{ ClientCode }}")
                                             .Replace("tagEnvironment", "{{ Environment }}");
 
-            return djangoStyleValue.RenderTemplate(propertyTagDictionary);
+            if (djangoStyleValue.Contains("{"))
+            {
+                return djangoStyleValue.RenderTemplate(propertyTagDictionary);
+            }
+
+            return baseValue;
         }
 
-        private void LoadEnviroment()
+        private void LoadEnvironment()
         {
             var env = Environment.GetEnvironmentVariables();
-            foreach (var key in env.Keys)
+            foreach (string key in env.Keys)
             {
-                var wantedKey = key.ToString();
+                var wantedKey = key;
                 if (wantedKey.StartsWith("Octopus"))
                 {
                     wantedKey = GetOctopusVariable(wantedKey);
