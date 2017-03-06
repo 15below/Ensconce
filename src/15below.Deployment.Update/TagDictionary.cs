@@ -24,56 +24,9 @@ namespace FifteenBelow.Deployment.Update
         {
             sources = FixSources(sources);
 
-            if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
+            LoadDictionary(identifier, sources);
 
-            //Load environment 1st
-            if (sources.Any(x => x.Item2 == TagSource.Environment))
-            {
-                LoadEnvironment();
-            }
-
-            //Load by xml data 2nd
-            foreach (var source in sources.Where(x => !string.IsNullOrEmpty(x.Item1) && x.Item2 == TagSource.XmlData))
-            {
-                XDocument doc = null;
-
-                try
-                {
-                    doc = XDocument.Parse(source.Item1);
-                }
-                catch (Exception)
-                {
-                    break;
-                }
-
-                PropertiesFromXml(identifier, doc);
-            }
-
-            if (ContainsKey("Environment") && ((string)this["Environment"]).StartsWith("DR-"))
-            {
-                if (ContainsKey("IsDRMachine") && ((string)this["IsDRMachine"]).ToLower() == "true")
-                {
-                    this["Environment"] = ((string)this["Environment"]).Substring(3);
-                }
-            }
-            
-            this.ToList().ForEach(pair => this[pair.Key] = GetExpandedPropertyValue(pair.Value.ToString()));
-
-            var expandedLogins = new Dictionary<string, DbLogin>();
-            foreach (var name in DbLogins.Keys)
-            {
-                var login = DbLogins[name];
-                expandedLogins[name] = new DbLogin
-                {
-                    DefaultDb = GetExpandedPropertyValue(login.DefaultDb),
-                    Password = login.Password,
-                    Username = GetExpandedPropertyValue(login.Username),
-                    ConnectionString = GetExpandedPropertyValue(login.ConnectionString)
-                };
-            }
-
-            DbLogins = expandedLogins;
-            Add("DbLogins", DbLogins);
+            ExpandDictionaryValues();
 
             if (!isLabel)
             {
@@ -98,7 +51,7 @@ namespace FifteenBelow.Deployment.Update
         {
             if (sources.Length == 0)
             {
-                sources = new[] {Tuple.Create("", TagSource.Environment)};
+                sources = new[] { Tuple.Create("", TagSource.Environment) };
             }
             else if (sources.Any(x => x.Item2 == TagSource.XmlFileName))
             {
@@ -124,6 +77,55 @@ namespace FifteenBelow.Deployment.Update
                 sources = newSources.ToArray();
             }
             return sources;
+        }
+
+        private void LoadDictionary(string identifier, Tuple<string, TagSource>[] sources)
+        {
+            if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
+            Add("DbLogins", DbLogins);
+
+            //Load environment 1st
+            if (sources.Any(x => x.Item2 == TagSource.Environment))
+            {
+                LoadEnvironment();
+            }
+
+            //Load by xml data 2nd
+            foreach (var source in sources.Where(x => !string.IsNullOrEmpty(x.Item1) && x.Item2 == TagSource.XmlData))
+            {
+                XDocument doc = null;
+
+                try
+                {
+                    doc = XDocument.Parse(source.Item1);
+                }
+                catch (Exception)
+                {
+                    break;
+                }
+
+                PropertiesFromXml(identifier, doc);
+            }
+
+            if (ContainsKey("Environment") && ((string) this["Environment"]).StartsWith("DR-"))
+            {
+                if (ContainsKey("IsDRMachine") && ((string) this["IsDRMachine"]).ToLower() == "true")
+                {
+                    this["Environment"] = ((string) this["Environment"]).Substring(3);
+                }
+            }
+        }
+
+        private void ExpandDictionaryValues()
+        {
+            this.ToList().ForEach(pair => this[pair.Key] = GetExpandedPropertyValue(pair.Value.ToString()));
+
+            foreach (var dbLogin in DbLogins.Values)
+            {
+                dbLogin.DefaultDb = GetExpandedPropertyValue(dbLogin.DefaultDb);
+                dbLogin.Username = GetExpandedPropertyValue(dbLogin.Username);
+                dbLogin.ConnectionString = GetExpandedPropertyValue(dbLogin.ConnectionString);
+            }
         }
 
         private void PropertiesFromXml(string identifier, XDocument doc)
@@ -272,7 +274,7 @@ namespace FifteenBelow.Deployment.Update
             return DbLogins[dbUserName].Password;
         }
 
-        public struct DbLogin
+        public class DbLogin
         {
             public string Username;
             public string Password;
@@ -283,12 +285,6 @@ namespace FifteenBelow.Deployment.Update
             {
                 return Username;
             }
-        }
-
-        public struct User
-        {
-            public string Name;
-            public string Role;
         }
     }
 
