@@ -11,7 +11,7 @@ namespace FifteenBelow.Deployment.Update
     {
         public Dictionary<string, DbLogin> DbLogins = new Dictionary<string, DbLogin>();
         private readonly HashSet<string> idSpecificValues = new HashSet<string>();
-        private readonly Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
+        private readonly Dictionary<string, List<string>> labelsAndIdentities = new Dictionary<string, List<string>>();
 
         public TagDictionary(string identifier) : this(identifier, false, new Dictionary<TagSource, string>()) { }
 
@@ -21,7 +21,10 @@ namespace FifteenBelow.Deployment.Update
 
         private TagDictionary(string identifier, bool isLabel, Dictionary<TagSource, string> sources)
         {
-            sources = FixSources(sources);
+            if (sources.Count == 0)
+            {
+                sources = new Dictionary<TagSource, string> { { TagSource.Environment, "" } };
+            }
 
             LoadDictionary(identifier, sources);
 
@@ -46,31 +49,6 @@ namespace FifteenBelow.Deployment.Update
             }
         }
 
-        private static Dictionary<TagSource, string> FixSources(Dictionary<TagSource, string> sources)
-        {
-            if (sources.Count == 0)
-            {
-                sources = new Dictionary<TagSource, string> { { TagSource.Environment, "" } };
-            }
-            else if (sources.ContainsKey(TagSource.XmlFileName))
-            {
-                //convert xmlFileName to be xmlData
-                XDocument doc;
-                try
-                {
-                    doc = XDocument.Load(new FileStream(sources[TagSource.XmlFileName], FileMode.Open, FileAccess.Read));
-                }
-                catch (Exception)
-                {
-                    doc = new XDocument();
-                }
-
-                sources.Add(TagSource.XmlData, doc.ToString());
-                sources.Remove(TagSource.XmlFileName);
-            }
-            return sources;
-        }
-
         private void LoadDictionary(string identifier, Dictionary<TagSource, string> sources)
         {
             if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
@@ -83,19 +61,15 @@ namespace FifteenBelow.Deployment.Update
             }
 
             //Load by xml data 2nd
-            foreach (var source in sources.Where(x => x.Key == TagSource.XmlData && !string.IsNullOrEmpty(x.Value)))
+            if (sources.ContainsKey(TagSource.XmlData))
             {
-                XDocument doc;
-                try
-                {
-                    doc = XDocument.Parse(source.Value);
-                }
-                catch (Exception)
-                {
-                    break;
-                }
+                PropertiesFromXml(identifier, sources[TagSource.XmlData]);
+            }
 
-                PropertiesFromXml(identifier, doc);
+            //Load xml file name 3rd
+            if (sources.ContainsKey(TagSource.XmlFileName))
+            {
+                PropertiesFromXml(identifier, File.ReadAllText(sources[TagSource.XmlFileName]));
             }
 
             if (ContainsKey("Environment") && ((string)this["Environment"]).StartsWith("DR-"))
@@ -126,15 +100,25 @@ namespace FifteenBelow.Deployment.Update
 
                     if (wantedKey.EndsWith("Name"))
                     {
-                        wantedKey = wantedKey.Substring(0, wantedKey.Length - "Name".Length);
+                        wantedKey = wantedKey.Substring(0, wantedKey.Length - 4);
                     }
                 }
                 AddOrDiscard(wantedKey, env[key].ToString());
             }
         }
 
-        private void PropertiesFromXml(string identifier, XDocument doc)
+        private void PropertiesFromXml(string identifier, string xmlData)
         {
+            XDocument doc;
+            try
+            {
+                doc = XDocument.Parse(xmlData);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
             var environmentNode = doc.XPathSelectElement("/Structure/Environment");
             if (environmentNode != null) AddOrDiscard("Environment", environmentNode.Value);
 
@@ -173,7 +157,7 @@ namespace FifteenBelow.Deployment.Update
                 {
                     if (labelsAndIdentities.Keys.Contains(label))
                     {
-                        labelsAndIdentities[label] = labelsAndIdentities[label].Concat(new List<string> { identity });
+                        labelsAndIdentities[label].Add(identity);
                     }
                     else
                     {
