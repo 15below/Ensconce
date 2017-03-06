@@ -9,30 +9,13 @@ namespace FifteenBelow.Deployment.Update
 {
     public class TagDictionary : Dictionary<string, object>
     {
-        public struct DbLogin
-        {
-            public string Username;
-            public string Password;
-            public string DefaultDb;
-            public string ConnectionString;
-
-            public override string ToString()
-            {
-                return Username;
-            }
-        }
-
-        public struct User
-        {
-            public string Name;
-            public string Role;
-        }
-
         public Dictionary<string, DbLogin> DbLogins = new Dictionary<string, DbLogin>();
         // These values (and no others) can be used as tags in property values
-        private static readonly string[] ValidTagsInProperties = new[] { "ClientCode", "Environment", "DbServer" };
         private readonly HashSet<string> idSpecificValues = new HashSet<string>();
         private readonly Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
+
+        private readonly string[] validTagsInProperties = { "ClientCode", "Environment", "DbServer" };
+        private readonly Dictionary<string, object> propertyTagDictionary = new Dictionary<string, object>();
 
         public TagDictionary(string identifier, params Tuple<string, TagSource>[] sources) : this(identifier, false, sources)
         { }
@@ -48,10 +31,10 @@ namespace FifteenBelow.Deployment.Update
             }
             else if (sources.Any(x => x.Item2 == TagSource.XmlFileName))
             {
-            	//convert xmlFileName to be xmlData
+                //convert xmlFileName to be xmlData
                 var newSources = new List<Tuple<string, TagSource>>();
                 newSources.AddRange(sources.Where(x => x.Item2 == TagSource.Environment || x.Item2 == TagSource.XmlData));
-                
+
                 foreach (var source in sources.Where(x => x.Item2 == TagSource.XmlFileName))
                 {
                     XDocument doc;
@@ -63,6 +46,7 @@ namespace FifteenBelow.Deployment.Update
                     {
                         doc = new XDocument();
                     }
+
                     newSources.Add(new Tuple<string, TagSource>(doc.ToString(), TagSource.XmlData));
                 }
 
@@ -81,25 +65,44 @@ namespace FifteenBelow.Deployment.Update
                 LoadXmlData(source.Item1, identifier);
             }
 
+            if (ContainsKey("Environment") && ((string)this["Environment"]).StartsWith("DR-"))
+            {
+                if (ContainsKey("IsDRMachine") && ((string)this["IsDRMachine"]).ToLower() == "true")
+                {
+                    this["Environment"] = ((string)this["Environment"]).Substring(3);
+                }
+            }
+
+            foreach (var key in validTagsInProperties.Where(Keys.Contains))
+            {
+                propertyTagDictionary.Add(key, this[key]);
+            }
+
             this.ToList().ForEach(pair => this[pair.Key] = GetExpandedPropertyValue(pair.Value.ToString()));
+
             var expandedLogins = new Dictionary<string, DbLogin>();
             foreach (var name in DbLogins.Keys)
             {
                 var login = DbLogins[name];
-                expandedLogins[name] = new DbLogin { DefaultDb = GetExpandedPropertyValue(login.DefaultDb), Password = login.Password, Username = GetExpandedPropertyValue(login.Username), ConnectionString = GetExpandedPropertyValue(login.ConnectionString) };
+                expandedLogins[name] = new DbLogin
+                {
+                    DefaultDb = GetExpandedPropertyValue(login.DefaultDb),
+                    Password = login.Password,
+                    Username = GetExpandedPropertyValue(login.Username),
+                    ConnectionString = GetExpandedPropertyValue(login.ConnectionString)
+                };
             }
+
             DbLogins = expandedLogins;
             Add("DbLogins", DbLogins);
+
             if (!isLabel)
             {
                 foreach (var label in labelsAndIdentities.Keys)
                 {
                     if (ContainsKey(label))
                     {
-                        throw new InvalidDataException(
-                            string.Format(
-                                "A label for a method group has been specified that clashes with a property name. The conflicting label is {0}",
-                                label));
+                        throw new InvalidDataException(string.Format("A label for a method group has been specified that clashes with a property name. The conflicting label is {0}", label));
                     }
                     var labelEnumerable = new LabelEnumeration();
                     foreach (var id in labelsAndIdentities[label])
@@ -108,14 +111,6 @@ namespace FifteenBelow.Deployment.Update
                             labelEnumerable.Add(id, new TagDictionary(id, true, sources));
                     }
                     this[label] = labelEnumerable;
-                }
-            }
-
-            if (ContainsKey("Environment") && ((string) this["Environment"]).StartsWith("DR-"))
-            {
-                if (ContainsKey("IsDRMachine") && ((string) this["IsDRMachine"]).ToLower() == "true")
-                {
-                    this["Environment"] = ((string) this["Environment"]).Substring(3);
                 }
             }
         }
@@ -137,30 +132,23 @@ namespace FifteenBelow.Deployment.Update
 
         private static Tuple<string, string> GetTagInPropertyValue(XDocument doc, string propName)
         {
-            var xEl = doc.XPathSelectElement(string.Format("Structure/{0}", propName)) ??
-                      doc.XPathSelectElements("/Structure/Properties/Property").FirstOrDefault(
-                          el => el.Attribute("name").Value == propName);
+            var xEl = doc.XPathSelectElement(string.Format("Structure/{0}", propName)) ?? doc.XPathSelectElements("/Structure/Properties/Property").FirstOrDefault(el => el.Attribute("name").Value == propName);
             return Tuple.Create(propName, xEl == null ? "" : xEl.Value);
         }
 
         private void PropertiesFromXml(string identifier, XDocument doc)
-        {            
+        {
             if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
-            ValidTagsInProperties
-                .Select(str => GetTagInPropertyValue(doc, str))
-                .ToList()
-                .ForEach(tuple => AddOrDiscard(tuple.Item1, tuple.Item2));
 
-            var matchingGroupProperties =
-                doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup")
-                    .Where(p => p.Name == "PropertyGroup").Where(p => p.Attribute("identity").Value == identifier)
-                    .Select(pg => pg.XPathSelectElements("Properties/Property"))
-                    .Aggregate(new List<XElement>(), (list, elements) => list.Concat(elements).ToList());
-            var generalProperties =
-                doc.XPathSelectElements("/Structure/Properties/Property");
-            var labelledGroups =
-                doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup")
-                    .Where(pg => pg.Elements().Select(e => e.Name).Contains("Label"));
+            validTagsInProperties.Select(str => GetTagInPropertyValue(doc, str))
+                                 .ToList()
+                                 .ForEach(tuple => AddOrDiscard(tuple.Item1, tuple.Item2));
+
+            var matchingGroupProperties = doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup")
+                                             .Where(p => p.Name == "PropertyGroup")
+                                             .Where(p => p.Attribute("identity").Value == identifier)
+                                             .Select(pg => pg.XPathSelectElements("Properties/Property"))
+                                             .Aggregate(new List<XElement>(), (list, elements) => list.Concat(elements).ToList());
 
             foreach (var prop in matchingGroupProperties)
             {
@@ -168,12 +156,18 @@ namespace FifteenBelow.Deployment.Update
                 var value = prop.Value.Trim();
                 AddOrDiscard(key, value, true);
             }
+
+            var generalProperties = doc.XPathSelectElements("/Structure/Properties/Property");
+
             foreach (var prop in generalProperties)
             {
                 var key = prop.Attribute("name").Value;
                 var value = prop.Value.Trim();
                 AddOrDiscard(key, value);
             }
+
+            var labelledGroups = doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup").Where(pg => pg.Elements().Select(e => e.Name).Contains("Label"));
+
             foreach (var labelledGroup in labelledGroups)
             {
                 var labels = labelledGroup.Elements("Label").Select(e => e.Value);
@@ -191,8 +185,7 @@ namespace FifteenBelow.Deployment.Update
                 }
             }
 
-            var dbLoginElements =
-                doc.XPathSelectElements("/Structure/DbLogins/DbLogin");
+            var dbLoginElements = doc.XPathSelectElements("/Structure/DbLogins/DbLogin");
             foreach (var dbLoginElement in dbLoginElements)
             {
                 var username = dbLoginElement.XPathSelectElement("Name").Value;
@@ -223,8 +216,7 @@ namespace FifteenBelow.Deployment.Update
                         connectionString = dbLoginElement.XPathSelectElement("ConnectionString").Value;
                     }
 
-                    DbLogins.Add(dbKey,
-                    new DbLogin
+                    DbLogins.Add(dbKey, new DbLogin
                     {
                         Username = username,
                         Password = password,
@@ -237,14 +229,12 @@ namespace FifteenBelow.Deployment.Update
 
         private string GetExpandedPropertyValue(string baseValue)
         {
-            var shortTagList = ValidTagsInProperties.Where(Keys.Contains).ToDictionary(str => str, str => this[str]);
-
             // TODO: Remove this replacement set once move to delimetered tags complete
-            var djangoStyleValue = baseValue
-                .Replace("tagDbServer", "{{ DbServer }}")
-                .Replace("tagClientCode", "{{ ClientCode }}")
-                .Replace("tagEnvironment", "{{ Environment }}");
-            return djangoStyleValue.RenderTemplate(shortTagList);
+            var djangoStyleValue = baseValue.Replace("tagDbServer", "{{ DbServer }}")
+                                            .Replace("tagClientCode", "{{ ClientCode }}")
+                                            .Replace("tagEnvironment", "{{ Environment }}");
+
+            return djangoStyleValue.RenderTemplate(propertyTagDictionary);
         }
 
         private void LoadEnviroment()
@@ -271,25 +261,44 @@ namespace FifteenBelow.Deployment.Update
             {
                 variableName = variableName.Split(new[] { "Octopus" }, 2, StringSplitOptions.RemoveEmptyEntries).Last();
             }
+
             if (variableName.EndsWith("Name"))
             {
                 variableName = variableName.Substring(0, variableName.Length - "Name".Length);
             }
+
             return variableName;
         }
 
         public void AddOrDiscard(string key, string value, bool idSpecific = false)
         {
-            if (!Keys.Contains(key))
-                Add(key, value);
-            if (Keys.Contains(key) && !idSpecificValues.Contains(key) && idSpecific)
-                this[key] = value;
+            if (!Keys.Contains(key)) Add(key, value);
+            if (Keys.Contains(key) && !idSpecificValues.Contains(key) && idSpecific) this[key] = value;
             if (idSpecific) idSpecificValues.Add(key);
         }
 
         public string GetDbPassword(string dbUserName)
         {
             return DbLogins[dbUserName].Password;
+        }
+
+        public struct DbLogin
+        {
+            public string Username;
+            public string Password;
+            public string DefaultDb;
+            public string ConnectionString;
+
+            public override string ToString()
+            {
+                return Username;
+            }
+        }
+
+        public struct User
+        {
+            public string Name;
+            public string Role;
         }
     }
 
