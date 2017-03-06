@@ -13,13 +13,13 @@ namespace FifteenBelow.Deployment.Update
         private readonly HashSet<string> idSpecificValues = new HashSet<string>();
         private readonly Dictionary<string, IEnumerable<string>> labelsAndIdentities = new Dictionary<string, IEnumerable<string>>();
 
-        public TagDictionary(string identifier, params Tuple<string, TagSource>[] sources) : this(identifier, false, sources)
-        { }
+        public TagDictionary(string identifier) : this(identifier, false, new Dictionary<TagSource, string>()) { }
 
-        public TagDictionary(string identifier, string xmlData) : this(identifier, Tuple.Create("", TagSource.Environment), Tuple.Create(xmlData, TagSource.XmlData))
-        { }
+        public TagDictionary(string identifier, Dictionary<TagSource, string> sources) : this(identifier, false, sources) { }
 
-        private TagDictionary(string identifier, bool isLabel, params Tuple<string, TagSource>[] sources)
+        public TagDictionary(string identifier, string xmlData) : this(identifier, false, new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, xmlData } }) { }
+
+        private TagDictionary(string identifier, bool isLabel, Dictionary<TagSource, string> sources)
         {
             sources = FixSources(sources);
 
@@ -46,57 +46,49 @@ namespace FifteenBelow.Deployment.Update
             }
         }
 
-        private static Tuple<string, TagSource>[] FixSources(Tuple<string, TagSource>[] sources)
+        private static Dictionary<TagSource, string> FixSources(Dictionary<TagSource, string> sources)
         {
-            if (sources.Length == 0)
+            if (sources.Count == 0)
             {
-                sources = new[] { Tuple.Create("", TagSource.Environment) };
+                sources = new Dictionary<TagSource, string> { { TagSource.Environment, "" } };
             }
-            else if (sources.Any(x => x.Item2 == TagSource.XmlFileName))
+            else if (sources.ContainsKey(TagSource.XmlFileName))
             {
                 //convert xmlFileName to be xmlData
-                var newSources = new List<Tuple<string, TagSource>>();
-                newSources.AddRange(sources.Where(x => x.Item2 == TagSource.Environment || x.Item2 == TagSource.XmlData));
-
-                foreach (var source in sources.Where(x => x.Item2 == TagSource.XmlFileName))
+                XDocument doc;
+                try
                 {
-                    XDocument doc;
-                    try
-                    {
-                        doc = XDocument.Load(new FileStream(source.Item1, FileMode.Open, FileAccess.Read));
-                    }
-                    catch (Exception)
-                    {
-                        doc = new XDocument();
-                    }
-
-                    newSources.Add(new Tuple<string, TagSource>(doc.ToString(), TagSource.XmlData));
+                    doc = XDocument.Load(new FileStream(sources[TagSource.XmlFileName], FileMode.Open, FileAccess.Read));
+                }
+                catch (Exception)
+                {
+                    doc = new XDocument();
                 }
 
-                sources = newSources.ToArray();
+                sources.Add(TagSource.XmlData, doc.ToString());
+                sources.Remove(TagSource.XmlFileName);
             }
             return sources;
         }
 
-        private void LoadDictionary(string identifier, Tuple<string, TagSource>[] sources)
+        private void LoadDictionary(string identifier, Dictionary<TagSource, string> sources)
         {
             if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
             Add("DbLogins", DbLogins);
 
             //Load environment 1st
-            if (sources.Any(x => x.Item2 == TagSource.Environment))
+            if (sources.ContainsKey(TagSource.Environment))
             {
                 LoadEnvironment();
             }
 
             //Load by xml data 2nd
-            foreach (var source in sources.Where(x => !string.IsNullOrEmpty(x.Item1) && x.Item2 == TagSource.XmlData))
+            foreach (var source in sources.Where(x => x.Key == TagSource.XmlData && !string.IsNullOrEmpty(x.Value)))
             {
-                XDocument doc = null;
-
+                XDocument doc;
                 try
                 {
-                    doc = XDocument.Parse(source.Item1);
+                    doc = XDocument.Parse(source.Value);
                 }
                 catch (Exception)
                 {
@@ -106,11 +98,11 @@ namespace FifteenBelow.Deployment.Update
                 PropertiesFromXml(identifier, doc);
             }
 
-            if (ContainsKey("Environment") && ((string) this["Environment"]).StartsWith("DR-"))
+            if (ContainsKey("Environment") && ((string)this["Environment"]).StartsWith("DR-"))
             {
-                if (ContainsKey("IsDRMachine") && ((string) this["IsDRMachine"]).ToLower() == "true")
+                if (ContainsKey("IsDRMachine") && ((string)this["IsDRMachine"]).ToLower() == "true")
                 {
-                    this["Environment"] = ((string) this["Environment"]).Substring(3);
+                    this["Environment"] = ((string)this["Environment"]).Substring(3);
                 }
             }
         }
@@ -144,7 +136,7 @@ namespace FifteenBelow.Deployment.Update
         private void PropertiesFromXml(string identifier, XDocument doc)
         {
             var environmentNode = doc.XPathSelectElement("/Structure/Environment");
-            if(environmentNode != null) AddOrDiscard("Environment", environmentNode.Value);
+            if (environmentNode != null) AddOrDiscard("Environment", environmentNode.Value);
 
             var clientCode = doc.XPathSelectElement("/Structure/ClientCode");
             if (clientCode != null) AddOrDiscard("ClientCode", clientCode.Value);
