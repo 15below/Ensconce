@@ -151,11 +151,18 @@ namespace FifteenBelow.Deployment.Update.Tests
             Assert.AreEqual(Idvalue, loader[Avalue]);
         }
 
+        private static string GetDbLoginValue(TagDictionary dic, string db, string value)
+        {
+            var dbLogins = dic["DbLogins"] as Dictionary<string, object>;
+            var dbSettings = dbLogins[db] as Dictionary<string, object>;
+            return dbSettings[value] as string;
+        }
+
         [Test]
         public void DbPasswordAccessibleViaDictionaryWithoutPrefix()
         {
             var sut = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
-            Assert.AreEqual("Some high entrophy random text", sut.DbLogins["AUDIT"].Password);
+            Assert.AreEqual("Some high entrophy random text", GetDbLoginValue(sut, "AUDIT", "Password"));
         }
 
         [TestCase("FAA.", "ClientDomain")]
@@ -169,74 +176,53 @@ namespace FifteenBelow.Deployment.Update.Tests
         [Test]
         public void SuccessfullyGetDbPassword()
         {
-            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, XMLFilename } });
-            Assert.AreEqual("NoPasswordsRoundHere", loader.GetDbPassword("config"));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, XMLFilename } });
+            Assert.AreEqual("NoPasswordsRoundHere", GetDbLoginValue(sut, "config", "Password"));
         }
 
         [Test]
         public void DbLoginsGenerated()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.AreEqual("This isn't a password either", sut.DbLogins.Values.First(login => login.Username == "config").Password);
+            Assert.AreEqual("This isn't a password either", GetDbLoginValue(sut, "config", "Password"));
         }
 
         [Test]
         public void DbLoginNamesAreSubstituted()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.IsTrue(sut.DbLogins.Values.Select(login => login.Username).Contains(string.Format("{0}-{1}-AUDIT", Environment.GetEnvironmentVariable("ClientCode"), Environment.GetEnvironmentVariable("Environment"))));
+            Assert.AreEqual(string.Format("{0}-{1}-AUDIT", Environment.GetEnvironmentVariable("ClientCode"), Environment.GetEnvironmentVariable("Environment")), GetDbLoginValue(sut, "AUDIT", "Username"));
         }
 
         [Test]
         public void DbLoginDefaultDbsAreSubstituted()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.IsTrue(sut.DbLogins.Values.Select(login => login.DefaultDb).Contains("FAA-LOC-AUDIT"));
+            Assert.AreEqual("FAA-LOC-AUDIT", GetDbLoginValue(sut, "AUDIT", "DefaultDb"));
         }
 
         [Test]
         public void DbLoginConnectionStringLoaded()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.IsTrue(sut.DbLogins.Values.Select(login => login.Username).Contains("ConnectionString"));
-            var correctDbLogin = sut.DbLogins.First(login => login.Key == "ConnectionString");
-            Assert.AreEqual("Actual ConnectionString", correctDbLogin.Value.ConnectionString);
+            Assert.AreEqual("Actual ConnectionString", GetDbLoginValue(sut, "ConnectionString", "ConnectionString"));
         }
-
-        [Test]
-        public void DbLoginSuppliesConnectionString()
-        {
-            var sut = new TagDictionary("ident", XmlData);
-            var login = sut.DbLogins.First();
-            Assert.IsFalse(string.IsNullOrEmpty(login.Value.ConnectionString));
-        }
-
 
         [Test]
         public void DbLoginWithKey()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.True(sut.DbLogins.ContainsKey("LOGIN"));
-            var login = sut.DbLogins["LOGIN"];
-            Assert.IsFalse(string.IsNullOrEmpty(login.ConnectionString));
-            Assert.AreEqual("ZZ-ENV-LOGIN", login.Username);
-            Assert.AreEqual("ZZ-ENV-LOGIN", login.DefaultDb);
-        }
 
-        [Test]
-        public void DbLoginSuppliesConnectionStringWithSubbedValues()
-        {
-            var sut = new TagDictionary("ident", XmlData);
-            var login = sut.DbLogins.First();
-            Assert.IsTrue(login.Value.ConnectionString.Contains("DbServerAddress"));
+            Assert.AreEqual("Data Source=DbServerAddress; Initial Catalog=ZZ-ENV-LOGIN; User ID=ZZ-ENV-LOGIN; Password=Some high entrophy random text;", GetDbLoginValue(sut, "LOGIN", "ConnectionString"));
+            Assert.AreEqual("ZZ-ENV-LOGIN", GetDbLoginValue(sut, "LOGIN", "Username"));
+            Assert.AreEqual("ZZ-ENV-LOGIN", GetDbLoginValue(sut, "LOGIN", "DefaultDb"));
         }
 
         [Test]
         public void DBLoginsWork()
         {
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var login = sut.DbLogins["LOGIN"];
-            Assert.AreEqual(login.Username, "{{ DbLogins.LOGIN.Username }}".RenderTemplate(sut));
+            Assert.AreEqual("ZZ-ENV-LOGIN", "{{ DbLogins.LOGIN.Username }}".RenderTemplate(sut));
         }
 
         [Test]

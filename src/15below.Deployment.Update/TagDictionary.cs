@@ -9,7 +9,6 @@ namespace FifteenBelow.Deployment.Update
 {
     public class TagDictionary : Dictionary<string, object>
     {
-        public Dictionary<string, DbLogin> DbLogins = new Dictionary<string, DbLogin>();
         private readonly HashSet<string> idSpecificValues = new HashSet<string>();
         private readonly Dictionary<string, List<string>> labelsAndIdentities = new Dictionary<string, List<string>>();
 
@@ -50,7 +49,6 @@ namespace FifteenBelow.Deployment.Update
         private void LoadDictionary(string identifier, Dictionary<TagSource, string> sources)
         {
             if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
-            Add("DbLogins", DbLogins);
 
             //Load environment 1st
             if (sources.ContainsKey(TagSource.Environment))
@@ -78,7 +76,7 @@ namespace FifteenBelow.Deployment.Update
                 }
             }
 
-            ExpandDictionaryValues();
+            ExpandDictionaryValues(this);
         }
 
         private void LoadEnvironment()
@@ -180,50 +178,53 @@ namespace FifteenBelow.Deployment.Update
                     dbKey = username.StartsWith("tagClientCode-tagEnvironment-") ? username.Substring(29) : username;
                 }
 
-                if (!DbLogins.ContainsKey(dbKey))
+                Dictionary<string, object> dbLogins;
+                if (ContainsKey("DbLogins"))
                 {
-                    var password = string.Empty;
-                    var defaultDb = string.Empty;
-                    string connectionString;
+                    dbLogins = this["DbLogins"] as Dictionary<string, object>;
+                }
+                else
+                {
+                    dbLogins = new Dictionary<string, object>();
+                    Add("DbLogins", dbLogins);
+                }
+
+                if (!dbLogins.ContainsKey(dbKey))
+                {
+                    var dbLoginDic = new Dictionary<string, object> { { "Username", username } };
 
                     if (string.IsNullOrWhiteSpace(dbLoginElement.TryXPathValueWithDefault("ConnectionString", "")))
                     {
-                        password = dbLoginElement.XPathSelectElement("Password").Value;
-                        defaultDb = dbLoginElement.XPathSelectElement("DefaultDb").Value;
-                        connectionString = string.Format("Data Source={{{{ DbServer }}}}; Initial Catalog={0}; User ID={1}; Password={2};", dbLoginElement.XPathSelectElement("DefaultDb").Value, username, dbLoginElement.XPathSelectElement("Password").Value);
+                        dbLoginDic.Add("Password", dbLoginElement.XPathSelectElement("Password").Value);
+                        dbLoginDic.Add("DefaultDb", dbLoginElement.XPathSelectElement("DefaultDb").Value);
+                        dbLoginDic.Add("ConnectionString", string.Format("Data Source={{{{ DbServer }}}}; Initial Catalog={0}; User ID={1}; Password={2};", dbLoginElement.XPathSelectElement("DefaultDb").Value, username, dbLoginElement.XPathSelectElement("Password").Value));
                     }
                     else
                     {
-                        connectionString = dbLoginElement.XPathSelectElement("ConnectionString").Value;
+                        dbLoginDic.Add("ConnectionString", dbLoginElement.XPathSelectElement("ConnectionString").Value);
                     }
-
-                    DbLogins.Add(dbKey, new DbLogin
-                    {
-                        Username = username,
-                        Password = password,
-                        DefaultDb = defaultDb,
-                        ConnectionString = connectionString
-                    });
+                    dbLogins.Add(dbKey, dbLoginDic);
                 }
             }
         }
 
-        private void ExpandDictionaryValues()
+        private void ExpandDictionaryValues(Dictionary<string, object> dictionaryToExpand)
         {
-            foreach (var key in Keys.ToList())
+            foreach (var key in dictionaryToExpand.Keys.ToList())
             {
-                var valueAsString = this[key] as string;
+                var valueAsString = dictionaryToExpand[key] as string;
                 if (valueAsString != null)
                 {
-                    this[key] = GetExpandedPropertyValue(valueAsString);
+                    dictionaryToExpand[key] = GetExpandedPropertyValue(valueAsString);
                 }
-            }
-
-            foreach (var dbLogin in DbLogins.Values)
-            {
-                dbLogin.DefaultDb = GetExpandedPropertyValue(dbLogin.DefaultDb);
-                dbLogin.Username = GetExpandedPropertyValue(dbLogin.Username);
-                dbLogin.ConnectionString = GetExpandedPropertyValue(dbLogin.ConnectionString);
+                else
+                {
+                    var valueAsDictionary = dictionaryToExpand[key] as Dictionary<string, object>;
+                    if (valueAsDictionary != null)
+                    {
+                        ExpandDictionaryValues(valueAsDictionary);
+                    }
+                }
             }
         }
 
@@ -242,24 +243,6 @@ namespace FifteenBelow.Deployment.Update
             if (!Keys.Contains(key)) Add(key, value);
             if (Keys.Contains(key) && !idSpecificValues.Contains(key) && idSpecific) this[key] = value;
             if (idSpecific) idSpecificValues.Add(key);
-        }
-
-        public string GetDbPassword(string dbUserName)
-        {
-            return DbLogins[dbUserName].Password;
-        }
-
-        public class DbLogin
-        {
-            public string Username;
-            public string Password;
-            public string DefaultDb;
-            public string ConnectionString;
-
-            public override string ToString()
-            {
-                return Username;
-            }
         }
     }
 
