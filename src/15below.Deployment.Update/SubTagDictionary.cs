@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace FifteenBelow.Deployment.Update
 {
-    public class LabelEnumeration : IDictionary<string, IDictionary<string, object>>, IEnumerable<IDictionary<string, object>>
+    public class SubTagDictionary : IDictionary<string, IDictionary<string, object>>, IEnumerable<IDictionary<string, object>>
     {
         private readonly IDictionary<string, IDictionary<string, object>> dict = new Dictionary<string, IDictionary<string, object>>();
-        
+
         IEnumerator<IDictionary<string, object>> IEnumerable<IDictionary<string, object>>.GetEnumerator()
         {
             return dict.Select((kv) => kv.Value).GetEnumerator();
@@ -75,8 +75,8 @@ namespace FifteenBelow.Deployment.Update
             get { return dict[key]; }
             set { dict[key] = value; }
         }
-
-        public ICollection<string> Keys { get; private set; }
-        public ICollection<IDictionary<string, object>> Values { get; private set; }
+        
+        public ICollection<string> Keys { get { return dict.Keys; } }
+        public ICollection<IDictionary<string, object>> Values { get { return dict.Values; } }
     }
 }

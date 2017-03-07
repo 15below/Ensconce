@@ -9,16 +9,11 @@ namespace FifteenBelow.Deployment.Update
 {
     public class TagDictionary : Dictionary<string, object>
     {
-        private readonly HashSet<string> idSpecificValues = new HashSet<string>();
-        private readonly Dictionary<string, List<string>> labelsAndIdentities = new Dictionary<string, List<string>>();
+        public TagDictionary(string identifier) : this(identifier, new Dictionary<TagSource, string>()) { }
 
-        public TagDictionary(string identifier) : this(identifier, false, new Dictionary<TagSource, string>()) { }
+        public TagDictionary(string identifier, string xmlData) : this(identifier, new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, xmlData } }) { }
 
-        public TagDictionary(string identifier, Dictionary<TagSource, string> sources) : this(identifier, false, sources) { }
-
-        public TagDictionary(string identifier, string xmlData) : this(identifier, false, new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, xmlData } }) { }
-
-        private TagDictionary(string identifier, bool isLabel, Dictionary<TagSource, string> sources)
+        public TagDictionary(string identifier, Dictionary<TagSource, string> sources)
         {
             if (sources.Count == 0)
             {
@@ -26,29 +21,11 @@ namespace FifteenBelow.Deployment.Update
             }
 
             LoadDictionary(identifier, sources);
-
-            if (!isLabel)
-            {
-                foreach (var label in labelsAndIdentities.Keys)
-                {
-                    if (ContainsKey(label))
-                    {
-                        throw new InvalidDataException(string.Format("A label for a method group has been specified that clashes with a property name. The conflicting label is {0}", label));
-                    }
-                    var labelEnumerable = new LabelEnumeration();
-                    foreach (var id in labelsAndIdentities[label])
-                    {
-                        if (!labelEnumerable.ContainsKey(id))
-                            labelEnumerable.Add(id, new TagDictionary(id, true, sources));
-                    }
-                    this[label] = labelEnumerable;
-                }
-            }
         }
 
         private void LoadDictionary(string identifier, Dictionary<TagSource, string> sources)
         {
-            if (!string.IsNullOrEmpty(identifier)) AddOrDiscard("identity", identifier);
+            if (!string.IsNullOrEmpty(identifier)) this.AddOrDiscard("identity", identifier);
 
             //Load environment 1st
             if (sources.ContainsKey(TagSource.Environment))
@@ -101,7 +78,7 @@ namespace FifteenBelow.Deployment.Update
                         wantedKey = wantedKey.Substring(0, wantedKey.Length - 4);
                     }
                 }
-                AddOrDiscard(wantedKey, env[key].ToString());
+                this.AddOrDiscard(wantedKey, env[key].ToString());
             }
         }
 
@@ -117,53 +94,95 @@ namespace FifteenBelow.Deployment.Update
                 return;
             }
 
+            BasePropertiesFromXml(doc);
+            IdentityPropertyGroupsFromXml(identifier, doc);
+            GeneralPropertiesFromXml(doc);
+            LabelPropertiesFromXml(doc);
+            DbLoginPropertiesFromXml(doc);
+        }
+
+        private void BasePropertiesFromXml(XDocument doc)
+        {
             var environmentNode = doc.XPathSelectElement("/Structure/Environment");
-            if (environmentNode != null) AddOrDiscard("Environment", environmentNode.Value);
+            if (environmentNode != null) this.AddOrDiscard("Environment", environmentNode.Value);
 
             var clientCode = doc.XPathSelectElement("/Structure/ClientCode");
-            if (clientCode != null) AddOrDiscard("ClientCode", clientCode.Value);
+            if (clientCode != null) this.AddOrDiscard("ClientCode", clientCode.Value);
+        }
 
+        private void IdentityPropertyGroupsFromXml(string identifier, XDocument doc)
+        {
             var matchingGroupProperties = doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup")
-                                             .Where(p => p.Name == "PropertyGroup")
-                                             .Where(p => p.Attribute("identity").Value == identifier)
-                                             .Select(pg => pg.XPathSelectElements("Properties/Property"))
-                                             .Aggregate(new List<XElement>(), (list, elements) => list.Concat(elements).ToList());
+                .Where(p => p.Name == "PropertyGroup")
+                .Where(p => p.Attribute("identity").Value == identifier)
+                .SelectMany(pg => pg.XPathSelectElements("Properties/Property"));
 
             foreach (var prop in matchingGroupProperties)
             {
                 var key = prop.Attribute("name").Value;
                 var value = prop.Value.Trim();
-                AddOrDiscard(key, value, true);
+                this.AddOrDiscard(key, value, true);
             }
+        }
 
+        private void GeneralPropertiesFromXml(XDocument doc)
+        {
             var generalProperties = doc.XPathSelectElements("/Structure/Properties/Property");
-
             foreach (var prop in generalProperties)
             {
                 var key = prop.Attribute("name").Value;
                 var value = prop.Value.Trim();
-                AddOrDiscard(key, value);
+                this.AddOrDiscard(key, value);
             }
+        }
 
+        private void LabelPropertiesFromXml(XDocument doc)
+        {
             var labelledGroups = doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup").Where(pg => pg.Elements().Select(e => e.Name).Contains("Label"));
-
             foreach (var labelledGroup in labelledGroups)
             {
                 var labels = labelledGroup.Elements("Label").Select(e => e.Value);
                 var identity = labelledGroup.Attribute("identity").Value;
                 foreach (var label in labels)
                 {
-                    if (labelsAndIdentities.Keys.Contains(label))
+                    SubTagDictionary labelDic;
+                    if (ContainsKey(label))
                     {
-                        labelsAndIdentities[label].Add(identity);
+                        labelDic = this[label] as SubTagDictionary;
+                        if (labelDic == null)
+                        {
+                            throw new InvalidDataException(string.Format("A label for a method group has been specified that clashes with a property name. The conflicting label is {0}", label));
+                        }
                     }
                     else
                     {
-                        labelsAndIdentities[label] = new List<string> { identity };
+                        labelDic = new SubTagDictionary();
+                        Add(label, labelDic);
+                    }
+
+                    Dictionary<string, object> instanceDic;
+                    if (labelDic.ContainsKey(identity))
+                    {
+                        instanceDic = labelDic[identity] as Dictionary<string, object>;
+                    }
+                    else
+                    {
+                        instanceDic = new Dictionary<string, object> { { "identity", identity } };
+                        labelDic.Add(identity, instanceDic);
+                    }
+
+                    foreach (var prop in labelledGroup.XPathSelectElements("Properties/Property"))
+                    {
+                        var key = prop.Attribute("name").Value;
+                        var value = prop.Value.Trim();
+                        instanceDic.AddOrDiscard(key, value);
                     }
                 }
             }
+        }
 
+        private void DbLoginPropertiesFromXml(XDocument doc)
+        {
             var dbLoginElements = doc.XPathSelectElements("/Structure/DbLogins/DbLogin");
             foreach (var dbLoginElement in dbLoginElements)
             {
@@ -178,21 +197,20 @@ namespace FifteenBelow.Deployment.Update
                     dbKey = username.StartsWith("tagClientCode-tagEnvironment-") ? username.Substring(29) : username;
                 }
 
-                Dictionary<string, object> dbLogins;
+                SubTagDictionary dbLogins;
                 if (ContainsKey("DbLogins"))
                 {
-                    dbLogins = this["DbLogins"] as Dictionary<string, object>;
+                    dbLogins = this["DbLogins"] as SubTagDictionary;
                 }
                 else
                 {
-                    dbLogins = new Dictionary<string, object>();
+                    dbLogins = new SubTagDictionary();
                     Add("DbLogins", dbLogins);
                 }
 
                 if (!dbLogins.ContainsKey(dbKey))
                 {
                     var dbLoginDic = new Dictionary<string, object> { { "Username", username } };
-
                     if (string.IsNullOrWhiteSpace(dbLoginElement.TryXPathValueWithDefault("ConnectionString", "")))
                     {
                         dbLoginDic.Add("Password", dbLoginElement.XPathSelectElement("Password").Value);
@@ -208,7 +226,7 @@ namespace FifteenBelow.Deployment.Update
             }
         }
 
-        private void ExpandDictionaryValues(Dictionary<string, object> dictionaryToExpand)
+        private void ExpandDictionaryValues(IDictionary<string, object> dictionaryToExpand)
         {
             foreach (var key in dictionaryToExpand.Keys.ToList())
             {
@@ -219,10 +237,13 @@ namespace FifteenBelow.Deployment.Update
                 }
                 else
                 {
-                    var valueAsDictionary = dictionaryToExpand[key] as Dictionary<string, object>;
-                    if (valueAsDictionary != null)
+                    var valueAsEnumerableDictionary = dictionaryToExpand[key] as SubTagDictionary;
+                    if (valueAsEnumerableDictionary != null)
                     {
-                        ExpandDictionaryValues(valueAsDictionary);
+                        foreach (var a in valueAsEnumerableDictionary.Values)
+                        {
+                            ExpandDictionaryValues(a);
+                        }
                     }
                 }
             }
@@ -237,19 +258,5 @@ namespace FifteenBelow.Deployment.Update
 
             return djangoStyleValue.Contains("{") ? djangoStyleValue.RenderTemplate(this) : baseValue;
         }
-
-        public void AddOrDiscard(string key, string value, bool idSpecific = false)
-        {
-            if (!Keys.Contains(key)) Add(key, value);
-            if (Keys.Contains(key) && !idSpecificValues.Contains(key) && idSpecific) this[key] = value;
-            if (idSpecific) idSpecificValues.Add(key);
-        }
-    }
-
-    public enum TagSource
-    {
-        Environment,
-        XmlFileName,
-        XmlData
     }
 }

@@ -153,7 +153,7 @@ namespace FifteenBelow.Deployment.Update.Tests
 
         private static string GetDbLoginValue(TagDictionary dic, string db, string value)
         {
-            var dbLogins = dic["DbLogins"] as Dictionary<string, object>;
+            var dbLogins = dic["DbLogins"] as SubTagDictionary;
             var dbSettings = dbLogins[db] as Dictionary<string, object>;
             return dbSettings[value] as string;
         }
