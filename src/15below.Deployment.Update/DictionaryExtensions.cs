@@ -5,10 +5,10 @@ namespace FifteenBelow.Deployment.Update
 {
     public static class DictionaryExtensions
     {
-        public static void AddOrDiscard(this Dictionary<string, object> dictionary, string key, string value, bool idSpecific = false)
+        public static void AddOrDiscard<TK, TV>(this Dictionary<TK, TV> dictionary, TK key, TV value)
         {
-            if (!dictionary.Keys.Contains(key)) dictionary.Add(key, value);
-            if (dictionary.Keys.Contains(key) && idSpecific) dictionary[key] = value;
+            if (!dictionary.Keys.Contains(key))
+                dictionary.Add(key, value);
         }
     }
 }

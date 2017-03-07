@@ -121,7 +121,7 @@ namespace FifteenBelow.Deployment.Update
             {
                 var key = prop.Attribute("name").Value;
                 var value = prop.Value.Trim();
-                this.AddOrDiscard(key, value, true);
+                this[key] =  value;
             }
         }
 
