@@ -237,12 +237,12 @@ namespace FifteenBelow.Deployment.Update
                 }
                 else
                 {
-                    var valueAsEnumerableDictionary = dictionaryToExpand[key] as SubTagDictionary;
-                    if (valueAsEnumerableDictionary != null)
+                    var valueAsSubTagDictionary = dictionaryToExpand[key] as SubTagDictionary;
+                    if (valueAsSubTagDictionary != null)
                     {
-                        foreach (var a in valueAsEnumerableDictionary.Values)
+                        foreach (var subTagDictionary in valueAsSubTagDictionary.Values)
                         {
-                            ExpandDictionaryValues(a);
+                            ExpandDictionaryValues(subTagDictionary);
                         }
                     }
                 }
