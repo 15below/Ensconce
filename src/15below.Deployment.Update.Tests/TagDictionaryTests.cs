@@ -62,24 +62,21 @@ namespace FifteenBelow.Deployment.Update.Tests
         [Test]
         public void FirstParamTakesPrecedence()
         {
-            var loader = new TagDictionary("ident",
-                                               Tuple.Create("", TagSource.Environment),
-                                               Tuple.Create(XMLFilename, TagSource.XmlFileName));
+            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlFileName, XMLFilename } });
             Assert.AreEqual(QueAppServer, loader[QueAppServer]);
         }
 
         [Test]
         public void IdentifiedPropertiesTakePrecedence()
         {
-            var loader = new TagDictionary("myId",
-                                               Tuple.Create(XmlData, TagSource.XmlData));
+            var loader = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual(IsSysValue, loader[IsSys]);
         }
 
         [Test]
         public void LoadFromEnvironment()
         {
-            var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
+            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual(IsSys, loader[IsSys]);
         }
 
@@ -89,7 +86,7 @@ namespace FifteenBelow.Deployment.Update.Tests
             var environment = "LOC";
             Environment.SetEnvironmentVariable("Environment", "");
             Environment.SetEnvironmentVariable("OctopusEnvironmentName", environment);
-            var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
+            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual(environment, loader["Environment"]);
             Environment.SetEnvironmentVariable("OctopusEnvironmentName", "");
         }
@@ -100,7 +97,7 @@ namespace FifteenBelow.Deployment.Update.Tests
             var environment = "DEV";
             Environment.SetEnvironmentVariable("Environment", "");
             Environment.SetEnvironmentVariable("Octopus.Environment.Name", environment);
-            var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
+            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual(environment, loader["Environment"]);
             Environment.SetEnvironmentVariable("Octopus.Environment.Name", "");
         }
@@ -108,22 +105,20 @@ namespace FifteenBelow.Deployment.Update.Tests
         [Test]
         public void LoadFromXmlData()
         {
-            var loader = new TagDictionary("ident",
-                                               Tuple.Create(
-                                                   XmlData, TagSource.XmlData));
+            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("AndThisWouldBeAPassword", loader["DbPassword"]);
         }
 
         [Test]
         public void LoadEmptyXmlData()
         {
-            Assert.DoesNotThrow(() => new TagDictionary("ident", Tuple.Create("", TagSource.XmlData)));
+            Assert.DoesNotThrow(() => new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, "" } }));
         }
 
         [Test]
         public void LoadFromXmlFileName()
         {
-            var loader = new TagDictionary("ident", Tuple.Create(XMLFilename, TagSource.XmlFileName));
+            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, XMLFilename } });
             Assert.AreEqual("SomeUserName", loader["DbUser"]);
         }
 
@@ -137,7 +132,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         [Test]
         public void LoadEnvironmentOnlyWithInvalidXMLFile()
         {
-            var sut = new TagDictionary("ident", Tuple.Create("", TagSource.Environment), Tuple.Create("incorrectStructure.xml", TagSource.XmlFileName));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlFileName, "incorrectStructure.xml" } });
             Assert.AreEqual(EnvClientCode, sut["ClientCode"]);
         }
 
@@ -152,88 +147,82 @@ namespace FifteenBelow.Deployment.Update.Tests
         [Test]
         public void IdValueTakesPrecidenceEvenFromLaterSource()
         {
-            var loader = new TagDictionary("myId", Tuple.Create(XmlData, TagSource.XmlData), Tuple.Create("structure.xml", TagSource.XmlFileName));
+            var loader = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
             Assert.AreEqual(Idvalue, loader[Avalue]);
+        }
+
+        private static string GetDbLoginValue(TagDictionary dic, string db, string value)
+        {
+            var dbLogins = dic["DbLogins"] as SubTagDictionary;
+            var dbSettings = dbLogins[db] as Dictionary<string, object>;
+            return dbSettings[value] as string;
         }
 
         [Test]
         public void DbPasswordAccessibleViaDictionaryWithoutPrefix()
         {
-            var sut = new TagDictionary("myId", Tuple.Create(XmlData, TagSource.XmlData), Tuple.Create("structure.xml", TagSource.XmlFileName));
-            Assert.AreEqual("Some high entrophy random text", sut.DbLogins["AUDIT"].Password);
+            var sut = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
+            Assert.AreEqual("Some high entrophy random text", GetDbLoginValue(sut, "AUDIT", "Password"));
         }
 
         [TestCase("FAA.", "ClientDomain")]
         [TestCase(".LOC.", "ClientDomain")]
         public void TestTagsInPropertiesAreSubstituted(string expected, string key)
         {
-            var tagDict = new TagDictionary("myId", Tuple.Create(XmlData, TagSource.XmlData), Tuple.Create("structure.xml", TagSource.XmlFileName));
+            var tagDict = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
             Assert.IsTrue(tagDict[key].ToString().Contains(expected));
         }
 
         [Test]
         public void SuccessfullyGetDbPassword()
         {
-            var loader = new TagDictionary("ident", Tuple.Create(XMLFilename, TagSource.XmlFileName));
-            Assert.AreEqual("NoPasswordsRoundHere", loader.GetDbPassword("config"));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, XMLFilename } });
+            Assert.AreEqual("NoPasswordsRoundHere", GetDbLoginValue(sut, "config", "Password"));
         }
 
         [Test]
         public void DbLoginsGenerated()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.AreEqual("This isn't a password either", sut.DbLogins.Values.First(login => login.Username == "config").Password);
+            Assert.AreEqual("This isn't a password either", GetDbLoginValue(sut, "config", "Password"));
         }
 
         [Test]
         public void DbLoginNamesAreSubstituted()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.IsTrue(sut.DbLogins.Values.Select(login => login.Username).Contains(string.Format("{0}-{1}-AUDIT", Environment.GetEnvironmentVariable("ClientCode"), Environment.GetEnvironmentVariable("Environment"))));
+            Assert.AreEqual(string.Format("{0}-{1}-AUDIT", Environment.GetEnvironmentVariable("ClientCode"), Environment.GetEnvironmentVariable("Environment")), GetDbLoginValue(sut, "AUDIT", "Username"));
         }
 
         [Test]
         public void DbLoginDefaultDbsAreSubstituted()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.IsTrue(sut.DbLogins.Values.Select(login => login.DefaultDb).Contains("FAA-LOC-AUDIT"));
+            Assert.AreEqual("FAA-LOC-AUDIT", GetDbLoginValue(sut, "AUDIT", "DefaultDb"));
         }
 
         [Test]
         public void DbLoginConnectionStringLoaded()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.IsTrue(sut.DbLogins.Values.Select(login => login.Username).Contains("ConnectionString"));
-            var correctDbLogin = sut.DbLogins.First(login => login.Key == "ConnectionString");
-            Assert.AreEqual("Actual ConnectionString", correctDbLogin.Value.ConnectionString);
+            Assert.AreEqual("Actual ConnectionString", GetDbLoginValue(sut, "ConnectionString", "ConnectionString"));
         }
-
-        [Test]
-        public void DbLoginSuppliesConnectionString()
-        {
-            var sut = new TagDictionary("ident", XmlData);
-            var login = sut.DbLogins.First();
-            Assert.IsFalse(string.IsNullOrEmpty(login.Value.ConnectionString));
-        }
-
 
         [Test]
         public void DbLoginWithKey()
         {
             var sut = new TagDictionary("ident", XmlData);
-            Assert.True(sut.DbLogins.ContainsKey("LOGIN"));
-            var login = sut.DbLogins["LOGIN"];
-            Assert.IsFalse(string.IsNullOrEmpty(login.ConnectionString));
-            Assert.AreEqual("ZZ-ENV-LOGIN", login.Username);
-            Assert.AreEqual("ZZ-ENV-LOGIN", login.DefaultDb);
+
+            Assert.AreEqual("Data Source=DbServerAddress; Initial Catalog=ZZ-ENV-LOGIN; User ID=ZZ-ENV-LOGIN; Password=Some high entrophy random text;", GetDbLoginValue(sut, "LOGIN", "ConnectionString"));
+            Assert.AreEqual("ZZ-ENV-LOGIN", GetDbLoginValue(sut, "LOGIN", "Username"));
+            Assert.AreEqual("ZZ-ENV-LOGIN", GetDbLoginValue(sut, "LOGIN", "DefaultDb"));
         }
 
         [Test]
-        public void DbLoginSuppliesConnectionStringWithSubbedValues()
+        public void DBLoginsWork()
         {
-            var sut = new TagDictionary("ident", XmlData);
-            var login = sut.DbLogins.First();
-            Assert.IsTrue(login.Value.ConnectionString.Contains("DbServerAddress"));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("ZZ-ENV-LOGIN", "{{ DbLogins.LOGIN.Username }}".RenderTemplate(sut));
         }
 
         [Test]
@@ -246,7 +235,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         [Test]
         public void LoadLabelledGroupsValuesAndNormalIdentityValuesAvailable()
         {
-            var sut = new TagDictionary("ident", Tuple.Create("structure.xml", TagSource.XmlFileName));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, "structure.xml" } });
             Assert.AreEqual("SYS", ((IEnumerable<IDictionary<string, object>>)sut["GDS"]).First()["IsSys"]);
             Assert.AreEqual("SomeUserName", sut["DbUser"]);
             Assert.AreEqual("notSYS", sut["IsSys"].ToString());
@@ -255,7 +244,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         [Test]
         public void LoadLabelledGroupsBuildsEnumeratorCorrectly()
         {
-            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             var isSysCollection = ((IEnumerable<IDictionary<string, object>>)sut["GDS"]).Select(gds => gds[IsSys].ToString());
             Assert.IsTrue(new HashSet<string> { "SYS", "SYS2" }.IsSupersetOf(new HashSet<string>(isSysCollection)));
         }
@@ -271,7 +260,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         [Test]
         public void InstanceNameIsAccessibleWhileEnumerating()
         {
-            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             var isSysCollection = ((IEnumerable<IDictionary<string, object>>)sut["GDS"]).Select(gds => gds["identity"].ToString());
             Assert.IsTrue(new HashSet<string> { "myId", "myId2" }.IsSupersetOf(new HashSet<string>(isSysCollection)));
         }
@@ -283,56 +272,56 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             Environment.SetEnvironmentVariable("Environment", null);
             Environment.SetEnvironmentVariable(key, value);
-            var sut = new TagDictionary("ident", Tuple.Create("", TagSource.Environment), Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, XmlData } });
             Assert.AreEqual(value, sut[friendlyKey]);
         }
 
         [Test]
         public void ForLoopWorks()
         {
-            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("myIdmyId2", "{% for instance in GDS %}{{ instance.identity }}{% endfor %}".RenderTemplate(sut));
         }
 
         [Test]
         public void AccessByGroupType()
         {
-            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("SYS", "{{ GDS.myId.IsSys }}".RenderTemplate(sut));
         }
 
         [Test]
         public void AccessFirstInLabel()
         {
-            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("SYS", "{% with GDS|first as instance %}{{ instance.IsSys }}{% endwith %}".RenderTemplate(sut));
         }
 
         [Test]
         public void ExistsFilterWorksWhenTagExists()
         {
-            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("LOC", "{% if Environment|exists %}{{ Environment }}{% endif %}".RenderTemplate(sut));
         }
 
         [Test]
         public void ExistsFilterWorksWhenTagDoesNotExist()
         {
-            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{{ DoesNotExist }}{% endif %}".RenderTemplate(sut));
         }
 
         [Test]
         public void ForLoopWithExistsWorksWhenTagExists()
         {
-            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("myIdmyId2", "{% if GDS|exists %}{% for instance in GDS %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
         }
 
         [Test]
         public void ForLoopWithExistsDoesNothingWhenTagDoesNotExist()
         {
-            var sut = new TagDictionary("ident", Tuple.Create(XmlData, TagSource.XmlData));
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
         }
 
@@ -342,7 +331,7 @@ namespace FifteenBelow.Deployment.Update.Tests
             Environment.SetEnvironmentVariable("Environment", "DR-LOC");
             Environment.SetEnvironmentVariable("OctopusEnvironmentName", "DR-LOC");
             Environment.SetEnvironmentVariable("IsDRMachine", "");
-            var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
+            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual("DR-LOC", loader["Environment"]);
         }
 
@@ -352,7 +341,7 @@ namespace FifteenBelow.Deployment.Update.Tests
             Environment.SetEnvironmentVariable("Environment", "DR-LOC");
             Environment.SetEnvironmentVariable("OctopusEnvironmentName", "DR-LOC");
             Environment.SetEnvironmentVariable("IsDRMachine", "true");
-            var loader = new TagDictionary("ident", Tuple.Create("", TagSource.Environment));
+            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual("LOC", loader["Environment"]);
         }
     }

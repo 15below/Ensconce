@@ -57,13 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LabelEnumeration.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="SubTagDictionary.cs" />
     <Compile Include="NDjangoExpansions\ConcatFilter.cs" />
     <Compile Include="NDjangoExpansions\EmptyFilter.cs" />
     <Compile Include="NDjangoExpansions\ExistsFilter.cs" />
     <Compile Include="NDjangoExpansions\DefaultFilter.cs" />
     <Compile Include="NDjangoWrapper.cs" />
     <Compile Include="TagDictionary.cs" />
+    <Compile Include="TagSource.cs" />
     <Compile Include="UpdateFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
