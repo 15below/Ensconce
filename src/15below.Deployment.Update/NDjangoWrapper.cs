@@ -11,7 +11,6 @@ namespace FifteenBelow.Deployment.Update
     {
         private const string ErrorGuid = "{668B7536-C32B-4D86-B065-70C143EB4AD9}";
         private const string ErrorText = "[ERROR OCCURRED HERE]";
-        private const string StringProvider = "string://";
 
         private static readonly Lazy<ITemplateManager> TemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(false));
         private static readonly Lazy<ITemplateManager> XmlTemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(true));
@@ -41,7 +40,7 @@ namespace FifteenBelow.Deployment.Update
 
         private static string Render(string template, IDictionary<string, object> values, ITemplateManager templateManager)
         {
-            var replacementValue = templateManager.RenderTemplate(StringProvider + template, values).ReadToEnd();
+            var replacementValue = templateManager.RenderTemplate(template, values).ReadToEnd();
 
             if (replacementValue.Contains(ErrorGuid))
             {
@@ -56,12 +55,8 @@ namespace FifteenBelow.Deployment.Update
         {
             public TextReader GetTemplate(string path)
             {
-                if (path.StartsWith(StringProvider))
-                {
-                    var mem = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(path.Substring(StringProvider.Length)));
-                    return new StreamReader(mem);
-                }
-                return new StreamReader(path);
+                var mem = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(path));
+                return new StreamReader(mem);
             }
 
             public bool IsUpdated(string path, DateTime timestamp)
