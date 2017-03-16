@@ -5,6 +5,7 @@
     <Property name="ClientDomain">{{ ClientCode }}.{{ Environment }}.example.com</Property>
     <Property name="QueueAppServer">ToBeOverriddenAsEnv</Property>
     <Property name="DbEncoded">Overridden!</Property>
+    <Property name="BlankValue"></Property>
     <Property name="DbUser">
       ThisWouldBeAUsername
     </Property>

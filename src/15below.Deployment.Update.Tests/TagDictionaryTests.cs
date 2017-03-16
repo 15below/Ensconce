@@ -366,6 +366,27 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void WhenCollectionEmpty_emptyistrue()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("empty", "{% if NotPresent|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void WhenBlankValue_isEmpty()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("empty", "{% if BlankValue|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void WhenNotBlnk_NotEmpty()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("not empty", "{% if DbEncoded|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
+        }
+        
+        [Test]
         public void UpdateDREnvironment_WithNotDRMachine()
         {
             Environment.SetEnvironmentVariable("Environment", "DR-LOC");
