@@ -9,22 +9,22 @@ namespace FifteenBelow.Deployment.Update
 {
     public static class NDjangoWrapper
     {
-        private const string ErrorGuid = "{668B7536-C32B-4D86-B065-70C143EB4AD9}";
-        private const string ErrorText = "[ERROR OCCURRED HERE]";
-
+        private static readonly ErrorTemplate Error = new ErrorTemplate();
         private static readonly Lazy<ITemplateManager> TemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(false));
         private static readonly Lazy<ITemplateManager> XmlTemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(true));
 
         private static ITemplateManager GetTemplateManager(bool xmlSafe)
         {
             return new TemplateManagerProvider().WithLoader(new StringLoader())
-                                                .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, ErrorGuid)
+                                                .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, Error)
                                                 .WithSetting(Constants.DEFAULT_AUTOESCAPE, xmlSafe)
+                                                .WithSetting(Constants.EXCEPTION_IF_ERROR, true)
+                                                .WithSetting(Constants.RELOAD_IF_UPDATED, false)
                                                 .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
                                                 .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
-                                                .WithFilter("default", new NDjangoExpansions.DefaultFilter(ErrorGuid))
-                                                .WithFilter("exists", new NDjangoExpansions.ExistsFilter(ErrorGuid))
-                                                .WithFilter("empty", new NDjangoExpansions.EmptyFilter(ErrorGuid))
+                                                .WithFilter("default", new NDjangoExpansions.DefaultFilter())
+                                                .WithFilter("exists", new NDjangoExpansions.ExistsFilter())
+                                                .WithFilter("empty", new NDjangoExpansions.EmptyFilter())
                                                 .GetNewManager();
         }
 
@@ -40,15 +40,33 @@ namespace FifteenBelow.Deployment.Update
 
         private static string Render(string template, IDictionary<string, object> values, ITemplateManager templateManager)
         {
-            var replacementValue = templateManager.RenderTemplate(template, values).ReadToEnd();
-
-            if (replacementValue.Contains(ErrorGuid))
+            lock (Error)
             {
-                var attemptedRender = replacementValue.Replace(ErrorGuid, ErrorText);
-                throw new ArgumentException(string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}", template, attemptedRender));
-            }
+                Error.Invoked = false;
+                string replacementValue;
 
-            return replacementValue;
+                try
+                {
+                    replacementValue = templateManager.RenderTemplate(template, values).ReadToEnd();
+                }
+                catch (ArgumentException e)
+                {
+                    if (e.Message == "Object must be of type String.")
+                    {
+                        throw new ArgumentException(string.Format("Tag substitution failed in rule processing on template string:\n{0}", template));
+                    }
+
+                    throw;
+                }
+
+                if (Error.Invoked)
+                {
+                    var attemptedRender = replacementValue.Replace(Error.ToString(), "[ERROR OCCURRED HERE]");
+                    throw new ArgumentException(string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}", template, attemptedRender));
+                }
+
+                return replacementValue;
+            }
         }
 
         public class StringLoader : ITemplateLoader
@@ -62,6 +80,17 @@ namespace FifteenBelow.Deployment.Update
             public bool IsUpdated(string path, DateTime timestamp)
             {
                 return true;
+            }
+        }
+
+        public class ErrorTemplate
+        {
+            public bool Invoked;
+
+            public override string ToString()
+            {
+                Invoked = true;
+                return "{RandomText-668B7536-C32B-4D86-B065-70C143EB4AD9}";
             }
         }
     }

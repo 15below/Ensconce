@@ -275,6 +275,30 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, XmlData } });
             Assert.AreEqual(value, sut[friendlyKey]);
         }
+        
+        [Test]
+        public void UseAnInvalidProperty_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{{ NotARealProperty }}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution failed on template string:\n{{ NotARealProperty }}\n\nAttempted rendering was:\n[ERROR OCCURRED HERE]", error.Message);
+        }
+
+        [Test]
+        public void ForLoopAccessGlobalPropertyFromInstance_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution failed on template string:\n{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}\n\nAttempted rendering was:\n[ERROR OCCURRED HERE][ERROR OCCURRED HERE]", error.Message);
+        }
+
+        [Test]
+        public void ForLoopAccessGlobalPropertyFromInstanceInIf_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution failed in rule processing on template string:\n{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}", error.Message);
+        }
 
         [Test]
         public void ForLoopWorks()
