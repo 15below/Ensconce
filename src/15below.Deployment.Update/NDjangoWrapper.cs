@@ -42,25 +42,26 @@ namespace FifteenBelow.Deployment.Update
         {
             lock (Error)
             {
-                Error.Invoked = false;
                 string replacementValue;
 
                 try
                 {
+                    Error.Invoked = false;
                     replacementValue = templateManager.RenderTemplate(template, values).ReadToEnd();
                 }
-                catch (ArgumentException e)
+                catch (Exception)
                 {
-                    if (e.Message == "Object must be of type String.")
-                    {
-                        throw new ArgumentException(string.Format("Tag substitution failed in rule processing on template string:\n{0}", template));
-                    }
-
-                    throw;
+                    replacementValue = string.Empty;
+                    Error.Invoked = true;
                 }
 
                 if (Error.Invoked)
                 {
+                    if (string.IsNullOrWhiteSpace(replacementValue) || !replacementValue.Contains(Error.ToString()))
+                    {
+                        throw new ArgumentException(string.Format("Tag substitution errored on template string:\n{0}", template));
+                    }
+
                     var attemptedRender = replacementValue.Replace(Error.ToString(), "[ERROR OCCURRED HERE]");
                     throw new ArgumentException(string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}", template, attemptedRender));
                 }
@@ -91,6 +92,18 @@ namespace FifteenBelow.Deployment.Update
             {
                 Invoked = true;
                 return "{RandomText-668B7536-C32B-4D86-B065-70C143EB4AD9}";
+            }
+
+            public override bool Equals(object obj)
+            {
+                Invoked = true;
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                Invoked = true;
+                return -1;
             }
         }
     }

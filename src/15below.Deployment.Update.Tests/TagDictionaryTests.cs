@@ -297,7 +297,23 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}".RenderTemplate(sut));
-            Assert.AreEqual("Tag substitution failed in rule processing on template string:\n{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}", error.Message);
+            Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}", error.Message);
+        }
+
+        [Test]
+        public void ForLoopAccessGlobalPropertyFromInstanceInIfEqual_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}", error.Message);
+        }
+
+        [Test]
+        public void ForLoopAccessGlobalPropertyFromInstanceInIfNotEqual_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}", error.Message);
         }
 
         [Test]
