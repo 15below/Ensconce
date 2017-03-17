@@ -275,6 +275,46 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, XmlData } });
             Assert.AreEqual(value, sut[friendlyKey]);
         }
+        
+        [Test]
+        public void UseAnInvalidProperty_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{{ NotARealProperty }}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution failed on template string:\n{{ NotARealProperty }}\n\nAttempted rendering was:\n[ERROR OCCURRED HERE]", error.Message);
+        }
+
+        [Test]
+        public void ForLoopAccessGlobalPropertyFromInstance_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution failed on template string:\n{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}\n\nAttempted rendering was:\n[ERROR OCCURRED HERE][ERROR OCCURRED HERE]", error.Message);
+        }
+
+        [Test]
+        public void ForLoopAccessGlobalPropertyFromInstanceInIf_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}", error.Message);
+        }
+
+        [Test]
+        public void ForLoopAccessGlobalPropertyFromInstanceInIfEqual_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}", error.Message);
+        }
+
+        [Test]
+        public void ForLoopAccessGlobalPropertyFromInstanceInIfNotEqual_Throws()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}".RenderTemplate(sut));
+            Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}", error.Message);
+        }
 
         [Test]
         public void ForLoopWorks()
@@ -325,6 +365,27 @@ namespace FifteenBelow.Deployment.Update.Tests
             Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
         }
 
+        [Test]
+        public void WhenCollectionEmpty_emptyistrue()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("empty", "{% if NotPresent|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void WhenBlankValue_isEmpty()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("empty", "{% if BlankValue|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void WhenNotBlnk_NotEmpty()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("not empty", "{% if DbEncoded|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
+        }
+        
         [Test]
         public void UpdateDREnvironment_WithNotDRMachine()
         {
