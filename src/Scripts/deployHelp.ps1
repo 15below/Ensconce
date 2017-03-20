@@ -1,4 +1,4 @@
-﻿$deployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+﻿$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
 if (Test-Path variable:\OctopusParameters)
 {
@@ -21,10 +21,10 @@ function ensconce
     if (@($input).Count -ne 0)
     {
         $input.Reset()
-        $results = $input | & "$deployToolsDir\ensconce.exe" $args
+        $results = $input | & "$DeployToolsDir\Tools\Ensconce\Ensconce.exe" $args
     }
     else {
-        $results = & "$deployToolsDir\ensconce.exe" $args
+        $results = & "$DeployToolsDir\Tools\Ensconce\Ensconce.exe" $args
     }
     if ($LASTEXITCODE -ne 0)
     {

@@ -14,14 +14,14 @@
 	</metadata>
 	
 	<files>
-		<file src="..\Ensconce\bin\Release\*" target="Content" />
+		<file src="..\Ensconce\bin\Release\*" target="Content\Tools\Ensconce" />
+		<file src="..\ExternalDeployTools\**" target="Content\Tools" />
 		<file src="..\Scripts\deployHelp.ps1" target="Content" />
 		<file src="..\Scripts\createWebSite.ps1" target="Content" />
 		<file src="..\Scripts\createiis6app.ps1" target="Content" />
 		<file src="..\Scripts\createiis7app.ps1" target="Content" />
 		<file src="..\Scripts\dnsHelper.ps1" target="Content" />
 		<file src="..\Scripts\UserManagement.ps1" target="Content" />
-		<file src="..\ExternalDeployTools\Grant\*" target="Content" />
 		<file src="deploy.ps1" target="deploy.ps1" />	
 	</files>
 </package>

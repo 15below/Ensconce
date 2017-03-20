@@ -1,4 +1,4 @@
-$deployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
 $ErrorActionPreference = 'SilentlyContinue'
 $IISVersion = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\InetStp").SetupString
@@ -15,10 +15,10 @@ $ErrorActionPreference = 'Continue'
 if($IIS6 -eq $true)
 {
 	write-host "Using IIS6"
-	. $deployToolsDir\createiis6app.ps1
+	. $DeployToolsDir\createiis6app.ps1
 }
 else
 {
 	write-host "Using IIS7"
-	. $deployToolsDir\createiis7app.ps1
+	. $DeployToolsDir\createiis7app.ps1
 }
