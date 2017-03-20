@@ -1,14 +1,14 @@
 $scriptDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
-if(Test-Path $DeployToolsDir)
+if(Test-Path $DeployPath)
 {
-    Write-Host "Removing Deploy Tools Directory Found at $DeployToolsDir"
-    Remove-Item $DeployToolsDir -Force -Recurse
+    Write-Host "Removing Deploy Tools Directory Found at $DeployPath"
+    Remove-Item $DeployPath -Force -Recurse
     Start-Sleep -s 2
 }
 
-Write-Host "Creating Deploy Tools Directory at $DeployToolsDir"
-New-Item $DeployToolsDir -Type container
+Write-Host "Creating Deploy Tools Directory at $DeployPath"
+New-Item $DeployPath -Type container
 
-Write-Host "Deploying Tools to $DeployToolsDir"
-Copy-Item "$scriptDir\Content\*" $DeployToolsDir -Force -Recurse
+Write-Host "Deploying Tools to $DeployPath"
+Copy-Item "$scriptDir\Content\*" $DeployPath -Force -Recurse
