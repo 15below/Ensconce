@@ -9,6 +9,7 @@ namespace FifteenBelow.Deployment.Update
 {
     public static class NDjangoWrapper
     {
+        private const string StringProvider = "ensconceString://";
         private static readonly ErrorTemplate Error = new ErrorTemplate();
         private static readonly Lazy<ITemplateManager> TemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(false));
         private static readonly Lazy<ITemplateManager> XmlTemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(true));
@@ -47,7 +48,7 @@ namespace FifteenBelow.Deployment.Update
                 try
                 {
                     Error.Invoked = false;
-                    replacementValue = templateManager.RenderTemplate(template, values).ReadToEnd();
+                    replacementValue = templateManager.RenderTemplate(StringProvider + template, values).ReadToEnd();
                 }
                 catch (Exception)
                 {
@@ -74,8 +75,15 @@ namespace FifteenBelow.Deployment.Update
         {
             public TextReader GetTemplate(string path)
             {
-                var mem = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(path));
-                return new StreamReader(mem);
+                //If the path starts with our own string provider treat it as text.
+                //If not, then it's an actual file path, so use a standard stream reader.
+                //Although we do not pass file paths into this function, ndjango does internally.
+                if (path.StartsWith(StringProvider))
+                {
+                    var mem = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(path.Substring(StringProvider.Length)));
+                    return new StreamReader(mem);
+                }
+                return new StreamReader(path);
             }
 
             public bool IsUpdated(string path, DateTime timestamp)

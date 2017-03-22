@@ -405,5 +405,12 @@ namespace FifteenBelow.Deployment.Update.Tests
             var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual("LOC", loader["Environment"]);
         }
+
+        [Test]
+        public void wibblewobble()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual(xml.Value.RenderTemplate(sut), "{% include \"webservice-structure.xml\" %}".RenderTemplate(sut));
+        }
     }
 }
