@@ -407,7 +407,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
-        public void wibblewobble()
+        public void EnsureThatXmlIncludesWork_AndArriveRenderered()
         {
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual(xml.Value.RenderTemplate(sut), "{% include \"webservice-structure.xml\" %}".RenderTemplate(sut));
