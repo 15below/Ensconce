@@ -385,7 +385,28 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("not empty", "{% if DbEncoded|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
         }
-        
+
+        [Test]
+        public void WhenPropertyDoesntExist_UseDeault()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("default", "{{ NotAValue|default:\"default\" }}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void WhenPropertyDoesntExist_ValueInt_UseDeault()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("1", "{{ NotAValue|default:1 }}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void WhenPropertyDoesntExist_ValueSingleQuote_UseDeault()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("default", "{{ NotAValue|default:'default' }}".RenderTemplate(sut));
+        }
+
         [Test]
         public void UpdateDREnvironment_WithNotDRMachine()
         {
