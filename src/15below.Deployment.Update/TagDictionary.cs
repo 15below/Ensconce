@@ -256,7 +256,7 @@ namespace FifteenBelow.Deployment.Update
                                             .Replace("tagClientCode", "{{ ClientCode }}")
                                             .Replace("tagEnvironment", "{{ Environment }}");
 
-            return djangoStyleValue.Contains("{") ? djangoStyleValue.RenderTemplate(this) : baseValue;
+            return djangoStyleValue.Contains("{{") ? djangoStyleValue.RenderTemplate(this) : baseValue;
         }
     }
 }

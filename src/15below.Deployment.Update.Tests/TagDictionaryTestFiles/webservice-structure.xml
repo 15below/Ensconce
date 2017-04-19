@@ -23,6 +23,7 @@
           SYS
         </Property>
         <Property name="avalue">idvalue</Property>
+        <Property name="adate">datevalue {% templatetag openvariable %}dd-MM-yy{% templatetag closevariable %}</Property>
       </Properties>
     </PropertyGroup>
     <PropertyGroup identity="myId2">
@@ -32,6 +33,7 @@
           SYS2
         </Property>
         <Property name="avalue">idvalue</Property>
+        <Property name="adate">datevalue {% templatetag openvariable %}dd-MM-yy{% templatetag closevariable %}</Property>
       </Properties>
     </PropertyGroup>
   </PropertyGroups>
