@@ -50,9 +50,9 @@ namespace Ensconce
             {
                 Logging.Log("Loading xml config from file {0}", Path.GetFullPath(fixedPath));
                 var configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(5));
-                Logging.Log("Re-Building Tag Dictionary (Using Config File)");
+                Logging.Log((fallbackDictionary != null ? "Re-" : "") + "Building Tag Dictionary (Using config file)");
                 tags = new TagDictionary(instanceName, configXml);
-                Logging.Log("Built Tag Dictionary (Using Config File)");
+                Logging.Log((fallbackDictionary != null ? "Re-" : "") + "Built Tag Dictionary (Using config file)");
             }
             else
             {
