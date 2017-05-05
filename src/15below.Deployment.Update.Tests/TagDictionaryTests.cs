@@ -50,7 +50,9 @@ namespace FifteenBelow.Deployment.Update.Tests
         private const string XMLFilename = "structure.xml";
         private const string QueAppServer = "QueueAppServer";
         private const string Avalue = "avalue";
+        private const string Adate = "adate";
         private const string Idvalue = "idvalue";
+        private const string Datevalue = "datevalue {% templatetag openvariable %}dd-MM-yy{% templatetag closevariable %}";
 
         private readonly Lazy<string> xml = new Lazy<string>(() => new StreamReader(File.OpenRead(@"webservice-structure.xml")).ReadToEnd());
 
@@ -149,6 +151,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             var loader = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
             Assert.AreEqual(Idvalue, loader[Avalue]);
+        }
+
+        [Test]
+        public void OpenVariableValueDoesntgetReplacedOnRead()
+        {
+            var loader = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
+            Assert.AreEqual(Datevalue, loader[Adate]);
         }
 
         private static string GetDbLoginValue(TagDictionary dic, string db, string value)
