@@ -355,3 +355,8 @@ function SetMaxRequestEntityAllowed([string] $websiteName, [int] $maxRequestEnti
 {
 	"The SetMaxRequestEntityAllowed function does nothing in IIS6" | Write-Host
 }
+
+function RequireClientCertificate([string] $websiteName)
+{
+	throw [System.NotImplementedException] "Only implemented for IIS7 Apps"
+}

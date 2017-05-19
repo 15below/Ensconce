@@ -367,3 +367,9 @@ function SetMaxRequestEntityAllowed([string] $websiteName, [int] $maxRequestEnti
 {
 	Set-WebConfigurationProperty -Filter "//asp/limits" -name maxRequestEntityAllowed -PSPath "IIS:\" -value $maxRequestEntityAllowedValue -location $websiteName
 }
+
+function RequireClientCertificate([string] $websiteName)
+{
+	"Setting SSL Require Client Certs for $websiteName" | Write-Host
+	Set-WebConfiguration -Location "$webSiteName" -filter 'system.webserver/security/access' -Value "Ssl, SslRequireCert"
+}
