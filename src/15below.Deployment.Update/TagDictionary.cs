@@ -188,7 +188,7 @@ namespace FifteenBelow.Deployment.Update
                     }
 
                     //Support Properties being in Properties node, or at root
-                    foreach (var prop in propertyGroup.XPathSelectElements("Properties/Property").Concat(propertyGroup.XPathSelectElements("Property")))
+                    foreach (var prop in propertyGroup.XPathSelectElements(".//Property"))
                     {
                         var key = prop.Attribute("name").Value;
                         var value = prop.Value.Trim();
