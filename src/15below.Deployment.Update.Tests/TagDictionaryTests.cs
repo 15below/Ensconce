@@ -433,5 +433,15 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual(xml.Value.RenderTemplate(sut), "{% include \"webservice-structure.xml\" %}".RenderTemplate(sut));
         }
+
+        [Test]
+        public void DualLabeledGroupWorks()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("ABC123", "{{ Label1.0.Value }}".RenderTemplate(sut));
+            Assert.AreEqual("ABC123", "{{ Label2.0.Value }}".RenderTemplate(sut));
+            Assert.AreEqual("321CBA", "{{ Label1.1.Value }}".RenderTemplate(sut));
+            Assert.Throws<ArgumentException>(() => "{{ Label2.1.Value }}".RenderTemplate(sut));
+        }
     }
 }
