@@ -47,6 +47,10 @@
         <Property name="Value">321CBA</Property>
       </Properties>
     </PropertyGroup>
+    <PropertyGroup identity="0">
+      <Label>Label3</Label>
+      <Property name="Value">999</Property>
+    </PropertyGroup>
     <PropertyGroup label="FlatGroup" identity="0">
       <Property name="Value">FlatGroup-0</Property>
     </PropertyGroup>

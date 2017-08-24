@@ -458,5 +458,12 @@ namespace FifteenBelow.Deployment.Update.Tests
             Assert.AreEqual("FlatGroup-0", "{{ FlatGroup.0.Value }}".RenderTemplate(sut));
             Assert.AreEqual("FlatGroup-1", "{{ FlatGroup.1.Value }}".RenderTemplate(sut));
         }
+
+        [Test]
+        public void LabelNodeWithoutProperties()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("999", "{{ Label3.0.Value }}".RenderTemplate(sut));
+        }
     }
 }
