@@ -465,5 +465,13 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("999", "{{ Label3.0.Value }}".RenderTemplate(sut));
         }
+
+        [Test]
+        public void DualLabeledGroupWithContainerNodeWorks()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("888", "{{ LabelGrouped1.0.Value }}".RenderTemplate(sut));
+            Assert.AreEqual("888", "{{ LabelGrouped2.0.Value }}".RenderTemplate(sut));
+        }
     }
 }

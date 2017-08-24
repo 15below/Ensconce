@@ -51,6 +51,15 @@
       <Label>Label3</Label>
       <Property name="Value">999</Property>
     </PropertyGroup>
+    <PropertyGroup identity="0">
+      <Labels>
+        <Label>LabelGrouped1</Label>
+        <Label>LabelGrouped2</Label>
+      </Labels>
+      <Properties>
+        <Property name="Value">888</Property>
+      </Properties>
+    </PropertyGroup>
     <PropertyGroup label="FlatGroup" identity="0">
       <Property name="Value">FlatGroup-0</Property>
     </PropertyGroup>
