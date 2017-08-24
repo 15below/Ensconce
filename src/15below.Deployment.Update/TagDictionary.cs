@@ -121,7 +121,7 @@ namespace FifteenBelow.Deployment.Update
             {
                 var key = prop.Attribute("name").Value;
                 var value = prop.Value.Trim();
-                this[key] =  value;
+                this[key] = value;
             }
         }
 
@@ -138,11 +138,23 @@ namespace FifteenBelow.Deployment.Update
 
         private void LabelPropertiesFromXml(XDocument doc)
         {
-            var labelledGroups = doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup").Where(pg => pg.Elements().Select(e => e.Name).Contains("Label"));
-            foreach (var labelledGroup in labelledGroups)
+            foreach (var propertyGroup in doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup"))
             {
-                var labels = labelledGroup.Elements("Label").Select(e => e.Value);
-                var identity = labelledGroup.Attribute("identity").Value;
+                var labels = new List<string>();
+                if (propertyGroup.Attribute("label") != null)
+                {
+                    labels.Add(propertyGroup.Attribute("label").Value);
+                }
+                else if (propertyGroup.Elements().Select(e => e.Name).Contains("Label"))
+                {
+                    labels.AddRange(propertyGroup.Elements("Label").Select(e => e.Value));
+                }
+                else
+                {
+                    throw new InvalidDataException("PropertyGroup found with no label attribute or nodes");
+                }
+
+                var identity = propertyGroup.Attribute("identity").Value;
                 foreach (var label in labels)
                 {
                     SubTagDictionary labelDic;
@@ -171,7 +183,8 @@ namespace FifteenBelow.Deployment.Update
                         labelDic.Add(identity, instanceDic);
                     }
 
-                    foreach (var prop in labelledGroup.XPathSelectElements("Properties/Property"))
+                    //Support Properties being in Properties node, or at root
+                    foreach (var prop in propertyGroup.XPathSelectElements("Properties/Property").Concat(propertyGroup.XPathSelectElements("Property")))
                     {
                         var key = prop.Attribute("name").Value;
                         var value = prop.Value.Trim();

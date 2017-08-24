@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using NUnit.Framework;
 
 namespace FifteenBelow.Deployment.Update.Tests
 {
@@ -233,6 +233,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        public void LoadFlatLabelledGroups()
+        {
+            var sut = new TagDictionary("ident", XmlData);
+            Assert.IsTrue(sut.ContainsKey("FlatGroup"));
+        }
+
+        [Test]
         public void LoadLabelledGroupsValuesAndNormalIdentityValuesAvailable()
         {
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, "structure.xml" } });
@@ -275,7 +282,7 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, XmlData } });
             Assert.AreEqual(value, sut[friendlyKey]);
         }
-        
+
         [Test]
         public void UseAnInvalidProperty_Throws()
         {
@@ -442,6 +449,14 @@ namespace FifteenBelow.Deployment.Update.Tests
             Assert.AreEqual("ABC123", "{{ Label2.0.Value }}".RenderTemplate(sut));
             Assert.AreEqual("321CBA", "{{ Label1.1.Value }}".RenderTemplate(sut));
             Assert.Throws<ArgumentException>(() => "{{ Label2.1.Value }}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void FlatLabelGroupsHaveValues()
+        {
+            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("FlatGroup-0", "{{ FlatGroup.0.Value }}".RenderTemplate(sut));
+            Assert.AreEqual("FlatGroup-1", "{{ FlatGroup.1.Value }}".RenderTemplate(sut));
         }
     }
 }
