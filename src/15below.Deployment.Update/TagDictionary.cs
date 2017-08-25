@@ -145,13 +145,9 @@ namespace FifteenBelow.Deployment.Update
                 {
                     labels.Add(propertyGroup.Attribute("label").Value);
                 }
-                else if (propertyGroup.XPathSelectElements("Label").Any())
+                else if (propertyGroup.XPathSelectElements(".//Label").Any())
                 {
-                    labels.AddRange(propertyGroup.XPathSelectElements("Label").Select(x => x.Value));
-                }
-                else if (propertyGroup.XPathSelectElements("Labels/Label").Any())
-                {
-                    labels.AddRange(propertyGroup.XPathSelectElements("Labels/Label").Select(x => x.Value));
+                    labels.AddRange(propertyGroup.XPathSelectElements(".//Label").Select(x => x.Value));
                 }
                 else
                 {
