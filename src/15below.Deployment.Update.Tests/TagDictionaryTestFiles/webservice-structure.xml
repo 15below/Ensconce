@@ -34,6 +34,38 @@
         <Property name="avalue">idvalue</Property>
       </Properties>
     </PropertyGroup>
+    <PropertyGroup identity="0">
+      <Label>Label1</Label>
+      <Label>Label2</Label>
+      <Properties>
+        <Property name="Value">ABC123</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup identity="1">
+      <Label>Label1</Label>
+      <Properties>
+        <Property name="Value">321CBA</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup identity="0">
+      <Label>Label3</Label>
+      <Property name="Value">999</Property>
+    </PropertyGroup>
+    <PropertyGroup identity="0">
+      <Labels>
+        <Label>LabelGrouped1</Label>
+        <Label>LabelGrouped2</Label>
+      </Labels>
+      <Properties>
+        <Property name="Value">888</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup label="FlatGroup" identity="0">
+      <Property name="Value">FlatGroup-0</Property>
+    </PropertyGroup>
+    <PropertyGroup label="FlatGroup" identity="1">
+      <Property name="Value">FlatGroup-1</Property>
+    </PropertyGroup>
   </PropertyGroups>
   <DbLogins>
     <DbLogin>

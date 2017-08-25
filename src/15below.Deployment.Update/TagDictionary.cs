@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.XPath;
 
 namespace FifteenBelow.Deployment.Update
@@ -94,11 +97,22 @@ namespace FifteenBelow.Deployment.Update
                 return;
             }
 
+            ValidateStructureFile(doc);
             BasePropertiesFromXml(doc);
             IdentityPropertyGroupsFromXml(identifier, doc);
             GeneralPropertiesFromXml(doc);
             LabelPropertiesFromXml(doc);
             DbLoginPropertiesFromXml(doc);
+        }
+
+        private static void ValidateStructureFile(XDocument doc)
+        {
+            var schemas = new XmlSchemaSet();
+            var assembly = Assembly.GetExecutingAssembly();
+
+            schemas.Add(null, XmlReader.Create(assembly.GetManifestResourceStream("FifteenBelow.Deployment.Update.FixedStructure.xsd")));
+
+            doc.Validate(schemas, (sender, args) => { throw args.Exception; });
         }
 
         private void BasePropertiesFromXml(XDocument doc)
@@ -121,7 +135,7 @@ namespace FifteenBelow.Deployment.Update
             {
                 var key = prop.Attribute("name").Value;
                 var value = prop.Value.Trim();
-                this[key] =  value;
+                this[key] = value;
             }
         }
 
@@ -138,11 +152,23 @@ namespace FifteenBelow.Deployment.Update
 
         private void LabelPropertiesFromXml(XDocument doc)
         {
-            var labelledGroups = doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup").Where(pg => pg.Elements().Select(e => e.Name).Contains("Label"));
-            foreach (var labelledGroup in labelledGroups)
+            foreach (var propertyGroup in doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup"))
             {
-                var labels = labelledGroup.Elements("Label").Select(e => e.Value);
-                var identity = labelledGroup.Attribute("identity").Value;
+                var labels = new List<string>();
+                if (propertyGroup.Attribute("label") != null)
+                {
+                    labels.Add(propertyGroup.Attribute("label").Value);
+                }
+                else if (propertyGroup.XPathSelectElements(".//Label").Any())
+                {
+                    labels.AddRange(propertyGroup.XPathSelectElements(".//Label").Select(x => x.Value));
+                }
+                else
+                {
+                    throw new InvalidDataException("PropertyGroup found with no label attribute or nodes");
+                }
+
+                var identity = propertyGroup.Attribute("identity").Value;
                 foreach (var label in labels)
                 {
                     SubTagDictionary labelDic;
@@ -171,7 +197,7 @@ namespace FifteenBelow.Deployment.Update
                         labelDic.Add(identity, instanceDic);
                     }
 
-                    foreach (var prop in labelledGroup.XPathSelectElements("Properties/Property"))
+                    foreach (var prop in propertyGroup.XPathSelectElements(".//Property"))
                     {
                         var key = prop.Attribute("name").Value;
                         var value = prop.Value.Trim();

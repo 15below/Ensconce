@@ -85,13 +85,12 @@ namespace FifteenBelow.Deployment.Update
 
             if (fileElement == null) return File.ReadAllText(baseFile);
 
-            string replacementTemplate;
             string baseData = null;
 
             var replacementTemplateElement = fileElement.XPathSelectElement("s:ReplacementTemplate", nsm);
             if (replacementTemplateElement != null)
             {
-                replacementTemplate = replacementTemplateElement.Value.RenderTemplate(tagValues);
+                var replacementTemplate = replacementTemplateElement.Value.RenderTemplate(tagValues);
                 baseData = File.ReadAllText(replacementTemplate).RenderTemplate(tagValues);
             }
 
@@ -113,9 +112,7 @@ namespace FifteenBelow.Deployment.Update
             var schemas = new XmlSchemaSet();
             var assembly = Assembly.GetExecutingAssembly();
 
-            schemas.Add(null,
-                        XmlReader.Create(
-                            assembly.GetManifestResourceStream("FifteenBelow.Deployment.Update.Substitutions.xsd")));
+            schemas.Add(null, XmlReader.Create(assembly.GetManifestResourceStream("FifteenBelow.Deployment.Update.Substitutions.xsd")));
 
             subsXml.Validate(schemas, (sender, args) => { throw args.Exception; });
         }
@@ -146,7 +143,7 @@ namespace FifteenBelow.Deployment.Update
 
                 if (activeNode == null)
                 {
-                    throw new ApplicationException(String.Format("XPath select of {0} returned null", sub.XPath));
+                    throw new ApplicationException(string.Format("XPath select of {0} returned null", sub.XPath));
                 }
 
                 if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
