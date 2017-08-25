@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.XPath;
 
 namespace FifteenBelow.Deployment.Update
@@ -94,11 +97,22 @@ namespace FifteenBelow.Deployment.Update
                 return;
             }
 
+            ValidateStructureFile(doc);
             BasePropertiesFromXml(doc);
             IdentityPropertyGroupsFromXml(identifier, doc);
             GeneralPropertiesFromXml(doc);
             LabelPropertiesFromXml(doc);
             DbLoginPropertiesFromXml(doc);
+        }
+
+        private static void ValidateStructureFile(XDocument doc)
+        {
+            var schemas = new XmlSchemaSet();
+            var assembly = Assembly.GetExecutingAssembly();
+
+            schemas.Add(null, XmlReader.Create(assembly.GetManifestResourceStream("FifteenBelow.Deployment.Update.FixedStructure.xsd")));
+
+            doc.Validate(schemas, (sender, args) => { throw args.Exception; });
         }
 
         private void BasePropertiesFromXml(XDocument doc)

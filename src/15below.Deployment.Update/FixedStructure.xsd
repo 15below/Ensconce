@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:i="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:group name="Property">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Property">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="name" type="xs:string" use="required" />
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="Structure">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ClientCode" type="xs:string" />
+        <xs:element name="Environment" type="xs:string" />
+        <xs:element name="Properties">
+          <xs:complexType>
+            <xs:group ref="Property"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PropertyGroups">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:choice>
+                <xs:element maxOccurs="unbounded" name="PropertyGroup">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:choice>
+                        <xs:element name="Labels" minOccurs="0">
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element maxOccurs="unbounded" name="Label" type="xs:string" />
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="Label" type="xs:string" />
+                      </xs:choice>
+                      <xs:choice>
+                        <xs:element name="Properties">
+                          <xs:complexType>
+                            <xs:group ref="Property"/>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:group ref="Property"/>
+                      </xs:choice>
+                    </xs:sequence>
+                    <xs:attribute name="identity" type="xs:string" use="required" />
+                    <xs:attribute name="label" type="xs:string" use="optional" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DbLogins">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="DbLogin">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:choice>
+                      <xs:sequence>
+                        <xs:element name="Key" type="xs:string" />
+                        <xs:element name="Name" type="xs:string" />
+                        <xs:element name="DefaultDb" type="xs:string" />
+                        <xs:element name="Password" type="xs:string" />
+                      </xs:sequence>
+                      <xs:sequence>
+                        <xs:element name="Name" type="xs:string" />
+                        <xs:choice>
+                          <xs:sequence>
+                            <xs:element name="DefaultDb" type="xs:string" />
+                            <xs:element name="Password" type="xs:string" />
+                          </xs:sequence>
+                          <xs:element name="ConnectionString" type="xs:string" />
+                        </xs:choice>
+                      </xs:sequence>
+                    </xs:choice>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
