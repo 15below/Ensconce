@@ -197,7 +197,6 @@ namespace FifteenBelow.Deployment.Update
                         labelDic.Add(identity, instanceDic);
                     }
 
-                    //Support Properties being in Properties node, or at root
                     foreach (var prop in propertyGroup.XPathSelectElements(".//Property"))
                     {
                         var key = prop.Attribute("name").Value;
