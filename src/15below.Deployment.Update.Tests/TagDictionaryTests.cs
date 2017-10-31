@@ -20,6 +20,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         [SetUp]
         public void SetUp()
         {
+            Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
             testLock.WaitOne();
             var testEnv = new Dictionary<string, string>
                               {

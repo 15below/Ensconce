@@ -1,9 +1,9 @@
+framework: auto-detect
 redirects: on
-source https://api.nuget.org/v3/index.json
+source https://nuget.org/api/v2/
 
-// Turn off redirects here to allow test runners to use their own versions
-nuget NUnit 2.6.4 redirects: off
-nuget NUnit.Runners 2.6.4 redirects: off
-nuget RhinoMocks 3.6.0
+nuget NUnit
+nuget RhinoMocks
+nuget Newtonsoft.Json
 
-github 15below/Build.Tools:paket
+github 15below/Build.Tools:master

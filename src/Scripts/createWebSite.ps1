@@ -1,3 +1,4 @@
+Write-Host "Ensconce - CreateWebsite Loading"
 $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
 $ErrorActionPreference = 'SilentlyContinue'
@@ -22,3 +23,5 @@ else
 	write-host "Using IIS7"
 	. $DeployToolsDir\createiis7app.ps1
 }
+
+Write-Host "Ensconce - CreateWebsite Loaded"

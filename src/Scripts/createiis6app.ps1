@@ -1,3 +1,4 @@
+Write-Host "Ensconce - CreateIIS6App Loading"
 $frameworkPath = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client").InstallPath 
 set-alias regIIS $frameworkPath\aspnet_regiis.exe
 
@@ -360,3 +361,5 @@ function RequireClientCertificate([string] $websiteName)
 {
 	throw [System.NotImplementedException] "Only implemented for IIS7 Apps"
 }
+
+Write-Host "Ensconce - CreateIIS6App Loaded"

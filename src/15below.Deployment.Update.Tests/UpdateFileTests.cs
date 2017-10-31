@@ -1,17 +1,23 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.XPath;
-using NUnit.Framework;
 
 namespace FifteenBelow.Deployment.Update.Tests
 {
     [TestFixture]
     public class UpdateFileTests
     {
+        [SetUp]
+        public void Setup()
+        {
+            Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
+        }
+
         [Test]
         public void SubstituteOldValueWithNewStaticValue()
         {
@@ -39,7 +45,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void SubstituteOldValueWithNewTaggedValue()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution4.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> {{"taggedReplacementContent", "newvalue"}}
+                @"TestUpdateFiles\TestSubstitution4.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "taggedReplacementContent", "newvalue" } }
                 ));
             Assert.AreEqual("newvalue", newConfig.XPathSelectElement("/root/value").Value);
         }
@@ -48,7 +54,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void SubstituteOldValueWithNewTaggedXmlValue()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> {{"taggedReplacementContent", "newvalue"}}
+                @"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "taggedReplacementContent", "newvalue" } }
                 ));
             Assert.AreEqual("newvalue", newConfig.XPathSelectElement("/root/value").Descendants().First().Name.LocalName);
         }
@@ -91,7 +97,7 @@ namespace FifteenBelow.Deployment.Update.Tests
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);
         }
-        
+
         [Test]
         public void DoNotRemoveAttributesUnlessSpecified()
         {
@@ -100,7 +106,7 @@ namespace FifteenBelow.Deployment.Update.Tests
                 ));
             Assert.AreEqual("quack", newConfig.XPathSelectElement("/root/value").Attribute("duckAttr").Value);
         }
-        
+
         [Test]
         public void DoNotChangeChildrenUnlessNewValueSpecified()
         {
@@ -141,25 +147,25 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void SubstituteTaggedAttributeValue()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution9.xml", @"TestUpdateFiles\TestConfig3.xml", new Dictionary<string, object>{{"newValue", "after"}}
+                @"TestUpdateFiles\TestSubstitution9.xml", @"TestUpdateFiles\TestConfig3.xml", new Dictionary<string, object> { { "newValue", "after" } }
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);
         }
-        
+
         [Test]
         public void AppendAfterWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution14.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>{{"newValue", "after"}}
+                @"TestUpdateFiles\TestSubstitution14.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }
                 ));
             Assert.IsTrue(newConfig.Root.Descendants().Select(el => el.Name).Contains("NewTag"));
         }
-        
+
         [Test]
         public void AddChildContentWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution15.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>{{"newValue", "after"}}
+                @"TestUpdateFiles\TestSubstitution15.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }
                 ));
             Assert.AreEqual(1, newConfig.XPathSelectElements("/root/value/NewTag").Count());
         }
@@ -187,7 +193,7 @@ namespace FifteenBelow.Deployment.Update.Tests
                             XDocument.Parse(configs.Where(c => c.Item1 == @"TestUpdateFiles\TestConfig1.xml").Single().Item2).XPathSelectElement
                                 ("/root/value/testing").Value);
         }
-        
+
         [Test]
         public void AppendAfterWorksWithAmpersandInTag()
         {
@@ -204,7 +210,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void EmptyChildContentWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution16.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>{{"newValue", "after"}}
+                @"TestUpdateFiles\TestSubstitution16.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }
                 ));
             Assert.IsTrue(newConfig.XPathSelectElements("/root/value/NewTag").Count() == 0);
         }
@@ -213,17 +219,17 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void MultipleChildContentWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution17.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>{{"newValue", "after"}}
+                @"TestUpdateFiles\TestSubstitution17.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }
                 ));
             Assert.AreEqual("1", newConfig.XPathSelectElements("/root/value/one").First().Value);
             Assert.AreEqual("2", newConfig.XPathSelectElements("/root/value/two").First().Value);
         }
-        
+
         [Test]
         public void UpdateAllTouchesAllFiles()
         {
             var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution3.xml",
-                                               new Dictionary<string, object> {{"tagValue", "Tagged!"}});
+                                               new Dictionary<string, object> { { "tagValue", "Tagged!" } });
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("newvalue",
@@ -238,7 +244,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void UpdateAllKnowsAboutTaggedFiles()
         {
             var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution13.xml",
-                                               new Dictionary<string, object> {{"FilePath", "TaggedPath"}});
+                                               new Dictionary<string, object> { { "FilePath", "TaggedPath" } });
             Assert.AreEqual("newvalue",
                             XDocument.Parse(configs.Where(c => c.Item1 == @"TestUpdateFiles\TestConfig-TaggedPath.xml").Single().Item2).
                                 XPathSelectElement("/root/value").Value);
@@ -248,7 +254,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void TagsOutsideSpecifiedXPathsUnchanged()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution9.xml", @"TestUpdateFiles\TestConfig3.xml", new Dictionary<string, object>{{"newValue", "after"}}
+                @"TestUpdateFiles\TestSubstitution9.xml", @"TestUpdateFiles\TestConfig3.xml", new Dictionary<string, object> { { "newValue", "after" } }
                 ));
             Assert.AreEqual("{{ tagged }}", newConfig.XPathSelectElement("/root/myValue").Value);
         }
@@ -257,7 +263,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void ReplaceFileWithTemplateWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution10.xml", @"TestUpdateFiles\TestConfig2.xml", new Dictionary<string, object>{{"tagged", "after"}}
+                @"TestUpdateFiles\TestSubstitution10.xml", @"TestUpdateFiles\TestConfig2.xml", new Dictionary<string, object> { { "tagged", "after" } }
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue").Value);
         }
@@ -266,7 +272,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void NewFileWithTemplateWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution11.xml", @"TestUpdateFiles\DoesntExist.xml", new Dictionary<string, object>{{"tagged", "after"}}
+                @"TestUpdateFiles\TestSubstitution11.xml", @"TestUpdateFiles\DoesntExist.xml", new Dictionary<string, object> { { "tagged", "after" } }
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue").Value);
         }
@@ -275,7 +281,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void TemplateAndChangesWork()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution18.xml", @"TestUpdateFiles\TestConfig2.xml", new Dictionary<string, object>{{"tagged", "after"}}
+                @"TestUpdateFiles\TestSubstitution18.xml", @"TestUpdateFiles\TestConfig2.xml", new Dictionary<string, object> { { "tagged", "after" } }
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue").Value);
             Assert.AreEqual("afterAttr", newConfig.XPathSelectElement("/root/myValue").Attribute("myAttr").Value);
@@ -286,7 +292,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution19.xml", @"TestUpdateFiles\TestConfig2.xml",
-                new Dictionary<string, object> {{"tagged", "after"}, {"Environment", "LOC"}}
+                new Dictionary<string, object> { { "tagged", "after" }, { "Environment", "LOC" } }
                                                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue-LOC").Value);
             Assert.AreEqual("afterAttr", newConfig.XPathSelectElement("/root/myValue-LOC").Attribute("myAttr").Value);
@@ -297,7 +303,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             Assert.Throws<XmlSchemaValidationException>(() => XDocument.Parse(UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution20.xml", @"TestUpdateFiles\TestConfig2.xml",
-                new Dictionary<string, object> {{"tagged", "after"}, {"Environment", "LOC"}}
+                new Dictionary<string, object> { { "tagged", "after" }, { "Environment", "LOC" } }
                                                 )));
         }
 
@@ -306,7 +312,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             var newConfig = UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution21.xml", @"TestUpdateFiles\PlainText01.txt",
-                new Dictionary<string, object> {{"tag", "after"}, {"Environment", "LOC"}});
+                new Dictionary<string, object> { { "tag", "after" }, { "Environment", "LOC" } });
             Assert.IsTrue(newConfig.Contains("after"));
         }
 
@@ -315,7 +321,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             var newConfig = UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution21.xml", @"TestUpdateFiles\PlainText01.txt",
-                new Dictionary<string, object> {{"tag", "<after>"}, {"Environment", "LOC"}});
+                new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } });
             Assert.IsTrue(newConfig.Contains("<after>"));
         }
 
@@ -324,7 +330,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             var newConfig = UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution22.xml", @"TestUpdateFiles\PlainText02.txt",
-                new Dictionary<string, object> {{"tag", "<after>"}, {"Environment", "LOC"}});
+                new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } });
             Assert.AreEqual("Some plain text. With a {{ tag }}.", newConfig);
         }
 
@@ -332,7 +338,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void NDjangoFiltersAvailable()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution12.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>{{"newvalue", "AfTer"}}
+                @"TestUpdateFiles\TestSubstitution12.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newvalue", "AfTer" } }
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Value);
         }
@@ -342,7 +348,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             var newConfig = UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution23.xml", @"TestUpdateFiles\PlainText03.txt",
-                new Dictionary<string, object> {{"tag", "<after>"}, {"Environment", "LOC"}});
+                new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } });
             Assert.AreEqual("Some plain text. With a concat <after></after>.", newConfig);
         }
     }

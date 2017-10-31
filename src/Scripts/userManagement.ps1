@@ -1,3 +1,4 @@
+Write-Host "Ensconce - UserManagement Loading"
 # ADS_USER_FLAG_ENUM Enumeration
 # http://msdn.microsoft.com/en-us/library/aa772300(VS.85).aspx
 $ADS_UF_SCRIPT                 = 1   # 0x1
@@ -140,3 +141,5 @@ Function SetServiceAccount([string]$serviceName, [string]$account, [string]$pass
 		"Service $serviceName set to use account $account" | Write-Host
 	}
 }
+
+Write-Host "Ensconce - UserManagement Loaded"

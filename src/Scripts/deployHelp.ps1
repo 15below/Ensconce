@@ -1,4 +1,5 @@
-﻿$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+﻿Write-Host "Ensconce - DeployHelp Loading"
+$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
 if (Test-Path variable:\OctopusParameters)
 {
@@ -56,3 +57,5 @@ function CreateDesktopShortcut($exePath, $shortcutName)
 	$Shortcut.TargetPath = $exePath
 	$Shortcut.Save()
 }
+
+Write-Host "Ensconce - DeployHelp Loaded"

@@ -1,3 +1,4 @@
+Write-Host "Ensconce - CreateIIS7App Loading"
 # Resource For Looking Up IIS Powershell Snap In Commands/Functions
 # http://learn.iis.net/page.aspx/447/managing-iis-with-the-iis-powershell-snap-in/
 
@@ -373,3 +374,5 @@ function RequireClientCertificate([string] $websiteName)
 	"Setting SSL Require Client Certs for $websiteName" | Write-Host
 	Set-WebConfiguration -Location "$webSiteName" -filter 'system.webserver/security/access' -Value "Ssl, SslRequireCert"
 }
+
+Write-Host "Ensconce - CreateIIS7App Loaded"
