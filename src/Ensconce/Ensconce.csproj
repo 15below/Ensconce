@@ -120,6 +120,7 @@
     <Compile Include="ApplicationInteraction.cs" />
     <Compile Include="Arguments.cs" />
     <Compile Include="DatabaseInteraction.cs" />
+    <Compile Include="DictionaryExport.cs" />
     <Compile Include="FileInteraction.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Options.cs" />

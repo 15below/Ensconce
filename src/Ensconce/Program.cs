@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 
 namespace Ensconce
@@ -27,6 +26,12 @@ namespace Ensconce
             Arguments.SetUpAndParseOptions(args);
 
             Logging.Log("Arguments parsed");
+
+            if (!string.IsNullOrWhiteSpace(Arguments.DictionarySavePath) || !string.IsNullOrWhiteSpace(Arguments.DictionaryPostUrl))
+            {
+                DictionaryExport.ExportTagDictionary();
+                return;
+            }
 
             if (Arguments.ReadFromStdIn)
             {

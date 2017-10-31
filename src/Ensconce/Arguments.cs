@@ -1,9 +1,9 @@
+using FifteenBelow.Deployment.ReportingServices;
+using Mono.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FifteenBelow.Deployment.ReportingServices;
-using Mono.Options;
 
 namespace Ensconce
 {
@@ -29,6 +29,9 @@ namespace Ensconce
         internal static bool DropDatabase { get; private set; }
         internal static bool DeployReports { get; private set; }
         internal static bool DeployReportingRole { get; private set; }
+
+        internal static string DictionaryPostUrl { get; private set; }
+        internal static string DictionarySavePath { get; private set; }
 
         private static bool showHelp;
         private static bool dropDatabaseConfirm;
@@ -178,6 +181,16 @@ namespace Ensconce
                         var reportingServiceVariables = s.Split(separator: new [] { '=' }, count: 2);
                         ReportingServiceVariables.Add(reportingServiceVariables[0], reportingServiceVariables[1]);
                     }
+                },
+                {
+                    "dictionaryPostUrl=",
+                    @"Specify a url to post the tag directory to (as JSON)",
+                    s => DictionaryPostUrl = s
+                },
+                {
+                    "dictionarySavePath=",
+                    @"Specify a file to save the tag directory to (as JSON)",
+                    s => DictionarySavePath = s
                 }
             };
         }
@@ -187,7 +200,8 @@ namespace Ensconce
             var filesToBeMovedOrChanged = UpdateConfig || CopyTo || Replace || !string.IsNullOrEmpty(TemplateFilters);
             var databaseOperation = !string.IsNullOrEmpty(DatabaseName) || !string.IsNullOrEmpty(ConnectionString);
             var reportOperation = DeployReports || DeployReportingRole;
-            var operationRequested = filesToBeMovedOrChanged || databaseOperation || ReadFromStdIn || reportOperation;
+            var tagExportOperation = !string.IsNullOrEmpty(DictionaryPostUrl) || !string.IsNullOrEmpty(DictionarySavePath);
+            var operationRequested = ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation || tagExportOperation;
 
             if (showHelp || !operationRequested)
             {
@@ -243,6 +257,16 @@ namespace Ensconce
             if (reportOperation && !ReportingServiceVariables.Any())
             {
                 throw new OptionException("Error: You cannot deploy any reports to a reporting service instance with no variables", "reportVariable");
+            }
+
+            if (tagExportOperation && !string.IsNullOrWhiteSpace(DictionaryPostUrl) && (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation))
+            {
+                throw new OptionException("Error: You cannot post the dictionary to a URL along with other commands", "dictionaryPostUrl");
+            }
+
+            if (tagExportOperation && !string.IsNullOrWhiteSpace(DictionarySavePath) && (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation))
+            {
+                throw new OptionException("Error: You cannot save the dictionary to a file along with other commands", "dictionarySavePath");
             }
         }
     }
