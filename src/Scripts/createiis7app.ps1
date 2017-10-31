@@ -50,8 +50,6 @@ if ($LoadAsSnapin) {
 	}
 }
 
-Write-Host "Ensconce - CreateIIS7App Loaded"
-
 function CheckIfAppPoolExists ([string]$name)
 {
 	Test-Path "IIS:\AppPools\$name"
@@ -376,3 +374,5 @@ function RequireClientCertificate([string] $websiteName)
 	"Setting SSL Require Client Certs for $websiteName" | Write-Host
 	Set-WebConfiguration -Location "$webSiteName" -filter 'system.webserver/security/access' -Value "Ssl, SslRequireCert"
 }
+
+Write-Host "Ensconce - CreateIIS7App Loaded"

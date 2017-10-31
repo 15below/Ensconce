@@ -17,8 +17,6 @@ if(!(Test-Path "env:\ConfigOnly"))
     Set-Content "env:\ConfigOnly" $false
 }
 
-Write-Host "Ensconce - DeployHelp Loaded"
-
 function ensconce
 {
     if (@($input).Count -ne 0)
@@ -59,3 +57,5 @@ function CreateDesktopShortcut($exePath, $shortcutName)
 	$Shortcut.TargetPath = $exePath
 	$Shortcut.Save()
 }
+
+Write-Host "Ensconce - DeployHelp Loaded"

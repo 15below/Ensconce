@@ -1,5 +1,4 @@
 Write-Host "Ensconce - dnsHelper Loading"
-Write-Host "Ensconce - dnsHelper Loaded"
 
 function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 {                                                                               
@@ -98,3 +97,5 @@ function AddHostsEntry ([string]$Address, [string]$FullyQualifiedName)
 	
 	CheckHostsEntry $Address $FullyQualifiedName
 }
+
+Write-Host "Ensconce - dnsHelper Loaded"

@@ -23,8 +23,6 @@ $ADS_UF_DONT_REQUIRE_PREAUTH          = 4194304 # 0x400000
 $ADS_UF_PASSWORD_EXPIRED            = 8388608 # 0x800000
 $ADS_UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION = 16777216 # 0x1000000
 
-Write-Host "Ensconce - UserManagement Loaded"
-
 Function AddUser([string]$name, [string]$password)
 {
 	$computer = [ADSI]"WinNT://$env:computername,computer"
@@ -143,3 +141,5 @@ Function SetServiceAccount([string]$serviceName, [string]$account, [string]$pass
 		"Service $serviceName set to use account $account" | Write-Host
 	}
 }
+
+Write-Host "Ensconce - UserManagement Loaded"
