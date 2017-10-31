@@ -1,3 +1,6 @@
+Write-Host "Ensconce - dnsHelper Loading"
+Write-Host "Ensconce - dnsHelper Loaded"
+
 function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 {                                                                               
 	$result = dnscmd $dnsServer /EnumRecords $domain $lookupName

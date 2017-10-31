@@ -1,3 +1,4 @@
+Write-Host "Ensconce - UserManagement Loading"
 # ADS_USER_FLAG_ENUM Enumeration
 # http://msdn.microsoft.com/en-us/library/aa772300(VS.85).aspx
 $ADS_UF_SCRIPT                 = 1   # 0x1
@@ -21,6 +22,8 @@ $ADS_UF_USE_DES_KEY_ONLY            = 2097152 # 0x200000
 $ADS_UF_DONT_REQUIRE_PREAUTH          = 4194304 # 0x400000
 $ADS_UF_PASSWORD_EXPIRED            = 8388608 # 0x800000
 $ADS_UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION = 16777216 # 0x1000000
+
+Write-Host "Ensconce - UserManagement Loaded"
 
 Function AddUser([string]$name, [string]$password)
 {

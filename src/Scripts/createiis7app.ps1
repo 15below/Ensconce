@@ -1,3 +1,4 @@
+Write-Host "Ensconce - CreateIIS7App Loading"
 # Resource For Looking Up IIS Powershell Snap In Commands/Functions
 # http://learn.iis.net/page.aspx/447/managing-iis-with-the-iis-powershell-snap-in/
 
@@ -48,6 +49,8 @@ if ($LoadAsSnapin) {
 		exit 1
 	}
 }
+
+Write-Host "Ensconce - CreateIIS7App Loaded"
 
 function CheckIfAppPoolExists ([string]$name)
 {
