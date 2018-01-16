@@ -26,6 +26,7 @@ namespace FifteenBelow.Deployment.Update
                                                 .WithFilter("default", new NDjangoExpansions.DefaultFilter())
                                                 .WithFilter("exists", new NDjangoExpansions.ExistsFilter())
                                                 .WithFilter("empty", new NDjangoExpansions.EmptyFilter())
+                                                .WithFilter("startsWith", new NDjangoExpansions.StartsWithFilter())
                                                 .GetNewManager();
         }
 
