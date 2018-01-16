@@ -395,24 +395,52 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
-        public void WhenPropertyDoesntExist_UseDeault()
+        public void WhenPropertyDoesntExist_UseDefault()
         {
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("default", "{{ NotAValue|default:\"default\" }}".RenderTemplate(sut));
         }
 
         [Test]
-        public void WhenPropertyDoesntExist_ValueInt_UseDeault()
+        public void WhenPropertyDoesntExist_ValueInt_UseDefault()
         {
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("1", "{{ NotAValue|default:1 }}".RenderTemplate(sut));
         }
 
         [Test]
-        public void WhenPropertyDoesntExist_ValueSingleQuote_UseDeault()
+        public void WhenPropertyDoesntExist_ValueSingleQuote_UseDefault()
         {
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("default", "{{ NotAValue|default:'default' }}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void StartsWith_WhenPropertyDoesntExist()
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">Value</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.AreEqual(false.ToString().ToLower(), "{% if Undata|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        [TestCase("Hello", "h", true)]
+        [TestCase("Goodbye", "h", false)]
+        [TestCase("", "h", false)]
+        [TestCase("Empty", "", true)]
+        public void StartsWith_True(string value, string startsWith, bool expected)
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">{value}</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|startsWith:'#startsWith#' %}true{% else %}false{% endif %}".Replace("#startsWith#", startsWith).RenderTemplate(sut));
         }
 
         [Test]

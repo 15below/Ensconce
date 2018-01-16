@@ -13,7 +13,9 @@ namespace FifteenBelow.Deployment.Update.NDjangoExpansions
 
         public object PerformWithParam(object value, object parameter)
         {
-            return value is NDjangoWrapper.ErrorTemplate ? false : (value ?? "").ToString().StartsWith((parameter ?? "").ToString(), StringComparison.CurrentCultureIgnoreCase);
+            return (value is NDjangoWrapper.ErrorTemplate)
+                   ? false
+                   : (value ?? "").ToString().StartsWith((parameter ?? "").ToString(), StringComparison.CurrentCultureIgnoreCase);
         }
 
         public object DefaultValue
