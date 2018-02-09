@@ -3,8 +3,8 @@ using System;
 
 namespace FifteenBelow.Deployment.Update.NDjangoExpansions
 {
-    [Name("startsWith")]
-    public class StartsWithFilter : IFilter
+    [Name("endsWith")]
+    public class EndsWithFilter : IFilter
     {
         public object Perform(object value)
         {
@@ -19,7 +19,7 @@ namespace FifteenBelow.Deployment.Update.NDjangoExpansions
             }
             else
             {
-                return (value ?? "").ToString().StartsWith((parameter ?? "").ToString(), StringComparison.CurrentCultureIgnoreCase);
+                return (value ?? "").ToString().EndsWith((parameter ?? "").ToString(), StringComparison.CurrentCultureIgnoreCase);
             }
         }
 

@@ -424,7 +424,7 @@ namespace FifteenBelow.Deployment.Update.Tests
                                                       </Properties>
                                                   </Structure>");
 
-            Assert.AreEqual(false.ToString().ToLower(), "{% if Undata|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+            Assert.AreEqual(new NDjangoWrapper.ErrorTemplate().ToString(), "{% if Undata|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
         }
 
         [Test]
@@ -441,6 +441,51 @@ namespace FifteenBelow.Deployment.Update.Tests
                                                   </Structure>");
 
             Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|startsWith:'#startsWith#' %}true{% else %}false{% endif %}".Replace("#startsWith#", startsWith).RenderTemplate(sut));
+        }
+
+        [Test]
+        [Explicit] // You can only run this with a specific certificate loaded into your computer
+        public void Decrypt_Test()
+        {
+            string value = "fQF5wgZ4J9+lm2LbpqoxWeeao6A9x1XoIc3VTDSHBosJ1tM/mLX2XO8+AENaizmalFhCD1YKK4j7YmzEP72FwtfGgm2jazDGNb1WR440ZPL96P/tO/dKvy53KHtlkY76qFiP2KZPxRWjbem+5kpWn5lLczwl/7lQfBAM6ntawghntVAA7l7gwvKDuq2FcVIP3Njdu3DzSWPgP4P83pQxn04KtG7fO0VudUXjllI6Y/LAgpovYuC1SR3lTw33V4KVPXcOvB16bwplw+izKGWBn9Wjc6B0IxyW0tSz87ETzuL0HpiOeTZvEObrzSXlCjz3qbt4mf5gQ9QN4Gk7tLpOAZhrV1fn94IDL+l73KDbQDVo/HsX5sFFK1amFu7669kjlCOtiXxS9nZ35GtMVV2N+TC78xg0tAmYZtCOaJ+AgKoPj+PZTaR+Heu+nddiy7EAsezQ0FePxL1FN6+VcMydA16htdfdhwBzt/Sjql1LLoqSuaduOvXwftkOfhl3ylVRNnGjgHtIlAAEXtxfyitxVQSVVDgPRwfncB0S4LgpXrnuw+Bj7CuslXvCL6x9ZCp5PYqcXTYcwuv/xysFrTKM0k6xS4D6mIShlOwOxaMm0nntg3VBIXwJZULHabd/xMb2UkwQOAjKvgplLmduaSeGdS8axup326eSmEDRXQlHqUM=";
+
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">{value}</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            var expected = "hello";
+
+            Assert.AreEqual(expected.ToString().ToLower(), "{{ Data|decrypt:'XX-NON-Certificate' }}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void EndsWith_WhenPropertyDoesntExist()
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">Value</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.AreEqual(new NDjangoWrapper.ErrorTemplate().ToString(), "{% if Undata|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        [TestCase("Hello", "o", true)]
+        [TestCase("Goodbye", "o", false)]
+        [TestCase("", "h", false)]
+        [TestCase("Empty", "", true)]
+        public void EndsWith_True(string value, string endsWith, bool expected)
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">{value}</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).RenderTemplate(sut));
         }
 
         [Test]

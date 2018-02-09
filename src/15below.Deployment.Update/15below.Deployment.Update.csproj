@@ -58,6 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="NDjangoExpansions\DecryptFilter.cs" />
+    <Compile Include="NDjangoExpansions\EndsWithFilter.cs" />
     <Compile Include="NDjangoExpansions\StartsWithFilter.cs" />
     <Compile Include="SubTagDictionary.cs" />
     <Compile Include="NDjangoExpansions\ConcatFilter.cs" />
