@@ -26,6 +26,7 @@ namespace FifteenBelow.Deployment.Update
                                                 .WithFilter("default", new NDjangoExpansions.DefaultFilter())
                                                 .WithFilter("exists", new NDjangoExpansions.ExistsFilter())
                                                 .WithFilter("empty", new NDjangoExpansions.EmptyFilter())
+                                                .WithFilter("contains", new NDjangoExpansions.ContainsFilter())
                                                 .WithFilter("startsWith", new NDjangoExpansions.StartsWithFilter())
                                                 .WithFilter("endsWith", new NDjangoExpansions.EndsWithFilter())
                                                 .WithFilter("decrypt", new NDjangoExpansions.DecryptFilter())

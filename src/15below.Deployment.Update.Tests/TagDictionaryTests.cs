@@ -416,6 +416,59 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
+        [TestCase("Hello", "el", true)]
+        [TestCase("Goodbye", "el", false)]
+        [TestCase("", "el", false)]
+        public void Contains(string value, string contains, bool expected)
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">{value}</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|contains:'#contains#' %}true{% else %}false{% endif %}".Replace("#contains#", contains).RenderTemplate(sut));
+        }
+
+        [Test]
+        public void Contains_EmptyString_Throws()
+        {
+            var sut = new TagDictionary("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">Value</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.Throws<ArgumentException>(() => "{% if Data|contains:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void Contains_WhenPropertyDoesntExist_Throws()
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">Value</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.Throws<ArgumentException>(() => "{% if Undata|contains:'al' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        [TestCase("Hello", "el", true)]
+        [TestCase("Goodbye", "el", false)]
+        [TestCase("", "el", false)]
+        public void Contains_WhenPropertyDoesntExist_Defaulted(string value, string contains, bool expected)
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|contains:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", contains).Replace("#value#", value).RenderTemplate(sut));
+        }
+
+        [Test]
         [TestCase("Hello", "h", true)]
         [TestCase("Goodbye", "h", false)]
         [TestCase("", "h", false)]
