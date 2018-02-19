@@ -26,6 +26,10 @@ namespace FifteenBelow.Deployment.Update
                                                 .WithFilter("default", new NDjangoExpansions.DefaultFilter())
                                                 .WithFilter("exists", new NDjangoExpansions.ExistsFilter())
                                                 .WithFilter("empty", new NDjangoExpansions.EmptyFilter())
+                                                .WithFilter("contains", new NDjangoExpansions.ContainsFilter())
+                                                .WithFilter("startsWith", new NDjangoExpansions.StartsWithFilter())
+                                                .WithFilter("endsWith", new NDjangoExpansions.EndsWithFilter())
+                                                .WithFilter("decrypt", new NDjangoExpansions.DecryptFilter())
                                                 .GetNewManager();
         }
 
@@ -43,6 +47,7 @@ namespace FifteenBelow.Deployment.Update
         {
             lock (Error)
             {
+                string exceptionMessage = null;
                 string replacementValue;
 
                 try
@@ -50,8 +55,9 @@ namespace FifteenBelow.Deployment.Update
                     Error.Invoked = false;
                     replacementValue = templateManager.RenderTemplate(StringProvider + template, values).ReadToEnd();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    exceptionMessage = $"\n{ex.Message}";
                     replacementValue = string.Empty;
                     Error.Invoked = true;
                 }
@@ -60,11 +66,11 @@ namespace FifteenBelow.Deployment.Update
                 {
                     if (string.IsNullOrWhiteSpace(replacementValue) || !replacementValue.Contains(Error.ToString()))
                     {
-                        throw new ArgumentException(string.Format("Tag substitution errored on template string:\n{0}", template));
+                        throw new ArgumentException(string.Format("Tag substitution errored on template string:\n{0}{1}", template, exceptionMessage));
                     }
 
                     var attemptedRender = replacementValue.Replace(Error.ToString(), "[ERROR OCCURRED HERE]");
-                    throw new ArgumentException(string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}", template, attemptedRender));
+                    throw new ArgumentException(string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}{2}", template, attemptedRender, exceptionMessage));
                 }
 
                 return replacementValue;
