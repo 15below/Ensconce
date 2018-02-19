@@ -305,7 +305,7 @@ namespace FifteenBelow.Deployment.Update.Tests
         {
             var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}".RenderTemplate(sut));
-            Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}", error.Message);
+            Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}\nObject must be of type String.", error.Message);
         }
 
         [Test]
@@ -416,23 +416,10 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
-        public void StartsWith_WhenPropertyDoesntExist()
-        {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
-                                                      <Properties>
-                                                        <Property name=""Data"">Value</Property>
-                                                      </Properties>
-                                                  </Structure>");
-
-            Assert.AreEqual(new NDjangoWrapper.ErrorTemplate().ToString(), "{% if Undata|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
-        }
-
-        [Test]
         [TestCase("Hello", "h", true)]
         [TestCase("Goodbye", "h", false)]
         [TestCase("", "h", false)]
-        [TestCase("Empty", "", true)]
-        public void StartsWith_True(string value, string startsWith, bool expected)
+        public void StartsWith(string value, string startsWith, bool expected)
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <Properties>
@@ -441,6 +428,97 @@ namespace FifteenBelow.Deployment.Update.Tests
                                                   </Structure>");
 
             Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|startsWith:'#startsWith#' %}true{% else %}false{% endif %}".Replace("#startsWith#", startsWith).RenderTemplate(sut));
+        }
+
+        [Test]
+        public void StartsWith_EmptyString_Throws()
+        {
+            var sut = new TagDictionary("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">Value</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.Throws<ArgumentException>(() => "{% if Data|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void StartsWith_WhenPropertyDoesntExist_Throws()
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">Value</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        [TestCase("Hello", "h", true)]
+        [TestCase("Goodbye", "h", false)]
+        [TestCase("", "h", false)]
+        public void StartsWith_WhenPropertyDoesntExist_Defaulted(string value, string startsWith, bool expected)
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|startsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", startsWith).Replace("#value#", value).RenderTemplate(sut));
+        }
+
+        [Test]
+        [TestCase("Hello", "o", true)]
+        [TestCase("Goodbye", "o", false)]
+        [TestCase("", "o", false)]
+        public void EndsWith(string value, string endsWith, bool expected)
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">{value}</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).RenderTemplate(sut));
+        }
+
+        [Test]
+        public void EndsWith_EmptyString_Throws()
+        {
+            var sut = new TagDictionary("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">Value</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.Throws<ArgumentException>(() => "{% if Data|endsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        public void EndsWith_WhenPropertyDoesntExist_Throws()
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                        <Property name=""Data"">Value</Property>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+        }
+
+        [Test]
+        [TestCase("Hello", "o", true)]
+        [TestCase("Goodbye", "o", false)]
+        [TestCase("", "o", false)]
+        public void EndsWith_WhenPropertyDoesntExist_Defaulted(string value, string endsWith, bool expected)
+        {
+            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <Properties>
+                                                      </Properties>
+                                                  </Structure>");
+
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).Replace("#value#", value).RenderTemplate(sut));
         }
 
         [Test]
@@ -458,34 +536,6 @@ namespace FifteenBelow.Deployment.Update.Tests
             var expected = "hello";
 
             Assert.AreEqual(expected.ToString().ToLower(), "{{ Data|decrypt:'XX-NON-Certificate' }}".RenderTemplate(sut));
-        }
-
-        [Test]
-        public void EndsWith_WhenPropertyDoesntExist()
-        {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
-                                                      <Properties>
-                                                        <Property name=""Data"">Value</Property>
-                                                      </Properties>
-                                                  </Structure>");
-
-            Assert.AreEqual(new NDjangoWrapper.ErrorTemplate().ToString(), "{% if Undata|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
-        }
-
-        [Test]
-        [TestCase("Hello", "o", true)]
-        [TestCase("Goodbye", "o", false)]
-        [TestCase("", "h", false)]
-        [TestCase("Empty", "", true)]
-        public void EndsWith_True(string value, string endsWith, bool expected)
-        {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
-                                                      <Properties>
-                                                        <Property name=""Data"">{value}</Property>
-                                                      </Properties>
-                                                  </Structure>");
-
-            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).RenderTemplate(sut));
         }
 
         [Test]

@@ -13,9 +13,13 @@ namespace FifteenBelow.Deployment.Update.NDjangoExpansions
 
         public object PerformWithParam(object value, object parameter)
         {
-            if (value is NDjangoWrapper.ErrorTemplate)
+            if (!(parameter is string s) || String.IsNullOrEmpty(s))
             {
-                return value;
+                throw new Exception($"startsWith parameter must be a non-empty string");
+            }
+            else if (value is NDjangoWrapper.ErrorTemplate)
+            {
+                throw new Exception($"Value does not exist when calling startsWith");
             }
             else
             {
