@@ -530,12 +530,13 @@ namespace FifteenBelow.Deployment.Update.Tests
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <Properties>
                                                         <Property name=""Data"">{value}</Property>
+                                                        <Property name=""Certificate"">XX-NON-Certificate</Property>
                                                       </Properties>
                                                   </Structure>");
 
             var expected = "hello";
 
-            Assert.AreEqual(expected.ToString().ToLower(), "{{ Data|decrypt:'XX-NON-Certificate' }}".RenderTemplate(sut));
+            Assert.AreEqual(expected.ToString().ToLower(), "{{ Data|decrypt:Certificate }}".RenderTemplate(sut));
         }
 
         [Test]
