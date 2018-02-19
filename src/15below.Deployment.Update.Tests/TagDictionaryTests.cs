@@ -422,9 +422,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void Contains(string value, string contains, bool expected)
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">{value}</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|contains:'#contains#' %}true{% else %}false{% endif %}".Replace("#contains#", contains).RenderTemplate(sut));
@@ -434,9 +438,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void Contains_EmptyString_Throws()
         {
             var sut = new TagDictionary("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">Value</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.Throws<ArgumentException>(() => "{% if Data|contains:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
@@ -446,9 +454,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void Contains_WhenPropertyDoesntExist_Throws()
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">Value</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.Throws<ArgumentException>(() => "{% if Undata|contains:'al' %}true{% else %}false{% endif %}".RenderTemplate(sut));
@@ -461,8 +473,11 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void Contains_WhenPropertyDoesntExist_Defaulted(string value, string contains, bool expected)
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
-                                                      <Properties>
-                                                      </Properties>
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties />
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|contains:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", contains).Replace("#value#", value).RenderTemplate(sut));
@@ -475,9 +490,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void StartsWith(string value, string startsWith, bool expected)
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">{value}</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|startsWith:'#startsWith#' %}true{% else %}false{% endif %}".Replace("#startsWith#", startsWith).RenderTemplate(sut));
@@ -487,9 +506,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void StartsWith_EmptyString_Throws()
         {
             var sut = new TagDictionary("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">Value</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.Throws<ArgumentException>(() => "{% if Data|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
@@ -499,9 +522,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void StartsWith_WhenPropertyDoesntExist_Throws()
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">Value</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut));
@@ -514,8 +541,11 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void StartsWith_WhenPropertyDoesntExist_Defaulted(string value, string startsWith, bool expected)
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
-                                                      <Properties>
-                                                      </Properties>
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties />
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|startsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", startsWith).Replace("#value#", value).RenderTemplate(sut));
@@ -528,9 +558,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void EndsWith(string value, string endsWith, bool expected)
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">{value}</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).RenderTemplate(sut));
@@ -540,9 +574,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void EndsWith_EmptyString_Throws()
         {
             var sut = new TagDictionary("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">Value</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.Throws<ArgumentException>(() => "{% if Data|endsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
@@ -552,9 +590,13 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void EndsWith_WhenPropertyDoesntExist_Throws()
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">Value</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut));
@@ -567,8 +609,11 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void EndsWith_WhenPropertyDoesntExist_Defaulted(string value, string endsWith, bool expected)
         {
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
-                                                      <Properties>
-                                                      </Properties>
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties />
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).Replace("#value#", value).RenderTemplate(sut));
@@ -581,10 +626,14 @@ namespace FifteenBelow.Deployment.Update.Tests
             string value = "fQF5wgZ4J9+lm2LbpqoxWeeao6A9x1XoIc3VTDSHBosJ1tM/mLX2XO8+AENaizmalFhCD1YKK4j7YmzEP72FwtfGgm2jazDGNb1WR440ZPL96P/tO/dKvy53KHtlkY76qFiP2KZPxRWjbem+5kpWn5lLczwl/7lQfBAM6ntawghntVAA7l7gwvKDuq2FcVIP3Njdu3DzSWPgP4P83pQxn04KtG7fO0VudUXjllI6Y/LAgpovYuC1SR3lTw33V4KVPXcOvB16bwplw+izKGWBn9Wjc6B0IxyW0tSz87ETzuL0HpiOeTZvEObrzSXlCjz3qbt4mf5gQ9QN4Gk7tLpOAZhrV1fn94IDL+l73KDbQDVo/HsX5sFFK1amFu7669kjlCOtiXxS9nZ35GtMVV2N+TC78xg0tAmYZtCOaJ+AgKoPj+PZTaR+Heu+nddiy7EAsezQ0FePxL1FN6+VcMydA16htdfdhwBzt/Sjql1LLoqSuaduOvXwftkOfhl3ylVRNnGjgHtIlAAEXtxfyitxVQSVVDgPRwfncB0S4LgpXrnuw+Bj7CuslXvCL6x9ZCp5PYqcXTYcwuv/xysFrTKM0k6xS4D6mIShlOwOxaMm0nntg3VBIXwJZULHabd/xMb2UkwQOAjKvgplLmduaSeGdS8axup326eSmEDRXQlHqUM=";
 
             var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
                                                       <Properties>
                                                         <Property name=""Data"">{value}</Property>
                                                         <Property name=""Certificate"">XX-NON-Certificate</Property>
                                                       </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
                                                   </Structure>");
 
             var expected = "hello";
