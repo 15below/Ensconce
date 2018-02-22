@@ -101,7 +101,17 @@ namespace FifteenBelow.Deployment.Update
             {
                 if (baseData == null) baseData = File.ReadAllText(baseFile);
                 var baseXml = XDocument.Parse(baseData);
-                return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
+                try
+                {
+                    return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
+                }
+                catch (Exception)
+                {
+                    var partialFilename = $"{baseFile}_partial";
+                    baseXml.Save(partialFilename);
+
+                    throw;
+                }
             }
 
             return baseData;

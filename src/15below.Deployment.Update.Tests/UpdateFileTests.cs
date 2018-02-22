@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -87,6 +88,15 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void ThrowNewMissingArgExceptionIfNoTagValue()
         {
             Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
+        }
+
+        [Test]
+        public void CreatePartialOutputFileIFExceptionDuringProcess()
+        {
+            Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
+            var fileName = @"TestUpdateFiles\TestConfig1.xml_partial";
+
+            Assert.IsTrue(File.Exists(fileName));
         }
 
         [Test]
