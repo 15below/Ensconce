@@ -18,9 +18,13 @@ namespace FifteenBelow.Deployment.Update.NDjangoExpansions
         {
             var cert = LoadCertificate(StoreName.My, StoreLocation.LocalMachine, $"CN={(string)parameter}");
 
-            if (cert == null)
+            if (value is NDjangoWrapper.ErrorTemplate)
             {
-                return new NDjangoWrapper.ErrorTemplate();
+                throw new Exception($"Value does not exist when calling decrypt");
+            }
+            else if (cert == null)
+            {
+                throw new Exception($"Certificate does not exist: {parameter}");
             }
             else
             {
