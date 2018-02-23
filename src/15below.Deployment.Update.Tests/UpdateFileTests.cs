@@ -17,6 +17,14 @@ namespace FifteenBelow.Deployment.Update.Tests
         public void Setup()
         {
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
+
+            var wd = Path.Combine(Environment.CurrentDirectory, "TestUpdateFiles");
+            foreach (var file in Directory.EnumerateFiles(wd, "*.xml_partial"))
+            {
+                File.Delete(file);
+            }
+
+
         }
 
         [Test]
@@ -91,9 +99,19 @@ namespace FifteenBelow.Deployment.Update.Tests
         }
 
         [Test]
-        public void CreatePartialOutputFileIFExceptionDuringProcess()
+        public void DoNotCreatePartialOutputFileIfExceptionDuringProcessWhenIndicated()
         {
             Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
+            var fileName = @"TestUpdateFiles\TestConfig1.xml_partial";
+
+            Assert.False(File.Exists(fileName));
+        }
+
+        [Test]
+        public void CreatePartialOutputFileIfExceptionDuringProcessWhenIndicated()
+        {
+            Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml", outputFailureContext: true));
+
             var fileName = @"TestUpdateFiles\TestConfig1.xml_partial";
 
             Assert.IsTrue(File.Exists(fileName));

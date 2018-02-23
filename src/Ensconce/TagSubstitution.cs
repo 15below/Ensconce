@@ -10,7 +10,7 @@ namespace Ensconce
         {
             Logging.Log("Updating config with substitution file {0}", Arguments.SubstitutionPath);
 
-            UpdateFile.UpdateFiles(Arguments.SubstitutionPath, TextRendering.TagDictionary);
+            UpdateFile.UpdateFiles(Arguments.SubstitutionPath, TextRendering.TagDictionary, Arguments.OutputFailureContext);
         }
 
         internal static void UpdateFiles()

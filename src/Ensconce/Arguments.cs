@@ -33,6 +33,8 @@ namespace Ensconce
         internal static string DictionaryPostUrl { get; private set; }
         internal static string DictionarySavePath { get; private set; }
 
+        internal static bool OutputFailureContext { get; private set; }
+
         private static bool showHelp;
         private static bool dropDatabaseConfirm;
         private static readonly List<string> RawToDirectories = new List<string>();
@@ -50,6 +52,7 @@ namespace Ensconce
             SubstitutionPath = "substitutions.xml";
             DatabaseRepository = "";
             WithTransaction = true;
+            OutputFailureContext = false;
 
             var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
             if (!string.IsNullOrEmpty(envWarnOnOneTimeScriptChanges))
@@ -128,6 +131,11 @@ namespace Ensconce
                     "u|updateConfig",
                     "Update config",
                     s => UpdateConfig = s != null
+                },
+                {
+                    "ofc|outputFailureContext",
+                    "Output Failure Context",
+                    s => OutputFailureContext = true
                 },
                 {
                     "q|quiet",
