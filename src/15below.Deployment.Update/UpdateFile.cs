@@ -32,7 +32,7 @@ namespace FifteenBelow.Deployment.Update
             public string Prefix;
         }
 
-        public static void UpdateFiles(string substitutionFile, IDictionary<string, object> tagValues)
+        public static void UpdateFiles(string substitutionFile, IDictionary<string, object> tagValues, bool outputFailureContext)
         {
             var subsXml = XDocument.Load(substitutionFile);
             var nsm = new XmlNamespaceManager(new NameTable());
@@ -46,11 +46,11 @@ namespace FifteenBelow.Deployment.Update
 
             foreach (var file in files)
             {
-                File.WriteAllText(file, Update(subsXml, nsm, file, tagValues));
+                File.WriteAllText(file, Update(subsXml, nsm, file, tagValues, outputFailureContext));
             }
         }
 
-        public static IEnumerable<Tuple<string, string>> UpdateAll(string substitutionFile, IDictionary<string, object> tagValues)
+        public static IEnumerable<Tuple<string, string>> UpdateAll(string substitutionFile, IDictionary<string, object> tagValues, bool outputFailureContext = false)
         {
             var subsXml = XDocument.Load(substitutionFile);
             var nsm = new XmlNamespaceManager(new NameTable());
@@ -62,10 +62,10 @@ namespace FifteenBelow.Deployment.Update
                                .Select(el => el.Attribute("Filename").Value)
                                .Select(path => path.RenderTemplate(tagValues));
 
-            return files.Select(file => Tuple.Create(file, Update(substitutionFile, file, tagValues)));
+            return files.Select(file => Tuple.Create(file, Update(substitutionFile, file, tagValues, outputFailureContext)));
         }
 
-        public static string Update(string substitutionFile, string baseFile, IDictionary<string, object> tagValues = null)
+        public static string Update(string substitutionFile, string baseFile, IDictionary<string, object> tagValues = null, bool outputFailureContext = false)
         {
             var subsXml = XDocument.Load(substitutionFile);
             var nsm = new XmlNamespaceManager(new NameTable());
@@ -73,10 +73,10 @@ namespace FifteenBelow.Deployment.Update
 
             ValidateSubstitutionDoc(subsXml);
 
-            return Update(subsXml, nsm, baseFile, tagValues);
+            return Update(subsXml, nsm, baseFile, tagValues, outputFailureContext);
         }
 
-        public static string Update(XDocument subsXml, XmlNamespaceManager nsm, string baseFile, IDictionary<string, object> tagValues = null)
+        public static string Update(XDocument subsXml, XmlNamespaceManager nsm, string baseFile, IDictionary<string, object> tagValues = null, bool outputFailureContext = false)
         {
             tagValues = tagValues ?? new Dictionary<string, object>();
 
@@ -101,7 +101,19 @@ namespace FifteenBelow.Deployment.Update
             {
                 if (baseData == null) baseData = File.ReadAllText(baseFile);
                 var baseXml = XDocument.Parse(baseData);
-                return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
+                try
+                {
+                    return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
+                }
+                catch (Exception)
+                {
+                    if (outputFailureContext)
+                    {
+                        var partialFilename = $"{baseFile}_partial";
+                        baseXml.Save(partialFilename);
+                    }
+                    throw;
+                }
             }
 
             return baseData;
