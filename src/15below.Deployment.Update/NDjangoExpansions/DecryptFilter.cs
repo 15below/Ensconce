@@ -20,7 +20,7 @@ namespace FifteenBelow.Deployment.Update.NDjangoExpansions
 
             if (value is NDjangoWrapper.ErrorTemplate)
             {
-                throw new Exception($"Value does not exist when calling decrypt");
+                throw new Exception("Value does not exist when calling decrypt");
             }
             else if (cert == null)
             {
@@ -66,7 +66,7 @@ namespace FifteenBelow.Deployment.Update.NDjangoExpansions
         private byte[] DecryptData(X509Certificate2 cert, byte[] data)
         {
             var rsa = (RSACryptoServiceProvider)cert.PrivateKey;
-            return rsa.Decrypt(data, false);
+            return rsa.Decrypt(data, true);
         }
     }
 }
