@@ -75,7 +75,7 @@ namespace Ensconce
                 {
                     "i|stdin",
                     "Read template string from StdIn",
-                    s => ReadFromStdIn = s != null
+                    s => ReadFromStdIn = Logging.ReadFromStdIn = s != null
                 },
                 {
                     "h|help",
@@ -140,7 +140,7 @@ namespace Ensconce
                 {
                     "q|quiet",
                     "Turn off logging output (default=False, but always True if -i set)",
-                    s => Quiet = s != null
+                    s => Quiet = Logging.Quiet = s != null
                 },
                 {
                     "treatAsTemplateFilter=",

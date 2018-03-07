@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ensconce;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -78,6 +79,8 @@ namespace FifteenBelow.Deployment.Update
 
         public static string Update(XDocument subsXml, XmlNamespaceManager nsm, string baseFile, IDictionary<string, object> tagValues = null, bool outputFailureContext = false)
         {
+            Logging.Log($"Updating file {baseFile}");
+
             tagValues = tagValues ?? new Dictionary<string, object>();
 
             var fileElement = subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
@@ -151,6 +154,8 @@ namespace FifteenBelow.Deployment.Update
 
             foreach (var sub in subs)
             {
+                Logging.Log($"Updating xpath {sub.XPath}");
+
                 var activeNode = baseXml.XPathSelectElement(sub.XPath.RenderTemplate(tagValues), baseNsm);
 
                 if (activeNode == null)
