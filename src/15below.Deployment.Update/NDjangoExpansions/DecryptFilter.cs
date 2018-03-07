@@ -11,7 +11,7 @@ namespace FifteenBelow.Deployment.Update.NDjangoExpansions
     {
         public object Perform(object value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public object PerformWithParam(object value, object parameter)

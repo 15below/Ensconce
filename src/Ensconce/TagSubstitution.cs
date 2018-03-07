@@ -21,6 +21,8 @@ namespace Ensconce
 
             foreach (var templateFile in templateFiles)
             {
+                Logging.Log($"Updating template file {templateFile.FullName}");
+
                 string template;
                 Encoding encoding;
 

@@ -2,20 +2,22 @@ using System;
 
 namespace Ensconce
 {
-    internal static class Logging
+    public static class Logging
     {
         private static readonly DateTime Started = DateTime.Now;
+        public static bool Quiet { get; set; }
+        public static bool ReadFromStdIn { get; set; }
 
-        internal static void Log(string message, params object[] values)
+        public static void Log(string message, params object[] values)
         {
-            if (Arguments.Quiet || Arguments.ReadFromStdIn) return;
+            if (Quiet || ReadFromStdIn) return;
             Console.Write("+{0:mm\\:ss\\.fff} - ", DateTime.Now - Started);
             Console.WriteLine(message, values);
         }
 
-        internal static void LogError(string message, params object[] values)
+        public static void LogError(string message, params object[] values)
         {
-            if (Arguments.Quiet || Arguments.ReadFromStdIn) return;
+            if (Quiet || ReadFromStdIn) return;
             Console.Error.Write("+{0:mm\\:ss\\.fff} - ", DateTime.Now - Started);
             Console.Error.WriteLine(message, values);
         }
