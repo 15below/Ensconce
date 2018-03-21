@@ -293,13 +293,24 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 		New-WebBinding -Name $websiteName -IP "*" -Port 443 -Protocol https -HostHeader $hostHeader
 	}
 	
-	if ((dir IIS:\\sslbindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq "0.0.0.0"}) -eq $Null) 
+	try
+	{
+		# Avoid Error 234: https://stackoverflow.com/questions/21859308/failed-to-enumerate-ssl-bindings-error-code-234
+		$bindings=Get-ChildItem IIS:\SslBindings
+	}
+	catch
+	{
+		$firstentry = Get-ChildItem HKLM:\SYSTEM\CurrentControlSet\services\HTTP\Parameters\SslBindingInfo | Select-Object -First 1
+		$firstentry | New-ItemProperty -Name "SslCertStoreName" -Value "MY"
+		$bindings=Get-ChildItem IIS:\SslBindings
+	}
+
+	if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq "0.0.0.0"}) -eq $Null) 
 	{
 		Set-Location IIS:\sslbindings
 		get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1 | new-item 0.0.0.0!443
 		Set-Location $scriptDir
 	}
-
 }
 
 function EnableWebDav ([string] $websiteName) 
