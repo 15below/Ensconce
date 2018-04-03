@@ -37,7 +37,7 @@ if ($LoadAsSnapin) {
 		Add-PSSnapin $ModuleName
         if ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName) {
             $ModuleLoaded = $true
-			write-host "Loaded $ModuleName As Snap In"
+			write-host "Loaded $ModuleName As Snap In"	
         }
     } elseif ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName) {
         $ModuleLoaded = $true
@@ -58,7 +58,7 @@ function CheckIfAppPoolExists ([string]$name)
 function StopAppPool([string]$name)
 {
 	$status = (Get-WebAppPoolState -Name $name).Value
-
+	
 	if ($status -eq "Started")
 	{
 		"Stopping AppPool: " + $name | Write-Host
@@ -79,7 +79,7 @@ function UpdateAppPoolRecycling([string]$name, [string]$periodicRestart="02:00:0
 function StartAppPool([string]$name)
 {
 	$status = (Get-WebAppPoolState -Name $name).Value
-
+	
 	if ($status -ne "Started")
 	{
 		"Starting AppPool: " + $name | Write-Host
@@ -94,7 +94,7 @@ function StartAppPool([string]$name)
 function RestartAppPool([string]$name)
 {
 	$status = (Get-WebAppPoolState -Name $name).Value
-
+	
 	if ($status -eq "Started")
 	{
 		"Restarting AppPool: " + $name | Write-Host
@@ -109,7 +109,7 @@ function RestartAppPool([string]$name)
 function StopWebSite([string]$name)
 {
 	$status = "Unknown"
-
+	
 	try
 	{
 		$status = (Get-WebsiteState -Name $name).Value
@@ -133,7 +133,7 @@ function StopWebSite([string]$name)
 function StartWebSite([string]$name)
 {
 	$status = "Unknown"
-
+	
 	try
 	{
 		$status = (Get-WebsiteState -Name $name).Value
@@ -154,19 +154,19 @@ function StartWebSite([string]$name)
 	}
 }
 
-function CheckIfWebApplicationExists ([string]$webSite, [string]$appName)
+function CheckIfWebApplicationExists ([string]$webSite, [string]$appName) 
 {
-	$tempApp = Get-WebApplication -Site $webSite | where-object {$_.path.contains($appName) }
+	$tempApp = Get-WebApplication -Site $webSite | where-object {$_.path.contains($appName) } 
 	$tempApp -ne $NULL
 }
 
 function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
 {
-	$tempApp = Get-WebVirtualDirectory -Site $webSite | where-object {$_.path.contains($virtualDir) }
+	$tempApp = Get-WebVirtualDirectory -Site $webSite | where-object {$_.path.contains($virtualDir) } 
 	$tempApp -ne $NULL
 }
 
-function CheckIfSslBindingExists ([string]$webSite, [string]$hostHeader)
+function CheckIfSslBindingExists ([string]$webSite, [string]$hostHeader) 
 {
 	$tempApp = Get-WebBinding -Name $webSite -HostHeader $hostHeader -Protocol https
 	$tempApp -ne $NULL
@@ -200,7 +200,7 @@ function SetManagedPipelineModeClassic ([string]$name)
 function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 {
 	$appPool = Get-Item "IIS:\AppPools\$name"
-
+	
 	# LocalSystem = 0
 	# LocalService = 1
 	# NetworkService = 2
@@ -211,7 +211,7 @@ function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 	{
 		$identityType = 2
 	}
-	else
+	else 
 	{
 		$appPool.processModel.username = $user
 		$appPool.processModel.password = $password
@@ -232,7 +232,7 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 			New-WebSite $name -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName
 		}
 	}
-
+	
 	Set-ItemProperty IIS:\Sites\$name -name logFile.directory -value $logLocation
 }
 
@@ -241,7 +241,7 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 	if($protocol -eq "" ) {
 		$protocol = "http"
 	}
-
+	
 	$site = Get-WebSite | where { $_.Name -eq $siteName }
 	if($site -ne $null)
 	{
@@ -267,15 +267,15 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 	}
 }
 
-function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir, [string]$SubFolders)
+function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir, [string]$SubFolders) 
 {
 	EnsurePath $installDir
-	if ($subFolders -eq $null -or $subFolders -eq "")
+	if ($subFolders -eq $null -or $subFolders -eq "") 
 	{ New-WebApplication -Name $appName -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool }
 	else
-	{
+	{ 
 		"$installDir\$SubFolders"
-		New-WebApplication -Name "$SubFolders\$appName" -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool
+		New-WebApplication -Name "$SubFolders\$appName" -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool 
 	}
 }
 
@@ -292,7 +292,7 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 	if ( $checkBinding -eq $False) {
 		New-WebBinding -Name $websiteName -IP "*" -Port 443 -Protocol https -HostHeader $hostHeader
 	}
-
+	
 	try
 	{
 		# Avoid Error 234: https://stackoverflow.com/questions/21859308/failed-to-enumerate-ssl-bindings-error-code-234
@@ -305,7 +305,7 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 		$bindings=Get-ChildItem IIS:\SslBindings
 	}
 
-	if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq "0.0.0.0"}) -eq $Null)
+	if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq "0.0.0.0"}) -eq $Null) 
 	{
 		Set-Location IIS:\sslbindings
 		get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1 | new-item 0.0.0.0!443
@@ -313,7 +313,7 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 	}
 }
 
-function EnableWebDav ([string] $websiteName)
+function EnableWebDav ([string] $websiteName) 
 {
 	"Enabling WebDav authoring for $websiteName" | Write-Host
 	Set-WebConfigurationProperty -filter "/system.WebServer/webdav/authoring" -name enabled -value true -PSPath "IIS:\" -location $websiteName
@@ -357,7 +357,7 @@ function EnableParentPaths ([string] $websiteName)
 function Enable32BitApps ([string] $appPoolName)
 {
 	$current = (get-itemProperty IIS:\AppPools\$appPoolName).enable32BitAppOnWin64
-
+	
 	if ($current -eq $False)
 	{
 		"Setting enable32BitAppOnWin64 to True for the $appPoolName AppPool" | Write-Host
