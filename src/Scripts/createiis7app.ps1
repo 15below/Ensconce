@@ -181,7 +181,7 @@ function CreateAppPool ([string]$name)
 {
 	try
 	{
-	 $poolCreated = Get-WebAppPoolState $name –errorvariable myerrorvariable
+	 $poolCreated = Get-WebAppPoolState $name -ErrorVariable myerrorvariable
 	}
 	catch
 	{
@@ -384,6 +384,18 @@ function RequireClientCertificate([string] $websiteName)
 {
 	"Setting SSL Require Client Certs for $websiteName" | Write-Host
 	Set-WebConfiguration -Location "$webSiteName" -filter 'system.webserver/security/access' -Value "Ssl, SslRequireCert"
+}
+
+function SetManagedRuntimeVersion([string] $appPoolName, [string] $runtimeVersion)
+{
+	# Valid runtime versions can be found here: https://msdn.microsoft.com/en-us/library/aa347554(v=VS.90).aspx
+	Set-ItemProperty IIS:\AppPools\$appPoolName managedRuntimeVersion $runtimeVersion
+}
+
+function SetManagedRuntimeToNoManagedCode([string] $appPoolName, [string] $runtimeVersion)
+{
+	# "" is the same as "No Managed Code"
+	Set-ItemProperty IIS:\AppPools\$appPoolName managedRuntimeVersion ""
 }
 
 Write-Host "Ensconce - CreateIIS7App Loaded"
