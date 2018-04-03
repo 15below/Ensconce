@@ -362,4 +362,14 @@ function RequireClientCertificate([string] $websiteName)
 	throw [System.NotImplementedException] "Only implemented for IIS7 Apps"
 }
 
+function SetManagedRuntimeVersion([string] $appPoolName, [string] $runtimeVersion)
+{
+	throw [System.NotImplementedException] "Only implemented for IIS7 Apps"
+}
+
+function SetManagedRuntimeToNoManagedCode([string] $appPoolName, [string] $runtimeVersion)
+{
+	throw [System.NotImplementedException] "Only implemented for IIS7 Apps"
+}
+
 Write-Host "Ensconce - CreateIIS6App Loaded"
