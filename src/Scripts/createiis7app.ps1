@@ -181,7 +181,7 @@ function CreateAppPool ([string]$name)
 {
 	try
 	{
-	 $poolCreated = Get-WebAppPoolState $name �errorvariable myerrorvariable
+	 $poolCreated = Get-WebAppPoolState $name -ErrorVariable myerrorvariable
 	}
 	catch
 	{
