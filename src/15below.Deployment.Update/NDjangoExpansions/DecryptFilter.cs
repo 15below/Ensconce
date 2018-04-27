@@ -24,7 +24,7 @@ namespace FifteenBelow.Deployment.Update.NDjangoExpansions
             }
             else
             {
-                var cert = new CertificateDetails(StoreLocation.LocalMachine, StoreName.My, $"CN={(string)parameter}");
+                var cert = new CertificateDetails(StoreLocation.LocalMachine, StoreName.My, (string)parameter);
                 var data = Convert.FromBase64String((string)value);
                 var decrypted = Decrypt(cert, data);
                 return Encoding.UTF8.GetString(decrypted);
