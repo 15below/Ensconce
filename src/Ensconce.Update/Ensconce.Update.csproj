@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ensconce.Update</RootNamespace>
     <AssemblyName>Ensconce.Update</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -34,20 +34,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.PowerPack">
-      <HintPath>..\References\FSharp.PowerPack.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.PowerPack.Compatibility">
-      <HintPath>..\References\FSharp.PowerPack.Compatibility.dll</HintPath>
-    </Reference>
-    <Reference Include="NDjango.Core40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\NDjango.Core40.dll</HintPath>
-    </Reference>
-    <Reference Include="NDjangoFilters.NDjangoExtension40, Version=0.9.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\NDjangoFilters.NDjangoExtension40.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -87,6 +73,14 @@
     <ProjectReference Include="..\Ensconce.Logging\Ensconce.Logging.csproj">
       <Project>{93361700-1eac-461e-a5cd-42365cbc82aa}</Project>
       <Name>Ensconce.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NDjangoPort\NDjangoParserFilters\NDjangoParserFilters.csproj">
+      <Project>{89dc9575-c706-4d0d-944a-79e5865ffe88}</Project>
+      <Name>NDjangoParserFilters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NDjangoPort\NDjangoParser\NDjangoParser.fsproj">
+      <Project>{114d656e-6491-4e02-85db-38a151eb2ffb}</Project>
+      <Name>NDjangoParser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
