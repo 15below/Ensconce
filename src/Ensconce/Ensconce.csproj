@@ -135,17 +135,17 @@
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\15below.Deployment.Database\15below.Deployment.Database.csproj">
+    <ProjectReference Include="..\Ensconce.Database\Ensconce.Database.csproj">
       <Project>{3bf706c4-851b-4502-9f09-e74fcc92c379}</Project>
-      <Name>15below.Deployment.Database</Name>
+      <Name>Ensconce.Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\15below.Deployment.ReportingServices\15below.Deployment.ReportingServices.csproj">
+    <ProjectReference Include="..\Ensconce.ReportingServices\Ensconce.ReportingServices.csproj">
       <Project>{442013d9-845f-47c9-b529-0426193559a8}</Project>
-      <Name>15below.Deployment.ReportingServices</Name>
+      <Name>Ensconce.ReportingServices</Name>
     </ProjectReference>
-    <ProjectReference Include="..\15below.Deployment.Update\15below.Deployment.Update.csproj">
+    <ProjectReference Include="..\Ensconce.Update\Ensconce.Update.csproj">
       <Project>{a59b1375-dc78-47d2-8930-746cd88863af}</Project>
-      <Name>15below.Deployment.Update</Name>
+      <Name>Ensconce.Update</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ensconce.Logging\Ensconce.Logging.csproj">
       <Project>{93361700-1eac-461e-a5cd-42365cbc82aa}</Project>

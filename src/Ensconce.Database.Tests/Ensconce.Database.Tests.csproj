@@ -50,9 +50,9 @@
     <Compile Include="TemporaryDatabaseTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\15below.Deployment.Database\15below.Deployment.Database.csproj">
+    <ProjectReference Include="..\Ensconce.Database\Ensconce.Database.csproj">
       <Project>{3BF706C4-851B-4502-9F09-E74FCC92C379}</Project>
-      <Name>15below.Deployment.Database</Name>
+      <Name>Ensconce.Database</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

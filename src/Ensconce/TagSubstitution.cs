@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Text;
-using FifteenBelow.Deployment.Update;
+using Ensconce.Update;
 
 namespace Ensconce
 {

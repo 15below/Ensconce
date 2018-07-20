@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using FifteenBelow.Deployment.Update;
+using Ensconce.Update;
 
 namespace Ensconce
 {

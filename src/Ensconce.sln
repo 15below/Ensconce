@@ -10,15 +10,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{293126
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce", "Ensconce\Ensconce.csproj", "{0B5FD6CF-76AE-4599-9661-4489B62D2851}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Update", "15below.Deployment.Update\15below.Deployment.Update.csproj", "{A59B1375-DC78-47D2-8930-746CD88863AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Update", "Ensconce.Update\Ensconce.Update.csproj", "{A59B1375-DC78-47D2-8930-746CD88863AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Update.Tests", "15below.Deployment.Update.Tests\15below.Deployment.Update.Tests.csproj", "{53F246CF-6D01-4BA0-B774-4F4A9588DD75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Update.Tests", "Ensconce.Update.Tests\Ensconce.Update.Tests.csproj", "{53F246CF-6D01-4BA0-B774-4F4A9588DD75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.Database", "15below.Deployment.Database\15below.Deployment.Database.csproj", "{3BF706C4-851B-4502-9F09-E74FCC92C379}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Database", "Ensconce.Database\Ensconce.Database.csproj", "{3BF706C4-851B-4502-9F09-E74FCC92C379}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Database.Tests", "Ensconce.Database.Tests\Ensconce.Database.Tests.csproj", "{4E884DFE-E8D7-4742-AA5A-618FECE890CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "15below.Deployment.ReportingServices", "15below.Deployment.ReportingServices\15below.Deployment.ReportingServices.csproj", "{442013D9-845F-47C9-B529-0426193559A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.ReportingServices", "Ensconce.ReportingServices\Ensconce.ReportingServices.csproj", "{442013D9-845F-47C9-B529-0426193559A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Logging", "Ensconce.Logging\Ensconce.Logging.csproj", "{93361700-1EAC-461E-A5CD-42365CBC82AA}"
 EndProject
