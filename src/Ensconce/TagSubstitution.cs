@@ -2,7 +2,7 @@
 using System.Text;
 using Ensconce.Update;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     internal static class TagSubstitution
     {

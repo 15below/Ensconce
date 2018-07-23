@@ -10,6 +10,7 @@ NUGET
     FAKE (4.64.13)
     FluentNHibernate (2.1.2)
       NHibernate (>= 5.1.1)
+    FSharp.Core (4.5.1)
     Iesi.Collections (4.0.4)
     log4net (2.0.8)
     Microsoft.SqlServer.Compact (4.0.8876.1)

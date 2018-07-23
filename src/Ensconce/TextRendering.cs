@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Ensconce.Update;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     internal static class TextRendering
     {

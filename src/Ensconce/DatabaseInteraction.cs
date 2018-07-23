@@ -1,6 +1,6 @@
 using System.Data.SqlClient;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     internal static class DatabaseInteraction
     {

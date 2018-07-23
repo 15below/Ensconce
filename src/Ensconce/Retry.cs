@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     /// <summary>
     /// Retry logic applied from this Stack Overflow thread
@@ -31,8 +31,8 @@ namespace Ensconce
                 }
                 catch (Exception ex)
                 {
-                    Console.Out.WriteLine("Something went wrong, but we're going to try again...");
-                    Console.Out.WriteLine(ex.Message);
+                    System.Console.Out.WriteLine("Something went wrong, but we're going to try again...");
+                    System.Console.Out.WriteLine(ex.Message);
                     exceptions.Add(ex);
                     Thread.Sleep(retryInterval);
                 }

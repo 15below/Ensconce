@@ -2,7 +2,7 @@
 using System.Collections;
 using System.IO;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     internal static class FileInteraction
     {

@@ -6,7 +6,7 @@ using System.Management;
 using System.ServiceProcess;
 using System.Threading;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     internal static class ApplicationInteraction
     {

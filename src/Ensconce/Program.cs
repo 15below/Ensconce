@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     internal static class Program
     {
@@ -14,9 +14,9 @@ namespace Ensconce
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine("Something went wrong. :(");
-                Console.Error.WriteLine(e.Message);
-                Console.Error.WriteLine(e.StackTrace);
+                System.Console.Error.WriteLine("Something went wrong. :(");
+                System.Console.Error.WriteLine(e.Message);
+                System.Console.Error.WriteLine(e.StackTrace);
                 return -1;
             }
         }
@@ -35,9 +35,9 @@ namespace Ensconce
 
             if (Arguments.ReadFromStdIn)
             {
-                using (var input = Console.In)
+                using (var input = System.Console.In)
                 {
-                    Console.Out.Write(input.ReadToEnd().Render());
+                    System.Console.Out.Write(input.ReadToEnd().Render());
                 }
                 // No other operations can be performed when reading from stdin
                 return;

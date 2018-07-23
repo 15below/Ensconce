@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Ensconce.NDjango.Core;
+using Ensconce.NDjango.Core.Filters.HtmlFilters;
+using Ensconce.NDjango.Core.Filters.List;
+using Ensconce.NDjango.Core.Filters.StringFilters;
+using Ensconce.Update.NDjango.Custom.Filters;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using NDjango;
-using NDjango.Interfaces;
 
 namespace Ensconce.Update
 {
@@ -11,25 +13,55 @@ namespace Ensconce.Update
     {
         private const string StringProvider = "ensconceString://";
         private static readonly ErrorTemplate Error = new ErrorTemplate();
-        private static readonly Lazy<ITemplateManager> TemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(false));
-        private static readonly Lazy<ITemplateManager> XmlTemplateManager = new Lazy<ITemplateManager>(() => GetTemplateManager(true));
+        private static readonly Lazy<Interfaces.ITemplateManager> TemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(false));
+        private static readonly Lazy<Interfaces.ITemplateManager> XmlTemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(true));
+        private static readonly Filter[] Filters =
+        {
+            //Core Filters
+            new Filter("add", new AddFilter()),
+            new Filter("get_digit", new GetDigit()),
+            new Filter("divisibleby", new DivisibleByFilter()),
+            new Filter("addslashes", new AddSlashesFilter()),
+            new Filter("capfirst", new CapFirstFilter()),
+            new Filter("escapejs", new EscapeJSFilter()),
+            new Filter("fix_ampersands", new FixAmpersandsFilter()),
+            new Filter("floatformat", new FloatFormatFilter()),
+            new Filter("linenumbers", new LineNumbersFilter()),
+            new Filter("lower", new LowerFilter()),
+            new Filter("upper", new UpperFilter()),
+            new Filter("make_list", new MakeListFilter()),
+            new Filter("wordcount", new WordCountFilter()),
+            new Filter("ljust", new LJustFilter()),
+            new Filter("rjust", new RJustFilter()),
+            new Filter("center", new CenterFilter()),
+            new Filter("cut", new CutFilter()),
+            new Filter("title", new TitleFilter()),
+            new Filter("removetags", new RemoveTagsFilter()),
+            new Filter("first", new FirstFilter()),
+            new Filter("last", new LastFilter()),
+            new Filter("length", new LengthFilter()),
+            new Filter("length_is", new LengthIsFilter()),
+            new Filter("random", new RandomFilter()),
+            new Filter("slice", new SliceFilter()),
+            //Custom Filters
+            new Filter("concat", new ConcatFilter()),
+            new Filter("default", new NDjango.Custom.Filters.DefaultFilter()), //DO NOT USE STANDARD DEFAULT FILTER
+            new Filter("exists", new ExistsFilter()),
+            new Filter("empty", new EmptyFilter()),
+            new Filter("contains", new ContainsFilter()),
+            new Filter("startsWith", new StartsWithFilter()),
+            new Filter("endsWith", new EndsWithFilter()),
+            new Filter("decrypt", new DecryptFilter())
+        };
 
-        private static ITemplateManager GetTemplateManager(bool xmlSafe)
+        private static Interfaces.ITemplateManager GetTemplateManager(bool xmlSafe)
         {
             return new TemplateManagerProvider().WithLoader(new StringLoader())
                                                 .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, Error)
                                                 .WithSetting(Constants.DEFAULT_AUTOESCAPE, xmlSafe)
                                                 .WithSetting(Constants.EXCEPTION_IF_ERROR, true)
                                                 .WithSetting(Constants.RELOAD_IF_UPDATED, false)
-                                                .WithFilters(NDjango.FiltersCS.FilterManager.GetFilters().Where(f => f.name != "default"))
-                                                .WithFilter("concat", new NDjangoExpansions.ConcatFilter())
-                                                .WithFilter("default", new NDjangoExpansions.DefaultFilter())
-                                                .WithFilter("exists", new NDjangoExpansions.ExistsFilter())
-                                                .WithFilter("empty", new NDjangoExpansions.EmptyFilter())
-                                                .WithFilter("contains", new NDjangoExpansions.ContainsFilter())
-                                                .WithFilter("startsWith", new NDjangoExpansions.StartsWithFilter())
-                                                .WithFilter("endsWith", new NDjangoExpansions.EndsWithFilter())
-                                                .WithFilter("decrypt", new NDjangoExpansions.DecryptFilter())
+                                                .WithFilters(Filters)
                                                 .GetNewManager();
         }
 
@@ -43,7 +75,7 @@ namespace Ensconce.Update
             return Render(template, values, XmlTemplateManager.Value);
         }
 
-        private static string Render(string template, IDictionary<string, object> values, ITemplateManager templateManager)
+        private static string Render(string template, IDictionary<string, object> values, Interfaces.ITemplateManager templateManager)
         {
             lock (Error)
             {
@@ -77,7 +109,7 @@ namespace Ensconce.Update
             }
         }
 
-        public class StringLoader : ITemplateLoader
+        public class StringLoader : Interfaces.ITemplateLoader
         {
             public TextReader GetTemplate(string path)
             {

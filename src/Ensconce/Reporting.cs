@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Ensconce.ReportingServices;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     internal static class Reporting
     {

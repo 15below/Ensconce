@@ -1,11 +1,11 @@
-using Ensconce.ReportingServices;
-using Mono.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Ensconce.ReportingServices;
+using Mono.Options;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     internal static class Arguments
     {
@@ -213,8 +213,8 @@ namespace Ensconce
 
             if (showHelp || !operationRequested)
             {
-                Console.WriteLine("Configuration update console wrapper. See https://github.com/15below/Ensconce for details.");
-                p.WriteOptionDescriptions(Console.Out);
+                System.Console.WriteLine("Configuration update console wrapper. See https://github.com/15below/Ensconce for details.");
+                p.WriteOptionDescriptions(System.Console.Out);
                 if (!showHelp) throw new OptionException("Invalid combination of options given, showing help.", "help");
             }
 

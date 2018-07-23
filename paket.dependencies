@@ -6,5 +6,6 @@ nuget NUnit
 nuget RhinoMocks
 nuget Newtonsoft.Json
 nuget roundhouse.lib
+nuget FSharp.Core
 
 github 15below/Build.Tools:V1.1

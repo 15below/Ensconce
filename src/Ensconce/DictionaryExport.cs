@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.IO;
+﻿using System.IO;
 using System.Net;
+using Newtonsoft.Json;
 
-namespace Ensconce
+namespace Ensconce.Console
 {
     internal static class DictionaryExport
     {

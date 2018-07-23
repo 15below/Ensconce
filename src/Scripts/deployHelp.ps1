@@ -22,10 +22,10 @@ function ensconce
     if (@($input).Count -ne 0)
     {
         $input.Reset()
-        $results = $input | & "$DeployToolsDir\Tools\Ensconce\Ensconce.exe" $args
+        $results = $input | & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $args
     }
     else {
-        $results = & "$DeployToolsDir\Tools\Ensconce\Ensconce.exe" $args
+        $results = & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $args
     }
     if ($LASTEXITCODE -ne 0)
     {
