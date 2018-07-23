@@ -1,5 +1,6 @@
 framework: auto-detect
-redirects: on
+redirects: force
+strategy: min
 source https://nuget.org/api/v2/
 
 nuget NUnit
@@ -7,5 +8,6 @@ nuget RhinoMocks
 nuget Newtonsoft.Json
 nuget roundhouse.lib
 nuget FSharp.Core
+nuget StructureMap
 
 github 15below/Build.Tools:V1.1
