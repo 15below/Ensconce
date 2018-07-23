@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{293126
 		..\paket.dependencies = ..\paket.dependencies
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Console", "Ensconce\Ensconce.Console.csproj", "{0B5FD6CF-76AE-4599-9661-4489B62D2851}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Console", "Ensconce.Console\Ensconce.Console.csproj", "{0B5FD6CF-76AE-4599-9661-4489B62D2851}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Update", "Ensconce.Update\Ensconce.Update.csproj", "{A59B1375-DC78-47D2-8930-746CD88863AF}"
 EndProject
