@@ -29,19 +29,19 @@ Function AddUser([string]$name, [string]$password)
 	$newuser = $computer.Create("user", $name)
 	$newuser.SetPassword($password)
 	$newuser.SetInfo()
-	
-	$newuser.UserFlags = $ADS_UF_DONT_EXPIRE_PASSWD           
+
+	$newuser.UserFlags = $ADS_UF_DONT_EXPIRE_PASSWD
 	$newuser.CommitChanges()
 }
 
 Function AddUserToGroup([string]$name, [string]$group)
 {
 	"AddUserToGroup: $name, $group" | Write-Host
-	
+
 	$objComputer = [ADSI]("WinNT://$env:computername,computer")
 
 	$colUsers = $objComputer.psbase.children |
-		Where-Object {$_.psBase.schemaClassName -eq "User" -and $_.psBase.Name -eq $name} 
+		Where-Object {$_.psBase.schemaClassName -eq "User" -and $_.psBase.Name -eq $name}
 
 	if($colUsers -eq $null)
 	{
@@ -49,10 +49,10 @@ Function AddUserToGroup([string]$name, [string]$group)
 	}
 	else
 	{
-		$searchgroup = ($objComputer.psbase.children | 
+		$searchgroup = ($objComputer.psbase.children |
 			Where {$_.psbase.schemaClassName -eq "group" -and $_.psbase.Name -eq $group} |
 			Select-Object -First 1)
-		
+
 		if($searchgroup -eq $null)
 		{
 			"Could not locate group: $group" | Write-Host
@@ -60,7 +60,7 @@ Function AddUserToGroup([string]$name, [string]$group)
 		else
 		{
 			$blnFound = $False
-			$members = @($searchgroup.psbase.Invoke("Members")) 
+			$members = @($searchgroup.psbase.Invoke("Members"))
 			ForEach ($Member In $Members)
 			{
 				$class = $member.GetType().InvokeMember("Class", 'GetProperty', $Null, $member, $Null)
@@ -71,8 +71,8 @@ Function AddUserToGroup([string]$name, [string]$group)
 					"User already added to group: $name, $group" | Write-Host
 				}
 			}
-			
-			if ($blnFound -eq $False) {	
+
+			if ($blnFound -eq $False) {
 				try {
 					net localgroup $group $name /add
 				}
@@ -98,7 +98,7 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 		AddUser $name $password
 		AddUserToGroup $name "administrators"
 	}
-	
+
 	$exe = "$DeployToolsDir\Tools\Grant\Grant.exe"
 	$userName = "$env:computername\$name"
 	&$exe ADD SeServiceLogonRight $userName
@@ -116,7 +116,7 @@ Function CheckAndCreateUserAccount([string]$name, [string]$password)
 
 	if ($blnFound -eq $False) {
 		AddUser $name $password
-		
+
 		net localgroup Users $name /add
 	}
 }
@@ -124,7 +124,7 @@ Function CheckAndCreateUserAccount([string]$name, [string]$password)
 Function SetServiceAccount([string]$serviceName, [string]$account, [string]$password)
 {
 	$svc = gwmi win32_service -filter ("Name=""$serviceName""")
-	
+
 	if ($svc -eq $null)
 	{
 		"Could not locate service $serviceName" | Write-Host
