@@ -409,5 +409,27 @@ namespace Ensconce.Update.Tests
             Assert.AreEqual("new-after", newConfig.XPathSelectElement("/root/testing/test[2]").Attribute("myAttr").Value);
             Assert.AreEqual("new-value", newConfig.XPathSelectElement("/root/testing/test[2]").Value);
         }
+
+        [Test]
+        public void SubstituteIf_True()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution30.xml", @"TestUpdateFiles\TestConfig3.xml",
+                new Dictionary<string, object> { { "Environment", "INT" } }
+            ));
+
+            Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);
+        }
+
+        [Test]
+        public void SubstituteIf_False()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution30.xml", @"TestUpdateFiles\TestConfig3.xml",
+                new Dictionary<string, object> { { "Environment", "NOT_INT" } }
+            ));
+
+            Assert.AreEqual("before", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);
+        }
     }
 }

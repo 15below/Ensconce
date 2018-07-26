@@ -24,6 +24,7 @@ namespace Ensconce.Update
             public string AddChildContent;
             public string AddChildContentIfNotExists;
             public bool HasAddChildContent;
+            public bool Execute;
 
             public Substitution()
             {
@@ -37,6 +38,7 @@ namespace Ensconce.Update
                 AddChildContent = "";
                 AddChildContentIfNotExists = "";
                 HasAddChildContent = false;
+                Execute = true;
             }
         }
 
@@ -161,7 +163,7 @@ namespace Ensconce.Update
                 baseNsm.AddNamespace(ns.Prefix, ns.Uri);
             }
 
-            foreach (var sub in subs)
+            foreach (var sub in subs.Where(x => x.Execute))
             {
                 Logging.Log($"Updating xpath {sub.XPath}");
 
@@ -264,6 +266,11 @@ namespace Ensconce.Update
                 }
 
                 sub.XPath = change.Attribute("xPath")?.Value.RenderTemplate(tagValues);
+
+                if (change.Attribute("if") != null)
+                {
+                    sub.Execute = bool.Parse($"{{% if {change.Attribute("if")?.Value} %}}true{{% else %}}false{{% endif %}}".RenderTemplate(tagValues));
+                }
             }
 
             return sub;
