@@ -2,11 +2,12 @@ framework: auto-detect
 redirects: force
 strategy: min
 source https://nuget.org/api/v2/
+source temp-packages
 
 nuget NUnit
 nuget RhinoMocks
 nuget Newtonsoft.Json
-nuget roundhouse.lib
+nuget roundhouse.lib prerelease
 nuget FSharp.Core
 nuget StructureMap
 
