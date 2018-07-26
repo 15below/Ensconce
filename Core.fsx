@@ -44,7 +44,6 @@ Target "Solution:Clean"           <| Solution.clean config
 Target "Versioning:Update"             <| Versioning.update config
 Target "Versioning:UpdateDeployNuspec" <| Versioning.updateDeploy config
 Target "Test:Run"                      <| Test.run config
-Target "SpecFlow:Run"                  <| Specflow.run config
 
 // Build order
 "Solution:Clean"
@@ -52,7 +51,6 @@ Target "SpecFlow:Run"                  <| Specflow.run config
     =?> ("Versioning:UpdateDeployNuspec", not isLocalBuild)
     ==> "Solution:Build"
     ==> "PackagingDeploy:Package"
-    ==> "SpecFlow:Run"
     ==> "Test:Run"
     =?> ("PackagingDeploy:Push", not isLocalBuild)
     ==> "Default"

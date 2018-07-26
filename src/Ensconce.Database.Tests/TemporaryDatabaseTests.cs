@@ -1,11 +1,10 @@
-﻿using System;
+﻿using NUnit.Framework;
+using Rhino.Mocks;
+using roundhouse.infrastructure.logging;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using FifteenBelow.Deployment;
-using NUnit.Framework;
-using Rhino.Mocks;
-using roundhouse.infrastructure.logging;
 
 namespace Ensconce.Database.Tests
 {
@@ -50,12 +49,12 @@ namespace Ensconce.Database.Tests
                 Assert.True(!sut.Exists());
             }
         }
-        
+
         [Test]
         public void should_stamp_version_from_default_buildinfo_file_when_deployed()
         {
             // This version number is set in _BuildInfo.txt which lives at the root of the database scripts
-            const string currentVersion = "1.1.1.1"; 
+            const string currentVersion = "1.1.1.1";
             using (var sut = new TemporaryDatabase())
             {
                 sut.Deploy(Path.Combine(Assembly.GetExecutingAssembly().Directory(), "Scripts1"));
@@ -81,7 +80,7 @@ namespace Ensconce.Database.Tests
         [Test]
         public void should_stamp_repository_path_when_deployed()
         {
-            const string repositoryPath= "testrepository";
+            const string repositoryPath = "testrepository";
             using (var sut = new TemporaryDatabase())
             {
                 sut.Deploy(Path.Combine(Assembly.GetExecutingAssembly().Directory(), "Scripts1"), repositoryPath);
@@ -102,18 +101,18 @@ namespace Ensconce.Database.Tests
                 Assert.That(sut.GetTables().Select(x => x.Name), Has.Member("Table2"));
             }
         }
-        
+
         [Test]
         public void should_not_display_fluent_nhibernate_warnings()
         {
             // Get around problem with calling roundhouse dll directly where it continually logs missing type for nhibernate
             var logger = MockRepository.GenerateMock<Logger>();
-            
+
             using (var sut = new TemporaryDatabase(null, logger))
             {
                 sut.Deploy();
 
-                var args=logger.GetArgumentsForCallsMadeOn(x => x.log_a_warning_event_containing(null, null));
+                var args = logger.GetArgumentsForCallsMadeOn(x => x.log_a_warning_event_containing(null, null));
 
                 Assert.That(args[0],
                             Has.None.ContainsSubstring(

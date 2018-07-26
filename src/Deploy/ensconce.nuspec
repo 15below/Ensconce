@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>Ensconce</id>
-		<version>1.0.12.0</version>
+		<version>1.1.0.0</version>
 		<title>Ensconce</title>
 		<authors>15below Ltd</authors>
 		<owners>15below Ltd</owners>
@@ -14,7 +14,7 @@
 	</metadata>
 	
 	<files>
-		<file src="..\Ensconce\bin\Release\*" target="Content\Tools\Ensconce" />
+		<file src="..\Ensconce.Console\bin\Release\*" target="Content\Tools\Ensconce" />
 		<file src="..\ExternalDeployTools\**" target="Content\Tools" />
 		<file src="..\Scripts\deployHelp.ps1" target="Content" />
 		<file src="..\Scripts\createWebSite.ps1" target="Content" />
