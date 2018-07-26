@@ -2,6 +2,7 @@
 <Root xmlns="http://15below.com/Substitutions.xsd">
   <Namespaces/>
   <Files>
+    <!-- NOT THIS IS INTENTIONALLY INVALID STRUCTURE -->
     <File Filename="TestUpdateFiles\TestConfig2.xml">
       <ReplacementTemplate>TestUpdateFiles\TestConfig4.xml</ReplacementTemplate>
       <Change>

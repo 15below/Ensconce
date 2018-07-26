@@ -37,7 +37,8 @@
                           <xs:element name="Change" maxOccurs="unbounded">
                             <xs:complexType>
                               <xs:sequence>
-                                <xs:element name="XPath" type="xs:string"/>
+                                <xs:element name="XPath" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                                <xs:element name="Content" type="xs:string" minOccurs="0"/>
                                 <xs:element name="ReplacementContent" type="xs:string" minOccurs="0"/>
                                 <xs:element name="AddChildContent" minOccurs="0">
                                   <xs:complexType>
@@ -55,18 +56,35 @@
                                     <xs:simpleContent>
                                       <xs:extension base="xs:string">
                                         <xs:attribute name="attributeName" type="xs:string" use="required"/>
+                                        <xs:attribute name="value" type="xs:string" use="optional"/>
                                       </xs:extension>
                                     </xs:simpleContent>
                                   </xs:complexType>
                                 </xs:element>
                               </xs:sequence>
+                              <xs:attribute name="type" use="optional">
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:enumeration value="ReplacementContent" />
+                                    <xs:enumeration value="AddChildContent" />
+                                    <xs:enumeration value="AppendAfter" />
+                                    <xs:enumeration value="RemoveCurrentAttributes" />
+                                    <xs:enumeration value="ChangeAttribute" />
+                                  </xs:restriction>
+                                </xs:simpleType>
+                              </xs:attribute>
+                              <xs:attribute name="XPath" type="xs:string" use="optional"/>
+                              <xs:attribute name="attributeName" type="xs:string" use="optional"/>
+                              <xs:attribute name="value" type="xs:string" use="optional"/>
+                              <xs:attribute name="ifNotExists" type="xs:string" use="optional"/>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
                   </xs:choice>
-                  <xs:attribute name="Filename" type="xs:string"/>
+                  <xs:attribute name="Filename" type="xs:string" use="required"/>
+                  <xs:attribute name="ReplacementTemplate" type="xs:string" use="optional"/>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>

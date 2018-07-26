@@ -162,8 +162,8 @@ namespace Ensconce.Update
                     throw new ApplicationException(string.Format("XPath select of {0} returned null", sub.XPath));
                 }
 
-                if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
                 if (sub.HasAddChildContent) AddChildContentToActive(tagValues, activeNode, sub);
+                if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
                 if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
                 if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
 
@@ -203,59 +203,76 @@ namespace Ensconce.Update
 
         private static Substitution BuildSubstitions(XElement change, XmlNamespaceManager nsm, IDictionary<string, object> tagValues)
         {
-            var sub = new Substitution();
-            var replacementContent = change.XPathSelectElement("s:ReplacementContent", nsm);
-
-            if (replacementContent == null)
+            //Default everything off
+            var sub = new Substitution
             {
-                sub.ReplacementContent = "";
-                sub.HasReplacementContent = false;
+                ReplacementContent = "",
+                HasReplacementContent = false,
+                AddChildContent = "",
+                HasAddChildContent = false,
+                AddChildContentIfNotExists = null,
+                AppendAfter = "",
+                HasAppendAfter = false,
+                XPath = "",
+                RemoveCurrentAttributes = false,
+                ChangeAttributes = new List<Tuple<string, string>>()
+            };
+
+
+            if (change.Attribute("type") == null)
+            {
+                sub.ReplacementContent = change.XPathSelectElement("s:ReplacementContent", nsm)?.Value;
+                sub.HasReplacementContent = sub.ReplacementContent != null;
+
+                sub.AddChildContent = change.XPathSelectElement("s:AddChildContent", nsm)?.Value;
+                sub.HasAddChildContent = sub.AddChildContent != null;
+                sub.AddChildContentIfNotExists = change.XPathSelectElement("s:AddChildContent", nsm)?.Attribute("ifNotExists")?.Value;
+
+                sub.AppendAfter = change.XPathSelectElement("s:AppendAfter", nsm)?.Value;
+                sub.HasAppendAfter = sub.AppendAfter != null;
+
+                sub.XPath = (change.Attribute("XPath")?.Value ?? change.XPathSelectElement("s:XPath", nsm)?.Value).RenderTemplate(tagValues);
+
+                sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
+
+                sub.ChangeAttributes = change.XPathSelectElements("s:ChangeAttribute", nsm).Select(ca => new Tuple<string, string>(ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value)).ToList();
             }
             else
             {
-                sub.ReplacementContent = replacementContent.Value;
-                sub.HasReplacementContent = true;
-            }
-
-            var addChildContent = change.XPathSelectElement("s:AddChildContent", nsm);
-            if (addChildContent == null)
-            {
-                sub.AddChildContent = "";
-                sub.HasAddChildContent = false;
-            }
-            else
-            {
-                sub.AddChildContent = addChildContent.Value;
-                sub.HasAddChildContent = true;
-
-                var ifNotExists = addChildContent.Attribute("ifNotExists");
-                if (ifNotExists != null)
+                switch (change.Attribute("type")?.Value.ToLower())
                 {
-                    sub.AddChildContentIfNotExists = ifNotExists.Value;
+                    case "replacementcontent":
+                        sub.ReplacementContent = change.Value;
+                        sub.HasReplacementContent = true;
+                        break;
+                    case "addchildcontent":
+                        sub.AddChildContent = change.Value;
+                        sub.HasAddChildContent = true;
+                        var ifNotExists = change.Attribute("ifNotExists");
+                        if (ifNotExists != null)
+                        {
+                            sub.AddChildContentIfNotExists = ifNotExists.Value;
+                        }
+                        break;
+                    case "appendafter":
+                        sub.AppendAfter = change.Value;
+                        sub.HasAppendAfter = true;
+                        break;
+                    case "removecurrentattributes":
+                        sub.RemoveCurrentAttributes = true;
+                        break;
+                    case "changeattribute":
+                        sub.ChangeAttributes = new List<Tuple<string, string>>
+                            {
+                                new Tuple<string, string>(change.Attribute("attributeName")?.Value,change.Attribute("value")?.Value)
+                            };
+                        break;
+                    default:
+                        throw new Exception($"Unknown change type '{change.Attribute("type")?.Value}'");
                 }
-                else
-                {
-                    sub.AddChildContentIfNotExists = null;
-                }
-            }
 
-            var appendAfter = change.XPathSelectElement("s:AppendAfter", nsm);
-            if (appendAfter == null)
-            {
-                sub.AppendAfter = "";
-                sub.HasAppendAfter = false;
+                sub.XPath = change.Attribute("XPath")?.Value.RenderTemplate(tagValues);
             }
-            else
-            {
-                sub.AppendAfter = appendAfter.Value;
-                sub.HasAppendAfter = true;
-            }
-
-            sub.XPath = change.XPathSelectElement("s:XPath", nsm).Value.RenderTemplate(tagValues);
-            sub.RemoveCurrentAttributes =
-                XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
-            sub.ChangeAttributes = change.XPathSelectElements("s:ChangeAttribute", nsm)
-                .Select(ca => new Tuple<string, string>(ca.Attribute("attributeName").Value, ca.Value)).ToList();
 
             return sub;
         }
