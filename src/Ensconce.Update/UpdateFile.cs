@@ -12,18 +12,32 @@ namespace Ensconce.Update
 {
     public class UpdateFile
     {
-        public struct Substitution
+        public class Substitution
         {
             public string XPath;
             public string ReplacementContent;
             public bool HasReplacementContent;
             public bool RemoveCurrentAttributes;
-            public List<Tuple<string, string>> ChangeAttributes;
+            public List<(string attributeName, string newValue)> ChangeAttributes;
             public string AppendAfter;
             public bool HasAppendAfter;
             public string AddChildContent;
             public string AddChildContentIfNotExists;
             public bool HasAddChildContent;
+
+            public Substitution()
+            {
+                XPath = "";
+                ReplacementContent = "";
+                HasReplacementContent = false;
+                RemoveCurrentAttributes = false;
+                ChangeAttributes = new List<(string attributeName, string newValue)>();
+                AppendAfter = "";
+                HasAppendAfter = false;
+                AddChildContent = "";
+                AddChildContentIfNotExists = "";
+                HasAddChildContent = false;
+            }
         }
 
         public struct Namespace
@@ -41,7 +55,7 @@ namespace Ensconce.Update
             ValidateSubstitutionDoc(subsXml);
 
             var files = subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
-                               .Select(el => el.Attribute("Filename").Value)
+                               .Select(el => el.Attribute("Filename")?.Value)
                                .Select(path => path.RenderTemplate(tagValues));
 
             foreach (var file in files)
@@ -96,9 +110,9 @@ namespace Ensconce.Update
                 baseData = File.ReadAllText(replacementTemplate).RenderTemplate(tagValues);
             }
 
-            var subs = fileElement.XPathSelectElements(string.Format("s:Changes/s:Change"), nsm)
-                                  .Select(change => BuildSubstitions(change, nsm, tagValues));
-
+            var subs = fileElement.XPathSelectElements("s:Changes/s:Change", nsm)
+                                  .Select(change => BuildSubstitions(change, nsm, tagValues))
+                                  .ToList();
             if (subs.Any())
             {
                 if (baseData == null) baseData = File.ReadAllText(baseFile);
@@ -128,19 +142,15 @@ namespace Ensconce.Update
 
             schemas.Add(null, XmlReader.Create(assembly.GetManifestResourceStream("Ensconce.Update.Substitutions.xsd")));
 
-            subsXml.Validate(schemas, (sender, args) => { throw args.Exception; });
+            subsXml.Validate(schemas, (sender, args) => throw args.Exception);
         }
 
-        private static string UpdateXml(IDictionary<string, object> tagValues,
-                                        IEnumerable<Substitution> subs,
-                                        XDocument baseXml,
-                                        XmlNamespaceManager nsm,
-                                        XDocument subsXml)
+        private static string UpdateXml(IDictionary<string, object> tagValues, IEnumerable<Substitution> subs, XNode baseXml, IXmlNamespaceResolver nsm, XNode subsXml)
         {
             var nss = subsXml.XPathSelectElements("/s:Root/s:Namespaces/s:Namespace", nsm)
                              .Select(ns => new Namespace
                              {
-                                 Prefix = ns.Attribute("Prefix").Value,
+                                 Prefix = ns.Attribute("Prefix")?.Value,
                                  Uri = ns.Value
                              });
 
@@ -159,40 +169,39 @@ namespace Ensconce.Update
 
                 if (activeNode == null)
                 {
-                    throw new ApplicationException(string.Format("XPath select of {0} returned null", sub.XPath));
+                    throw new ApplicationException($"XPath select of {sub.XPath} returned null");
                 }
 
-                if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
                 if (sub.HasAddChildContent) AddChildContentToActive(tagValues, activeNode, sub);
+                if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
                 if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
                 if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
 
-                foreach (var ca in sub.ChangeAttributes)
+                foreach (var (atttibute, value) in sub.ChangeAttributes)
                 {
-                    activeNode.SetAttributeValue(ca.Item1, ca.Item2.RenderTemplate(tagValues));
+                    activeNode.SetAttributeValue(atttibute, value.RenderTemplate(tagValues));
                 }
             }
 
             return baseXml.ToString();
         }
 
-        private static void AppendAfterActive(IDictionary<string, object> tagValues, XElement activeNode, Substitution sub)
+        private static void AppendAfterActive(IDictionary<string, object> tagValues, XNode activeNode, Substitution sub)
         {
             var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AppendAfter.RenderXmlTemplate(tagValues) + "</fakeRoot>");
             activeNode.AddAfterSelf(fakeRoot.Elements());
         }
 
-        private static void AddChildContentToActive(IDictionary<string, object> tagValues, XElement activeNode, Substitution sub)
+        private static void AddChildContentToActive(IDictionary<string, object> tagValues, XContainer activeNode, Substitution sub)
         {
-            if (sub.AddChildContentIfNotExists == null ||
-                activeNode.Document.XPathSelectElement(sub.AddChildContentIfNotExists.RenderTemplate(tagValues)) == null)
+            if (sub.AddChildContentIfNotExists == null || activeNode.Document?.XPathSelectElement(sub.AddChildContentIfNotExists.RenderTemplate(tagValues)) == null)
             {
                 var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
                 activeNode.Add(fakeRoot.Elements());
             }
         }
 
-        private static void ReplaceChildNodes(IDictionary<string, object> tagValues, XElement activeNode, Substitution sub)
+        private static void ReplaceChildNodes(IDictionary<string, object> tagValues, XContainer activeNode, Substitution sub)
         {
             var replacementValue = sub.ReplacementContent.RenderXmlTemplate(tagValues);
             // Ugly hack to stop XElement.SetValue escaping text...
@@ -201,61 +210,61 @@ namespace Ensconce.Update
             activeNode.ReplaceNodes(children);
         }
 
-        private static Substitution BuildSubstitions(XElement change, XmlNamespaceManager nsm, IDictionary<string, object> tagValues)
+        private static Substitution BuildSubstitions(XElement change, IXmlNamespaceResolver nsm, IDictionary<string, object> tagValues)
         {
+            //Default everything off
             var sub = new Substitution();
-            var replacementContent = change.XPathSelectElement("s:ReplacementContent", nsm);
 
-            if (replacementContent == null)
+            if (change.Attribute("type") == null)
             {
-                sub.ReplacementContent = "";
-                sub.HasReplacementContent = false;
-            }
-            else
-            {
-                sub.ReplacementContent = replacementContent.Value;
-                sub.HasReplacementContent = true;
-            }
+                sub.ReplacementContent = change.XPathSelectElement("s:ReplacementContent", nsm)?.Value;
+                sub.HasReplacementContent = sub.ReplacementContent != null;
 
-            var addChildContent = change.XPathSelectElement("s:AddChildContent", nsm);
-            if (addChildContent == null)
-            {
-                sub.AddChildContent = "";
-                sub.HasAddChildContent = false;
-            }
-            else
-            {
-                sub.AddChildContent = addChildContent.Value;
-                sub.HasAddChildContent = true;
+                sub.AddChildContent = change.XPathSelectElement("s:AddChildContent", nsm)?.Value;
+                sub.HasAddChildContent = sub.AddChildContent != null;
+                sub.AddChildContentIfNotExists = change.XPathSelectElement("s:AddChildContent", nsm)?.Attribute("ifNotExists")?.Value;
 
-                var ifNotExists = addChildContent.Attribute("ifNotExists");
-                if (ifNotExists != null)
+                sub.AppendAfter = change.XPathSelectElement("s:AppendAfter", nsm)?.Value;
+                sub.HasAppendAfter = sub.AppendAfter != null;
+
+                sub.XPath = (change.Attribute("xPath")?.Value ?? change.XPathSelectElement("s:XPath", nsm)?.Value).RenderTemplate(tagValues);
+
+                sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
+
+                foreach (var ca in change.XPathSelectElements("s:ChangeAttribute", nsm))
                 {
-                    sub.AddChildContentIfNotExists = ifNotExists.Value;
-                }
-                else
-                {
-                    sub.AddChildContentIfNotExists = null;
+                    sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
                 }
             }
-
-            var appendAfter = change.XPathSelectElement("s:AppendAfter", nsm);
-            if (appendAfter == null)
-            {
-                sub.AppendAfter = "";
-                sub.HasAppendAfter = false;
-            }
             else
             {
-                sub.AppendAfter = appendAfter.Value;
-                sub.HasAppendAfter = true;
-            }
+                switch (change.Attribute("type")?.Value.ToLower())
+                {
+                    case "replacementcontent":
+                        sub.ReplacementContent = change.Value;
+                        sub.HasReplacementContent = true;
+                        break;
+                    case "addchildcontent":
+                        sub.AddChildContent = change.Value;
+                        sub.HasAddChildContent = true;
+                        sub.AddChildContentIfNotExists = change.Attribute("ifNotExists")?.Value;
+                        break;
+                    case "appendafter":
+                        sub.AppendAfter = change.Value;
+                        sub.HasAppendAfter = true;
+                        break;
+                    case "removecurrentattributes":
+                        sub.RemoveCurrentAttributes = true;
+                        break;
+                    case "changeattribute":
+                        sub.ChangeAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
+                        break;
+                    default:
+                        throw new Exception($"Unknown change type '{change.Attribute("type")?.Value}'");
+                }
 
-            sub.XPath = change.XPathSelectElement("s:XPath", nsm).Value.RenderTemplate(tagValues);
-            sub.RemoveCurrentAttributes =
-                XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
-            sub.ChangeAttributes = change.XPathSelectElements("s:ChangeAttribute", nsm)
-                .Select(ca => new Tuple<string, string>(ca.Attribute("attributeName").Value, ca.Value)).ToList();
+                sub.XPath = change.Attribute("xPath")?.Value.RenderTemplate(tagValues);
+            }
 
             return sub;
         }

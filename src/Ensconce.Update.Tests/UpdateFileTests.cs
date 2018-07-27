@@ -23,8 +23,6 @@ namespace Ensconce.Update.Tests
             {
                 File.Delete(file);
             }
-
-
         }
 
         [Test]
@@ -378,6 +376,38 @@ namespace Ensconce.Update.Tests
                 @"TestUpdateFiles\TestSubstitution23.xml", @"TestUpdateFiles\PlainText03.txt",
                 new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } });
             Assert.AreEqual("Some plain text. With a concat <after></after>.", newConfig);
+        }
+
+        [Test]
+        public void SimplifiedChangeAttributeStructure()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution27.xml", @"TestUpdateFiles\TestConfig3.xml"
+            ));
+            Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);
+        }
+
+        [Test]
+        public void CondensedChangeAttributeStructure()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution28.xml", @"TestUpdateFiles\TestConfig3.xml"
+            ));
+            Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);
+        }
+
+        [Test]
+        public void CondensedAllSubsStructure()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution29.xml", @"TestUpdateFiles\TestConfig3.xml"
+            ));
+            Assert.NotNull(newConfig.XPathSelectElement("/root/testing"));
+            Assert.Null(newConfig.XPathSelectElement("/root/testing/test[1]").Attribute("myAttr"));
+            Assert.AreEqual("after", newConfig.XPathSelectElement("/root/testing/test[1]").Attribute("myAttr2").Value);
+            Assert.AreEqual("value", newConfig.XPathSelectElement("/root/testing/test[1]").Value);
+            Assert.AreEqual("new-after", newConfig.XPathSelectElement("/root/testing/test[2]").Attribute("myAttr").Value);
+            Assert.AreEqual("new-value", newConfig.XPathSelectElement("/root/testing/test[2]").Value);
         }
     }
 }

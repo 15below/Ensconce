@@ -1,5 +1,5 @@
 Write-Host "Ensconce - CreateIIS6App Loading"
-$frameworkPath = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client").InstallPath 
+$frameworkPath = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client").InstallPath
 set-alias regIIS $frameworkPath\aspnet_regiis.exe
 
 function TestInclude ([string]$name) {
@@ -20,15 +20,15 @@ function CheckIfWebSiteExists ([string]$name)
 	$tempWebsite -ne $NULL
 }
 
-function CheckIfWebApplicationExists ([string]$webSite, [string]$appName) 
+function CheckIfWebApplicationExists ([string]$webSite, [string]$appName)
 {
 	$tempWebsite  = (gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'")
 	$tempApp = (gwmi -namespace "root\MicrosoftIISv2" -class "IISWebDirectory" | where {$_.name -like "$tempWebSite/*$appName" })
-	if ($tempApp -ne $NULL) 
+	if ($tempApp -ne $NULL)
 	{
     $tempApp.AppGetStatus().returnvalue -ne 2
-	} 
-	else 
+	}
+	else
 	{ $False }
 }
 
@@ -40,7 +40,7 @@ function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
 	($webVirtualDir -ne $null)
 }
 
-function CheckIfSslBindingExists ([string]$webSite, [string]$hostHeader) 
+function CheckIfSslBindingExists ([string]$webSite, [string]$hostHeader)
 {
 	$true
 }
@@ -69,7 +69,7 @@ function CreateAppPool ([string]$name)
 function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 {
 	$appPool = gwmi -namespace "root\MicrosoftIISv2" -class "IISApplicationPoolSetting" -filter "Name like '%$name%'"
-	
+
 	# LocalSystem = 0
 	# LocalService = 1
 	# NetworkService = 2
@@ -80,16 +80,16 @@ function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 	{
 		$identityType = 2
 	}
-	else 
+	else
 	{
 		$appPool.WAMUserName = $user
 		$appPool.WAMUserPass = $password
 		# Only add user to group if its a specific user, dont do it for networkservice
 		AddUserToGroup $user "IIS_WPG"
 	}
-	
+
 	$appPool.AppPoolIdentityType = $identityType
-	$appPool.Put()	
+	$appPool.Put()
 }
 
 function StopAppPool([string]$name)
@@ -153,7 +153,7 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 	"    Creating IIS website for " + $name
 	$tempWebsite  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$name%'"
 	if (($tempWebsite -eq $NULL)) {
-	
+
 		$iisWebService  = gwmi -namespace "root\MicrosoftIISv2" -class "IIsWebService"
 
 		$bindingClass = [wmiclass]'root\MicrosoftIISv2:ServerBinding'
@@ -163,23 +163,23 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 		EnsurePath $localPath
 		$NewSite = $iisWebService.CreateNewSite($name, $bindings, $localPath)
-				
+
 		$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$name%'"
-		
+
 		$iis = [ADSI]"IIS://localhost/W3SVC"
 		$webServer = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer"	 -AND $_.ServerComment -eq $name }
-				
+
 		$webserver.AspEnableParentPaths = $True
 		$webserver.LogFileDirectory = $logLocation
 		$webServer.Properties["AccessFlags"].Value = 513
 		$webServer.Properties["AuthFlags"].Value = 1
 		$webServer.DefaultDoc = "index.asp," + $webServer.DefaultDoc
 		$webServer.AppPoolID = $appPoolName
-				
+
 		$webserver.SetInfo()
 
 		$webVirtualDir = $webServer.children | where { $_.keyType -eq "IIsWebVirtualDir" }
-		
+
 		# Set Application name
 		$webVirtualDir.AppFriendlyName = $applicationName
 
@@ -220,12 +220,12 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 }
 
 
-function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir ,[string]$subFolders) 
+function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir ,[string]$subFolders)
 {
 	EnsurePath $InstallDir
 	$webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"
-	
-	if ($subFolders -eq $null -or $subFolders -eq "" ) 
+
+	if ($subFolders -eq $null -or $subFolders -eq "" )
 	{
 
 		$dirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebDirectory"
@@ -238,9 +238,9 @@ function CreateWebApplication([string]$webSite, [string]$appName, [string] $appP
 		CreateVirtualDirectory $webSite $virtualDirName $installDir
 		$nvdir = ($webServerSettings.Name + '/ROOT/' + $virtualDirName)
 
-		$nvdir = $nvdir.Replace("\", "/") 
+		$nvdir = $nvdir.Replace("\", "/")
 
-		$newDir = gwmi -namespace "root\microsoftiisv2" -Class "IIsWebVirtualDir" -filter "Name='$nvdir'"  
+		$newDir = gwmi -namespace "root\microsoftiisv2" -Class "IIsWebVirtualDir" -filter "Name='$nvdir'"
 	}
 
 	$newDir.AppCreate3(2, $appPool, $True)
@@ -288,7 +288,7 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 	}
 }
 
-function EnableWebDav ([string] $websiteName) 
+function EnableWebDav ([string] $websiteName)
 {
 	"EnableWebDav is not supported for IIS6" | Write-Host
 }
@@ -296,14 +296,14 @@ function EnableWebDav ([string] $websiteName)
 function AddAuthoringRule ([string] $websiteName, [string] $userName, [string] $access)
 {
 	"AddAutoringRole is not supported for IIS6" | Write-Host
-}	
+}
 
 function AddWildcardMap ([string] $websiteName, [string]$subFolders)
 {
 	$iis = [ADSI]"IIS://localhost/W3SVC"
 	$webServer = $iis.psbase.children | where { $_.keyType -eq "IIsWebServer"	 -AND $_.ServerComment -eq $websiteName }
 	$webVirtualDir = $webServer.children | where { $_.keyType -eq "IIsWebVirtualDir" }
-	if ($subFolders -ne $null -and $subFolders -ne "" ) 
+	if ($subFolders -ne $null -and $subFolders -ne "" )
 	{
 		$folders = $subFolders.split("\")
 		foreach ($folder in $Folders)
@@ -311,11 +311,11 @@ function AddWildcardMap ([string] $websiteName, [string]$subFolders)
 			$webVirtualDir = ($webVirtualDir.Children | where {$_.name -like $Folder })
 		}
 	}
-	
-	if ($webVirtualDir -ne $null) 
+
+	if ($webVirtualDir -ne $null)
 	{
 		$check = $webVirtualDir.ScriptMaps | where {$_.EndsWith(", All")}
-		if ($check -eq $null) 
+		if ($check -eq $null)
 		{
 			# Add wildcard map
 			$wildcardMap = "*,C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\aspnet_isapi.dll, 0, All"
