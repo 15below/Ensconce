@@ -4,24 +4,24 @@
   <Files>
     <File Filename="TestUpdateFiles\TestConfig3.xml">
       <Changes>
-        <Change type="AddChildContent" XPath="/root" ifNotExists="/root/testing">
+        <Change type="AddChildContent" xPath="/root" ifNotExists="/root/testing">
           <Content>
             <![CDATA[<testing/>]]>
           </Content>
         </Change>
-        <Change type="ReplacementContent" XPath="/root/testing">
+        <Change type="ReplacementContent" xPath="/root/testing">
           <Content>
             <![CDATA[<test myAttr="before">value</test>]]>
           </Content>
         </Change>
-        <Change type="RemoveCurrentAttributes" XPath="/root/testing/test" />
-        <Change type="ChangeAttribute" XPath="/root/testing/test" attributeName="myAttr2" value="after"/>
-        <Change type="AppendAfter" XPath="/root/testing/test">
+        <Change type="RemoveCurrentAttributes" xPath="/root/testing/test" />
+        <Change type="ChangeAttribute" xPath="/root/testing/test" attributeName="myAttr2" value="after"/>
+        <Change type="AppendAfter" xPath="/root/testing/test">
           <Content>
             <![CDATA[<test myAttr="new">new-value</test>]]>
           </Content>
         </Change>
-        <Change type="ChangeAttribute" XPath="/root/testing/test[2]" attributeName="myAttr" value="new-after"/>
+        <Change type="ChangeAttribute" xPath="/root/testing/test[2]" attributeName="myAttr" value="new-after"/>
       </Changes>
     </File>
   </Files>

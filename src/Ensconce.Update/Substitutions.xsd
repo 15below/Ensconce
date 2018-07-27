@@ -73,7 +73,7 @@
                                   </xs:restriction>
                                 </xs:simpleType>
                               </xs:attribute>
-                              <xs:attribute name="XPath" type="xs:string" use="optional"/>
+                              <xs:attribute name="xPath" type="xs:string" use="optional"/>
                               <xs:attribute name="attributeName" type="xs:string" use="optional"/>
                               <xs:attribute name="value" type="xs:string" use="optional"/>
                               <xs:attribute name="ifNotExists" type="xs:string" use="optional"/>

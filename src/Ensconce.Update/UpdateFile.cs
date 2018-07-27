@@ -227,7 +227,7 @@ namespace Ensconce.Update
                 sub.AppendAfter = change.XPathSelectElement("s:AppendAfter", nsm)?.Value;
                 sub.HasAppendAfter = sub.AppendAfter != null;
 
-                sub.XPath = (change.Attribute("XPath")?.Value ?? change.XPathSelectElement("s:XPath", nsm)?.Value).RenderTemplate(tagValues);
+                sub.XPath = (change.Attribute("xPath")?.Value ?? change.XPathSelectElement("s:XPath", nsm)?.Value).RenderTemplate(tagValues);
 
                 sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
 
@@ -263,7 +263,7 @@ namespace Ensconce.Update
                         throw new Exception($"Unknown change type '{change.Attribute("type")?.Value}'");
                 }
 
-                sub.XPath = change.Attribute("XPath")?.Value.RenderTemplate(tagValues);
+                sub.XPath = change.Attribute("xPath")?.Value.RenderTemplate(tagValues);
             }
 
             return sub;

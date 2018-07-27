@@ -4,7 +4,7 @@
   <Files>
     <File Filename="TestUpdateFiles\TestConfig3.xml">
       <Changes>
-        <Change type="ChangeAttribute" XPath="/root/value" attributeName="myAttr" value="after" />
+        <Change type="ChangeAttribute" xPath="/root/value" attributeName="myAttr" value="after" />
       </Changes>
     </File>
   </Files>
