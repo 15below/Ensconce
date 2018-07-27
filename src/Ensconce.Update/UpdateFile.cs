@@ -18,7 +18,7 @@ namespace Ensconce.Update
             public string ReplacementContent;
             public bool HasReplacementContent;
             public bool RemoveCurrentAttributes;
-            public List<Tuple<string, string>> ChangeAttributes;
+            public List<(string attributeName, string newValue)> ChangeAttributes;
             public string AppendAfter;
             public bool HasAppendAfter;
             public string AddChildContent;
@@ -31,7 +31,7 @@ namespace Ensconce.Update
                 ReplacementContent = "";
                 HasReplacementContent = false;
                 RemoveCurrentAttributes = false;
-                ChangeAttributes = new List<Tuple<string, string>>();
+                ChangeAttributes = new List<(string attributeName, string newValue)>();
                 AppendAfter = "";
                 HasAppendAfter = false;
                 AddChildContent = "";
@@ -177,9 +177,9 @@ namespace Ensconce.Update
                 if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
                 if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
 
-                foreach (var ca in sub.ChangeAttributes)
+                foreach (var (atttibute, value) in sub.ChangeAttributes)
                 {
-                    activeNode.SetAttributeValue(ca.Item1, ca.Item2.RenderTemplate(tagValues));
+                    activeNode.SetAttributeValue(atttibute, value.RenderTemplate(tagValues));
                 }
             }
 
@@ -231,7 +231,7 @@ namespace Ensconce.Update
 
                 sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
 
-                sub.ChangeAttributes = change.XPathSelectElements("s:ChangeAttribute", nsm).Select(ca => new Tuple<string, string>(ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value)).ToList();
+                sub.ChangeAttributes.AddRange(change.XPathSelectElements("s:ChangeAttribute", nsm).Select(ca => (ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value)));
             }
             else
             {
@@ -254,10 +254,7 @@ namespace Ensconce.Update
                         sub.RemoveCurrentAttributes = true;
                         break;
                     case "changeattribute":
-                        sub.ChangeAttributes = new List<Tuple<string, string>>
-                            {
-                                new Tuple<string, string>(change.Attribute("attributeName")?.Value,change.Attribute("value")?.Value)
-                            };
+                        sub.ChangeAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
                         break;
                     default:
                         throw new Exception($"Unknown change type '{change.Attribute("type")?.Value}'");
