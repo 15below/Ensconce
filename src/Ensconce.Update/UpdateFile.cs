@@ -231,7 +231,10 @@ namespace Ensconce.Update
 
                 sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
 
-                sub.ChangeAttributes.AddRange(change.XPathSelectElements("s:ChangeAttribute", nsm).Select(ca => (ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value)));
+                foreach (var ca in change.XPathSelectElements("s:ChangeAttribute", nsm))
+                {
+                    sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                }
             }
             else
             {
