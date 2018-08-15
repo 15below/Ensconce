@@ -114,9 +114,7 @@ namespace Ensconce.Database.Tests
 
                 var args = logger.GetArgumentsForCallsMadeOn(x => x.log_a_warning_event_containing(null, null));
 
-                Assert.That(args[0],
-                            Has.None.ContainsSubstring(
-                                "Had an error building session factory from merged, attempting unmerged. The error:"));
+                Assert.That(args[0], Has.None.ContainsSubstring("Had an error building session factory from merged, attempting unmerged. The error:"));
             }
         }
 

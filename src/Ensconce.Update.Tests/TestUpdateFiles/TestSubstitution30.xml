@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces/>
+  <Files>
+    <File Filename="TestUpdateFiles\TestConfig3.xml">
+      <Changes>
+        <Change type="ChangeAttribute" xPath="/root/value" attributeName="myAttr" value="after" if="Environment == 'INT'" />
+      </Changes>
+    </File>
+  </Files>
+</Root>
