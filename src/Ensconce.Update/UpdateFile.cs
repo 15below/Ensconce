@@ -48,7 +48,7 @@ namespace Ensconce.Update
             public string Prefix;
         }
 
-        public static void UpdateFiles(string substitutionFile, IDictionary<string, object> tagValues, bool outputFailureContext)
+        public static void UpdateFiles(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext)
         {
             var subsXml = XDocument.Load(substitutionFile);
             var nsm = new XmlNamespaceManager(new NameTable());
@@ -66,7 +66,7 @@ namespace Ensconce.Update
             }
         }
 
-        public static IEnumerable<Tuple<string, string>> UpdateAll(string substitutionFile, IDictionary<string, object> tagValues, bool outputFailureContext = false)
+        public static IEnumerable<Tuple<string, string>> UpdateAll(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext = false)
         {
             var subsXml = XDocument.Load(substitutionFile);
             var nsm = new XmlNamespaceManager(new NameTable());
@@ -81,7 +81,7 @@ namespace Ensconce.Update
             return files.Select(file => Tuple.Create(file, Update(substitutionFile, file, tagValues, outputFailureContext)));
         }
 
-        public static string Update(string substitutionFile, string baseFile, IDictionary<string, object> tagValues = null, bool outputFailureContext = false)
+        public static string Update(string substitutionFile, string baseFile, Lazy<TagDictionary> tagValues = null, bool outputFailureContext = false)
         {
             var subsXml = XDocument.Load(substitutionFile);
             var nsm = new XmlNamespaceManager(new NameTable());
@@ -92,11 +92,11 @@ namespace Ensconce.Update
             return Update(subsXml, nsm, baseFile, tagValues, outputFailureContext);
         }
 
-        public static string Update(XDocument subsXml, XmlNamespaceManager nsm, string baseFile, IDictionary<string, object> tagValues = null, bool outputFailureContext = false)
+        public static string Update(XDocument subsXml, XmlNamespaceManager nsm, string baseFile, Lazy<TagDictionary> tagValues = null, bool outputFailureContext = false)
         {
             Logging.Log($"Updating file {baseFile}");
 
-            tagValues = tagValues ?? new Dictionary<string, object>();
+            tagValues = tagValues ?? new Lazy<TagDictionary>(TagDictionary.Empty);
 
             var fileElement = subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
                                      .SingleOrDefault(el => ((string)el.Attribute("Filename")).RenderTemplate(tagValues) == baseFile);
@@ -147,7 +147,7 @@ namespace Ensconce.Update
             subsXml.Validate(schemas, (sender, args) => throw args.Exception);
         }
 
-        private static string UpdateXml(IDictionary<string, object> tagValues, IEnumerable<Substitution> subs, XNode baseXml, IXmlNamespaceResolver nsm, XNode subsXml)
+        private static string UpdateXml(Lazy<TagDictionary> tagValues, IEnumerable<Substitution> subs, XNode baseXml, IXmlNamespaceResolver nsm, XNode subsXml)
         {
             var nss = subsXml.XPathSelectElements("/s:Root/s:Namespaces/s:Namespace", nsm)
                              .Select(ns => new Namespace
@@ -188,13 +188,13 @@ namespace Ensconce.Update
             return baseXml.ToString();
         }
 
-        private static void AppendAfterActive(IDictionary<string, object> tagValues, XNode activeNode, Substitution sub)
+        private static void AppendAfterActive(Lazy<TagDictionary> tagValues, XNode activeNode, Substitution sub)
         {
             var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AppendAfter.RenderXmlTemplate(tagValues) + "</fakeRoot>");
             activeNode.AddAfterSelf(fakeRoot.Elements());
         }
 
-        private static void AddChildContentToActive(IDictionary<string, object> tagValues, XContainer activeNode, Substitution sub)
+        private static void AddChildContentToActive(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub)
         {
             if (sub.AddChildContentIfNotExists == null || activeNode.Document?.XPathSelectElement(sub.AddChildContentIfNotExists.RenderTemplate(tagValues)) == null)
             {
@@ -203,7 +203,7 @@ namespace Ensconce.Update
             }
         }
 
-        private static void ReplaceChildNodes(IDictionary<string, object> tagValues, XContainer activeNode, Substitution sub)
+        private static void ReplaceChildNodes(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub)
         {
             var replacementValue = sub.ReplacementContent.RenderXmlTemplate(tagValues);
             // Ugly hack to stop XElement.SetValue escaping text...
@@ -212,7 +212,7 @@ namespace Ensconce.Update
             activeNode.ReplaceNodes(children);
         }
 
-        private static Substitution BuildSubstitions(XElement change, IXmlNamespaceResolver nsm, IDictionary<string, object> tagValues)
+        private static Substitution BuildSubstitions(XElement change, IXmlNamespaceResolver nsm, Lazy<TagDictionary> tagValues)
         {
             //Default everything off
             var sub = new Substitution();

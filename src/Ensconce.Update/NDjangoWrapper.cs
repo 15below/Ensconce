@@ -1,11 +1,10 @@
-﻿using Ensconce.NDjango.Core;
+﻿using System;
+using System.IO;
+using Ensconce.NDjango.Core;
 using Ensconce.NDjango.Core.Filters.HtmlFilters;
 using Ensconce.NDjango.Core.Filters.List;
 using Ensconce.NDjango.Core.Filters.StringFilters;
 using Ensconce.Update.NDjango.Custom.Filters;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Ensconce.Update
 {
@@ -65,27 +64,32 @@ namespace Ensconce.Update
                                                 .GetNewManager();
         }
 
-        public static string RenderTemplate(this string template, IDictionary<string, object> values)
+        public static string RenderTemplate(this string template, Lazy<TagDictionary> values)
         {
             return Render(template, values, TemplateManager.Value);
         }
 
-        public static string RenderXmlTemplate(this string template, IDictionary<string, object> values)
+        public static string RenderXmlTemplate(this string template, Lazy<TagDictionary> values)
         {
             return Render(template, values, XmlTemplateManager.Value);
         }
 
-        private static string Render(string template, IDictionary<string, object> values, Interfaces.ITemplateManager templateManager)
+        private static string Render(string template, Lazy<TagDictionary> values, Interfaces.ITemplateManager templateManager)
         {
             lock (Error)
             {
+                if (!template.Contains("{{") && !template.Contains("{%"))
+                {
+                    return template;
+                }
+
                 string exceptionMessage = null;
                 string replacementValue;
 
                 try
                 {
                     Error.Invoked = false;
-                    replacementValue = templateManager.RenderTemplate(StringProvider + template, values).ReadToEnd();
+                    replacementValue = templateManager.RenderTemplate(StringProvider + template, values.Value).ReadToEnd();
                 }
                 catch (Exception ex)
                 {

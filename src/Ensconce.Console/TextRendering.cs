@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Ensconce.Update;
 
@@ -7,8 +6,7 @@ namespace Ensconce.Console
 {
     internal static class TextRendering
     {
-        private static readonly Lazy<TagDictionary> LazyTags = new Lazy<TagDictionary>(() => Retry.Do(BuildTagDictionary, TimeSpan.FromSeconds(5)));
-        public static IDictionary<string, object> TagDictionary => LazyTags.Value;
+        public static readonly Lazy<TagDictionary> TagDictionary = new Lazy<TagDictionary>(() => Retry.Do(BuildTagDictionary, TimeSpan.FromSeconds(5)));
 
         internal static string Render(this string s)
         {
@@ -18,11 +16,11 @@ namespace Ensconce.Console
         private static TagDictionary BuildTagDictionary()
         {
             var instanceName = Environment.GetEnvironmentVariable("InstanceName");
-            var tags = BuildTagDictionary(instanceName);
+            var tags = new Lazy<TagDictionary>(() => BuildTagDictionary(instanceName));
 
             if (string.IsNullOrWhiteSpace(Arguments.FixedPath))
             {
-                return tags;
+                return tags.Value;
             }
 
             var fixedPath = Arguments.FixedPath.RenderTemplate(tags);
@@ -32,13 +30,13 @@ namespace Ensconce.Console
                 throw new FileNotFoundException($"Unable to locate structure file at {fixedPath}", fixedPath);
             }
 
-            return BuildTagDictionary(instanceName, fixedPath, tags);
+            return BuildTagDictionary(instanceName, fixedPath, tags.Value);
         }
 
         private static TagDictionary BuildTagDictionary(string instanceName)
         {
             Logging.Log("Building Tag Dictionary {0}", instanceName);
-            var tags = new TagDictionary(instanceName);
+            var tags = Update.TagDictionary.FromIdentifier(instanceName);
             Logging.Log("Built Tag Dictionary {0}", instanceName);
             return tags;
         }
@@ -52,7 +50,7 @@ namespace Ensconce.Console
                 Logging.Log("Loading xml config from file {0}", Path.GetFullPath(fixedPath));
                 var configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(5));
                 Logging.Log((fallbackDictionary != null ? "Re-" : "") + "Building Tag Dictionary (Using config file)");
-                tags = new TagDictionary(instanceName, configXml);
+                tags = Update.TagDictionary.FromXml(instanceName, configXml);
                 Logging.Log((fallbackDictionary != null ? "Re-" : "") + "Built Tag Dictionary (Using config file)");
             }
             else
