@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,20 +11,53 @@ using System.Xml.XPath;
 
 namespace Ensconce.Update
 {
-    public class TagDictionary : Dictionary<string, object>
+    public class TagDictionary : IDictionary<string, object>
     {
-        public TagDictionary(string identifier) : this(identifier, new Dictionary<TagSource, string>()) { }
+        private readonly IDictionary<string, object> innerDictionary;
 
-        public TagDictionary(string identifier, string xmlData) : this(identifier, new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, xmlData } }) { }
+        private TagDictionary() : this(new Dictionary<string, object>()) { }
 
-        public TagDictionary(string identifier, Dictionary<TagSource, string> sources)
+        private TagDictionary(IDictionary<string, object> baseDictionary)
+        {
+            innerDictionary = baseDictionary;
+        }
+
+        public static TagDictionary Empty()
+        {
+            var tagDictionary = new TagDictionary();
+            tagDictionary.LoadDictionary(string.Empty, new Dictionary<TagSource, string>());
+            return tagDictionary;
+        }
+
+        public static TagDictionary FromIdentifier(string identifier)
+        {
+            var tagDictionary = new TagDictionary();
+            tagDictionary.LoadDictionary(identifier, new Dictionary<TagSource, string>());
+            return tagDictionary;
+        }
+
+        public static TagDictionary FromXml(string identifier, string xmlData)
+        {
+            var tagDictionary = new TagDictionary();
+            tagDictionary.LoadDictionary(identifier, new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, xmlData } });
+            return tagDictionary;
+        }
+
+        public static TagDictionary FromSources(string identifier, Dictionary<TagSource, string> sources)
         {
             if (sources.Count == 0)
             {
                 sources = new Dictionary<TagSource, string> { { TagSource.Environment, "" } };
             }
 
-            LoadDictionary(identifier, sources);
+            var tagDictionary = new TagDictionary();
+            tagDictionary.LoadDictionary(identifier, sources);
+            return tagDictionary;
+        }
+
+        public static TagDictionary FromDictionary(IDictionary<string, object> raw)
+        {
+            return new TagDictionary(raw);
         }
 
         private void LoadDictionary(string identifier, Dictionary<TagSource, string> sources)
@@ -282,7 +316,76 @@ namespace Ensconce.Update
                                             .Replace("tagClientCode", "{{ ClientCode }}")
                                             .Replace("tagEnvironment", "{{ Environment }}");
 
-            return djangoStyleValue.Contains("{") ? djangoStyleValue.RenderTemplate(this) : baseValue;
+            return djangoStyleValue.RenderTemplate(new Lazy<TagDictionary>(() => this));
         }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return innerDictionary.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)innerDictionary).GetEnumerator();
+        }
+
+        public void Add(KeyValuePair<string, object> item)
+        {
+            innerDictionary.Add(item);
+        }
+
+        public void Clear()
+        {
+            innerDictionary.Clear();
+        }
+
+        public bool Contains(KeyValuePair<string, object> item)
+        {
+            return innerDictionary.Contains(item);
+        }
+
+        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
+        {
+            innerDictionary.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(KeyValuePair<string, object> item)
+        {
+            return innerDictionary.Remove(item);
+        }
+
+        public int Count => innerDictionary.Count;
+
+        public bool IsReadOnly => innerDictionary.IsReadOnly;
+
+        public bool ContainsKey(string key)
+        {
+            return innerDictionary.ContainsKey(key);
+        }
+
+        public void Add(string key, object value)
+        {
+            innerDictionary.Add(key, value);
+        }
+
+        public bool Remove(string key)
+        {
+            return innerDictionary.Remove(key);
+        }
+
+        public bool TryGetValue(string key, out object value)
+        {
+            return innerDictionary.TryGetValue(key, out value);
+        }
+
+        public object this[string key]
+        {
+            get => innerDictionary[key];
+            set => innerDictionary[key] = value;
+        }
+
+        public ICollection<string> Keys => innerDictionary.Keys;
+
+        public ICollection<object> Values => innerDictionary.Values;
     }
 }

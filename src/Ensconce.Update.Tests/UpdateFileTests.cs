@@ -52,7 +52,7 @@ namespace Ensconce.Update.Tests
         public void SubstituteOldValueWithNewTaggedValue()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution4.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "taggedReplacementContent", "newvalue" } }
+                @"TestUpdateFiles\TestSubstitution4.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "taggedReplacementContent", "newvalue" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("newvalue", newConfig.XPathSelectElement("/root/value").Value);
         }
@@ -61,7 +61,7 @@ namespace Ensconce.Update.Tests
         public void SubstituteOldValueWithNewTaggedXmlValue()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "taggedReplacementContent", "newvalue" } }
+                @"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "taggedReplacementContent", "newvalue" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("newvalue", newConfig.XPathSelectElement("/root/value").Descendants().First().Name.LocalName);
         }
@@ -73,7 +73,7 @@ namespace Ensconce.Update.Tests
                 @"TestUpdateFiles\TestSubstitution6.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>
                                                                 {
                                                                     {"configList", new []{"newvalue1", "newvalue2","newvalue3"}}
-                                                                }
+                                                                }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual(XElement.Parse("<value><newvalue1/><newvalue2 /><newvalue3/></value>").ToString(), newConfig.XPathSelectElement("/root/value").ToString());
         }
@@ -85,7 +85,7 @@ namespace Ensconce.Update.Tests
                 @"TestUpdateFiles\TestSubstitution6.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object>
                                                                 {
                                                                     {"configList", new []{"newvalue1", "newvalue2","newvalue3"}}
-                                                                }
+                                                                }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("", newConfig.XPathSelectElement("/root/value/newvalue1").Value);
         }
@@ -173,7 +173,7 @@ namespace Ensconce.Update.Tests
         public void SubstituteTaggedAttributeValue()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution9.xml", @"TestUpdateFiles\TestConfig3.xml", new Dictionary<string, object> { { "newValue", "after" } }
+                @"TestUpdateFiles\TestSubstitution9.xml", @"TestUpdateFiles\TestConfig3.xml", new Dictionary<string, object> { { "newValue", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);
         }
@@ -182,7 +182,7 @@ namespace Ensconce.Update.Tests
         public void AppendAfterWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution14.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }
+                @"TestUpdateFiles\TestSubstitution14.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.IsTrue(newConfig.Root.Descendants().Select(el => el.Name).Contains("NewTag"));
         }
@@ -191,7 +191,7 @@ namespace Ensconce.Update.Tests
         public void AddChildContentWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution15.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }
+                @"TestUpdateFiles\TestSubstitution15.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual(1, newConfig.XPathSelectElements("/root/value/NewTag").Count());
         }
@@ -200,7 +200,7 @@ namespace Ensconce.Update.Tests
         public void ReplacementContentWorksWithAmpersandInTag()
         {
             var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution24.xml",
-                                               new Dictionary<string, object> { { "tagValue", "t&his*text" } });
+                                               new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary());
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("t&his*text",
@@ -212,7 +212,7 @@ namespace Ensconce.Update.Tests
         public void AddChildContenWorksWithAmpersandInTag()
         {
             var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution25.xml",
-                                               new Dictionary<string, object> { { "tagValue", "t&his*text" } });
+                                               new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary());
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("t&his*text",
@@ -224,7 +224,7 @@ namespace Ensconce.Update.Tests
         public void AppendAfterWorksWithAmpersandInTag()
         {
             var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution26.xml",
-                                               new Dictionary<string, object> { { "tagValue", "t&his*text" } });
+                                               new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary());
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("t&his*text",
@@ -236,7 +236,7 @@ namespace Ensconce.Update.Tests
         public void EmptyChildContentWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution16.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }
+                @"TestUpdateFiles\TestSubstitution16.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.IsTrue(newConfig.XPathSelectElements("/root/value/NewTag").Count() == 0);
         }
@@ -245,7 +245,7 @@ namespace Ensconce.Update.Tests
         public void MultipleChildContentWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution17.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }
+                @"TestUpdateFiles\TestSubstitution17.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("1", newConfig.XPathSelectElements("/root/value/one").First().Value);
             Assert.AreEqual("2", newConfig.XPathSelectElements("/root/value/two").First().Value);
@@ -255,7 +255,7 @@ namespace Ensconce.Update.Tests
         public void UpdateAllTouchesAllFiles()
         {
             var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution3.xml",
-                                               new Dictionary<string, object> { { "tagValue", "Tagged!" } });
+                                               new Dictionary<string, object> { { "tagValue", "Tagged!" } }.ToLazyTagDictionary());
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("newvalue",
@@ -270,7 +270,7 @@ namespace Ensconce.Update.Tests
         public void UpdateAllKnowsAboutTaggedFiles()
         {
             var configs = UpdateFile.UpdateAll(@"TestUpdateFiles\TestSubstitution13.xml",
-                                               new Dictionary<string, object> { { "FilePath", "TaggedPath" } });
+                                               new Dictionary<string, object> { { "FilePath", "TaggedPath" } }.ToLazyTagDictionary());
             Assert.AreEqual("newvalue",
                             XDocument.Parse(configs.Where(c => c.Item1 == @"TestUpdateFiles\TestConfig-TaggedPath.xml").Single().Item2).
                                 XPathSelectElement("/root/value").Value);
@@ -280,7 +280,7 @@ namespace Ensconce.Update.Tests
         public void TagsOutsideSpecifiedXPathsUnchanged()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution9.xml", @"TestUpdateFiles\TestConfig3.xml", new Dictionary<string, object> { { "newValue", "after" } }
+                @"TestUpdateFiles\TestSubstitution9.xml", @"TestUpdateFiles\TestConfig3.xml", new Dictionary<string, object> { { "newValue", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("{{ tagged }}", newConfig.XPathSelectElement("/root/myValue").Value);
         }
@@ -289,7 +289,7 @@ namespace Ensconce.Update.Tests
         public void ReplaceFileWithTemplateWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution10.xml", @"TestUpdateFiles\TestConfig2.xml", new Dictionary<string, object> { { "tagged", "after" } }
+                @"TestUpdateFiles\TestSubstitution10.xml", @"TestUpdateFiles\TestConfig2.xml", new Dictionary<string, object> { { "tagged", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue").Value);
         }
@@ -298,7 +298,7 @@ namespace Ensconce.Update.Tests
         public void NewFileWithTemplateWorks()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution11.xml", @"TestUpdateFiles\DoesntExist.xml", new Dictionary<string, object> { { "tagged", "after" } }
+                @"TestUpdateFiles\TestSubstitution11.xml", @"TestUpdateFiles\DoesntExist.xml", new Dictionary<string, object> { { "tagged", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue").Value);
         }
@@ -307,7 +307,7 @@ namespace Ensconce.Update.Tests
         public void TemplateAndChangesWork()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution18.xml", @"TestUpdateFiles\TestConfig2.xml", new Dictionary<string, object> { { "tagged", "after" } }
+                @"TestUpdateFiles\TestSubstitution18.xml", @"TestUpdateFiles\TestConfig2.xml", new Dictionary<string, object> { { "tagged", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue").Value);
             Assert.AreEqual("afterAttr", newConfig.XPathSelectElement("/root/myValue").Attribute("myAttr").Value);
@@ -318,7 +318,7 @@ namespace Ensconce.Update.Tests
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution19.xml", @"TestUpdateFiles\TestConfig2.xml",
-                new Dictionary<string, object> { { "tagged", "after" }, { "Environment", "LOC" } }
+                new Dictionary<string, object> { { "tagged", "after" }, { "Environment", "LOC" } }.ToLazyTagDictionary()
                                                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/myValue-LOC").Value);
             Assert.AreEqual("afterAttr", newConfig.XPathSelectElement("/root/myValue-LOC").Attribute("myAttr").Value);
@@ -329,7 +329,7 @@ namespace Ensconce.Update.Tests
         {
             Assert.Throws<XmlSchemaValidationException>(() => XDocument.Parse(UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution20.xml", @"TestUpdateFiles\TestConfig2.xml",
-                new Dictionary<string, object> { { "tagged", "after" }, { "Environment", "LOC" } }
+                new Dictionary<string, object> { { "tagged", "after" }, { "Environment", "LOC" } }.ToLazyTagDictionary()
                                                 )));
         }
 
@@ -338,7 +338,7 @@ namespace Ensconce.Update.Tests
         {
             var newConfig = UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution21.xml", @"TestUpdateFiles\PlainText01.txt",
-                new Dictionary<string, object> { { "tag", "after" }, { "Environment", "LOC" } });
+                new Dictionary<string, object> { { "tag", "after" }, { "Environment", "LOC" } }.ToLazyTagDictionary());
             Assert.IsTrue(newConfig.Contains("after"));
         }
 
@@ -347,7 +347,7 @@ namespace Ensconce.Update.Tests
         {
             var newConfig = UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution21.xml", @"TestUpdateFiles\PlainText01.txt",
-                new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } });
+                new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } }.ToLazyTagDictionary());
             Assert.IsTrue(newConfig.Contains("<after>"));
         }
 
@@ -356,7 +356,7 @@ namespace Ensconce.Update.Tests
         {
             var newConfig = UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution22.xml", @"TestUpdateFiles\PlainText02.txt",
-                new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } });
+                new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } }.ToLazyTagDictionary());
             Assert.AreEqual("Some plain text. With a {{ tag }}.", newConfig);
         }
 
@@ -364,7 +364,7 @@ namespace Ensconce.Update.Tests
         public void NDjangoFiltersAvailable()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
-                @"TestUpdateFiles\TestSubstitution12.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newvalue", "AfTer" } }
+                @"TestUpdateFiles\TestSubstitution12.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newvalue", "AfTer" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Value);
         }
@@ -374,7 +374,7 @@ namespace Ensconce.Update.Tests
         {
             var newConfig = UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution23.xml", @"TestUpdateFiles\PlainText03.txt",
-                new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } });
+                new Dictionary<string, object> { { "tag", "<after>" }, { "Environment", "LOC" } }.ToLazyTagDictionary());
             Assert.AreEqual("Some plain text. With a concat <after></after>.", newConfig);
         }
 
@@ -415,7 +415,7 @@ namespace Ensconce.Update.Tests
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution30.xml", @"TestUpdateFiles\TestConfig3.xml",
-                new Dictionary<string, object> { { "Environment", "INT" } }
+                new Dictionary<string, object> { { "Environment", "INT" } }.ToLazyTagDictionary()
             ));
 
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);
@@ -426,7 +426,7 @@ namespace Ensconce.Update.Tests
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution30.xml", @"TestUpdateFiles\TestConfig3.xml",
-                new Dictionary<string, object> { { "Environment", "NOT_INT" } }
+                new Dictionary<string, object> { { "Environment", "NOT_INT" } }.ToLazyTagDictionary()
             ));
 
             Assert.AreEqual("before", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);

@@ -63,21 +63,21 @@ namespace Ensconce.Update.Tests
         [Test]
         public void FirstParamTakesPrecedence()
         {
-            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlFileName, XMLFilename } });
+            var loader = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlFileName, XMLFilename } });
             Assert.AreEqual(QueAppServer, loader[QueAppServer]);
         }
 
         [Test]
         public void IdentifiedPropertiesTakePrecedence()
         {
-            var loader = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var loader = TagDictionary.FromSources("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual(IsSysValue, loader[IsSys]);
         }
 
         [Test]
         public void LoadFromEnvironment()
         {
-            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
+            var loader = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual(IsSys, loader[IsSys]);
         }
 
@@ -87,7 +87,7 @@ namespace Ensconce.Update.Tests
             var environment = "LOC";
             Environment.SetEnvironmentVariable("Environment", "");
             Environment.SetEnvironmentVariable("OctopusEnvironmentName", environment);
-            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
+            var loader = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual(environment, loader["Environment"]);
             Environment.SetEnvironmentVariable("OctopusEnvironmentName", "");
         }
@@ -98,7 +98,7 @@ namespace Ensconce.Update.Tests
             var environment = "DEV";
             Environment.SetEnvironmentVariable("Environment", "");
             Environment.SetEnvironmentVariable("Octopus.Environment.Name", environment);
-            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
+            var loader = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual(environment, loader["Environment"]);
             Environment.SetEnvironmentVariable("Octopus.Environment.Name", "");
         }
@@ -106,34 +106,34 @@ namespace Ensconce.Update.Tests
         [Test]
         public void LoadFromXmlData()
         {
-            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var loader = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("AndThisWouldBeAPassword", loader["DbPassword"]);
         }
 
         [Test]
         public void LoadEmptyXmlData()
         {
-            Assert.DoesNotThrow(() => new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, "" } }));
+            Assert.DoesNotThrow(() => TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, "" } }));
         }
 
         [Test]
         public void LoadFromXmlFileName()
         {
-            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, XMLFilename } });
+            var loader = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, XMLFilename } });
             Assert.AreEqual("SomeUserName", loader["DbUser"]);
         }
 
         [Test]
         public void LoadEnvironmentOnlyWithInvalidXML()
         {
-            var sut = new TagDictionary("ident", "ThisIsNotXML");
+            var sut = TagDictionary.FromXml("ident", "ThisIsNotXML");
             Assert.AreEqual(EnvClientCode, sut["ClientCode"]);
         }
 
         [Test]
         public void LoadEnvironmentOnlyWithInvalidXMLFile()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlFileName, "incorrectStructure.xml" } });
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlFileName, "incorrectStructure.xml" } });
             Assert.AreEqual(EnvClientCode, sut["ClientCode"]);
         }
 
@@ -141,14 +141,14 @@ namespace Ensconce.Update.Tests
         [TestCase("Overridden!", "DbEncoded")]
         public void TestDefaultLoader(string expected, string key)
         {
-            var loader = new TagDictionary("myId", XmlData);
+            var loader = TagDictionary.FromXml("myId", XmlData);
             Assert.AreEqual(expected, loader[key]);
         }
 
         [Test]
         public void IdValueTakesPrecidenceEvenFromLaterSource()
         {
-            var loader = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
+            var loader = TagDictionary.FromSources("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
             Assert.AreEqual(Idvalue, loader[Avalue]);
         }
 
@@ -162,7 +162,7 @@ namespace Ensconce.Update.Tests
         [Test]
         public void DbPasswordAccessibleViaDictionaryWithoutPrefix()
         {
-            var sut = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
+            var sut = TagDictionary.FromSources("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
             Assert.AreEqual("Some high entrophy random text", GetDbLoginValue(sut, "AUDIT", "Password"));
         }
 
@@ -170,49 +170,49 @@ namespace Ensconce.Update.Tests
         [TestCase(".LOC.", "ClientDomain")]
         public void TestTagsInPropertiesAreSubstituted(string expected, string key)
         {
-            var tagDict = new TagDictionary("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
+            var tagDict = TagDictionary.FromSources("myId", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData }, { TagSource.XmlFileName, "structure.xml" } });
             Assert.IsTrue(tagDict[key].ToString().Contains(expected));
         }
 
         [Test]
         public void SuccessfullyGetDbPassword()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, XMLFilename } });
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, XMLFilename } });
             Assert.AreEqual("NoPasswordsRoundHere", GetDbLoginValue(sut, "config", "Password"));
         }
 
         [Test]
         public void DbLoginsGenerated()
         {
-            var sut = new TagDictionary("ident", XmlData);
+            var sut = TagDictionary.FromXml("ident", XmlData);
             Assert.AreEqual("This isn't a password either", GetDbLoginValue(sut, "config", "Password"));
         }
 
         [Test]
         public void DbLoginNamesAreSubstituted()
         {
-            var sut = new TagDictionary("ident", XmlData);
+            var sut = TagDictionary.FromXml("ident", XmlData);
             Assert.AreEqual(string.Format("{0}-{1}-AUDIT", Environment.GetEnvironmentVariable("ClientCode"), Environment.GetEnvironmentVariable("Environment")), GetDbLoginValue(sut, "AUDIT", "Username"));
         }
 
         [Test]
         public void DbLoginDefaultDbsAreSubstituted()
         {
-            var sut = new TagDictionary("ident", XmlData);
+            var sut = TagDictionary.FromXml("ident", XmlData);
             Assert.AreEqual("FAA-LOC-AUDIT", GetDbLoginValue(sut, "AUDIT", "DefaultDb"));
         }
 
         [Test]
         public void DbLoginConnectionStringLoaded()
         {
-            var sut = new TagDictionary("ident", XmlData);
+            var sut = TagDictionary.FromXml("ident", XmlData);
             Assert.AreEqual("Actual ConnectionString", GetDbLoginValue(sut, "ConnectionString", "ConnectionString"));
         }
 
         [Test]
         public void DbLoginWithKey()
         {
-            var sut = new TagDictionary("ident", XmlData);
+            var sut = TagDictionary.FromXml("ident", XmlData);
 
             Assert.AreEqual("Data Source=DbServerAddress; Initial Catalog=ZZ-ENV-LOGIN; User ID=ZZ-ENV-LOGIN; Password=Some high entrophy random text;", GetDbLoginValue(sut, "LOGIN", "ConnectionString"));
             Assert.AreEqual("ZZ-ENV-LOGIN", GetDbLoginValue(sut, "LOGIN", "Username"));
@@ -222,28 +222,28 @@ namespace Ensconce.Update.Tests
         [Test]
         public void DBLoginsWork()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("ZZ-ENV-LOGIN", "{{ DbLogins.LOGIN.Username }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("ZZ-ENV-LOGIN", "{{ DbLogins.LOGIN.Username }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void LoadLabelledGroups()
         {
-            var sut = new TagDictionary("ident", XmlData);
+            var sut = TagDictionary.FromXml("ident", XmlData);
             Assert.IsTrue(sut.ContainsKey("GDS"));
         }
 
         [Test]
         public void LoadFlatLabelledGroups()
         {
-            var sut = new TagDictionary("ident", XmlData);
+            var sut = TagDictionary.FromXml("ident", XmlData);
             Assert.IsTrue(sut.ContainsKey("FlatGroup"));
         }
 
         [Test]
         public void LoadLabelledGroupsValuesAndNormalIdentityValuesAvailable()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, "structure.xml" } });
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, "structure.xml" } });
             Assert.AreEqual("SYS", ((IEnumerable<IDictionary<string, object>>)sut["GDS"]).First()["IsSys"]);
             Assert.AreEqual("SomeUserName", sut["DbUser"]);
             Assert.AreEqual("notSYS", sut["IsSys"].ToString());
@@ -252,7 +252,7 @@ namespace Ensconce.Update.Tests
         [Test]
         public void LoadLabelledGroupsBuildsEnumeratorCorrectly()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             var isSysCollection = ((IEnumerable<IDictionary<string, object>>)sut["GDS"]).Select(gds => gds[IsSys].ToString());
             Assert.IsTrue(new HashSet<string> { "SYS", "SYS2" }.IsSupersetOf(new HashSet<string>(isSysCollection)));
         }
@@ -261,14 +261,14 @@ namespace Ensconce.Update.Tests
         public void PropertyAndLabelWithSameNameThrowException()
         {
             Environment.SetEnvironmentVariable("GDS", "This shouldn't be here");
-            Assert.Throws<InvalidDataException>(() => new TagDictionary("ident", XmlData));
+            Assert.Throws<InvalidDataException>(() => TagDictionary.FromXml("ident", XmlData));
             Environment.SetEnvironmentVariable("GDS", null);
         }
 
         [Test]
         public void InstanceNameIsAccessibleWhileEnumerating()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             var isSysCollection = ((IEnumerable<IDictionary<string, object>>)sut["GDS"]).Select(gds => gds["identity"].ToString());
             Assert.IsTrue(new HashSet<string> { "myId", "myId2" }.IsSupersetOf(new HashSet<string>(isSysCollection)));
         }
@@ -280,139 +280,139 @@ namespace Ensconce.Update.Tests
         {
             Environment.SetEnvironmentVariable("Environment", null);
             Environment.SetEnvironmentVariable(key, value);
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, XmlData } });
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlData, XmlData } });
             Assert.AreEqual(value, sut[friendlyKey]);
         }
 
         [Test]
         public void UseAnInvalidProperty_Throws()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{{ NotARealProperty }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{{ NotARealProperty }}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution failed on template string:\n{{ NotARealProperty }}\n\nAttempted rendering was:\n[ERROR OCCURRED HERE]", error.Message);
         }
 
         [Test]
         public void ForLoopAccessGlobalPropertyFromInstance_Throws()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution failed on template string:\n{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}\n\nAttempted rendering was:\n[ERROR OCCURRED HERE][ERROR OCCURRED HERE]", error.Message);
         }
 
         [Test]
         public void ForLoopAccessGlobalPropertyFromInstanceInIf_Throws()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}\nObject must be of type String.", error.Message);
         }
 
         [Test]
         public void ForLoopAccessGlobalPropertyFromInstanceInIfEqual_Throws()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}", error.Message);
         }
 
         [Test]
         public void ForLoopAccessGlobalPropertyFromInstanceInIfNotEqual_Throws()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}", error.Message);
         }
 
         [Test]
         public void ForLoopWorks()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("myIdmyId2", "{% for instance in GDS %}{{ instance.identity }}{% endfor %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("myIdmyId2", "{% for instance in GDS %}{{ instance.identity }}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void AccessByGroupType()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("SYS", "{{ GDS.myId.IsSys }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("SYS", "{{ GDS.myId.IsSys }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void AccessFirstInLabel()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("SYS", "{% with GDS|first as instance %}{{ instance.IsSys }}{% endwith %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("SYS", "{% with GDS|first as instance %}{{ instance.IsSys }}{% endwith %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void ExistsFilterWorksWhenTagExists()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("LOC", "{% if Environment|exists %}{{ Environment }}{% endif %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("LOC", "{% if Environment|exists %}{{ Environment }}{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void ExistsFilterWorksWhenTagDoesNotExist()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{{ DoesNotExist }}{% endif %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{{ DoesNotExist }}{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void ForLoopWithExistsWorksWhenTagExists()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("myIdmyId2", "{% if GDS|exists %}{% for instance in GDS %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("myIdmyId2", "{% if GDS|exists %}{% for instance in GDS %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void ForLoopWithExistsDoesNothingWhenTagDoesNotExist()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual(String.Empty, "{% if DoesNotExist|exists %}{% for instance in DoesNotExist %}{{ instance.identity }}{% endfor %}{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void WhenCollectionEmpty_emptyistrue()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("empty", "{% if NotPresent|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("empty", "{% if NotPresent|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void WhenBlankValue_isEmpty()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("empty", "{% if BlankValue|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("empty", "{% if BlankValue|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void WhenNotBlnk_NotEmpty()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("not empty", "{% if DbEncoded|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("not empty", "{% if DbEncoded|empty %}empty{% else %}not empty{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void WhenPropertyDoesntExist_UseDefault()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("default", "{{ NotAValue|default:\"default\" }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("default", "{{ NotAValue|default:\"default\" }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void WhenPropertyDoesntExist_ValueInt_UseDefault()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("1", "{{ NotAValue|default:1 }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("1", "{{ NotAValue|default:1 }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void WhenPropertyDoesntExist_ValueSingleQuote_UseDefault()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("default", "{{ NotAValue|default:'default' }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("default", "{{ NotAValue|default:'default' }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -421,7 +421,7 @@ namespace Ensconce.Update.Tests
         [TestCase("", "el", false)]
         public void Contains(string value, string contains, bool expected)
         {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -431,13 +431,13 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|contains:'#contains#' %}true{% else %}false{% endif %}".Replace("#contains#", contains).RenderTemplate(sut));
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|contains:'#contains#' %}true{% else %}false{% endif %}".Replace("#contains#", contains).RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void Contains_EmptyString_Throws()
         {
-            var sut = new TagDictionary("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -447,13 +447,13 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Data|contains:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+            Assert.Throws<ArgumentException>(() => "{% if Data|contains:'' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void Contains_WhenPropertyDoesntExist_Throws()
         {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -463,7 +463,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Undata|contains:'al' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+            Assert.Throws<ArgumentException>(() => "{% if Undata|contains:'al' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -472,7 +472,7 @@ namespace Ensconce.Update.Tests
         [TestCase("", "el", false)]
         public void Contains_WhenPropertyDoesntExist_Defaulted(string value, string contains, bool expected)
         {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties />
@@ -480,7 +480,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|contains:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", contains).Replace("#value#", value).RenderTemplate(sut));
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|contains:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", contains).Replace("#value#", value).RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -489,7 +489,7 @@ namespace Ensconce.Update.Tests
         [TestCase("", "h", false)]
         public void StartsWith(string value, string startsWith, bool expected)
         {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -499,13 +499,13 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|startsWith:'#startsWith#' %}true{% else %}false{% endif %}".Replace("#startsWith#", startsWith).RenderTemplate(sut));
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|startsWith:'#startsWith#' %}true{% else %}false{% endif %}".Replace("#startsWith#", startsWith).RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void StartsWith_EmptyString_Throws()
         {
-            var sut = new TagDictionary("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -515,13 +515,13 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Data|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+            Assert.Throws<ArgumentException>(() => "{% if Data|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void StartsWith_WhenPropertyDoesntExist_Throws()
         {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -531,7 +531,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+            Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -540,7 +540,7 @@ namespace Ensconce.Update.Tests
         [TestCase("", "h", false)]
         public void StartsWith_WhenPropertyDoesntExist_Defaulted(string value, string startsWith, bool expected)
         {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties />
@@ -548,7 +548,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|startsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", startsWith).Replace("#value#", value).RenderTemplate(sut));
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|startsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", startsWith).Replace("#value#", value).RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -557,7 +557,7 @@ namespace Ensconce.Update.Tests
         [TestCase("", "o", false)]
         public void EndsWith(string value, string endsWith, bool expected)
         {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -567,13 +567,13 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).RenderTemplate(sut));
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void EndsWith_EmptyString_Throws()
         {
-            var sut = new TagDictionary("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -583,13 +583,13 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Data|endsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+            Assert.Throws<ArgumentException>(() => "{% if Data|endsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void EndsWith_WhenPropertyDoesntExist_Throws()
         {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -599,7 +599,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut));
+            Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -608,7 +608,7 @@ namespace Ensconce.Update.Tests
         [TestCase("", "o", false)]
         public void EndsWith_WhenPropertyDoesntExist_Defaulted(string value, string endsWith, bool expected)
         {
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties />
@@ -616,7 +616,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).Replace("#value#", value).RenderTemplate(sut));
+            Assert.AreEqual(expected.ToString().ToLower(), "{% if Data|default:'#value#'|endsWith:'#endsWith#' %}true{% else %}false{% endif %}".Replace("#endsWith#", endsWith).Replace("#value#", value).RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -625,7 +625,7 @@ namespace Ensconce.Update.Tests
         {
             string value = "fQF5wgZ4J9+lm2LbpqoxWeeao6A9x1XoIc3VTDSHBosJ1tM/mLX2XO8+AENaizmalFhCD1YKK4j7YmzEP72FwtfGgm2jazDGNb1WR440ZPL96P/tO/dKvy53KHtlkY76qFiP2KZPxRWjbem+5kpWn5lLczwl/7lQfBAM6ntawghntVAA7l7gwvKDuq2FcVIP3Njdu3DzSWPgP4P83pQxn04KtG7fO0VudUXjllI6Y/LAgpovYuC1SR3lTw33V4KVPXcOvB16bwplw+izKGWBn9Wjc6B0IxyW0tSz87ETzuL0HpiOeTZvEObrzSXlCjz3qbt4mf5gQ9QN4Gk7tLpOAZhrV1fn94IDL+l73KDbQDVo/HsX5sFFK1amFu7669kjlCOtiXxS9nZ35GtMVV2N+TC78xg0tAmYZtCOaJ+AgKoPj+PZTaR+Heu+nddiy7EAsezQ0FePxL1FN6+VcMydA16htdfdhwBzt/Sjql1LLoqSuaduOvXwftkOfhl3ylVRNnGjgHtIlAAEXtxfyitxVQSVVDgPRwfncB0S4LgpXrnuw+Bj7CuslXvCL6x9ZCp5PYqcXTYcwuv/xysFrTKM0k6xS4D6mIShlOwOxaMm0nntg3VBIXwJZULHabd/xMb2UkwQOAjKvgplLmduaSeGdS8axup326eSmEDRXQlHqUM=";
 
-            var sut = new TagDictionary("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
                                                       <Environment>LOC</Environment>
                                                       <Properties>
@@ -638,7 +638,7 @@ namespace Ensconce.Update.Tests
 
             var expected = "hello";
 
-            Assert.AreEqual(expected.ToString().ToLower(), "{{ Data|decrypt:Certificate }}".RenderTemplate(sut));
+            Assert.AreEqual(expected.ToString().ToLower(), "{{ Data|decrypt:Certificate }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -647,7 +647,7 @@ namespace Ensconce.Update.Tests
             Environment.SetEnvironmentVariable("Environment", "DR-LOC");
             Environment.SetEnvironmentVariable("OctopusEnvironmentName", "DR-LOC");
             Environment.SetEnvironmentVariable("IsDRMachine", "");
-            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
+            var loader = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual("DR-LOC", loader["Environment"]);
         }
 
@@ -657,48 +657,48 @@ namespace Ensconce.Update.Tests
             Environment.SetEnvironmentVariable("Environment", "DR-LOC");
             Environment.SetEnvironmentVariable("OctopusEnvironmentName", "DR-LOC");
             Environment.SetEnvironmentVariable("IsDRMachine", "true");
-            var loader = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
+            var loader = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             Assert.AreEqual("LOC", loader["Environment"]);
         }
 
         [Test]
         public void EnsureThatXmlIncludesWork_AndArriveRenderered()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual(xml.Value.RenderTemplate(sut), "{% include \"webservice-structure.xml\" %}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual(xml.Value.RenderTemplate(sut.ToLazyTagDictionary()), "{% include \"webservice-structure.xml\" %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void DualLabeledGroupWorks()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("ABC123", "{{ Label1.0.Value }}".RenderTemplate(sut));
-            Assert.AreEqual("ABC123", "{{ Label2.0.Value }}".RenderTemplate(sut));
-            Assert.AreEqual("321CBA", "{{ Label1.1.Value }}".RenderTemplate(sut));
-            Assert.Throws<ArgumentException>(() => "{{ Label2.1.Value }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("ABC123", "{{ Label1.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.AreEqual("ABC123", "{{ Label2.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.AreEqual("321CBA", "{{ Label1.1.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<ArgumentException>(() => "{{ Label2.1.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void FlatLabelGroupsHaveValues()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("FlatGroup-0", "{{ FlatGroup.0.Value }}".RenderTemplate(sut));
-            Assert.AreEqual("FlatGroup-1", "{{ FlatGroup.1.Value }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("FlatGroup-0", "{{ FlatGroup.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.AreEqual("FlatGroup-1", "{{ FlatGroup.1.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void LabelNodeWithoutProperties()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("999", "{{ Label3.0.Value }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("999", "{{ Label3.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
         public void DualLabeledGroupWithContainerNodeWorks()
         {
-            var sut = new TagDictionary("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("888", "{{ LabelGrouped1.0.Value }}".RenderTemplate(sut));
-            Assert.AreEqual("888", "{{ LabelGrouped2.0.Value }}".RenderTemplate(sut));
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("888", "{{ LabelGrouped1.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.AreEqual("888", "{{ LabelGrouped2.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
     }
 }
