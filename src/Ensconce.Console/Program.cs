@@ -23,10 +23,6 @@ namespace Ensconce.Console
 
         private static void MainLogic(string[] args)
         {
-            Logging.Log("-------------------------------------------");
-            Logging.Log("    15below Ensconce Deployment Helper     ");
-            Logging.Log("-------------------------------------------");
-
             Arguments.SetUpAndParseOptions(args);
 
             Logging.Log("Arguments parsed");
