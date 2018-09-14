@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Ensconce.NDjango.Core;
 using Ensconce.NDjango.Core.Filters.HtmlFilters;
@@ -79,11 +78,10 @@ namespace Ensconce.Update
         {
             lock (Error)
             {
-                if (!template.Contains("{"))
+                if (!template.Contains("{{") && !template.Contains("{%"))
                 {
                     return template;
                 }
-
 
                 string exceptionMessage = null;
                 string replacementValue;
