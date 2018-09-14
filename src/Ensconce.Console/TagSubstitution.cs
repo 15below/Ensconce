@@ -22,17 +22,8 @@ namespace Ensconce.Console
             foreach (var templateFile in templateFiles)
             {
                 Logging.Log($"Updating template file {templateFile.FullName}");
-
-                string template;
-                Encoding encoding;
-
-                using (var readStream = templateFile.OpenText())
-                {
-                    encoding = readStream.CurrentEncoding;
-                    template = readStream.ReadToEnd();
-                }
-
-                File.WriteAllText(templateFile.FullName, template.Render(), encoding);
+                var template = File.ReadAllText(templateFile.FullName);
+                File.WriteAllText(templateFile.FullName, template.Render(), Encoding.UTF8);
             }
         }
     }

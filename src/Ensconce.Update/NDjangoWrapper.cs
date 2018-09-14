@@ -80,7 +80,9 @@ namespace Ensconce.Update
             {
                 if (!template.Contains("{{") && !template.Contains("{%"))
                 {
-                    return template;
+                    //Use an empty tag dictionary because we don't have tags
+                    //For some reason, this "fixes" something in files...but i have no idea what!
+                    values = new Lazy<TagDictionary>(TagDictionary.Empty);
                 }
 
                 string exceptionMessage = null;
