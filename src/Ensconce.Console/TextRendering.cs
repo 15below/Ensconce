@@ -18,20 +18,21 @@ namespace Ensconce.Console
         private static TagDictionary BuildTagDictionary()
         {
             var instanceName = Environment.GetEnvironmentVariable("InstanceName");
-            var fixedPath = Arguments.FixedPath;
+            var tags = BuildTagDictionary(instanceName);
 
-            //If file doesn't exist, try rendering the path as a template string
-            if (!File.Exists(fixedPath))
+            if (string.IsNullOrWhiteSpace(Arguments.FixedPath))
             {
-                //Create a tag dictionary from environments to render
-                var tags = BuildTagDictionary(instanceName);
-                fixedPath = fixedPath.RenderTemplate(tags);
-                //build from that path, giving environment dictonary as a fallback
-                return BuildTagDictionary(instanceName, fixedPath, tags);
+                return tags;
             }
 
-            //Build using fixed path, do not provide a fall back
-            return BuildTagDictionary(instanceName, fixedPath, null);
+            var fixedPath = Arguments.FixedPath.RenderTemplate(tags);
+
+            if (!File.Exists(fixedPath))
+            {
+                throw new FileNotFoundException($"Unable to locate structure file at {fixedPath}", fixedPath);
+            }
+
+            return BuildTagDictionary(instanceName, fixedPath, tags);
         }
 
         private static TagDictionary BuildTagDictionary(string instanceName)

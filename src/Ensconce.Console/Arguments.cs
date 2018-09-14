@@ -62,7 +62,7 @@ namespace Ensconce.Console
             }
 
             var envFixedPath = Environment.GetEnvironmentVariable("FixedPath");
-            FixedPath = !string.IsNullOrEmpty(envFixedPath) ? envFixedPath : @"D:\FixedStructure\structure.xml";
+            FixedPath = !string.IsNullOrEmpty(envFixedPath) ? envFixedPath : string.Empty;
 
             var envRoundhouseOutputPath = Environment.GetEnvironmentVariable("RoundhouseOutputPath");
             RoundhouseOutputPath = !string.IsNullOrEmpty(envRoundhouseOutputPath) ? envRoundhouseOutputPath : @"E:\RH\";
@@ -84,7 +84,7 @@ namespace Ensconce.Console
                 },
                 {
                     "fixedPath=",
-                    @"Override path to structure.xml relative to executable (default=""D:\FixedStructure\structure.xml"")",
+                    "Override path to structure.xml relative to executable (default=\"Env:\\FixedPath\")",
                     s => FixedPath = string.IsNullOrEmpty(s) ? FixedPath : s
                 },
                 {
