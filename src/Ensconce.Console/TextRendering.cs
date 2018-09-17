@@ -25,12 +25,13 @@ namespace Ensconce.Console
 
             var fixedPath = Arguments.FixedPath.RenderTemplate(tags);
 
-            if (!File.Exists(fixedPath))
+            if (File.Exists(fixedPath))
             {
-                throw new FileNotFoundException($"Unable to locate structure file at {fixedPath}", fixedPath);
+                return BuildTagDictionary(instanceName, fixedPath, tags.Value);
             }
 
-            return BuildTagDictionary(instanceName, fixedPath, tags.Value);
+            Logging.Log("WARNING: The fixed structure path was not located at '{0}' so running without it!", fixedPath);
+            return tags.Value;
         }
 
         private static TagDictionary BuildTagDictionary(string instanceName)
