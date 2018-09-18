@@ -32,7 +32,7 @@ namespace Ensconce.Update
         public static TagDictionary FromIdentifier(string identifier)
         {
             var tagDictionary = new TagDictionary();
-            tagDictionary.LoadDictionary(identifier, new Dictionary<TagSource, string>());
+            tagDictionary.LoadDictionary(identifier, new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
             return tagDictionary;
         }
 
