@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using roundhouse;
 using roundhouse.databases;
 using roundhouse.infrastructure.logging;
@@ -84,6 +85,7 @@ namespace Ensconce
                 .Set(x => x.DisableTokenReplacement = true)
                 .Set(x => x.Drop = dropDatabase)
                 .Set(x => x.DisableOutput = true)
+                .Set(x => x.DefaultEncoding = Encoding.Default)
                 .SetCustomLogging(logger);
 
             if (databaseRestoreOptions != null)
