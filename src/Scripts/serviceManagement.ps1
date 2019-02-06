@@ -46,17 +46,13 @@ Function InstallAutomaticStartService([string]$serviceName, [string]$exePath, [s
 Function InstallAutomaticStartDotNetCoreServiceWithCredential([string]$serviceName, [string]$dllPath, [string]$serviceDisplayName, [string]$serviceDescription, [string]$serviceUser, [string]$servicePassword)
 {
 	$exePath = "C:\Program Files\dotnet\dotnet.exe $dllPath"
-	$passwordSecure = ConvertTo-SecureString -String $servicePassword -AsPlainText -Force
-	$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $serviceUser, $passwordSecure
-	New-Service -Name $serviceName -BinaryPathName $exePath -StartupType Automatic -DisplayName $serviceDisplayName -Description $serviceDescription -Credential $credential | Write-Host
-	& "sc.exe" failure $serviceName reset= 30 actions= restart/5000 | Write-Host
+	InstallAutomaticStartServiceWithCredential $serviceName $exePath $serviceDisplayName $serviceDescription $serviceUser $servicePassword
 }
 
 Function InstallAutomaticStartDotNetCoreService([string]$serviceName, [string]$dllPath, [string]$serviceDisplayName, [string]$serviceDescription)
 {
 	$exePath = "C:\Program Files\dotnet\dotnet.exe $dllPath"
-	New-Service -Name $serviceName -BinaryPathName $exePath -StartupType Automatic -DisplayName $serviceDisplayName -Description $serviceDescription | Write-Host
-	& "sc.exe" failure $serviceName reset= 30 actions= restart/5000 | Write-Host
+	InstallAutomaticStartService $serviceName $exePath $serviceDisplayName $serviceDescription
 }
 
 Write-Host "Ensconce - ServiceManagement Loaded"
