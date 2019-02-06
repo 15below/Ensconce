@@ -1,5 +1,4 @@
 REDIRECTS: FORCE
-STRATEGY: MIN
 RESTRICTION: == net47
 NUGET
   remote: https://www.nuget.org/api/v2
@@ -50,10 +49,7 @@ NUGET
       NHibernate.JetDriver (>= 2.0.0.1002)
       Npgsql (>= 3.2.7)
       System.Data.SQLite.Core (>= 1.0.109.2)
-    StructureMap (4.7)
-      System.Reflection.Emit.Lightweight (>= 4.3)
     System.Data.SQLite.Core (1.0.109.2)
-    System.Reflection.Emit.Lightweight (4.3)
     System.Threading.Tasks.Extensions (4.3)
 GITHUB
   remote: 15below/Build.Tools
