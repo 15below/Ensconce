@@ -932,8 +932,8 @@ namespace Ensconce.NDjango.Tests
             ////>>> time(datetime.time(0), u"h")
             ////u'12'
 
-
-            lst.Add(new TestDescriptor("timesince-filter01", "{{ value|timesince:arg}}", ContextObjects.p("value", DateTime.Now, "arg", DateTime.Now), ContextObjects.p("0 minutes")));
+            var now = DateTime.Now;
+            lst.Add(new TestDescriptor("timesince-filter01", "{{ value|timesince:arg}}", ContextObjects.p("value", now, "arg", now), ContextObjects.p("0 minutes")));
 
             lst.Add(new TestDescriptor("timesince-filter02", "{{ value|timesince:arg}}", ContextObjects.p("value", new DateTime(2000, 12, 12), "arg", new DateTime(2001, 12, 12)), ContextObjects.p("0 minutes")));
 
@@ -947,8 +947,7 @@ namespace Ensconce.NDjango.Tests
 
             lst.Add(new TestDescriptor("timesince-filter07", "{{ value|timesince:arg}}", ContextObjects.p("value", new DateTime(2002, 12, 12, 10, 30, 0), "arg", new DateTime(2002, 12, 12)), ContextObjects.p("10 hours 30 minutes")));
 
-
-            lst.Add(new TestDescriptor("timeuntil-filter01", "{{ value|timeuntil:arg}}", ContextObjects.p("value", DateTime.Now, "arg", DateTime.Now), ContextObjects.p("0 minutes")));
+            lst.Add(new TestDescriptor("timeuntil-filter01", "{{ value|timeuntil:arg}}", ContextObjects.p("value", now, "arg", now), ContextObjects.p("0 minutes")));
 
             lst.Add(new TestDescriptor("timeuntil-filter02", "{{ value|timeuntil:arg}}", ContextObjects.p("value", new DateTime(2001, 12, 12), "arg", new DateTime(2000, 12, 12)), ContextObjects.p("0 minutes")));
 
