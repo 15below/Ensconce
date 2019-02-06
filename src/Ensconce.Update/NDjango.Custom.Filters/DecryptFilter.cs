@@ -38,7 +38,7 @@ namespace Ensconce.Update.NDjango.Custom.Filters
 
         public byte[] Decrypt(CertificateDetails details, byte[] data)
         {
-            Exception lastException = null;
+            var exceptions = new List<Exception>();
 
             foreach (var certificate in FindCertificates(details))
             {
@@ -49,11 +49,11 @@ namespace Ensconce.Update.NDjango.Custom.Filters
                 }
                 catch (Exception ex)
                 {
-                    lastException = ex;
+                    exceptions.Add(ex);
                 }
             }
 
-            throw new CryptographicException($"Could not decrypt data using any found certificate with subject name '{details.CertificateSubjectName}' in the store {details.Location}/{details.Name}", lastException);
+            throw new CryptographicException($"Could not decrypt data using any found certificate with subject name '{details.CertificateSubjectName}' in the store {details.Location}/{details.Name}:{Environment.NewLine} - {String.Join($"{Environment.NewLine} - ", exceptions.Select(e => e.Message))}");
         }
 
         public IEnumerable<X509Certificate2> FindCertificates(CertificateDetails details)
