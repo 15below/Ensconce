@@ -103,7 +103,7 @@ namespace Ensconce.Update
                 {
                     if (wantedKey.Contains("."))
                     {
-                        wantedKey = wantedKey.Split(new[] { '.' }, 2, StringSplitOptions.RemoveEmptyEntries).Last().Replace(".", String.Empty);
+                        wantedKey = wantedKey.Split(new[] { '.' }, 2, StringSplitOptions.RemoveEmptyEntries).Last();
                     }
                     else
                     {
@@ -115,7 +115,7 @@ namespace Ensconce.Update
                         wantedKey = wantedKey.Substring(0, wantedKey.Length - 4);
                     }
                 }
-                this.AddOrDiscard(wantedKey, env[key].ToString());
+                this.AddOrDiscard(wantedKey.Replace(".", String.Empty), env[key].ToString());
             }
         }
 
