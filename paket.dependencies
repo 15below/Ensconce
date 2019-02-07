@@ -1,5 +1,5 @@
 framework: auto-detect
-redirects: on
+redirects: force
 source https://nuget.org/api/v2/
 
 nuget NUnit
