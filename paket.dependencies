@@ -1,11 +1,23 @@
 framework: auto-detect
-redirects: force
+redirects: on
 source https://nuget.org/api/v2/
 
 nuget NUnit
 nuget RhinoMocks
-nuget Newtonsoft.Json
 nuget roundhouse.lib
 nuget FSharp.Core
+
+//Missing depenendencies from roundhouse.lib - see https://github.com/chucknorris/roundhouse/pull/367
+
+nuget log4net @= 2.0.8
+nuget Newtonsoft.Json @= 10.0.3
+nuget Polly @= 6.1.2
+nuget System.Data.Common @= 4.3.0
+nuget System.Data.SqlClient @= 4.5.1
+nuget System.Security.Principal.Windows @= 4.5.1
+nuget Mysql.Data @= 8.0.13
+nuget System.Configuration.ConfigurationManager @= 4.5.0
+nuget System.Linq @= 4.3.0
+nuget EntityFramework @= 6.2.0
 
 github 15below/Build.Tools:V1.1
