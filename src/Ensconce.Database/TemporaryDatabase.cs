@@ -26,6 +26,13 @@ namespace Ensconce
             masterDatabaseConnectionString = Database.GetLocalConnectionStringFromDatabaseName("master").ConnectionString;
         }
 
+        public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions, Logger logger, string userName, string password)
+        {
+            DatabaseName = string.Format("BUILD-INT-Ensconce-{0}", Guid.NewGuid().ToString());
+            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName, userName, password), new LegacyFolderStructure(), restoreOptions, logger);
+            masterDatabaseConnectionString = Database.GetLocalConnectionStringFromDatabaseName("master", userName, password).ConnectionString;
+        }
+
         public string ReadVersion()
         {
             const string sql = "select version from [RoundhousE].[Version]";

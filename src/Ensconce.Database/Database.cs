@@ -1,11 +1,11 @@
-﻿using System.Data.Common;
+﻿using roundhouse;
+using roundhouse.databases;
+using roundhouse.infrastructure.logging;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using roundhouse;
-using roundhouse.databases;
-using roundhouse.infrastructure.logging;
 
 namespace Ensconce
 {
@@ -101,6 +101,11 @@ namespace Ensconce
         public static SqlConnectionStringBuilder GetLocalConnectionStringFromDatabaseName(string database)
         {
             return new SqlConnectionStringBuilder(string.Format("Data Source=(local);Initial Catalog={0};Trusted_Connection=Yes", database));
+        }
+
+        public static SqlConnectionStringBuilder GetLocalConnectionStringFromDatabaseName(string database, string user, string password)
+        {
+            return new SqlConnectionStringBuilder(string.Format("Data Source=(local);Initial Catalog={0};User ID={1};Password={2}", database, user, password));
         }
     }
 }
