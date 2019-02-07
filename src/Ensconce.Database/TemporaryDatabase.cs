@@ -1,9 +1,7 @@
-﻿using System;
+﻿using roundhouse.infrastructure.logging;
+using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.SqlClient;
-using roundhouse;
-using roundhouse.infrastructure.logging;
 
 namespace Ensconce
 {
@@ -17,42 +15,15 @@ namespace Ensconce
         {
         }
 
-        public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions)  : this(restoreOptions, null)
+        public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions) : this(restoreOptions, null)
         {
         }
 
         public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions, Logger logger)
         {
-            DatabaseName = GenerateDbName();
+            DatabaseName = string.Format("BUILD-INT-Ensconce-{0}", Guid.NewGuid().ToString());
             database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName), new LegacyFolderStructure(), restoreOptions, logger);
             masterDatabaseConnectionString = Database.GetLocalConnectionStringFromDatabaseName("master").ConnectionString;
-        }
-
-        [Obsolete("Temporary database only used for local testing")]
-        public TemporaryDatabase(string server, string user, string password)
-        {
-            DatabaseName = GenerateDbName();
-            masterDatabaseConnectionString = new SqlConnectionStringBuilder()
-                                                 {
-                                                     DataSource = server,
-                                                     InitialCatalog = DatabaseName,
-                                                     UserID = user,
-                                                     Password = password
-                                                 }.ConnectionString;
-
-            DbConnectionStringBuilder databaseConnectionString = new SqlConnectionStringBuilder()
-                                                                     {
-                                                                         DataSource = server,
-                                                                         InitialCatalog = DatabaseName,
-                                                                         UserID = user,
-                                                                         Password = password
-                                                                     };
-            database = new Database(databaseConnectionString, new LegacyFolderStructure());
-        }
-
-        private static string GenerateDbName()
-        {
-            return string.Format("BUILD-INT-{0}", Guid.NewGuid().ToString());
         }
 
         public string ReadVersion()
@@ -115,12 +86,28 @@ namespace Ensconce
 
         public void Dispose()
         {
-            var roundhouseMigrate = new Migrate();
-            roundhouseMigrate.Set(x => x.ConnectionString = database.ConnectionString);
-            roundhouseMigrate.GetConfiguration().DoNotCreateDatabase = true;
-            roundhouseMigrate.GetConfiguration().Drop = true;
-            roundhouseMigrate.GetConfiguration().WithTransaction = false;
-            roundhouseMigrate.Run();
+            using (var cnn = new SqlConnection(masterDatabaseConnectionString))
+            {
+                var sql = "declare @statement nvarchar(max)\r\n" +
+                          "set @statement = ''\r\n" +
+                          "select @statement = @statement + 'alter database [' + name + '] set single_user with rollback immediate; drop database [' + name + ']; ' from sys.databases where name like 'BUILD-INT-Ensconce%'\r\n" +
+                          "if len(@statement) = 0\r\n" +
+                          "begin\r\n" +
+                          "print 'no databases to drop'\r\n" +
+                          "end\r\n" +
+                          "else\r\n" +
+                          "begin\r\n" +
+                          "print @statement\r\n" +
+                          "exec sp_executesql @statement\r\n" +
+                          "end";
+                cnn.Open();
+                using (var cmd = new SqlCommand(sql, cnn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            return;
         }
 
         public void Deploy(string schemaScriptsFolder = "", string repository = "", bool dropDatabase = false)

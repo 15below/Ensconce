@@ -1,6 +1,4 @@
 ﻿using NUnit.Framework;
-using Rhino.Mocks;
-using roundhouse.infrastructure.logging;
 using System;
 using System.IO;
 using System.Linq;
@@ -9,7 +7,6 @@ using System.Reflection;
 namespace Ensconce.Database.Tests
 {
     [TestFixture]
-    [Explicit("Want to run these against local database")]
     [Category("Integration Test")]
     public class TemporaryDatabaseTests
     {
@@ -19,7 +16,6 @@ namespace Ensconce.Database.Tests
             var sut = new TemporaryDatabase();
             sut.Dispose();
         }
-
 
         [Test]
         public void should_remove_database_when_disposed()
@@ -76,7 +72,6 @@ namespace Ensconce.Database.Tests
             }
         }
 
-
         [Test]
         public void should_stamp_repository_path_when_deployed()
         {
@@ -101,23 +96,5 @@ namespace Ensconce.Database.Tests
                 Assert.That(sut.GetTables().Select(x => x.Name), Has.Member("Table2"));
             }
         }
-
-        [Test]
-        public void should_not_display_fluent_nhibernate_warnings()
-        {
-            // Get around problem with calling roundhouse dll directly where it continually logs missing type for nhibernate
-            var logger = MockRepository.GenerateMock<Logger>();
-
-            using (var sut = new TemporaryDatabase(null, logger))
-            {
-                sut.Deploy();
-
-                var args = logger.GetArgumentsForCallsMadeOn(x => x.log_a_warning_event_containing(null, null));
-
-                Assert.That(args[0], Has.None.ContainsSubstring("Had an error building session factory from merged, attempting unmerged. The error:"));
-            }
-        }
-
-
     }
 }
