@@ -40,7 +40,7 @@ Function RemoveService([string]$serviceName)
 	}
 }
 
-Function InstallService([string]$serviceName, [string]$exePath, [ServiceStartupType]$startupType, [string]$serviceDisplayName, [string]$serviceDescription)
+Function InstallService([string]$serviceName, [string]$exePath, [string]$startupType, [string]$serviceDisplayName, [string]$serviceDescription)
 {
 	RemoveService $serviceName
 	"Installing $serviceName with exe '$exePath'" | Write-Host
@@ -48,19 +48,19 @@ Function InstallService([string]$serviceName, [string]$exePath, [ServiceStartupT
 	SetServiceRestarts $serviceName
 }
 
-Function InstallServiceWithCredential([string]$serviceName, [string]$exePath, [ServiceStartupType]$startupType, [string]$serviceDisplayName, [string]$serviceDescription, [string]$serviceUser, [string]$servicePassword)
+Function InstallServiceWithCredential([string]$serviceName, [string]$exePath, [string]$startupType, [string]$serviceDisplayName, [string]$serviceDescription, [string]$serviceUser, [string]$servicePassword)
 {
 	InstallService $serviceName $exePath $startupType $serviceDisplayName $serviceDescription
 	SetServiceRunAs $serviceName $serviceUser $servicePassword
 }
 
-Function InstallDotNetCoreService([string]$serviceName, [string]$dllPath, [ServiceStartupType]$startupType, [string]$serviceDisplayName, [string]$serviceDescription)
+Function InstallDotNetCoreService([string]$serviceName, [string]$dllPath, [string]$startupType, [string]$serviceDisplayName, [string]$serviceDescription)
 {
 	$exePath = "C:\Program Files\dotnet\dotnet.exe $dllPath"
 	InstallService $serviceName $exePath $startupType $serviceDisplayName $serviceDescription
 }
 
-Function InstallDotNetCoreServiceWithCredential([string]$serviceName, [string]$dllPath, [ServiceStartupType]$startupType, [string]$serviceDisplayName, [string]$serviceDescription, [string]$serviceUser, [string]$servicePassword)
+Function InstallDotNetCoreServiceWithCredential([string]$serviceName, [string]$dllPath, [string]$startupType, [string]$serviceDisplayName, [string]$serviceDescription, [string]$serviceUser, [string]$servicePassword)
 {
 	InstallDotNetCoreService $serviceName $dllPath $startupType $serviceDisplayName $serviceDescription
 	SetServiceRunAs $serviceName $serviceUser $servicePassword
