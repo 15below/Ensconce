@@ -29,6 +29,7 @@ Function SetServiceRunAs([string]$serviceName, [string]$serviceUser, [string]$se
 }
 
 Function SetServiceRestarts([string]$serviceName){
+	"Setting service restarts for $serviceName"
 	& "sc.exe" failure $serviceName reset= 30 actions= restart/5000 | Write-Host
 }
 

@@ -93,6 +93,7 @@ namespace Ensconce
 
         public void Dispose()
         {
+            //Drop the database created
             database.Deploy("", "", true);
         }
 
