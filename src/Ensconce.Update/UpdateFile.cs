@@ -50,33 +50,24 @@ namespace Ensconce.Update
 
         public static void UpdateFiles(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext)
         {
-            UpdateAll(substitutionFile, tagValues, outputFailureContext);
-        }
+            var (subsXml, nsm) = LoadAndValidateSubstitutionDoc(substitutionFile);
 
-        public static IEnumerable<Tuple<string, string>> UpdateAll(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext = false)
-        {
-            var subsXml = XDocument.Load(substitutionFile);
-            var nsm = new XmlNamespaceManager(new NameTable());
-            nsm.AddNamespace("s", "http://15below.com/Substitutions.xsd");
-
-            ValidateSubstitutionDoc(subsXml);
-
-            return subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
-                          .Select(el => el.Attribute("Filename")?.Value)
-                          .Select(path => path.RenderTemplate(tagValues))
-                          .AsParallel()
-                          .WithDegreeOfParallelism(4)
-                          .Select(file => Tuple.Create(file, Update(subsXml, nsm, file, tagValues, outputFailureContext)))
-                          .ToList();
+            subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
+                .Select(el => el.Attribute("Filename")?.Value)
+                .Select(path => path.RenderTemplate(tagValues))
+                .AsParallel()
+                .WithDegreeOfParallelism(4)
+                .Select(file =>
+                {
+                    File.WriteAllText(file, Update(subsXml, nsm, file, tagValues, outputFailureContext));
+                    return file;
+                })
+                .ToList();
         }
 
         public static string Update(string substitutionFile, string baseFile, Lazy<TagDictionary> tagValues = null, bool outputFailureContext = false)
         {
-            var subsXml = XDocument.Load(substitutionFile);
-            var nsm = new XmlNamespaceManager(new NameTable());
-            nsm.AddNamespace("s", "http://15below.com/Substitutions.xsd");
-
-            ValidateSubstitutionDoc(subsXml);
+            var (subsXml, nsm) = LoadAndValidateSubstitutionDoc(substitutionFile);
 
             return Update(subsXml, nsm, baseFile, tagValues, outputFailureContext);
         }
@@ -126,14 +117,20 @@ namespace Ensconce.Update
             return baseData;
         }
 
-        private static void ValidateSubstitutionDoc(XDocument subsXml)
+        private static (XDocument subsXml, XmlNamespaceManager nsm) LoadAndValidateSubstitutionDoc(string substitutionFile)
         {
+            var subsXml = XDocument.Load(substitutionFile);
+            var nsm = new XmlNamespaceManager(new NameTable());
+            nsm.AddNamespace("s", "http://15below.com/Substitutions.xsd");
+
             var schemas = new XmlSchemaSet();
             var assembly = Assembly.GetExecutingAssembly();
 
             schemas.Add(null, XmlReader.Create(assembly.GetManifestResourceStream("Ensconce.Update.Substitutions.xsd")));
 
             subsXml.Validate(schemas, (sender, args) => throw args.Exception);
+
+            return (subsXml, nsm);
         }
 
         private static string UpdateXml(Lazy<TagDictionary> tagValues, IEnumerable<Substitution> subs, XNode baseXml, IXmlNamespaceResolver nsm, XNode subsXml)
