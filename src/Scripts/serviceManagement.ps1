@@ -22,10 +22,8 @@ Function StartService([string]$serviceName)
 
 Function SetServiceRunAs([string]$serviceName, [string]$serviceUser, [string]$servicePassword)
 {
-	$passwordSecure = ConvertTo-SecureString -String $servicePassword -AsPlainText -Force
-	$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $serviceUser, $passwordSecure
 	"Setting service $serviceName to run as $serviceUser"
-	Set-Service -Name $serviceName -Credential $credential | Write-Host
+	& "sc.exe" config $serviceName obj= $serviceUser password= $servicePassword | Write-Host
 }
 
 Function SetServiceRestarts([string]$serviceName){
