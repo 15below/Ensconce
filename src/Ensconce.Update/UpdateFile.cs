@@ -50,20 +50,7 @@ namespace Ensconce.Update
 
         public static void UpdateFiles(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext)
         {
-            var subsXml = XDocument.Load(substitutionFile);
-            var nsm = new XmlNamespaceManager(new NameTable());
-            nsm.AddNamespace("s", "http://15below.com/Substitutions.xsd");
-
-            ValidateSubstitutionDoc(subsXml);
-
-            var files = subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
-                               .Select(el => el.Attribute("Filename")?.Value)
-                               .Select(path => path.RenderTemplate(tagValues));
-
-            foreach (var file in files)
-            {
-                File.WriteAllText(file, Update(subsXml, nsm, file, tagValues, outputFailureContext));
-            }
+            UpdateAll(substitutionFile, tagValues, outputFailureContext);
         }
 
         public static IEnumerable<Tuple<string, string>> UpdateAll(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext = false)
@@ -74,11 +61,13 @@ namespace Ensconce.Update
 
             ValidateSubstitutionDoc(subsXml);
 
-            var files = subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
-                               .Select(el => el.Attribute("Filename").Value)
-                               .Select(path => path.RenderTemplate(tagValues));
-
-            return files.Select(file => Tuple.Create(file, Update(substitutionFile, file, tagValues, outputFailureContext)));
+            return subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
+                          .Select(el => el.Attribute("Filename")?.Value)
+                          .Select(path => path.RenderTemplate(tagValues))
+                          .AsParallel()
+                          .WithDegreeOfParallelism(4)
+                          .Select(file => Tuple.Create(file, Update(subsXml, nsm, file, tagValues, outputFailureContext)))
+                          .ToList();
         }
 
         public static string Update(string substitutionFile, string baseFile, Lazy<TagDictionary> tagValues = null, bool outputFailureContext = false)
@@ -246,21 +235,26 @@ namespace Ensconce.Update
                         sub.ReplacementContent = change.Value;
                         sub.HasReplacementContent = true;
                         break;
+
                     case "addchildcontent":
                         sub.AddChildContent = change.Value;
                         sub.HasAddChildContent = true;
                         sub.AddChildContentIfNotExists = change.Attribute("ifNotExists")?.Value;
                         break;
+
                     case "appendafter":
                         sub.AppendAfter = change.Value;
                         sub.HasAppendAfter = true;
                         break;
+
                     case "removecurrentattributes":
                         sub.RemoveCurrentAttributes = true;
                         break;
+
                     case "changeattribute":
                         sub.ChangeAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
                         break;
+
                     default:
                         throw new Exception($"Unknown change type '{change.Attribute("type")?.Value}'");
                 }
