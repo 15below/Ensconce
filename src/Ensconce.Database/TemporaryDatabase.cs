@@ -93,28 +93,8 @@ namespace Ensconce
 
         public void Dispose()
         {
-            using (var cnn = new SqlConnection(masterDatabaseConnectionString))
-            {
-                var sql = "declare @statement nvarchar(max)\r\n" +
-                          "set @statement = ''\r\n" +
-                          "select @statement = @statement + 'alter database [' + name + '] set single_user with rollback immediate; drop database [' + name + ']; ' from sys.databases where name like 'BUILD-INT-Ensconce%'\r\n" +
-                          "if len(@statement) = 0\r\n" +
-                          "begin\r\n" +
-                          "print 'no databases to drop'\r\n" +
-                          "end\r\n" +
-                          "else\r\n" +
-                          "begin\r\n" +
-                          "print @statement\r\n" +
-                          "exec sp_executesql @statement\r\n" +
-                          "end";
-                cnn.Open();
-                using (var cmd = new SqlCommand(sql, cnn))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-            }
-
-            return;
+            //Drop the database created
+            database.Deploy("", "", true);
         }
 
         public void Deploy(string schemaScriptsFolder = "", string repository = "", bool dropDatabase = false)

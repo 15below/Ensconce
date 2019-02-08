@@ -14,13 +14,14 @@ namespace Ensconce.Database.Tests
         {
             var dbUser = Environment.GetEnvironmentVariable("DbUser");
             var dbPass = Environment.GetEnvironmentVariable("DbPass");
+            var logger = new roundhouse.infrastructure.logging.custom.ConsoleLogger(true);
 
             if (!string.IsNullOrWhiteSpace(dbUser) && !string.IsNullOrWhiteSpace(dbPass))
             {
-                return new TemporaryDatabase(restoreOptions, null, dbUser, dbPass);
+                return new TemporaryDatabase(restoreOptions, logger, dbUser, dbPass);
             }
 
-            return new TemporaryDatabase(restoreOptions, null);
+            return new TemporaryDatabase(restoreOptions, logger);
         }
 
         [Test]

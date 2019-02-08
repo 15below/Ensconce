@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using Ensconce.Update;
+using System.IO;
+using System.Linq;
 using System.Text;
-using Ensconce.Update;
 
 namespace Ensconce.Console
 {
@@ -17,23 +18,32 @@ namespace Ensconce.Console
         {
             Logging.Log("Updating template filter files");
 
-            var templateFiles = new DirectoryInfo(Arguments.DeployFrom).EnumerateFiles(Arguments.TemplateFilters, SearchOption.AllDirectories);
-
-            foreach (var templateFile in templateFiles)
-            {
-                Logging.Log($"Updating template file {templateFile.FullName}");
-
-                string template;
-                Encoding encoding;
-
-                using (var readStream = templateFile.OpenText())
+            new DirectoryInfo(Arguments.DeployFrom)
+                .EnumerateFiles(Arguments.TemplateFilters, SearchOption.AllDirectories)
+                .AsParallel()
+                .WithDegreeOfParallelism(4)
+                .Select(x =>
                 {
-                    encoding = readStream.CurrentEncoding;
-                    template = readStream.ReadToEnd();
-                }
+                    UpdateSingleFile(x);
+                    return x;
+                })
+                .ToList();
+        }
 
-                File.WriteAllText(templateFile.FullName, template.Render(), encoding);
+        private static void UpdateSingleFile(FileInfo templateFile)
+        {
+            Logging.Log($"Updating template file {templateFile.FullName}");
+
+            string template;
+            Encoding encoding;
+
+            using (var readStream = templateFile.OpenText())
+            {
+                encoding = readStream.CurrentEncoding;
+                template = readStream.ReadToEnd();
             }
+
+            File.WriteAllText(templateFile.FullName, template.Render(), encoding);
         }
     }
 }

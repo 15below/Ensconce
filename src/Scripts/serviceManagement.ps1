@@ -1,8 +1,5 @@
 Write-Host "Ensconce - ServiceManagement Loading"
 
-$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
-. $DeployToolsDir\userManagement.ps1
-
 Function StopService([string]$serviceName)
 {
 	If (Get-Service $serviceName -ErrorAction SilentlyContinue) {
@@ -23,6 +20,19 @@ Function StartService([string]$serviceName)
 	Start-Service $serviceName | Write-Host
 }
 
+Function SetServiceRunAs([string]$serviceName, [string]$serviceUser, [string]$servicePassword)
+{
+	$passwordSecure = ConvertTo-SecureString -String $servicePassword -AsPlainText -Force
+	$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $serviceUser, $passwordSecure
+	"Setting service $serviceName to run as $serviceUser"
+	Set-Service -Name $serviceName -Credential $credential | Write-Host
+}
+
+Function SetServiceRestarts([string]$serviceName){
+	"Setting service restarts for $serviceName"
+	& "sc.exe" failure $serviceName reset= 30 actions= restart/5000 | Write-Host
+}
+
 Function RemoveService([string]$serviceName)
 {
 	If (Get-Service $serviceName -ErrorAction SilentlyContinue) {
@@ -32,60 +42,58 @@ Function RemoveService([string]$serviceName)
 	}
 }
 
-Function InstallAutomaticStartServiceWithCredential([string]$serviceName, [string]$exePath, [string]$serviceDisplayName, [string]$serviceDescription, [string]$serviceUser, [string]$servicePassword)
-{
-	RemoveService $serviceName
-	"Installing $serviceName with exe '$exePath' to run as $serviceUser" | Write-Host
-	$passwordSecure = ConvertTo-SecureString -String $servicePassword -AsPlainText -Force
-	$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $serviceUser, $passwordSecure
-	New-Service -Name $serviceName -BinaryPathName $exePath -StartupType Automatic -DisplayName $serviceDisplayName -Description $serviceDescription -Credential $credential | Write-Host
-	& "sc.exe" failure $serviceName reset= 30 actions= restart/5000 | Write-Host
-}
-
-Function InstallAutomaticStartService([string]$serviceName, [string]$exePath, [string]$serviceDisplayName, [string]$serviceDescription)
+Function InstallService([string]$serviceName, [string]$exePath, [ServiceStartupType]$startupType, [string]$serviceDisplayName, [string]$serviceDescription)
 {
 	RemoveService $serviceName
 	"Installing $serviceName with exe '$exePath'" | Write-Host
-	New-Service -Name $serviceName -BinaryPathName $exePath -StartupType Automatic -DisplayName $serviceDisplayName -Description $serviceDescription | Write-Host
-	& "sc.exe" failure $serviceName reset= 30 actions= restart/5000 | Write-Host
+	New-Service -Name $serviceName -BinaryPathName $exePath -StartupType $startupType -DisplayName $serviceDisplayName -Description $serviceDescription | Write-Host
+	SetServiceRestarts $serviceName
 }
 
-Function InstallAutomaticStartDotNetCoreServiceWithCredential([string]$serviceName, [string]$dllPath, [string]$serviceDisplayName, [string]$serviceDescription, [string]$serviceUser, [string]$servicePassword)
+Function InstallServiceWithCredential([string]$serviceName, [string]$exePath, [ServiceStartupType]$startupType, [string]$serviceDisplayName, [string]$serviceDescription, [string]$serviceUser, [string]$servicePassword)
+{
+	InstallService $serviceName $exePath $startupType $serviceDisplayName $serviceDescription
+	SetServiceRunAs $serviceName $serviceUser $servicePassword
+}
+
+Function InstallDotNetCoreService([string]$serviceName, [string]$dllPath, [ServiceStartupType]$startupType, [string]$serviceDisplayName, [string]$serviceDescription)
 {
 	$exePath = "C:\Program Files\dotnet\dotnet.exe $dllPath"
-	InstallAutomaticStartServiceWithCredential $serviceName $exePath $serviceDisplayName $serviceDescription $serviceUser $servicePassword
+	InstallService $serviceName $exePath $startupType $serviceDisplayName $serviceDescription
 }
 
-Function InstallAutomaticStartDotNetCoreService([string]$serviceName, [string]$dllPath, [string]$serviceDisplayName, [string]$serviceDescription)
+Function InstallDotNetCoreServiceWithCredential([string]$serviceName, [string]$dllPath, [ServiceStartupType]$startupType, [string]$serviceDisplayName, [string]$serviceDescription, [string]$serviceUser, [string]$servicePassword)
 {
-	$exePath = "C:\Program Files\dotnet\dotnet.exe $dllPath"
-	InstallAutomaticStartService $serviceName $exePath $serviceDisplayName $serviceDescription
+	InstallDotNetCoreService $serviceName $dllPath $startupType $serviceDisplayName $serviceDescription
+	SetServiceRunAs $serviceName $serviceUser $servicePassword
 }
 
-Function InstallTopshelfService([string]$exePath)
+Function InstallTopshelfService([string]$serviceName, [string]$exePath)
 {
+	RemoveService $serviceName
 	"Installing $exePath using topshelf" | Write-Host
 	& "$exePath install"
-}
-
-Function InstallTopshelfServiceWithInstance([string]$exePath, [string]$instance)
-{
-	"Installing $exePath with instance $instance using topshelf" | Write-Host
-	& "$exePath install /instance:$instance"
+	SetServiceRestarts $serviceName
 }
 
 Function InstallTopshelfServiceWithCredential([string]$serviceName, [string]$exePath, [string]$serviceUser, [string]$servicePassword)
 {
-	"Installing $exePath to run as $serviceUser using topshelf" | Write-Host
-	& "$exePath install"
-	SetServiceAccount $serviceName $serviceUser $servicePassword
+	InstallTopshelfService $serviceName $exePath
+	SetServiceRunAs $serviceName $serviceUser $servicePassword
+}
+
+Function InstallTopshelfServiceWithInstance([string]$serviceName, [string]$exePath, [string]$instance)
+{
+	RemoveService $serviceName
+	"Installing $exePath with instance $instance using topshelf" | Write-Host
+	& "$exePath install /instance:$instance"
+	SetServiceRestarts $serviceName
 }
 
 Function InstallTopshelfServiceWithInstanceAndCredential([string]$serviceName, [string]$exePath, [string]$instance, [string]$serviceUser, [string]$servicePassword)
 {
-	"Installing $exePath with instance $instance to run as $serviceUser using topshelf" | Write-Host
-	& "$exePath install /instance:$instance"
-	SetServiceAccount $serviceName $serviceUser $servicePassword
+	InstallTopshelfServiceWithInstance $serviceName $exePath $instance
+	SetServiceRunAs $serviceName $serviceUser $servicePassword
 }
 
 Write-Host "Ensconce - ServiceManagement Loaded"
