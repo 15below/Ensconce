@@ -72,7 +72,23 @@ namespace Ensconce.Update
             return Update(subsXml, nsm, baseFile, tagValues, outputFailureContext);
         }
 
-        public static string Update(XDocument subsXml, XmlNamespaceManager nsm, string baseFile, Lazy<TagDictionary> tagValues = null, bool outputFailureContext = false)
+        private static (XDocument subsXml, XmlNamespaceManager nsm) LoadAndValidateSubstitutionDoc(string substitutionFile)
+        {
+            var subsXml = XDocument.Load(substitutionFile);
+            var nsm = new XmlNamespaceManager(new NameTable());
+            nsm.AddNamespace("s", "http://15below.com/Substitutions.xsd");
+
+            var schemas = new XmlSchemaSet();
+            var assembly = Assembly.GetExecutingAssembly();
+
+            schemas.Add(null, XmlReader.Create(assembly.GetManifestResourceStream("Ensconce.Update.Substitutions.xsd")));
+
+            subsXml.Validate(schemas, (sender, args) => throw args.Exception);
+
+            return (subsXml, nsm);
+        }
+
+        private static string Update(XDocument subsXml, XmlNamespaceManager nsm, string baseFile, Lazy<TagDictionary> tagValues = null, bool outputFailureContext = false)
         {
             Logging.Log($"Updating file {baseFile}");
 
@@ -115,22 +131,6 @@ namespace Ensconce.Update
             }
 
             return baseData;
-        }
-
-        private static (XDocument subsXml, XmlNamespaceManager nsm) LoadAndValidateSubstitutionDoc(string substitutionFile)
-        {
-            var subsXml = XDocument.Load(substitutionFile);
-            var nsm = new XmlNamespaceManager(new NameTable());
-            nsm.AddNamespace("s", "http://15below.com/Substitutions.xsd");
-
-            var schemas = new XmlSchemaSet();
-            var assembly = Assembly.GetExecutingAssembly();
-
-            schemas.Add(null, XmlReader.Create(assembly.GetManifestResourceStream("Ensconce.Update.Substitutions.xsd")));
-
-            subsXml.Validate(schemas, (sender, args) => throw args.Exception);
-
-            return (subsXml, nsm);
         }
 
         private static string UpdateXml(Lazy<TagDictionary> tagValues, IEnumerable<Substitution> subs, XNode baseXml, IXmlNamespaceResolver nsm, XNode subsXml)
