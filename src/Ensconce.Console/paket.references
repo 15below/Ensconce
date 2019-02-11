@@ -1,14 +1,1 @@
 roundhouse.lib
-
-//Missing depenendencies from roundhouse.lib - see https://github.com/chucknorris/roundhouse/pull/367
-
-log4net
-Newtonsoft.Json
-Polly
-System.Data.Common
-System.Data.SqlClient
-System.Security.Principal.Windows
-Mysql.Data
-System.Configuration.ConfigurationManager
-System.Linq
-EntityFramework
