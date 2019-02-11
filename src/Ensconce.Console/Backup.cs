@@ -9,7 +9,7 @@ namespace Ensconce.Console
     {
         internal static void DoBackup()
         {
-            var backupSources = Arguments.BackupSources.Select(x => x.Render());
+            var backupSources = Arguments.BackupSources.Select(x => x.Render()).ToList();
             var backupDestination = Arguments.BackupDestination.Render();
 
             if (File.Exists(backupDestination))
@@ -24,50 +24,45 @@ namespace Ensconce.Console
                 }
             }
 
-            using (var zipFile = ZipFile.Open(backupDestination, ZipArchiveMode.Create))
+            if (backupSources.Count == 1)
             {
-                foreach (var backupSource in backupSources)
+                Logging.Log($"Adding {backupSources[0]} to {backupDestination}");
+                ZipFile.CreateFromDirectory(backupSources[0], backupDestination, CompressionLevel.Optimal, true);
+                Logging.Log($"Added {backupSources[0]} to {backupDestination}");
+            }
+            else
+            {
+                using (var zipFile = ZipFile.Open(backupDestination, ZipArchiveMode.Create))
                 {
-                    Logging.Log($"Adding {backupSource} to {backupDestination}");
+                    foreach (var backupSource in backupSources)
+                    {
+                        Logging.Log($"Adding {backupSource} to {backupDestination}");
 
-                    var backupSourceDirectory = new DirectoryInfo(backupSource);
-                    var files = backupSourceDirectory.GetFiles("**", SearchOption.AllDirectories);
-                    if (files.Length == 0)
-                    {
-                        zipFile.CreateEntry(backupSourceDirectory.Name);
-                    }
-                    else
-                    {
-                        foreach (var file in files)
+                        var backupSourceDirectory = new DirectoryInfo(backupSource);
+                        var files = backupSourceDirectory.GetFiles("**", SearchOption.AllDirectories);
+                        if (files.Length == 0)
                         {
-                            if (backupSourceDirectory.Parent != null)
+                            zipFile.CreateEntry(backupSourceDirectory.Name);
+                        }
+                        else
+                        {
+                            foreach (var file in files)
                             {
-                                zipFile.CreateEntryFromFile(file.FullName, file.FullName.Replace(backupSourceDirectory.Parent.FullName, ""), CompressionLevel.Optimal);
-                            }
-                            else
-                            {
-                                zipFile.CreateEntryFromFile(file.FullName, file.FullName.Replace(backupSourceDirectory.FullName, ""), CompressionLevel.Optimal);
+                                if (backupSourceDirectory.Parent != null)
+                                {
+                                    zipFile.CreateEntryFromFile(file.FullName, file.FullName.Replace(backupSourceDirectory.Parent.FullName, ""), CompressionLevel.Optimal);
+                                }
+                                else
+                                {
+                                    zipFile.CreateEntryFromFile(file.FullName, file.FullName.Replace(backupSourceDirectory.FullName, ""), CompressionLevel.Optimal);
+                                }
                             }
                         }
-                    }
 
-                    Logging.Log($"Added {backupSource} to {backupDestination}");
+                        Logging.Log($"Added {backupSource} to {backupDestination}");
+                    }
                 }
             }
-            //foreach (var backupSource in backupSources)
-            //{
-            //    if (initialCreate)
-            //    {
-            //        ZipFile.CreateFromDirectory(backupSource, backupDestination, CompressionLevel.Optimal, false);
-            //        initialCreate = false;
-            //    }
-            //    else
-            //    {
-            //        using (var zipFile = ZipFile.Open(backupDestination, ZipArchiveMode.Update))
-            //        {
-            //        }
-            //    }
-            //}
         }
     }
 }
