@@ -7,12 +7,15 @@ namespace Ensconce.Console
     {
         internal static void DoBackup()
         {
-            if (File.Exists(Arguments.BackupDestination) && Arguments.BackupOverwrite)
+            var backupSource = Arguments.BackupSource.Render();
+            var backupDestination = Arguments.BackupDestination.Render();
+
+            if (File.Exists(backupDestination) && Arguments.BackupOverwrite)
             {
-                File.Delete(Arguments.BackupDestination);
+                File.Delete(backupDestination);
             }
 
-            ZipFile.CreateFromDirectory(Arguments.BackupSource, Arguments.BackupDestination, CompressionLevel.Optimal, false);
+            ZipFile.CreateFromDirectory(backupSource, backupDestination, CompressionLevel.Optimal, false);
         }
     }
 }
