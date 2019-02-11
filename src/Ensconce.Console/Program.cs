@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace Ensconce.Console
@@ -36,13 +37,13 @@ namespace Ensconce.Console
 
             Logging.Log("Arguments parsed");
 
-            if (Arguments.TagExport)
+            if (!string.IsNullOrWhiteSpace(Arguments.DictionarySavePath) || !string.IsNullOrWhiteSpace(Arguments.DictionaryPostUrl))
             {
                 DictionaryExport.ExportTagDictionary();
                 return;
             }
 
-            if (Arguments.Backup)
+            if (Arguments.BackupSources.Any())
             {
                 Backup.DoBackup();
                 return;
