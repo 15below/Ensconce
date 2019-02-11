@@ -35,7 +35,7 @@ namespace Ensconce.Console
         internal static string DictionarySavePath { get; private set; }
 
         internal static bool Backup { get; private set; }
-        internal static string BackupSource { get; private set; }
+        internal static List<string> BackupSources { get; private set; } = new List<string>();
         internal static string BackupDestination { get; private set; }
         internal static bool BackupOverwrite { get; private set; }
 
@@ -44,6 +44,7 @@ namespace Ensconce.Console
         private static bool showHelp;
         private static bool dropDatabaseConfirm;
         private static readonly List<string> RawToDirectories = new List<string>();
+        private static readonly List<string> RawBackupSources = new List<string>();
 
         internal static void SetUpAndParseOptions(string[] args)
         {
@@ -218,8 +219,8 @@ namespace Ensconce.Console
                 },
                 {
                     "backupSource=",
-                    @"Specify the source directory of the backup.  Required for the backup option",
-                    s => BackupSource = s
+                    @"Specify the source directory of the backup, multiple values can be specified.  Required for the backup option",
+                    s => RawBackupSources.Add(s)
                 },
                 {
                     "backupDestination=",
@@ -318,24 +319,19 @@ namespace Ensconce.Console
 
             if (Backup)
             {
-                if (string.IsNullOrWhiteSpace(BackupSource))
+                if (RawBackupSources.Count == 0)
                 {
                     throw new OptionException("Error: You must specify a backupSource to perform the backup operation", "backupSource");
                 }
 
-                if (!Directory.Exists(BackupSource))
+                foreach (var rawBackupSource in RawBackupSources)
                 {
-                    throw new OptionException("Error: Cannot find the backup source directory", "backupSource");
+                    BackupSources.AddRange(rawBackupSource.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
                 }
 
                 if (string.IsNullOrWhiteSpace(BackupDestination))
                 {
                     throw new OptionException("Error: You must specify a backupDestination to perform the backup operation", "backupDestination");
-                }
-
-                if (File.Exists(BackupDestination) && !BackupOverwrite)
-                {
-                    throw new OptionException("Error: Backup destination file already exists", "backupDestination");
                 }
 
                 if (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation || TagExport)
