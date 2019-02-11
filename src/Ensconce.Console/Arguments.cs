@@ -1,9 +1,9 @@
+using Ensconce.ReportingServices;
+using Mono.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Ensconce.ReportingServices;
-using Mono.Options;
 
 namespace Ensconce.Console
 {
@@ -30,8 +30,14 @@ namespace Ensconce.Console
         internal static bool DeployReports { get; private set; }
         internal static bool DeployReportingRole { get; private set; }
 
+        internal static bool TagExport { get; private set; }
         internal static string DictionaryPostUrl { get; private set; }
         internal static string DictionarySavePath { get; private set; }
+
+        internal static bool Backup { get; private set; }
+        internal static string BackupSource { get; private set; }
+        internal static string BackupDestination { get; private set; }
+        internal static bool BackupOverwrite { get; private set; }
 
         internal static bool OutputFailureContext { get; private set; }
 
@@ -109,12 +115,12 @@ namespace Ensconce.Console
                 },
                 {
                     "t|deployTo=",
-                    "Path to deploy to. Required for the finalisePath and copyToPath options, multiple values can be specified.",
+                    "Path to deploy to. Required for the copyTo & replace option, multiple values can be specified.",
                     s => RawToDirectories.Add(s)
                 },
                 {
                     "f|deployFrom=",
-                    "Path to deploy from. Required for the copyTo and databaseName options",
+                    "Path to deploy from. Required for the copyTo & replace and databaseName options",
                     s => DeployFrom = s
                 },
                 {
@@ -191,6 +197,11 @@ namespace Ensconce.Console
                     }
                 },
                 {
+                    "e|export",
+                    @"Export dictionary as JSON.  Specify dictionaryPostUrl or dictionarySavePath",
+                    s => TagExport = s != null
+                },
+                {
                     "dictionaryPostUrl=",
                     @"Specify a url to post the tag directory to (as JSON)",
                     s => DictionaryPostUrl = s
@@ -199,7 +210,27 @@ namespace Ensconce.Console
                     "dictionarySavePath=",
                     @"Specify a file to save the tag directory to (as JSON)",
                     s => DictionarySavePath = s
-                }
+                },
+                {
+                    "b|backup",
+                    @"Specify the source of the backup.  Required for the backup option",
+                    s => Backup = s != null
+                },
+                {
+                    "backupSource=",
+                    @"Specify the source directory of the backup.  Required for the backup option",
+                    s => BackupSource = s
+                },
+                {
+                    "backupDestination=",
+                    @"Specify the destination file for the backup.  Required for the backup option",
+                    s => BackupDestination = s
+                },
+                {
+                    "bo|backupOverwrite",
+                    @"Specify if the backup should overwrite an existing file",
+                    s => BackupOverwrite = s != null
+                },
             };
         }
 
@@ -208,8 +239,8 @@ namespace Ensconce.Console
             var filesToBeMovedOrChanged = UpdateConfig || CopyTo || Replace || !string.IsNullOrEmpty(TemplateFilters);
             var databaseOperation = !string.IsNullOrEmpty(DatabaseName) || !string.IsNullOrEmpty(ConnectionString);
             var reportOperation = DeployReports || DeployReportingRole;
-            var tagExportOperation = !string.IsNullOrEmpty(DictionaryPostUrl) || !string.IsNullOrEmpty(DictionarySavePath);
-            var operationRequested = ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation || tagExportOperation;
+
+            var operationRequested = ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation || TagExport || Backup;
 
             if (showHelp || !operationRequested)
             {
@@ -267,14 +298,50 @@ namespace Ensconce.Console
                 throw new OptionException("Error: You cannot deploy any reports to a reporting service instance with no variables", "reportVariable");
             }
 
-            if (tagExportOperation && !string.IsNullOrWhiteSpace(DictionaryPostUrl) && (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation))
+            if (TagExport)
             {
-                throw new OptionException("Error: You cannot post the dictionary to a URL along with other commands", "dictionaryPostUrl");
+                if (string.IsNullOrWhiteSpace(DictionaryPostUrl) || string.IsNullOrWhiteSpace(DictionarySavePath))
+                {
+                    throw new OptionException("Error: You must specify a dictionaryPostUrl or dictionarySavePath", "export");
+                }
+
+                if (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation || Backup)
+                {
+                    throw new OptionException("Error: You cannot export the dictionary to a URL along with other commands", "export");
+                }
+
+                if (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation || Backup)
+                {
+                    throw new OptionException("Error: You cannot export the dictionary to a file along with other commands", "export");
+                }
             }
 
-            if (tagExportOperation && !string.IsNullOrWhiteSpace(DictionarySavePath) && (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation))
+            if (Backup)
             {
-                throw new OptionException("Error: You cannot save the dictionary to a file along with other commands", "dictionarySavePath");
+                if (string.IsNullOrWhiteSpace(BackupSource))
+                {
+                    throw new OptionException("Error: You must specify a backupSource to perform the backup operation", "backupSource");
+                }
+
+                if (!Directory.Exists(BackupSource))
+                {
+                    throw new OptionException("Error: Cannot find the backup source directory", "backupSource");
+                }
+
+                if (string.IsNullOrWhiteSpace(BackupDestination))
+                {
+                    throw new OptionException("Error: You must specify a backupDestination to perform the backup operation", "backupDestination");
+                }
+
+                if (File.Exists(BackupDestination) && !BackupOverwrite)
+                {
+                    throw new OptionException("Error: Backup destination file already exists", "backupDestination");
+                }
+
+                if (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation || TagExport)
+                {
+                    throw new OptionException("Error: You cannot perform a backup along with other commands", "backup");
+                }
             }
         }
     }
