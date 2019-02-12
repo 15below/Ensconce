@@ -9,57 +9,60 @@ namespace Ensconce.Console
     {
         internal static void DoBackup()
         {
-            var backupSources = Arguments.BackupSources.Select(x => x.Render()).ToList();
-            var backupDestination = Arguments.BackupDestination.Render();
+            var backupSources = Arguments.BackupSources.Select(x => new DirectoryInfo(x.Render())).ToList();
+            var backupDestination = new FileInfo(Arguments.BackupDestination.Render());
 
-            if (File.Exists(backupDestination))
+            if (backupDestination.Exists)
             {
                 if (Arguments.BackupOverwrite)
                 {
-                    File.Delete(backupDestination);
+                    backupDestination.Delete();
                 }
                 else
                 {
                     throw new Exception($"File {backupDestination} already exists, to overwite, use the --backupOverite option");
                 }
             }
+            else if (backupDestination.Directory != null && !backupDestination.Directory.Exists)
+            {
+                backupDestination.Directory.Create();
+            }
 
             if (backupSources.Count == 1)
             {
-                Logging.Log($"Adding {backupSources[0]} to {backupDestination}");
-                ZipFile.CreateFromDirectory(backupSources[0], backupDestination, CompressionLevel.Optimal, true);
-                Logging.Log($"Added {backupSources[0]} to {backupDestination}");
+                Logging.Log($"Adding {backupSources[0]} to {backupDestination.FullName}");
+                ZipFile.CreateFromDirectory(backupSources[0].FullName, backupDestination.FullName, CompressionLevel.Optimal, true);
+                Logging.Log($"Added {backupSources[0]} to {backupDestination.FullName}");
             }
             else
             {
-                using (var zipFile = ZipFile.Open(backupDestination, ZipArchiveMode.Create))
+                using (var zipFile = ZipFile.Open(backupDestination.FullName, ZipArchiveMode.Create))
                 {
                     foreach (var backupSource in backupSources)
                     {
-                        Logging.Log($"Adding {backupSource} to {backupDestination}");
+                        Logging.Log($"Adding {backupSource} to {backupDestination.FullName}");
 
-                        var backupSourceDirectory = new DirectoryInfo(backupSource);
-                        var files = backupSourceDirectory.GetFiles("**", SearchOption.AllDirectories);
+                        var files = backupSource.GetFiles("**", SearchOption.AllDirectories);
                         if (files.Length == 0)
                         {
-                            zipFile.CreateEntry(backupSourceDirectory.Name);
+                            zipFile.CreateEntry(backupSource.Name);
                         }
                         else
                         {
                             foreach (var file in files)
                             {
-                                if (backupSourceDirectory.Parent != null)
+                                if (backupSource.Parent != null)
                                 {
-                                    zipFile.CreateEntryFromFile(file.FullName, file.FullName.Replace(backupSourceDirectory.Parent.FullName, ""), CompressionLevel.Optimal);
+                                    zipFile.CreateEntryFromFile(file.FullName, file.FullName.Replace(backupSource.Parent.FullName, ""), CompressionLevel.Optimal);
                                 }
                                 else
                                 {
-                                    zipFile.CreateEntryFromFile(file.FullName, file.FullName.Replace(backupSourceDirectory.FullName, ""), CompressionLevel.Optimal);
+                                    zipFile.CreateEntryFromFile(file.FullName, file.FullName.Replace(backupSource.FullName, ""), CompressionLevel.Optimal);
                                 }
                             }
                         }
 
-                        Logging.Log($"Added {backupSource} to {backupDestination}");
+                        Logging.Log($"Added {backupSource} to {backupDestination.FullName}");
                     }
                 }
             }
