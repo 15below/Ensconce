@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace Ensconce.Console
@@ -19,6 +21,14 @@ namespace Ensconce.Console
                 System.Console.Error.WriteLine(e.StackTrace);
                 return -1;
             }
+            finally
+            {
+                if (Debugger.IsAttached)
+                {
+                    System.Console.Error.WriteLine("Press Enter to quit...");
+                    System.Console.ReadLine();
+                }
+            }
         }
 
         private static void MainLogic(string[] args)
@@ -30,6 +40,12 @@ namespace Ensconce.Console
             if (!string.IsNullOrWhiteSpace(Arguments.DictionarySavePath) || !string.IsNullOrWhiteSpace(Arguments.DictionaryPostUrl))
             {
                 DictionaryExport.ExportTagDictionary();
+                return;
+            }
+
+            if (Arguments.BackupSources.Any())
+            {
+                Backup.DoBackup();
                 return;
             }
 
