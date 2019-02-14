@@ -2,14 +2,20 @@ Write-Host "Ensconce - ServiceManagement Loading"
 
 Function StopService([string]$serviceName)
 {
-	If (Get-Service $serviceName -ErrorAction SilentlyContinue) {
-		If ((Get-Service $serviceName).Status -eq 'Running') {
+	If (Get-Service $serviceName -ErrorAction SilentlyContinue)
+	{
+		If ((Get-Service $serviceName).Status -eq 'Running')
+		{
 			"Stopping $serviceName" | Write-Host
 			Stop-Service $serviceName | Write-Host
-		} Else {
-		   "$serviceName found, but it is not running." | Write-Host
 		}
-	} Else {
+		Else
+		{
+			"$serviceName found, but it is not running." | Write-Host
+		}
+	}
+	Else
+	{
 		"$serviceName not found to stop" | Write-Host
 	}
 }
@@ -26,19 +32,22 @@ Function SetServiceRunAs([string]$serviceName, [string]$serviceUser, [string]$se
 	& "sc.exe" config $serviceName obj= $serviceUser password= $servicePassword | Write-Host
 }
 
-Function SetServiceRestarts([string]$serviceName){
+Function SetServiceRestarts([string]$serviceName)
+{
 	"Setting service restarts for $serviceName"
 	& "sc.exe" failure $serviceName reset= 86400 actions= restart/60000/restart/60000// | Write-Host
 }
 
-Function SetServiceRestartsIndefinate([string]$serviceName){
+Function SetServiceRestartsIndefinite([string]$serviceName)
+{
 	"Setting service restarts for $serviceName"
 	& "sc.exe" failure $serviceName reset= 86400 actions= restart/60000/restart/60000/restart/60000 | Write-Host
 }
 
 Function RemoveService([string]$serviceName)
 {
-	If (Get-Service $serviceName -ErrorAction SilentlyContinue) {
+	If (Get-Service $serviceName -ErrorAction SilentlyContinue)
+	{
 		StopService $serviceName
 		"Removing $serviceName" | Write-Host
 		& "sc.exe" delete $serviceName
