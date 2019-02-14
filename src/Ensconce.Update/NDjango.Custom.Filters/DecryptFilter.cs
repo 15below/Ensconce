@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Ensconce.NDjango.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Ensconce.NDjango.Core;
 
 namespace Ensconce.Update.NDjango.Custom.Filters
 {
@@ -62,11 +62,13 @@ namespace Ensconce.Update.NDjango.Custom.Filters
 
             try
             {
-                bool found = false;
+                var found = false;
 
                 store.Open(OpenFlags.ReadOnly);
 
-                var certs = store.Certificates.Find(X509FindType.FindBySubjectName, details.CertificateSubjectName, false)
+                var distinguishedName = details.CertificateSubjectName.StartsWith("CN=", StringComparison.InvariantCultureIgnoreCase) ? details.CertificateSubjectName : $"CN={details.CertificateSubjectName}";
+
+                var certs = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, distinguishedName, false)
                                               .Cast<X509Certificate2>()
                                               .Where(cert => cert.NotBefore <= DateTime.Now && cert.NotAfter >= DateTime.Now)
                                               .OrderByDescending(cert => cert.NotBefore);
