@@ -66,11 +66,7 @@ namespace Ensconce.Update.NDjango.Custom.Filters
 
                 store.Open(OpenFlags.ReadOnly);
 
-                var distinguishedName = details.CertificateSubjectName;
-                if (!distinguishedName.StartsWith("CN=", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    distinguishedName = $"CN={distinguishedName}";
-                }
+                var distinguishedName = details.CertificateSubjectName.StartsWith("CN=", StringComparison.InvariantCultureIgnoreCase) ? details.CertificateSubjectName : $"CN={details.CertificateSubjectName}";
 
                 var certs = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, distinguishedName, false)
                                               .Cast<X509Certificate2>()
