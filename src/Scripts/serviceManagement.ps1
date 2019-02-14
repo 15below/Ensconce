@@ -38,7 +38,7 @@ Function SetServiceRestarts([string]$serviceName)
 	& "sc.exe" failure $serviceName reset= 86400 actions= restart/60000/restart/60000// | Write-Host
 }
 
-Function SetServiceRestartsIndefinite([string]$serviceName)
+Function SetServiceRestartAlways([string]$serviceName)
 {
 	"Setting service restarts for $serviceName"
 	& "sc.exe" failure $serviceName reset= 86400 actions= restart/60000/restart/60000/restart/60000 | Write-Host
