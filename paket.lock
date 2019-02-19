@@ -4,7 +4,7 @@ NUGET
   remote: https://www.nuget.org/api/v2
     Antlr3.Runtime (3.5.1)
     EntityFramework (6.2)
-    FAKE (4.64.14)
+    FAKE (4.64.16)
     FluentNHibernate (2.1.2)
       NHibernate (>= 5.1.1)
     FSharp.Core (4.6.2)
