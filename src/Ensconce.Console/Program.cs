@@ -16,9 +16,8 @@ namespace Ensconce.Console
             }
             catch (Exception e)
             {
-                System.Console.Error.WriteLine("Something went wrong. :(");
-                System.Console.Error.WriteLine(e.Message);
-                System.Console.Error.WriteLine(e.StackTrace);
+                System.Console.Error.WriteLine("Something went wrong.");
+                System.Console.Error.WriteLine(e.ToString());
                 return -1;
             }
             finally
