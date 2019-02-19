@@ -22,7 +22,7 @@ namespace Ensconce.Console
 
             var files = new DirectoryInfo(Arguments.DeployFrom).GetFiles(Arguments.TemplateFilters, SearchOption.AllDirectories);
 
-            var exceptions = new ConcurrentQueue<Exception>();
+            var exceptions = new ConcurrentBag<Exception>();
 
             Parallel.ForEach(files, file =>
             {
@@ -32,7 +32,7 @@ namespace Ensconce.Console
                 }
                 catch (Exception e)
                 {
-                    exceptions.Enqueue(e);
+                    exceptions.Add(e);
                 }
             });
 

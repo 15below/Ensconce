@@ -293,6 +293,16 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
+        public void UpdateAllWhenError_ThrowsAggregateException()
+        {
+            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
+
+            Assert.Throws<AggregateException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution5.xml", new Lazy<TagDictionary>(), false));
+
+            content.Save(@"TestUpdateFiles\TestConfig1.xml");
+        }
+
+        [Test]
         public void TagsOutsideSpecifiedXPathsUnchanged()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(
