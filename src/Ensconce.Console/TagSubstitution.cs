@@ -1,7 +1,9 @@
 ﻿using Ensconce.Update;
+using System;
+using System.Collections.Concurrent;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Ensconce.Console
 {
@@ -18,16 +20,23 @@ namespace Ensconce.Console
         {
             Logging.Log("Updating template filter files");
 
-            new DirectoryInfo(Arguments.DeployFrom)
-                .EnumerateFiles(Arguments.TemplateFilters, SearchOption.AllDirectories)
-                .AsParallel()
-                .WithDegreeOfParallelism(4)
-                .Select(x =>
+            var files = new DirectoryInfo(Arguments.DeployFrom).GetFiles(Arguments.TemplateFilters, SearchOption.AllDirectories);
+
+            var exceptions = new ConcurrentQueue<Exception>();
+
+            Parallel.ForEach(files, file =>
+            {
+                try
                 {
-                    UpdateSingleFile(x);
-                    return x;
-                })
-                .ToList();
+                    UpdateSingleFile(file);
+                }
+                catch (Exception e)
+                {
+                    exceptions.Enqueue(e);
+                }
+            });
+
+            if (exceptions.Count > 0) throw new AggregateException(exceptions);
         }
 
         private static void UpdateSingleFile(FileInfo templateFile)

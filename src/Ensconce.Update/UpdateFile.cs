@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -52,17 +54,26 @@ namespace Ensconce.Update
         {
             var (subsXml, nsm) = LoadAndValidateSubstitutionDoc(substitutionFile);
 
-            subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
-                .Select(el => el.Attribute("Filename")?.Value)
-                .Select(path => path.RenderTemplate(tagValues))
-                .AsParallel()
-                .WithDegreeOfParallelism(4)
-                .Select(file =>
+            var files = subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
+                               .Select(el => el.Attribute("Filename")?.Value)
+                               .Select(path => path.RenderTemplate(tagValues))
+                               .ToList();
+
+            var exceptions = new ConcurrentQueue<Exception>();
+
+            Parallel.ForEach(files, file =>
+            {
+                try
                 {
                     File.WriteAllText(file, Update(subsXml, nsm, file, tagValues, outputFailureContext));
-                    return file;
-                })
-                .ToList();
+                }
+                catch (Exception e)
+                {
+                    exceptions.Enqueue(e);
+                }
+            });
+
+            if (exceptions.Count > 0) throw new AggregateException(exceptions);
         }
 
         public static string Update(string substitutionFile, string baseFile, Lazy<TagDictionary> tagValues = null, bool outputFailureContext = false)
