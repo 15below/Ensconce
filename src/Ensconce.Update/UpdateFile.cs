@@ -73,7 +73,8 @@ namespace Ensconce.Update
                 }
             });
 
-            if (exceptions.Count > 0) throw new AggregateException(exceptions);
+            if (exceptions.Count == 1) throw exceptions.First();
+            if (exceptions.Count > 1) throw new AggregateException(exceptions);
         }
 
         public static string Update(string substitutionFile, string baseFile, Lazy<TagDictionary> tagValues = null, bool outputFailureContext = false)

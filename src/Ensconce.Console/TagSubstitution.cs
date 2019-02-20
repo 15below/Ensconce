@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,7 +37,8 @@ namespace Ensconce.Console
                 }
             });
 
-            if (exceptions.Count > 0) throw new AggregateException(exceptions);
+            if (exceptions.Count == 1) throw exceptions.First();
+            if (exceptions.Count > 1) throw new AggregateException(exceptions);
         }
 
         private static void UpdateSingleFile(FileInfo templateFile)
