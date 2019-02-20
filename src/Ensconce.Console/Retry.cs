@@ -10,16 +10,18 @@ namespace Ensconce.Console
     /// </summary>
     public static class Retry
     {
-        public static void Do(Action action, TimeSpan retryInterval, int retryCount = 3)
+        private static readonly int retryCount = 5;
+
+        public static void Do(Action action, TimeSpan retryInterval)
         {
             Do<object>(() =>
             {
                 action();
                 return null;
-            }, retryInterval, retryCount);
+            }, retryInterval);
         }
 
-        public static T Do<T>(Func<T> action, TimeSpan retryInterval, int retryCount = 3)
+        public static T Do<T>(Func<T> action, TimeSpan retryInterval)
         {
             var exceptions = new List<Exception>();
 
@@ -29,12 +31,16 @@ namespace Ensconce.Console
                 {
                     return action();
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (retry + 1 < retryCount)
                 {
-                    System.Console.Out.WriteLine("Something went wrong, but we're going to try again...");
-                    System.Console.Out.WriteLine(ex.Message);
+                    System.Console.Out.WriteLine($"Something went wrong on attempt {retry + 1} of {retryCount}, but we're going to try again in {retryInterval.TotalMilliseconds}ms...");
                     exceptions.Add(ex);
                     Thread.Sleep(retryInterval);
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                    System.Console.Out.WriteLine($"Something went wrong on attempt {retry + 1} of {retryCount}, throwing all {exceptions.Count} exceptions...");
                 }
             }
 
