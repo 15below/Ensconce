@@ -296,8 +296,20 @@ namespace Ensconce.Update.Tests
         public void UpdateAllWhenError_ThrowsAggregateException()
         {
             var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
+            var content2 = XDocument.Load(@"TestUpdateFiles\TestConfig2.xml");
 
-            Assert.Throws<AggregateException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution5.xml", new Lazy<TagDictionary>(), false));
+            Assert.Throws<AggregateException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution31.xml", new Lazy<TagDictionary>(), false));
+
+            content.Save(@"TestUpdateFiles\TestConfig1.xml");
+            content.Save(@"TestUpdateFiles\TestConfig2.xml");
+        }
+
+        [Test]
+        public void UpdateAllWhenError_SingleError_ThrowsArgumentException()
+        {
+            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
+
+            Assert.Throws<ArgumentException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution32.xml", new Lazy<TagDictionary>(), false));
 
             content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }

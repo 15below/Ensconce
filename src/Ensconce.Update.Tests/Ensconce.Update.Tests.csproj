@@ -173,6 +173,12 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestUpdateFiles\TestSubstitution31.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUpdateFiles\TestSubstitution32.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestUpdateFiles\TestSubstitution5.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
