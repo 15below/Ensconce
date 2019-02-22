@@ -1,4 +1,4 @@
-﻿namespace Ensconce.NDjango.Core
+namespace Ensconce.NDjango.Core
 
 open System.Reflection
 open System.Runtime.InteropServices
@@ -13,9 +13,9 @@ open System.Runtime.InteropServices
 [<assembly: AssemblyCulture("")>]
 [<assembly: ComVisible(false)>]
 [<assembly: Guid("771c5998-6e25-4dc2-9ecf-d40da78c4c78")>]
-[<assembly: AssemblyVersion("1.1.6.0")>]
-[<assembly: AssemblyFileVersion("1.1.6.0")>]
-[<assembly: AssemblyInformationalVersion("1.1.6-Backup-local")>]
+[<assembly: AssemblyVersion("1.1.11.0")>]
+[<assembly: AssemblyFileVersion("1.1.11.0")>]
+[<assembly: AssemblyInformationalVersion("1.1.11-local")>]
 
 do
     ()
