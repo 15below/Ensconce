@@ -21,6 +21,8 @@ namespace Ensconce.Update
             public bool HasReplacementContent;
             public bool RemoveCurrentAttributes;
             public List<(string attributeName, string newValue)> ChangeAttributes;
+            public string ChangeValue;
+            public bool HasChangeValue;
             public string AppendAfter;
             public bool HasAppendAfter;
             public string AddChildContent;
@@ -35,6 +37,8 @@ namespace Ensconce.Update
                 HasReplacementContent = false;
                 RemoveCurrentAttributes = false;
                 ChangeAttributes = new List<(string attributeName, string newValue)>();
+                ChangeValue = "";
+                HasChangeValue = false;
                 AppendAfter = "";
                 HasAppendAfter = false;
                 AddChildContent = "";
@@ -176,6 +180,7 @@ namespace Ensconce.Update
                 if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
                 if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
                 if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
+                if (sub.HasChangeValue) activeNode.Value = sub.ChangeValue;
 
                 foreach (var (atttibute, value) in sub.ChangeAttributes)
                 {
@@ -235,6 +240,9 @@ namespace Ensconce.Update
                 {
                     sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
                 }
+
+                sub.ChangeValue = change.XPathSelectElement("s:ChangeValue", nsm)?.Attribute("value")?.Value;
+                sub.HasChangeValue = sub.ChangeValue != null;
             }
             else
             {
@@ -262,6 +270,11 @@ namespace Ensconce.Update
 
                     case "changeattribute":
                         sub.ChangeAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
+                        break;
+
+                    case "changevalue":
+                        sub.ChangeValue = change.Attribute("value")?.Value;
+                        sub.HasChangeValue = true;
                         break;
 
                     default:

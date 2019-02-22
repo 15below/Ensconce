@@ -446,6 +446,8 @@ namespace Ensconce.Update.Tests
             Assert.AreEqual("value", newConfig.XPathSelectElement("/root/testing/test[1]").Value);
             Assert.AreEqual("new-after", newConfig.XPathSelectElement("/root/testing/test[2]").Attribute("myAttr").Value);
             Assert.AreEqual("new-value", newConfig.XPathSelectElement("/root/testing/test[2]").Value);
+            Assert.NotNull(newConfig.XPathSelectElement("/root/myValue"));
+            Assert.AreEqual("nodeValue", newConfig.XPathSelectElement("/root/myValue").Value);
         }
 
         [Test]

@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root xmlns="http://15below.com/Substitutions.xsd">
-  <Namespaces/>
+  <Namespaces />
   <Files>
     <File Filename="TestUpdateFiles\TestConfig3.xml">
       <Changes>
         <Change type="AddChildContent" xPath="/root" ifNotExists="/root/testing">
           <Content>
-            <![CDATA[<testing/>]]>
+            <![CDATA[<testing />]]>
           </Content>
         </Change>
         <Change type="ReplacementContent" xPath="/root/testing">
@@ -15,13 +15,14 @@
           </Content>
         </Change>
         <Change type="RemoveCurrentAttributes" xPath="/root/testing/test" />
-        <Change type="ChangeAttribute" xPath="/root/testing/test" attributeName="myAttr2" value="after"/>
+        <Change type="ChangeAttribute" xPath="/root/testing/test" attributeName="myAttr2" value="after" />
         <Change type="AppendAfter" xPath="/root/testing/test">
           <Content>
             <![CDATA[<test myAttr="new">new-value</test>]]>
           </Content>
         </Change>
-        <Change type="ChangeAttribute" xPath="/root/testing/test[2]" attributeName="myAttr" value="new-after"/>
+        <Change type="ChangeAttribute" xPath="/root/testing/test[2]" attributeName="myAttr" value="new-after" />
+        <Change type="ChangeValue" xPath="/root/myValue" value="nodeValue" />
       </Changes>
     </File>
   </Files>
