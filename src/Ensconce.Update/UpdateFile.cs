@@ -180,11 +180,11 @@ namespace Ensconce.Update
                 if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
                 if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
                 if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
-                if (sub.HasChangeValue) activeNode.Value = sub.ChangeValue;
+                if (sub.HasChangeValue) activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
 
-                foreach (var (atttibute, value) in sub.ChangeAttributes)
+                foreach (var (attribute, value) in sub.ChangeAttributes)
                 {
-                    activeNode.SetAttributeValue(atttibute, value.RenderTemplate(tagValues));
+                    activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
                 }
             }
 
