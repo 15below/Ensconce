@@ -305,6 +305,26 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
+        public void ChangeAttributeWhenDoesntExists_ThrowsApplicationException()
+        {
+            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
+
+            Assert.Throws<ApplicationException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution33.xml", new Lazy<TagDictionary>(), false));
+
+            content.Save(@"TestUpdateFiles\TestConfig1.xml");
+        }
+
+        [Test]
+        public void AddAttributeWhenAlreadyExists_ThrowsApplicationException()
+        {
+            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
+
+            Assert.Throws<ApplicationException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution34.xml", new Lazy<TagDictionary>(), false));
+
+            content.Save(@"TestUpdateFiles\TestConfig1.xml");
+        }
+
+        [Test]
         public void UpdateAllWhenError_SingleError_ThrowsArgumentException()
         {
             var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
