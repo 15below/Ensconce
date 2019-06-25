@@ -20,6 +20,7 @@ namespace Ensconce.Update
             public string ReplacementContent;
             public bool HasReplacementContent;
             public bool RemoveCurrentAttributes;
+            public List<(string attributeName, string newValue)> AddAttributes;
             public List<(string attributeName, string newValue)> ChangeAttributes;
             public string ChangeValue;
             public bool HasChangeValue;
@@ -36,6 +37,7 @@ namespace Ensconce.Update
                 ReplacementContent = "";
                 HasReplacementContent = false;
                 RemoveCurrentAttributes = false;
+                AddAttributes = new List<(string attributeName, string newValue)>();
                 ChangeAttributes = new List<(string attributeName, string newValue)>();
                 ChangeValue = "";
                 HasChangeValue = false;
@@ -182,9 +184,28 @@ namespace Ensconce.Update
                 if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
                 if (sub.HasChangeValue) activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
 
+                foreach (var (attribute, value) in sub.AddAttributes)
+                {
+                    if (activeNode.Attribute(attribute) == null)
+                    {
+                        activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                    }
+                    else
+                    {
+                        throw new ApplicationException($"XPath of {sub.XPath} with attribute {attribute} already exists, cannot add");
+                    }
+                }
+
                 foreach (var (attribute, value) in sub.ChangeAttributes)
                 {
-                    activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                    if (activeNode.Attribute(attribute) != null)
+                    {
+                        activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                    }
+                    else
+                    {
+                        throw new ApplicationException($"XPath of {sub.XPath} with attribute {attribute} does not exist, cannot change");
+                    }
                 }
             }
 
@@ -236,6 +257,11 @@ namespace Ensconce.Update
 
                 sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
 
+                foreach (var ca in change.XPathSelectElements("s:AddAttribute", nsm))
+                {
+                    sub.AddAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                }
+
                 foreach (var ca in change.XPathSelectElements("s:ChangeAttribute", nsm))
                 {
                     sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
@@ -266,6 +292,10 @@ namespace Ensconce.Update
 
                     case "removecurrentattributes":
                         sub.RemoveCurrentAttributes = true;
+                        break;
+
+                    case "addattribute":
+                        sub.AddAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
                         break;
 
                     case "changeattribute":

@@ -51,6 +51,16 @@
                                 </xs:element>
                                 <xs:element name="AppendAfter" type="xs:string" minOccurs="0" />
                                 <xs:element name="RemoveCurrentAttributes" type="xs:boolean" default="false" minOccurs="0" />
+                                <xs:element name="AddAttribute" minOccurs="0" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="attributeName" type="xs:string" use="required" />
+                                        <xs:attribute name="value" type="xs:string" use="optional" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
                                 <xs:element name="ChangeAttribute" minOccurs="0" maxOccurs="unbounded">
                                   <xs:complexType>
                                     <xs:simpleContent>
@@ -78,6 +88,7 @@
                                     <xs:enumeration value="AddChildContent" />
                                     <xs:enumeration value="AppendAfter" />
                                     <xs:enumeration value="RemoveCurrentAttributes" />
+                                    <xs:enumeration value="AddAttribute" />
                                     <xs:enumeration value="ChangeAttribute" />
                                     <xs:enumeration value="ChangeValue" />
                                   </xs:restriction>

@@ -15,7 +15,7 @@
           </Content>
         </Change>
         <Change type="RemoveCurrentAttributes" xPath="/root/testing/test" />
-        <Change type="ChangeAttribute" xPath="/root/testing/test" attributeName="myAttr2" value="after" />
+        <Change type="AddAttribute" xPath="/root/testing/test" attributeName="myAttr2" value="after" />
         <Change type="AppendAfter" xPath="/root/testing/test">
           <Content>
             <![CDATA[<test myAttr="new">new-value</test>]]>
