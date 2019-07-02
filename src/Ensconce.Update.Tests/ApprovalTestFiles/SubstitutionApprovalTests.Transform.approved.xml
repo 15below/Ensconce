@@ -1,0 +1,4 @@
+﻿<root>
+  <node value="XX-LOC" prop="MyValue" instanceProp="MyInstance1Value" />
+  <node2 value1="LOC" value2="NotSet"></node2>
+</root>

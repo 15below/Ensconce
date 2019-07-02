@@ -1,0 +1,16 @@
+﻿<Structure xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <ClientCode>XX</ClientCode>
+  <Environment>LOC</Environment>
+  <Properties>
+    <Property name="MyProp">MyValue</Property>
+  </Properties>
+  <PropertyGroups>
+    <PropertyGroup identity="Instance1">
+      <Label>Group</Label>
+      <Properties>
+        <Property name="MyProp">MyInstance1Value</Property>
+      </Properties>
+    </PropertyGroup>
+  </PropertyGroups>
+  <DbLogins />
+</Structure>
