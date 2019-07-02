@@ -2,13 +2,11 @@
 <Root xmlns="http://15below.com/Substitutions.xsd">
   <Namespaces/>
   <Files>
-    <File Filename="TestUpdateFiles\TestConfig3.xml">
+    <File Filename="TestUpdateFiles\TestConfig1.xml">
       <Changes>
         <Change>
           <XPath>/root/value</XPath>
-          <ReplacementContent/>
-          <RemoveCurrentAttributes>true</RemoveCurrentAttributes>
-          <AddAttribute attributeName="myAttr">after</AddAttribute>
+          <ChangeAttribute attributeName="unknownAttribute">Hello</ChangeAttribute>
         </Change>
       </Changes>
     </File>

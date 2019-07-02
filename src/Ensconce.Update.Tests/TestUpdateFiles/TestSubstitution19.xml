@@ -7,7 +7,7 @@
       <Changes>
         <Change>
           <XPath>/root/myValue-{{ Environment }}</XPath>
-          <ChangeAttribute attributeName="myAttr">afterAttr</ChangeAttribute>
+          <AddAttribute attributeName="myAttr">afterAttr</AddAttribute>
         </Change>
       </Changes>
     </File>

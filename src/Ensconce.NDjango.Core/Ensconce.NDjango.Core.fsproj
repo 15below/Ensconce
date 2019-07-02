@@ -10,7 +10,7 @@
     <RootNamespace>Ensconce.NDjango.Core</RootNamespace>
     <AssemblyName>Ensconce.NDjango.Core</AssemblyName>
     <UseStandardResourceNames>true</UseStandardResourceNames>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.3.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>Ensconce.NDjango.Core</Name>

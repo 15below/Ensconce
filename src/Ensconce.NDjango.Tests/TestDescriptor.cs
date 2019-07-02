@@ -37,7 +37,7 @@ namespace Ensconce.NDjango.Tests
         public string[] Vars { get; set; }
         public int RecursionDepth { get; set; }
 
-        ResultGetter resultGetter;
+        private ResultGetter resultGetter;
 
         public override string ToString()
         {
@@ -90,7 +90,6 @@ namespace Ensconce.NDjango.Tests
             Vars = vars;
         }
 
-
         public string runTemplate(Interfaces.ITemplateManager manager, string templateName, IDictionary<string, object> context)
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -108,7 +107,9 @@ namespace Ensconce.NDjango.Tests
 
         public class SimpleNonNestedTag : SimpleTag
         {
-            public SimpleNonNestedTag() : base(false, "non-nested", 2) { }
+            public SimpleNonNestedTag() : base(false, "non-nested", 2)
+            {
+            }
 
             public override string ProcessTag(Interfaces.IContext context, string contents, object[] parms)
             {
@@ -124,7 +125,9 @@ namespace Ensconce.NDjango.Tests
 
         public class SimpleNestedTag : SimpleTag
         {
-            public SimpleNestedTag() : base(true, "nested", 2) { }
+            public SimpleNestedTag() : base(true, "nested", 2)
+            {
+            }
 
             public override string ProcessTag(Interfaces.IContext context, string contents, object[] parms)
             {
@@ -139,7 +142,6 @@ namespace Ensconce.NDjango.Tests
                     .ToString();
             }
         }
-
 
         public void Run(Interfaces.ITemplateManager manager)
         {
@@ -201,8 +203,10 @@ namespace Ensconce.NDjango.Tests
                         case Interfaces.NodeType.ParsingContext:
                             contextValues.InsertRange(0, (node.Context.TagClosures));
                             return new DesignerData(node.Position, node.Length, contextValues.ToArray(), node.ErrorMessage.Severity, node.ErrorMessage.Message);
+
                         case Interfaces.NodeType.Reference:
                             return new DesignerData(node.Position, node.Length, GetModelValues(node.Context.Model, RecursionDepth).ToArray(), node.ErrorMessage.Severity, node.ErrorMessage.Message);
+
                         default:
                             return new DesignerData(node.Position, node.Length, new List<string>(values).ToArray(), node.ErrorMessage.Severity, node.ErrorMessage.Message);
                     }
@@ -214,11 +218,10 @@ namespace Ensconce.NDjango.Tests
                 Assert.AreEqual(ResultForDesigner[i].Position, actualResult[i].Position, "Invalid Position");
                 Assert.AreEqual(ResultForDesigner[i].ErrorMessage, actualResult[i].ErrorMessage, "Invalid ErrorMessage");
                 Assert.AreEqual(ResultForDesigner[i].Severity, actualResult[i].Severity, "Invalid Severity");
-                Assert.AreEqual(ResultForDesigner[i].Values, actualResult[i].Values, "Invalid Values Array " + i);
+                Assert.AreEqual(ResultForDesigner[i].Values.OrderBy(x => x), actualResult[i].Values.OrderBy(x => x), "Invalid Values Array " + i);
             }
 
             Assert.AreEqual(ResultForDesigner.Count(), actualResult.Count);
-
         }
 
         private static List<string> GetModelValues(TypeResolver.IDjangoType model, int recursionDepth)
@@ -239,6 +242,7 @@ namespace Ensconce.NDjango.Tests
             }
             return result;
         }
+
         //the same logic responsible for retriving nodes as in NodeProvider class (DjangoDesigner).
         private static List<Interfaces.INode> GetNodes(IEnumerable<Interfaces.INode> nodes)
         {
@@ -256,7 +260,5 @@ namespace Ensconce.NDjango.Tests
         }
 
         //the same list as in Defaults.standardTags
-
     }
-
 }

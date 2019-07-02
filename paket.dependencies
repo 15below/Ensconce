@@ -4,7 +4,7 @@ source https://nuget.org/api/v2/
 
 nuget NUnit
 nuget RhinoMocks
-nuget roundhouse.lib
+nuget roundhouse.sqlserver
 nuget FSharp.Core
 
 github 15below/Build.Tools:V1.1
