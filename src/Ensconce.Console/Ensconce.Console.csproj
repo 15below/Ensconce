@@ -55,6 +55,7 @@
     <Compile Include="Backup.cs" />
     <Compile Include="DatabaseInteraction.cs" />
     <Compile Include="DictionaryExport.cs" />
+    <Compile Include="ExceptionDetails.cs" />
     <Compile Include="FileInteraction.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />

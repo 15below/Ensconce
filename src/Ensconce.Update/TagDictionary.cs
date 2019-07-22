@@ -188,6 +188,8 @@ namespace Ensconce.Update
         {
             foreach (var propertyGroup in doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup"))
             {
+                var identity = propertyGroup.Attribute("identity").Value;
+
                 var labels = new List<string>();
                 if (propertyGroup.Attribute("label") != null)
                 {
@@ -199,10 +201,9 @@ namespace Ensconce.Update
                 }
                 else
                 {
-                    throw new InvalidDataException("PropertyGroup found with no label attribute or nodes");
+                    throw new InvalidDataException($"PropertyGroup with identity '{identity}' has no label attribute or nodes");
                 }
 
-                var identity = propertyGroup.Attribute("identity").Value;
                 foreach (var label in labels)
                 {
                     SubTagDictionary labelDic;
@@ -211,7 +212,7 @@ namespace Ensconce.Update
                         labelDic = this[label] as SubTagDictionary;
                         if (labelDic == null)
                         {
-                            throw new InvalidDataException(string.Format("A label for a method group has been specified that clashes with a property name. The conflicting label is {0}", label));
+                            throw new InvalidDataException($"PropertyGroup with identity '{identity}' has a label specified that clashes with a property name. The conflicting label is {label}");
                         }
                     }
                     else
