@@ -291,7 +291,7 @@ namespace Ensconce.Console
 
             if (tagExportOperation)
             {
-                if (string.IsNullOrWhiteSpace(DictionaryPostUrl) || string.IsNullOrWhiteSpace(DictionarySavePath))
+                if (string.IsNullOrWhiteSpace(DictionaryPostUrl) && string.IsNullOrWhiteSpace(DictionarySavePath))
                 {
                     throw new OptionException("Error: You must specify a dictionaryPostUrl or dictionarySavePath", "export");
                 }
@@ -299,11 +299,6 @@ namespace Ensconce.Console
                 if (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation || backupOperation)
                 {
                     throw new OptionException("Error: You cannot export the dictionary to a URL along with other commands", "export");
-                }
-
-                if (ReadFromStdIn || filesToBeMovedOrChanged || databaseOperation || reportOperation || backupOperation)
-                {
-                    throw new OptionException("Error: You cannot export the dictionary to a file along with other commands", "export");
                 }
             }
 
