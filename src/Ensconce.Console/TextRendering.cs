@@ -6,7 +6,9 @@ namespace Ensconce.Console
 {
     internal static class TextRendering
     {
-        public static readonly Lazy<TagDictionary> TagDictionary = new Lazy<TagDictionary>(() => Retry.Do(BuildTagDictionary, TimeSpan.FromSeconds(5)));
+        public static readonly Lazy<TagDictionary> TagDictionary = new Lazy<TagDictionary>(() => Retry.Do(BuildTagDictionary,
+                                                                                                 TimeSpan.FromSeconds(5),
+                                                                                                 new[] { typeof(InvalidDataException) }));
 
         internal static string Render(this string s)
         {
