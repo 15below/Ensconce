@@ -21,7 +21,7 @@ let config =
         "packaging:outputsubdirs",      environVarOrDefault "outputsubdirs"         "true"
         "packaging:updateid",           environVarOrDefault "updateid"              ""
         "packaging:pushto",             environVarOrDefault "pushto"                ""
-        "packaging:pushendpoint",       environVarOrDefault "pushendpoint"          ""
+        "packaging:pushendpoint",       environVarOrDefault "pushendpoint"          "/api/v2/package"
         "packaging:pushurl",            environVarOrDefault "pushurl"               ""
         "packaging:apikey",             environVarOrDefault "apikey"                ""
         "packaging:deploypushto",       environVarOrDefault "deploypushto"          ""
@@ -36,11 +36,13 @@ let config =
         "vs:version",                   environVarOrDefault "vs_version"            "11.0" ]
 
 // Target definitions
-Target "Default"                  <| DoNothing
-Target "PackagingDeploy:Package"  <| PackagingDeploy.package config
-Target "PackagingDeploy:Push"     <| PackagingDeploy.push config
-Target "Solution:Build"           <| Solution.build config
-Target "Solution:Clean"           <| Solution.clean config
+Target "Default"                       <| DoNothing
+Target "PackagingDeploy:Package"       <| PackagingDeploy.package config
+Target "PackagingDeploy:Push"          <| PackagingDeploy.push config
+Target "Packaging:Package"             <| Packaging.package config
+Target "Packaging:Push"                <| Packaging.push config
+Target "Solution:Build"                <| Solution.build config
+Target "Solution:Clean"                <| Solution.clean config
 Target "Versioning:Update"             <| Versioning.update config
 Target "Versioning:UpdateDeployNuspec" <| Versioning.updateDeploy config
 Target "Test:Run"                      <| Test.run config
@@ -51,8 +53,10 @@ Target "Test:Run"                      <| Test.run config
     =?> ("Versioning:UpdateDeployNuspec", not isLocalBuild)
     ==> "Solution:Build"
     ==> "PackagingDeploy:Package"
+    ==> "Packaging:Package"
     ==> "Test:Run"
     =?> ("PackagingDeploy:Push", not isLocalBuild)
+    =?> ("Packaging:Push", not isLocalBuild)
     ==> "Default"
 
 RunParameterTargetOrDefault "target" "Default"
