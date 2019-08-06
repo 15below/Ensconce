@@ -45,7 +45,7 @@ namespace Ensconce
             Deploy(Directory.GetCurrentDirectory());
         }
 
-        public void Deploy(string schemaScriptsFolder, string repository = "", bool dropDatabase = false, int commandTimeout = 30)
+        public void Deploy(string schemaScriptsFolder, string repository = "", bool dropDatabase = false, int commandTimeSpan = 30)
         {
             if (schemaScriptsFolder == string.Empty)
                 schemaScriptsFolder = Assembly.GetExecutingAssembly().Directory();
@@ -64,7 +64,7 @@ namespace Ensconce
                 .Set(x => x.VersionFile = Path.Combine(schemaScriptsFolder, "_BuildInfo.txt"))
                 .Set(x => x.WithTransaction = WithTransaction)
                 .Set(x => x.Silent = true)
-                .Set(x => x.CommandTimeout = commandTimeout)
+                .Set(x => x.CommandTimeout = commandTimeSpan)
                 .Set(x =>
                 {
                     if (!string.IsNullOrEmpty(OutputPath))
