@@ -15,7 +15,7 @@ namespace Ensconce.Console
         internal static string FixedPath { get; private set; }
         internal static string SubstitutionPath { get; private set; }
         internal static string DatabaseRepository { get; private set; }
-        internal static int DatabaseCommandTimeout { get; private set; }
+        internal static int DatabaseCommandTimeSpan { get; private set; }
         internal static Dictionary<string, string> ReportingServiceVariables { get; private set; } = new Dictionary<string, string>();
         internal static List<string> DeployTo { get; private set; } = new List<string>();
         internal static string DeployFrom { get; private set; }
@@ -57,7 +57,7 @@ namespace Ensconce.Console
         {
             SubstitutionPath = "substitutions.xml";
             DatabaseRepository = "";
-            DatabaseCommandTimeout = 30;
+            DatabaseCommandTimeSpan = 30;
             WithTransaction = true;
             OutputFailureContext = false;
 
@@ -115,9 +115,9 @@ namespace Ensconce.Console
                     s => DatabaseRepository = string.IsNullOrEmpty(s) ? DatabaseRepository : s
                 },
                 {
-                    "databaseCommandTimeout=",
-                    "Database Command Timeout period. If not provided defaults to 30s.",
-                    s => DatabaseCommandTimeout = string.IsNullOrWhiteSpace(s) ? 30 : Convert.ToInt32(s)
+                    "databaseCommandTimeSpan=",
+                    "Database Command Timeout period in seconds. If not provided defaults to 30s.",
+                    s => DatabaseCommandTimeSpan = string.IsNullOrWhiteSpace(s) ? 30 : Convert.ToInt32(s)
                 },
                 {
                     "t|deployTo=",
