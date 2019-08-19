@@ -85,7 +85,7 @@ namespace Ensconce.Update
                     values = new Lazy<TagDictionary>(TagDictionary.Empty);
                 }
 
-                string exceptionMessage = null;
+                Exception exception = null;
                 string replacementValue;
 
                 try
@@ -95,7 +95,7 @@ namespace Ensconce.Update
                 }
                 catch (Exception ex)
                 {
-                    exceptionMessage = $"\n{ex.Message}";
+                    exception = ex;
                     replacementValue = string.Empty;
                     Error.Invoked = true;
                 }
@@ -104,11 +104,11 @@ namespace Ensconce.Update
                 {
                     if (string.IsNullOrWhiteSpace(replacementValue) || !replacementValue.Contains(Error.ToString()))
                     {
-                        throw new ArgumentException(string.Format("Tag substitution errored on template string:\n{0}{1}", template, exceptionMessage));
+                        throw new ArgumentException($"Tag substitution errored on template string:\n{template}", exception);
                     }
 
                     var attemptedRender = replacementValue.Replace(Error.ToString(), "[ERROR OCCURRED HERE]");
-                    throw new ArgumentException(string.Format("Tag substitution failed on template string:\n{0}\n\nAttempted rendering was:\n{1}{2}", template, attemptedRender, exceptionMessage));
+                    throw new ArgumentException($"Tag substitution failed on template string:\n{template}\n\nAttempted rendering was:\n{attemptedRender}", exception);
                 }
 
                 return replacementValue;

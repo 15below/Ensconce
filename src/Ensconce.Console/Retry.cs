@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace Ensconce.Console
@@ -12,16 +14,18 @@ namespace Ensconce.Console
     {
         private static readonly int retryCount = 5;
 
-        public static void Do(Action action, TimeSpan retryInterval)
+        public static void Do(Action action, TimeSpan retryInterval, Type[] doNotRetryTheseExceptions = null)
         {
             Do<object>(() =>
-            {
-                action();
-                return null;
-            }, retryInterval);
+                {
+                    action();
+                    return null;
+                },
+                retryInterval,
+                doNotRetryTheseExceptions);
         }
 
-        public static T Do<T>(Func<T> action, TimeSpan retryInterval)
+        public static T Do<T>(Func<T> action, TimeSpan retryInterval, Type[] doNotRetryTheseExceptions = null)
         {
             var exceptions = new List<Exception>();
 
@@ -30,6 +34,10 @@ namespace Ensconce.Console
                 try
                 {
                     return action();
+                }
+                catch (Exception ex) when (doNotRetryTheseExceptions?.Any(t => ex.GetType() == t) == true)
+                {
+                    throw;
                 }
                 catch (Exception ex) when (retry + 1 < retryCount)
                 {
