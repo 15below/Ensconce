@@ -57,9 +57,11 @@ namespace Ensconce.Console
         {
             SubstitutionPath = "substitutions.xml";
             DatabaseRepository = "";
-            DatabaseCommandTimeout = TimeSpan.FromSeconds(30);
             WithTransaction = true;
             OutputFailureContext = false;
+
+            var defaultDatabaseCommandTimeout = Environment.GetEnvironmentVariable("DatabaseCommandTimeout");
+            DatabaseCommandTimeout = TimeSpan.FromSeconds(!string.IsNullOrWhiteSpace(defaultDatabaseCommandTimeout) ? Convert.ToInt32(defaultDatabaseCommandTimeout) : 30);
 
             var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
             if (!string.IsNullOrEmpty(envWarnOnOneTimeScriptChanges))
@@ -116,8 +118,8 @@ namespace Ensconce.Console
                 },
                 {
                     "databaseCommandTimeout=",
-                    "Database Command Timeout period in seconds. If not provided defaults to 30s.",
-                    s => DatabaseCommandTimeout = string.IsNullOrWhiteSpace(s) ? TimeSpan.FromSeconds(30) : TimeSpan.FromSeconds(Convert.ToInt32(s))
+                    "Database Command Timeout period in seconds. If not provided defaults to a set value or 30s if not set.",
+                    s => DatabaseCommandTimeout = string.IsNullOrWhiteSpace(s) ? DatabaseCommandTimeout : TimeSpan.FromSeconds(Convert.ToInt32(s))
                 },
                 {
                     "t|deployTo=",
