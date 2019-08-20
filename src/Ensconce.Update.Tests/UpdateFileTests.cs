@@ -325,6 +325,31 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
+        public void UpdateMultipleXPathMatches()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution35.xml",
+                @"TestUpdateFiles\TestConfig5.xml"
+            ));
+
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate1'][1]").Attribute("value").Value);
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate1'][2]").Attribute("value").Value);
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate1'][3]").Attribute("value").Value);
+            Assert.AreEqual("UpdateFirst", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate2'][1]").Attribute("value").Value);
+            Assert.AreEqual("NotSet", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate2'][2]").Attribute("value").Value);
+            Assert.AreEqual("NotSet", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate3'][1]").Attribute("value").Value);
+            Assert.AreEqual("UpdateLast", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate3'][2]").Attribute("value").Value);
+
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate4'][1]").Attribute("value").Value);
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate4'][2]").Attribute("value").Value);
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate4'][3]").Attribute("value").Value);
+            Assert.AreEqual("UpdateFirst", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate5'][1]").Attribute("value").Value);
+            Assert.AreEqual("NotSet", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate5'][2]").Attribute("value").Value);
+            Assert.AreEqual("NotSet", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate6'][1]").Attribute("value").Value);
+            Assert.AreEqual("UpdateLast", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate6'][2]").Attribute("value").Value);
+        }
+
+        [Test]
         public void UpdateAllWhenError_SingleError_ThrowsArgumentException()
         {
             var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");

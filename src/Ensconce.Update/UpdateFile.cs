@@ -17,6 +17,7 @@ namespace Ensconce.Update
         public class Substitution
         {
             public string XPath;
+            public bool XPathMatchAll;
             public string ReplacementContent;
             public bool HasReplacementContent;
             public bool RemoveCurrentAttributes;
@@ -171,40 +172,47 @@ namespace Ensconce.Update
             {
                 Logging.Log($"Updating xpath {sub.XPath}");
 
-                var activeNode = baseXml.XPathSelectElement(sub.XPath.RenderTemplate(tagValues), baseNsm);
+                var xPathMatches = baseXml.XPathSelectElements(sub.XPath.RenderTemplate(tagValues), baseNsm).ToList();
 
-                if (activeNode == null)
+                if (xPathMatches.Count == 0)
                 {
-                    throw new ApplicationException($"XPath select of {sub.XPath} returned null");
+                    throw new ApplicationException($"XPath select of {sub.XPath} returned no matches.");
+                }
+                else if (!sub.XPathMatchAll && xPathMatches.Count > 1)
+                {
+                    throw new ApplicationException($"XPath select of {sub.XPath} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the XPath or Change node.");
                 }
 
-                if (sub.HasAddChildContent) AddChildContentToActive(tagValues, activeNode, sub);
-                if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
-                if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
-                if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
-                if (sub.HasChangeValue) activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
-
-                foreach (var (attribute, value) in sub.AddAttributes)
+                foreach (var activeNode in sub.XPathMatchAll ? xPathMatches : xPathMatches.Take(1))
                 {
-                    if (activeNode.Attribute(attribute) == null)
-                    {
-                        activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
-                    }
-                    else
-                    {
-                        throw new ApplicationException($"XPath of {sub.XPath} with attribute {attribute} already exists, cannot add");
-                    }
-                }
+                    if (sub.HasAddChildContent) AddChildContentToActive(tagValues, activeNode, sub);
+                    if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
+                    if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
+                    if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
+                    if (sub.HasChangeValue) activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
 
-                foreach (var (attribute, value) in sub.ChangeAttributes)
-                {
-                    if (activeNode.Attribute(attribute) != null)
+                    foreach (var (attribute, value) in sub.AddAttributes)
                     {
-                        activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                        if (activeNode.Attribute(attribute) == null)
+                        {
+                            activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                        }
+                        else
+                        {
+                            throw new ApplicationException($"XPath of {sub.XPath} with attribute {attribute} already exists, cannot add");
+                        }
                     }
-                    else
+
+                    foreach (var (attribute, value) in sub.ChangeAttributes)
                     {
-                        throw new ApplicationException($"XPath of {sub.XPath} with attribute {attribute} does not exist, cannot change");
+                        if (activeNode.Attribute(attribute) != null)
+                        {
+                            activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                        }
+                        else
+                        {
+                            throw new ApplicationException($"XPath of {sub.XPath} with attribute {attribute} does not exist, cannot change");
+                        }
                     }
                 }
             }
@@ -254,6 +262,7 @@ namespace Ensconce.Update
                 sub.HasAppendAfter = sub.AppendAfter != null;
 
                 sub.XPath = (change.Attribute("xPath")?.Value ?? change.XPathSelectElement("s:XPath", nsm)?.Value).RenderTemplate(tagValues);
+                sub.XPathMatchAll = (change.Attribute("matchAll")?.Value ?? change.XPathSelectElement("s:XPath", nsm)?.Attribute("matchAll")?.Value ?? "false").RenderTemplate(tagValues).Equals("true", StringComparison.CurrentCultureIgnoreCase);
 
                 sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
 
@@ -312,6 +321,7 @@ namespace Ensconce.Update
                 }
 
                 sub.XPath = change.Attribute("xPath")?.Value.RenderTemplate(tagValues);
+                sub.XPathMatchAll = change.Attribute("matchAll")?.Value.RenderTemplate(tagValues).Equals("true", StringComparison.CurrentCultureIgnoreCase) ?? false;
 
                 if (change.Attribute("if") != null)
                 {

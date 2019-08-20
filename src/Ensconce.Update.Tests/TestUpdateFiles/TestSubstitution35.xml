@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces />
+  <Files>
+    <File Filename="TestUpdateFiles\TestConfig5.xml">
+      <Changes>
+        <Change>
+          <XPath matchAll="true">/configuration/appSettings/add[@name='TestDuplicate1']</XPath>
+          <ChangeAttribute attributeName="value">UpdateAll</ChangeAttribute>
+        </Change>
+        <Change>
+          <XPath>/configuration/appSettings/add[@name='TestDuplicate2'][1]</XPath>
+          <ChangeAttribute attributeName="value">UpdateFirst</ChangeAttribute>
+        </Change>
+        <Change>
+          <XPath>/configuration/appSettings/add[@name='TestDuplicate3'][last()]</XPath>
+          <ChangeAttribute attributeName="value">UpdateLast</ChangeAttribute>
+        </Change>
+        <Change type="ChangeAttribute" xPath="/configuration/appSettings/add[@name='TestDuplicate4']" attributeName="value" value="UpdateAll" matchAll="true" />
+        <Change type="ChangeAttribute" xPath="/configuration/appSettings/add[@name='TestDuplicate5'][1]" attributeName="value" value="UpdateFirst" />
+        <Change type="ChangeAttribute" xPath="/configuration/appSettings/add[@name='TestDuplicate6'][last()]" attributeName="value" value="UpdateLast" />
+      </Changes>
+    </File>
+  </Files>
+</Root>
