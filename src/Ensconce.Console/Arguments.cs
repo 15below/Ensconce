@@ -15,6 +15,7 @@ namespace Ensconce.Console
         internal static string FixedPath { get; private set; }
         internal static string SubstitutionPath { get; private set; }
         internal static string DatabaseRepository { get; private set; }
+        internal static TimeSpan DatabaseCommandTimeout { get; private set; }
         internal static Dictionary<string, string> ReportingServiceVariables { get; private set; } = new Dictionary<string, string>();
         internal static List<string> DeployTo { get; private set; } = new List<string>();
         internal static string DeployFrom { get; private set; }
@@ -58,6 +59,9 @@ namespace Ensconce.Console
             DatabaseRepository = "";
             WithTransaction = true;
             OutputFailureContext = false;
+
+            var defaultDatabaseCommandTimeout = Environment.GetEnvironmentVariable("DatabaseCommandTimeout");
+            DatabaseCommandTimeout = TimeSpan.FromSeconds(!string.IsNullOrWhiteSpace(defaultDatabaseCommandTimeout) ? Convert.ToInt32(defaultDatabaseCommandTimeout) : 30);
 
             var envWarnOnOneTimeScriptChanges = Environment.GetEnvironmentVariable("WarnOnOneTimeScriptChanges");
             if (!string.IsNullOrEmpty(envWarnOnOneTimeScriptChanges))
@@ -111,6 +115,11 @@ namespace Ensconce.Console
                     "databaseRepository="
                     ,"The entry to be made in the repository field in the RoundhousE version table. If not provided defaults to an empty string. NOTE! Ignored if databaseName is not provided.",
                     s => DatabaseRepository = string.IsNullOrEmpty(s) ? DatabaseRepository : s
+                },
+                {
+                    "databaseCommandTimeout=",
+                    "Database Command Timeout period in seconds. If not provided defaults to a set value or 30s if not set.",
+                    s => DatabaseCommandTimeout = string.IsNullOrWhiteSpace(s) ? DatabaseCommandTimeout : TimeSpan.FromSeconds(Convert.ToInt32(s))
                 },
                 {
                     "t|deployTo=",

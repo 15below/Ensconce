@@ -97,9 +97,12 @@ namespace Ensconce
             database.Deploy("", "", true);
         }
 
-        public void Deploy(string schemaScriptsFolder = "", string repository = "", bool dropDatabase = false)
+        public void Deploy(string schemaScriptsFolder = "", string repository = "", bool dropDatabase = false, TimeSpan? commandTimeout = null)
         {
-            database.Deploy(schemaScriptsFolder, repository, dropDatabase);
+            if (commandTimeout == null)
+                commandTimeout = TimeSpan.FromSeconds(30);
+
+            database.Deploy(schemaScriptsFolder, repository, dropDatabase, commandTimeout.Value);
         }
     }
 }
