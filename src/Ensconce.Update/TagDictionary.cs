@@ -15,7 +15,9 @@ namespace Ensconce.Update
     {
         private readonly IDictionary<string, object> innerDictionary;
 
-        private TagDictionary() : this(new Dictionary<string, object>()) { }
+        private TagDictionary() : this(new Dictionary<string, object>())
+        {
+        }
 
         private TagDictionary(IDictionary<string, object> baseDictionary)
         {
@@ -247,42 +249,68 @@ namespace Ensconce.Update
             var dbLoginElements = doc.XPathSelectElements("/Structure/DbLogins/DbLogin");
             foreach (var dbLoginElement in dbLoginElements)
             {
-                var username = dbLoginElement.XPathSelectElement("Name").Value;
-                string dbKey;
+                string dbKey = null;
+                var dbLoginDic = new Dictionary<string, object>();
+
                 if (dbLoginElement.XPathSelectElement("Key") != null && !string.IsNullOrWhiteSpace(dbLoginElement.XPathSelectElement("Key").Value))
                 {
                     dbKey = dbLoginElement.XPathSelectElement("Key").Value;
-                }
-                else
-                {
-                    dbKey = username.StartsWith("tagClientCode-tagEnvironment-") ? username.Substring(29) : username;
-                }
 
-                SubTagDictionary dbLogins;
-                if (ContainsKey("DbLogins"))
-                {
-                    dbLogins = this["DbLogins"] as SubTagDictionary;
-                }
-                else
-                {
-                    dbLogins = new SubTagDictionary();
-                    Add("DbLogins", dbLogins);
-                }
-
-                if (!dbLogins.ContainsKey(dbKey))
-                {
-                    var dbLoginDic = new Dictionary<string, object> { { "Username", username } };
-                    if (string.IsNullOrWhiteSpace(dbLoginElement.TryXPathValueWithDefault("ConnectionString", "")))
+                    if (dbLoginElement.XPathSelectElement("Name") != null && !string.IsNullOrWhiteSpace(dbLoginElement.XPathSelectElement("Name").Value))
                     {
-                        dbLoginDic.Add("Password", dbLoginElement.XPathSelectElement("Password").Value);
+                        dbLoginDic.Add("Username", dbLoginElement.XPathSelectElement("Name").Value);
                         dbLoginDic.Add("DefaultDb", dbLoginElement.XPathSelectElement("DefaultDb").Value);
-                        dbLoginDic.Add("ConnectionString", string.Format("Data Source={{{{ DbServer }}}}; Initial Catalog={0}; User ID={1}; Password={2};", dbLoginElement.XPathSelectElement("DefaultDb").Value, username, dbLoginElement.XPathSelectElement("Password").Value));
+                        dbLoginDic.Add("Password", dbLoginElement.XPathSelectElement("Password").Value);
+                        if (ContainsKey("DbServer"))
+                        {
+                            dbLoginDic.Add("ConnectionString", $"Data Source={this["DbServer"]}; Initial Catalog={dbLoginDic["DefaultDb"]}; User ID={dbLoginDic["Username"]}; Password={dbLoginDic["Password"]};");
+                        }
                     }
                     else
                     {
+                        dbLoginDic.Add("Username", dbLoginElement.XPathSelectElement("Name").Value);
+                        dbLoginDic.Add("Password", dbLoginElement.XPathSelectElement("Password").Value);
                         dbLoginDic.Add("ConnectionString", dbLoginElement.XPathSelectElement("ConnectionString").Value);
                     }
-                    dbLogins.Add(dbKey, dbLoginDic);
+                }
+                else if (dbLoginElement.XPathSelectElement("Name") != null && !string.IsNullOrWhiteSpace(dbLoginElement.XPathSelectElement("Name").Value))
+                {
+                    var name = dbLoginElement.XPathSelectElement("Name").Value;
+                    dbKey = name.StartsWith("tagClientCode-tagEnvironment-") ? name.Substring(29) : name;
+
+                    if (dbLoginElement.XPathSelectElement("ConnectionString") != null && !string.IsNullOrWhiteSpace(dbLoginElement.XPathSelectElement("ConnectionString").Value))
+                    {
+                        dbLoginDic.Add("ConnectionString", dbLoginElement.XPathSelectElement("ConnectionString").Value);
+                    }
+                    else
+                    {
+                        dbLoginDic.Add("Username", name);
+                        dbLoginDic.Add("DefaultDb", dbLoginElement.XPathSelectElement("DefaultDb").Value);
+                        dbLoginDic.Add("Password", dbLoginElement.XPathSelectElement("Password").Value);
+                        if (ContainsKey("DbServer"))
+                        {
+                            dbLoginDic.Add("ConnectionString", $"Data Source={this["DbServer"]}; Initial Catalog={dbLoginDic["DefaultDb"]}; User ID={dbLoginDic["Username"]}; Password={dbLoginDic["Password"]};");
+                        }
+                    }
+                }
+
+                if (dbKey != null)
+                {
+                    SubTagDictionary dbLogins;
+                    if (ContainsKey("DbLogins"))
+                    {
+                        dbLogins = this["DbLogins"] as SubTagDictionary;
+                    }
+                    else
+                    {
+                        dbLogins = new SubTagDictionary();
+                        Add("DbLogins", dbLogins);
+                    }
+
+                    if (dbLogins != null && !dbLogins.ContainsKey(dbKey))
+                    {
+                        dbLogins.Add(dbKey, dbLoginDic);
+                    }
                 }
             }
         }
