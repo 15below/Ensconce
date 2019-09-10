@@ -115,6 +115,7 @@
                     </xs:element>
                   </xs:choice>
                   <xs:attribute name="Filename" type="xs:string" use="required" />
+                  <xs:attribute name="FileType" type="xs:string" use="optional" />
                   <xs:attribute name="ReplacementTemplate" type="xs:string" use="optional" />
                 </xs:complexType>
               </xs:element>

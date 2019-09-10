@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.XPath;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Ensconce.Update
 {
@@ -120,10 +122,10 @@ namespace Ensconce.Update
 
             string baseData = null;
 
-            var replacementTemplateElement = fileElement.XPathSelectElement("s:ReplacementTemplate", nsm);
-            if (replacementTemplateElement != null)
+            var replacementTemplateValue = fileElement.XPathSelectElement("s:ReplacementTemplate", nsm)?.Value ?? fileElement.Attribute("ReplacementTemplate")?.Value;
+            if (!string.IsNullOrWhiteSpace(replacementTemplateValue))
             {
-                var replacementTemplate = replacementTemplateElement.Value.RenderTemplate(tagValues);
+                var replacementTemplate = replacementTemplateValue.RenderTemplate(tagValues);
                 baseData = File.ReadAllText(replacementTemplate).RenderTemplate(tagValues);
             }
 
@@ -133,19 +135,42 @@ namespace Ensconce.Update
             if (subs.Any())
             {
                 if (baseData == null) baseData = File.ReadAllText(baseFile);
-                var baseXml = XDocument.Parse(baseData);
-                try
+                var fileType = fileElement.Attribute("FileType")?.Value ?? "XML";
+
+                if (fileType == "XML")
                 {
-                    return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
-                }
-                catch (Exception)
-                {
-                    if (outputFailureContext)
+                    var baseXml = XDocument.Parse(baseData);
+                    try
                     {
-                        var partialFilename = $"{baseFile}_partial";
-                        baseXml.Save(partialFilename);
+                        return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
                     }
-                    throw;
+                    catch (Exception)
+                    {
+                        if (outputFailureContext)
+                        {
+                            var partialFilename = $"{baseFile}_partial";
+                            baseXml.Save(partialFilename);
+                        }
+                        throw;
+                    }
+                }
+                else
+                {
+                    var baseJson = JObject.Parse(baseData);
+                    try
+                    {
+                        return UpdateJson(tagValues, subs, baseJson, nsm, subsXml);
+                    }
+                    catch (Exception)
+                    {
+                        if (outputFailureContext)
+                        {
+                            var partialFilename = $"{baseFile}_partial";
+                            File.WriteAllText(baseJson.ToString(Formatting.Indented), partialFilename);
+                        }
+                        throw;
+                    }
+                    //DoJson
                 }
             }
 
@@ -178,7 +203,8 @@ namespace Ensconce.Update
                 {
                     throw new ApplicationException($"XPath select of {sub.XPath} returned no matches.");
                 }
-                else if (!sub.XPathMatchAll && xPathMatches.Count > 1)
+
+                if (!sub.XPathMatchAll && xPathMatches.Count > 1)
                 {
                     throw new ApplicationException($"XPath select of {sub.XPath} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the XPath or Change node.");
                 }
@@ -218,6 +244,40 @@ namespace Ensconce.Update
             }
 
             return baseXml.ToString();
+        }
+
+        private static string UpdateJson(Lazy<TagDictionary> tagValues, IEnumerable<Substitution> subs, JObject baseJson, IXmlNamespaceResolver nsm, XNode subsXml)
+        {
+            foreach (var sub in subs.Where(x => x.Execute))
+            {
+                Logging.Log($"Updating JsonPath {sub.XPath}");
+
+                var xPathMatches = baseJson.SelectTokens(sub.XPath.RenderTemplate(tagValues)).ToList();
+
+                if (xPathMatches.Count == 0)
+                {
+                    throw new ApplicationException($"JsonPath select of {sub.XPath} returned no matches.");
+                }
+
+                if (!sub.XPathMatchAll && xPathMatches.Count > 1)
+                {
+                    throw new ApplicationException($"JsonPath select of {sub.XPath} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the XPath or Change node.");
+                }
+
+                foreach (var activeObject in sub.XPathMatchAll ? xPathMatches : xPathMatches.Take(1))
+                {
+                    if (sub.HasAddChildContent) throw new ApplicationException("Add child content is not supported with json files");
+                    if (sub.HasReplacementContent) throw new ApplicationException("Replacement content is not supported with json files");
+                    if (sub.HasAppendAfter) throw new ApplicationException("Append after is not supported with json files");
+                    if (sub.RemoveCurrentAttributes) throw new ApplicationException("Remove attributes is not supported with json files");
+                    if (sub.AddAttributes.Any()) throw new ApplicationException("Add attributes is not supported with json files");
+                    if (sub.ChangeAttributes.Any()) throw new ApplicationException("Change attributes is not supported with json files");
+
+                    if (sub.HasChangeValue) activeObject.Replace(new JValue(sub.ChangeValue.RenderTemplate(tagValues)));
+                }
+            }
+
+            return baseJson.ToString(Formatting.Indented);
         }
 
         private static void AppendAfterActive(Lazy<TagDictionary> tagValues, XNode activeNode, Substitution sub)
