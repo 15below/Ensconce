@@ -258,6 +258,30 @@ namespace Ensconce.Update
             return baseXml.ToString();
         }
 
+        private static void AppendAfterActive(Lazy<TagDictionary> tagValues, XNode activeNode, Substitution sub)
+        {
+            var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AppendAfter.RenderXmlTemplate(tagValues) + "</fakeRoot>");
+            activeNode.AddAfterSelf(fakeRoot.Elements());
+        }
+
+        private static void AddChildContentToActive(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub)
+        {
+            if (sub.AddChildContentIfNotExists == null || activeNode.Document?.XPathSelectElement(sub.AddChildContentIfNotExists.RenderTemplate(tagValues)) == null)
+            {
+                var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
+                activeNode.Add(fakeRoot.Elements());
+            }
+        }
+
+        private static void ReplaceChildNodes(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub)
+        {
+            var replacementValue = sub.ReplacementContent.RenderXmlTemplate(tagValues);
+            // Ugly hack to stop XElement.SetValue escaping text...
+            var tempEl = XElement.Parse("<fakeRoot>" + replacementValue + "</fakeRoot>");
+            var children = tempEl.DescendantNodes().Where(el => el.Parent == tempEl);
+            activeNode.ReplaceNodes(children);
+        }
+
         private static string UpdateJson(Lazy<TagDictionary> tagValues, IEnumerable<Substitution> subs, JObject baseJson, IXmlNamespaceResolver nsm, XNode subsXml)
         {
             foreach (var sub in subs.Where(x => x.Execute))
@@ -281,39 +305,15 @@ namespace Ensconce.Update
                     if (sub.RemoveCurrentAttributes) throw new ApplicationException("Remove attributes is not supported with json files");
                     if (sub.AddAttributes.Any()) throw new ApplicationException("Add attributes is not supported with json files");
                     if (sub.ChangeAttributes.Any()) throw new ApplicationException("Change attributes is not supported with json files");
+                    if (sub.HasAppendAfter) throw new ApplicationException("Append after is not supported with json files");
+                    if (sub.HasAddChildContent) throw new ApplicationException("Add child is not supported with json files");
 
-                    if (sub.HasAppendAfter) activeObject.AddAfterSelf(JObject.Parse(sub.AppendAfter.RenderTemplate(tagValues)));
-                    if (sub.HasAddChildContent) activeObject.Parent.Add(JObject.Parse(sub.AddChildContent.RenderTemplate(tagValues)));
-                    if (sub.HasReplacementContent) activeObject.Replace(JObject.Parse(sub.ReplacementContent.RenderTemplate(tagValues)));
+                    if (sub.HasReplacementContent) activeObject.Replace(JObject.Parse($"{{ fakeRoot: {sub.ReplacementContent.RenderTemplate(tagValues)} }}").GetValue("fakeRoot"));
                     if (sub.HasChangeValue) activeObject.Replace(new JValue(sub.ChangeValue.RenderTemplate(tagValues)));
                 }
             }
 
             return baseJson.ToString(Formatting.Indented);
-        }
-
-        private static void AppendAfterActive(Lazy<TagDictionary> tagValues, XNode activeNode, Substitution sub)
-        {
-            var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AppendAfter.RenderXmlTemplate(tagValues) + "</fakeRoot>");
-            activeNode.AddAfterSelf(fakeRoot.Elements());
-        }
-
-        private static void AddChildContentToActive(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub)
-        {
-            if (sub.AddChildContentIfNotExists == null || activeNode.Document?.XPathSelectElement(sub.AddChildContentIfNotExists.RenderTemplate(tagValues)) == null)
-            {
-                var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
-                activeNode.Add(fakeRoot.Elements());
-            }
-        }
-
-        private static void ReplaceChildNodes(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub)
-        {
-            var replacementValue = sub.ReplacementContent.RenderXmlTemplate(tagValues);
-            // Ugly hack to stop XElement.SetValue escaping text...
-            var tempEl = XElement.Parse("<fakeRoot>" + replacementValue + "</fakeRoot>");
-            var children = tempEl.DescendantNodes().Where(el => el.Parent == tempEl);
-            activeNode.ReplaceNodes(children);
         }
 
         private static Substitution BuildSubstitions(XElement change, IXmlNamespaceResolver nsm, Lazy<TagDictionary> tagValues, FileType fileType)

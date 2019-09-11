@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +28,7 @@ namespace Ensconce.Update.Tests
             }
 
             fileContent = new Dictionary<string, string>();
-            foreach (var file in Directory.EnumerateFiles(wd, "*.xml"))
+            foreach (var file in Directory.EnumerateFiles(wd, "*.*"))
             {
                 fileContent.Add(file, File.ReadAllText(file));
             }
@@ -470,6 +471,17 @@ namespace Ensconce.Update.Tests
             Assert.AreEqual("new-value", newConfig.XPathSelectElement("/root/testing/test[2]").Value);
             Assert.NotNull(newConfig.XPathSelectElement("/root/myValue"));
             Assert.AreEqual("nodeValue", newConfig.XPathSelectElement("/root/myValue").Value);
+        }
+
+        [Test]
+        public void JsonTest()
+        {
+            dynamic newJson = JObject.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution36.xml", @"TestUpdateFiles\TestJson01.json"
+            ));
+            Assert.AreEqual("NewData", (string)newJson.Data);
+            Assert.AreEqual("NotItem1", (string)newJson.Collection[0].NotData);
+            Assert.AreEqual("NotItem2", (string)newJson.Collection[1].NotData);
         }
 
         [Test]

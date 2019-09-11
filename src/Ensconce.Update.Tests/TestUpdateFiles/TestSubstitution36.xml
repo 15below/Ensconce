@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces />
+  <Files>
+    <File Filename="TestUpdateFiles\TestJson01.json" FileType="JSON">
+      <Changes>
+        <Change type="ChangeValue" jsonPath="$.Data" value="NewData" />
+        <Change type="ReplacementContent" jsonPath="$.Collection">
+          <Content>
+            <![CDATA[
+            [
+              {
+                NotData: "NotItem1"
+              },
+              {
+                NotData: "NotItem2"
+              }
+            ]
+            ]]>
+          </Content>
+        </Change>
+      </Changes>
+    </File>
+  </Files>
+</Root>
