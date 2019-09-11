@@ -485,6 +485,15 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
+        public void JsonTest_WithFilePath()
+        {
+            dynamic newJson = JObject.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution37.xml", @"TestUpdateFiles\TestJson01.json"
+            ));
+            Assert.AreEqual("C:\\Temp", (string)newJson.Data);
+        }
+
+        [Test]
         public void SubstituteIf_True()
         {
             var newConfig = XDocument.Parse(UpdateFile.Update(

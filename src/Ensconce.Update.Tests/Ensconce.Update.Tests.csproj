@@ -193,6 +193,9 @@
     <Content Include="TestUpdateFiles\TestSubstitution31.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestUpdateFiles\TestSubstitution37.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestUpdateFiles\TestSubstitution36.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
