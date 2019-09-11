@@ -123,3 +123,4 @@ paket-files/
 .vs
 *.orig
 /Timers.txt
+*/_NCrunch_*

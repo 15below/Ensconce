@@ -13,6 +13,8 @@ namespace Ensconce.Update.Tests
     [TestFixture]
     public class UpdateFileTests
     {
+        private Dictionary<string, string> fileContent;
+
         [SetUp]
         public void Setup()
         {
@@ -22,6 +24,21 @@ namespace Ensconce.Update.Tests
             foreach (var file in Directory.EnumerateFiles(wd, "*.xml_partial"))
             {
                 File.Delete(file);
+            }
+
+            fileContent = new Dictionary<string, string>();
+            foreach (var file in Directory.EnumerateFiles(wd, "*.xml"))
+            {
+                fileContent.Add(file, File.ReadAllText(file));
+            }
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            foreach (var file in fileContent)
+            {
+                File.WriteAllText(file.Key, file.Value);
             }
         }
 
@@ -199,46 +216,34 @@ namespace Ensconce.Update.Tests
         [Test]
         public void ReplacementContentWorksWithAmpersandInTag()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution24.xml", new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("t&his*text", document.XPathSelectElement("/root/value").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
         public void AddChildContenWorksWithAmpersandInTag()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution25.xml", new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("t&his*text", document.XPathSelectElement("/root/value/testing").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
         public void AppendAfterWorksWithAmpersandInTag()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution26.xml", new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("t&his*text", document.XPathSelectElement("/root/testing").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
@@ -263,9 +268,6 @@ namespace Ensconce.Update.Tests
         [Test]
         public void UpdateAllTouchesAllFiles()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-            var content2 = XDocument.Load(@"TestUpdateFiles\TestConfig2.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution3.xml", new Dictionary<string, object> { { "tagValue", "Tagged!" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
@@ -274,54 +276,33 @@ namespace Ensconce.Update.Tests
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("newvalue", document2.XPathSelectElement("/c:root/c:value", nms).Value);
             Assert.AreEqual("Tagged!", document.XPathSelectElement("/root/value").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
-            content2.Save(@"TestUpdateFiles\TestConfig2.xml");
         }
 
         [Test]
         public void UpdateAllKnowsAboutTaggedFiles()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig-TaggedPath.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution13.xml", new Dictionary<string, object> { { "FilePath", "TaggedPath" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig-TaggedPath.xml");
             Assert.AreEqual("newvalue", document.XPathSelectElement("/root/value").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig-TaggedPath.xml");
         }
 
         [Test]
         public void UpdateAllWhenError_ThrowsAggregateException()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-            var content2 = XDocument.Load(@"TestUpdateFiles\TestConfig2.xml");
-
             Assert.Throws<AggregateException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution31.xml", new Lazy<TagDictionary>(), false));
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
-            content.Save(@"TestUpdateFiles\TestConfig2.xml");
         }
 
         [Test]
         public void ChangeAttributeWhenDoesntExists_ThrowsApplicationException()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             Assert.Throws<ApplicationException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution33.xml", new Lazy<TagDictionary>(), false));
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
         public void AddAttributeWhenAlreadyExists_ThrowsApplicationException()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             Assert.Throws<ApplicationException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution34.xml", new Lazy<TagDictionary>(), false));
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
@@ -352,11 +333,7 @@ namespace Ensconce.Update.Tests
         [Test]
         public void UpdateAllWhenError_SingleError_ThrowsArgumentException()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             Assert.Throws<ArgumentException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution32.xml", new Lazy<TagDictionary>(), false));
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
