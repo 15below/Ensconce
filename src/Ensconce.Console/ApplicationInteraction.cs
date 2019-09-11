@@ -69,7 +69,7 @@ namespace Ensconce.Console
                     break;
                 }
 
-                Logging.Log("Still waiting for service {0} to stop", serviceName);
+                Logging.Log("Still waiting for service {0} to stop after {1} seconds", serviceName, waitAttempt);
                 Thread.Sleep(1000);
                 waitAttempt++;
             }

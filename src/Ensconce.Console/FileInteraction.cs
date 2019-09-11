@@ -18,6 +18,15 @@ namespace Ensconce.Console
 
             Logging.Log("Deleting from {0}", directory);
             PerformDelete(new DirectoryInfo(directory));
+
+            Logging.Log("Ensure Directory {0} has been deleted", directory);
+            Retry.Do(() =>
+            {
+                if (Directory.Exists(directory))
+                {
+                    throw new Exception("Directory still exists");
+                }
+            }, TimeSpan.FromMilliseconds(1000));
         }
 
         private static void PerformDelete(DirectoryInfo directory)
