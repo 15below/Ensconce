@@ -135,9 +135,16 @@ namespace Ensconce.Update
                 baseData = File.ReadAllText(replacementTemplate).RenderTemplate(tagValues);
             }
 
-            if (!Enum.TryParse(fileElement.Attribute("FileType")?.Value ?? "XML", true, out FileType fileType))
+            if (!Enum.TryParse(fileElement.Attribute("FileType")?.Value, true, out FileType fileType))
             {
-                throw new ApplicationException("Unable to establish type of file");
+                if (Path.GetExtension(baseFile).Equals(".json", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    fileType = FileType.Json;
+                }
+                else
+                {
+                    fileType = FileType.Xml;
+                }
             }
 
             var subs = fileElement.XPathSelectElements("s:Changes/s:Change", nsm)
