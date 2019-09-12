@@ -31,6 +31,13 @@
             ]]>
           </Content>
         </Change>
+        <Change type="ChangeValue" jsonPath="$.Data2">
+          <Content>
+            <![CDATA[
+            2
+            ]]>
+          </Content>
+        </Change>
       </Changes>
     </File>
   </Files>

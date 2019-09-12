@@ -368,7 +368,8 @@ namespace Ensconce.Update
                     sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
                 }
 
-                sub.ChangeValue = change.XPathSelectElement("s:ChangeValue", nsm)?.Attribute("value")?.Value;
+                var changeValue = change.XPathSelectElement("s:ChangeValue", nsm);
+                sub.ChangeValue = changeValue?.Attribute("value") != null ? changeValue?.Attribute("value")?.Value : changeValue?.Value;
                 sub.HasChangeValue = sub.ChangeValue != null;
             }
             else
@@ -404,7 +405,7 @@ namespace Ensconce.Update
                         break;
 
                     case "changevalue":
-                        sub.ChangeValue = change.Attribute("value")?.Value;
+                        sub.ChangeValue = change.Attribute("value") != null ? change.Attribute("value")?.Value : change.Value;
                         sub.HasChangeValue = true;
                         break;
 

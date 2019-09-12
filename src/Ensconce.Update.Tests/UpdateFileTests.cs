@@ -476,10 +476,12 @@ namespace Ensconce.Update.Tests
         [Test]
         public void JsonTest()
         {
-            dynamic newJson = JObject.Parse(UpdateFile.Update(
+            var data = UpdateFile.Update(
                 @"TestUpdateFiles\TestSubstitution36.xml", @"TestUpdateFiles\TestJson01.json"
-            ));
+            );
+            dynamic newJson = JObject.Parse(data);
             Assert.AreEqual("NewData", (string)newJson.Data);
+            Assert.AreEqual(2, (int)newJson.Data2);
             Assert.AreEqual("NotItem1", (string)newJson.Collection[0].NotData);
             Assert.AreEqual("NotItem2", (string)newJson.Collection[1].NotData);
             Assert.AreEqual("Value1", (string)newJson.ComplexData.Complex1);
