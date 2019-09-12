@@ -482,6 +482,10 @@ namespace Ensconce.Update.Tests
             Assert.AreEqual("NewData", (string)newJson.Data);
             Assert.AreEqual("NotItem1", (string)newJson.Collection[0].NotData);
             Assert.AreEqual("NotItem2", (string)newJson.Collection[1].NotData);
+            Assert.AreEqual("Value1", (string)newJson.ComplexData.Complex1);
+            Assert.AreEqual("Value2", (string)newJson.ComplexData.Complex2);
+            Assert.AreEqual("Value3", (string)newJson.ComplexData.Complex3);
+            Assert.AreEqual("Bill", (string)newJson.SubTrees.DataPoint.Value);
         }
 
         [Test]

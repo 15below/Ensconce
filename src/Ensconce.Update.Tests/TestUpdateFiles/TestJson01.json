@@ -7,5 +7,11 @@
     {
       "Data": "Item2"
     }
-  ]
+  ],
+  "ComplexData": "DUMMY",
+  "SubTrees": {
+    "DataPoint": {
+      "Value": "BOB"
+    }
+  }
 }
