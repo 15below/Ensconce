@@ -309,6 +309,7 @@ namespace Ensconce.Update
 
                 foreach (var activeObject in sub.PathMatchAll ? xPathMatches : xPathMatches.Take(1))
                 {
+                    //Should never get to this, but just in case!
                     if (sub.RemoveCurrentAttributes) throw new ApplicationException("Remove attributes is not supported with json files");
                     if (sub.AddAttributes.Any()) throw new ApplicationException("Add attributes is not supported with json files");
                     if (sub.ChangeAttributes.Any()) throw new ApplicationException("Change attributes is not supported with json files");
@@ -330,16 +331,7 @@ namespace Ensconce.Update
 
             if (change.Attribute("type") == null)
             {
-                sub.ReplacementContent = change.XPathSelectElement("s:ReplacementContent", nsm)?.Value;
-                sub.HasReplacementContent = sub.ReplacementContent != null;
-
-                sub.AddChildContent = change.XPathSelectElement("s:AddChildContent", nsm)?.Value;
-                sub.HasAddChildContent = sub.AddChildContent != null;
-                sub.AddChildContentIfNotExists = change.XPathSelectElement("s:AddChildContent", nsm)?.Attribute("ifNotExists")?.Value;
-
-                sub.AppendAfter = change.XPathSelectElement("s:AppendAfter", nsm)?.Value;
-                sub.HasAppendAfter = sub.AppendAfter != null;
-
+                //Old style long hand
                 switch (fileType)
                 {
                     case FileType.Xml:
@@ -356,63 +348,43 @@ namespace Ensconce.Update
                         throw new ApplicationException("Unknown file type");
                 }
 
-                sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
-
-                foreach (var ca in change.XPathSelectElements("s:AddAttribute", nsm))
+                if (fileType == FileType.Xml)
                 {
-                    sub.AddAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
-                }
+                    sub.AddChildContent = change.XPathSelectElement("s:AddChildContent", nsm)?.Value;
+                    sub.HasAddChildContent = sub.AddChildContent != null;
+                    sub.AddChildContentIfNotExists = change.XPathSelectElement("s:AddChildContent", nsm)?.Attribute("ifNotExists")?.Value;
 
-                foreach (var ca in change.XPathSelectElements("s:ChangeAttribute", nsm))
-                {
-                    sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                    sub.AppendAfter = change.XPathSelectElement("s:AppendAfter", nsm)?.Value;
+                    sub.HasAppendAfter = sub.AppendAfter != null;
+
+                    sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
+
+                    foreach (var ca in change.XPathSelectElements("s:AddAttribute", nsm))
+                    {
+                        sub.AddAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                    }
+
+                    foreach (var ca in change.XPathSelectElements("s:ChangeAttribute", nsm))
+                    {
+                        sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                    }
+
+                    sub.ReplacementContent = change.XPathSelectElement("s:ReplacementContent", nsm)?.Value;
+                    sub.HasReplacementContent = sub.ReplacementContent != null;
                 }
 
                 var changeValue = change.XPathSelectElement("s:ChangeValue", nsm);
                 sub.ChangeValue = changeValue?.Attribute("value") != null ? changeValue?.Attribute("value")?.Value : changeValue?.Value;
                 sub.HasChangeValue = sub.ChangeValue != null;
+
+                if (change.Attribute("if") != null)
+                {
+                    sub.Execute = bool.Parse($"{{% if {change.Attribute("if")?.Value} %}}true{{% else %}}false{{% endif %}}".RenderTemplate(tagValues));
+                }
             }
             else
             {
-                switch (change.Attribute("type")?.Value.ToLower())
-                {
-                    case "replacementcontent":
-                        sub.ReplacementContent = change.Value;
-                        sub.HasReplacementContent = true;
-                        break;
-
-                    case "addchildcontent":
-                        sub.AddChildContent = change.Value;
-                        sub.HasAddChildContent = true;
-                        sub.AddChildContentIfNotExists = change.Attribute("ifNotExists")?.Value;
-                        break;
-
-                    case "appendafter":
-                        sub.AppendAfter = change.Value;
-                        sub.HasAppendAfter = true;
-                        break;
-
-                    case "removecurrentattributes":
-                        sub.RemoveCurrentAttributes = true;
-                        break;
-
-                    case "addattribute":
-                        sub.AddAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
-                        break;
-
-                    case "changeattribute":
-                        sub.ChangeAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
-                        break;
-
-                    case "changevalue":
-                        sub.ChangeValue = change.Attribute("value") != null ? change.Attribute("value")?.Value : change.Value;
-                        sub.HasChangeValue = true;
-                        break;
-
-                    default:
-                        throw new Exception($"Unknown change type '{change.Attribute("type")?.Value}'");
-                }
-
+                //New style short hand
                 switch (fileType)
                 {
                     case FileType.Xml:
@@ -428,6 +400,45 @@ namespace Ensconce.Update
                 }
 
                 sub.PathMatchAll = change.Attribute("matchAll")?.Value.RenderTemplate(tagValues).Equals("true", StringComparison.CurrentCultureIgnoreCase) ?? false;
+
+                switch (change.Attribute("type")?.Value.ToLower())
+                {
+                    case "replacementcontent":
+                        sub.ReplacementContent = change.Value;
+                        sub.HasReplacementContent = true;
+                        break;
+
+                    case "addchildcontent" when fileType == FileType.Xml:
+                        sub.AddChildContent = change.Value;
+                        sub.HasAddChildContent = true;
+                        sub.AddChildContentIfNotExists = change.Attribute("ifNotExists")?.Value;
+                        break;
+
+                    case "appendafter" when fileType == FileType.Xml:
+                        sub.AppendAfter = change.Value;
+                        sub.HasAppendAfter = true;
+                        break;
+
+                    case "removecurrentattributes" when fileType == FileType.Xml:
+                        sub.RemoveCurrentAttributes = true;
+                        break;
+
+                    case "addattribute" when fileType == FileType.Xml:
+                        sub.AddAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
+                        break;
+
+                    case "changeattribute" when fileType == FileType.Xml:
+                        sub.ChangeAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
+                        break;
+
+                    case "changevalue":
+                        sub.ChangeValue = change.Attribute("value") != null ? change.Attribute("value")?.Value : change.Value;
+                        sub.HasChangeValue = true;
+                        break;
+
+                    default:
+                        throw new Exception($"Unknown change type '{change.Attribute("type")?.Value}'");
+                }
 
                 if (change.Attribute("if") != null)
                 {
