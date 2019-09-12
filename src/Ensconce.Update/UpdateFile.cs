@@ -315,9 +315,24 @@ namespace Ensconce.Update
                     if (sub.ChangeAttributes.Any()) throw new ApplicationException("Change attributes is not supported with json files");
                     if (sub.HasAppendAfter) throw new ApplicationException("Append after is not supported with json files");
                     if (sub.HasAddChildContent) throw new ApplicationException("Add child is not supported with json files");
+                    if (sub.HasReplacementContent) throw new ApplicationException("Replacement content is not supported with json files");
 
-                    if (sub.HasReplacementContent) activeObject.Replace(JObject.Parse($"{{ fakeRoot: {sub.ReplacementContent.RenderTemplate(tagValues)} }}").GetValue("fakeRoot"));
-                    if (sub.HasChangeValue) activeObject.Replace(new JValue(sub.ChangeValue.RenderTemplate(tagValues)));
+                    var updatedData = sub.ChangeValue.RenderTemplate(tagValues);
+                    if (string.IsNullOrWhiteSpace(updatedData)) throw new ApplicationException($"Value for {sub.Path} is null or empty");
+
+                    JToken value;
+                    if (updatedData.TrimStart().StartsWith("{") || updatedData.TrimStart().StartsWith("["))
+                    {
+                        var formatted = $"{{ fakeRoot: {updatedData} }}";
+                        var jObject = JObject.Parse(formatted);
+                        value = jObject.GetValue("fakeRoot");
+                    }
+                    else
+                    {
+                        value = new JValue(updatedData);
+                    }
+
+                    if (sub.HasChangeValue) activeObject.Replace(value);
                 }
             }
 
@@ -403,7 +418,7 @@ namespace Ensconce.Update
 
                 switch (change.Attribute("type")?.Value.ToLower())
                 {
-                    case "replacementcontent":
+                    case "replacementcontent" when fileType == FileType.Xml:
                         sub.ReplacementContent = change.Value;
                         sub.HasReplacementContent = true;
                         break;
