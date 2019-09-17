@@ -295,19 +295,19 @@ namespace Ensconce.Update
             {
                 Logging.Log($"Updating JsonPath {sub.Path}");
 
-                var xPathMatches = baseJson.SelectTokens(sub.Path.RenderTemplate(tagValues)).ToList();
+                var jsonPathMatches = baseJson.SelectTokens(sub.Path.RenderTemplate(tagValues)).ToList();
 
-                if (xPathMatches.Count == 0)
+                if (jsonPathMatches.Count == 0)
                 {
                     throw new ApplicationException($"JsonPath select of {sub.Path} returned no matches.");
                 }
 
-                if (!sub.PathMatchAll && xPathMatches.Count > 1)
+                if (!sub.PathMatchAll && jsonPathMatches.Count > 1)
                 {
-                    throw new ApplicationException($"JsonPath select of {sub.Path} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the XPath or Change node.");
+                    throw new ApplicationException($"JsonPath select of {sub.Path} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the JsonPath or Change node.");
                 }
 
-                foreach (var activeObject in sub.PathMatchAll ? xPathMatches : xPathMatches.Take(1))
+                foreach (var activeObject in sub.PathMatchAll ? jsonPathMatches : jsonPathMatches.Take(1))
                 {
                     //Should never get to this, but just in case!
                     if (sub.RemoveCurrentAttributes) throw new ApplicationException("Remove attributes is not supported with json files");
