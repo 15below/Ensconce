@@ -225,7 +225,9 @@ namespace Ensconce.Update
 
                 if (!sub.PathMatchAll && xPathMatches.Count > 1)
                 {
-                    throw new ApplicationException($"XPath select of {sub.Path} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the XPath or Change node.");
+                    Logging.LogError($"XPath select of {sub.Path} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the XPath or Change node.");
+                    Logging.Log("In order to be non breaking, this will NOT fail the deployment YET - This should be fixed to prevent future failures");
+                    //throw new ApplicationException($"XPath select of {sub.Path} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the XPath or Change node.");
                 }
 
                 foreach (var activeNode in sub.PathMatchAll ? xPathMatches : xPathMatches.Take(1))
