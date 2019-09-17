@@ -46,6 +46,15 @@
                                     </xs:simpleContent>
                                   </xs:complexType>
                                 </xs:element>
+                                <xs:element name="JsonPath" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="matchAll" type="xs:string" use="optional" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
                                 <xs:element name="Content" type="xs:string" minOccurs="0" />
                                 <xs:element name="ReplacementContent" type="xs:string" minOccurs="0" />
                                 <xs:element name="AddChildContent" minOccurs="0">
@@ -103,6 +112,7 @@
                                 </xs:simpleType>
                               </xs:attribute>
                               <xs:attribute name="xPath" type="xs:string" use="optional" />
+                              <xs:attribute name="jsonPath" type="xs:string" use="optional" />
                               <xs:attribute name="matchAll" type="xs:string" use="optional" />
                               <xs:attribute name="attributeName" type="xs:string" use="optional" />
                               <xs:attribute name="value" type="xs:string" use="optional" />
@@ -115,6 +125,7 @@
                     </xs:element>
                   </xs:choice>
                   <xs:attribute name="Filename" type="xs:string" use="required" />
+                  <xs:attribute name="FileType" type="xs:string" use="optional" />
                   <xs:attribute name="ReplacementTemplate" type="xs:string" use="optional" />
                 </xs:complexType>
               </xs:element>

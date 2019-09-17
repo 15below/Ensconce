@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces />
+  <Files>
+    <File Filename="TestUpdateFiles\TestJson01.json">
+      <Changes>
+        <Change type="ChangeValue" jsonPath="$.Data" value="C:\Temp" />
+      </Changes>
+    </File>
+  </Files>
+</Root>
