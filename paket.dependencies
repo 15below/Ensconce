@@ -7,5 +7,6 @@ nuget FSharp.Core
 nuget NUnit
 nuget RhinoMocks
 nuget roundhouse.sqlserver
+nuget System.ValueTuple
 
 github 15below/Build.Tools:V1.1
