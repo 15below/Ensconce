@@ -320,7 +320,6 @@ namespace Ensconce.Update
                     if (sub.HasReplacementContent) throw new ApplicationException("Replacement content is not supported with json files");
 
                     var updatedData = sub.ChangeValue.RenderTemplate(tagValues);
-                    if (string.IsNullOrWhiteSpace(updatedData)) throw new ApplicationException($"Value for {sub.Path} is null or empty");
 
                     JToken value;
                     if (updatedData.TrimStart().StartsWith("{") || updatedData.TrimStart().StartsWith("["))
