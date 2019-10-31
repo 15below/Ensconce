@@ -1,5 +1,7 @@
 # Template Syntax
 
+## Overview
+
 Ensconce uses a template language based on a version on Django.
 
 This was ported to .net and later brought directly into Ensconce when support for the port ceased.
