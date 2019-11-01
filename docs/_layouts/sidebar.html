@@ -4,7 +4,7 @@ layout: default
 {% assign url_parts = page.url | split: '/' %}
 {% assign url_parts_size = url_parts | size %}
 <div class="row p-2 full-height">
-    <div class="col-lg-9">
+    <div class="col-lg-9 full-height">
         <nav>
             <ol class="breadcrumb">
                 {% for part in url_parts %}
@@ -21,10 +21,12 @@ layout: default
                 {% endfor %}
                 {% endfor %}
             </ol>
-        </nav>
-        {{ content }}
+        </nav> 
+        <div>
+            {{ content }}
+        </div>
     </div>
-    <div class="col-lg-3 nav-col">
+    <div class="col-lg-3 nav-col full-height">
         <div class="list-group list-group-root">
             {% for part in url_parts %}
             {% for node in site.pages %}
@@ -58,18 +60,18 @@ layout: default
                         {% if node_url_parts_size == node2_url_parts_size %}
                         <a href="{{ node2.url | relative_url }}"
                             class="list-group-item list-group-item-action">{{ node2.title }}</a>
-                            <div class="list-group">
-                                    {% for node3 in site.pages %}
-                                    {% if node3.url contains node2.url and node3.url != node2.url %}
-                                    {% assign node3_url_parts = node3.url | split: '/' %}
-                                    {% assign node3_url_parts_size = node3_url_parts | size | minus: 3 %}
-                                    {% if node2_url_parts_size == node3_url_parts_size %}
-                                    <a href="{{ node3.url | relative_url }}"
-                                        class="list-group-item list-group-item-action">{{ node3.title }}</a>
-                                    {% endif %}
-                                    {% endif %}
-                                    {% endfor %}
-                                </div>
+                        <div class="list-group">
+                            {% for node3 in site.pages %}
+                            {% if node3.url contains node2.url and node3.url != node2.url %}
+                            {% assign node3_url_parts = node3.url | split: '/' %}
+                            {% assign node3_url_parts_size = node3_url_parts | size | minus: 3 %}
+                            {% if node2_url_parts_size == node3_url_parts_size %}
+                            <a href="{{ node3.url | relative_url }}"
+                                class="list-group-item list-group-item-action">{{ node3.title }}</a>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                        </div>
                         {% endif %}
                         {% endif %}
                         {% endfor %}
