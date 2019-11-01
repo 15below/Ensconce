@@ -1,10 +1,10 @@
-# How To Deploy Files
+# Deploying Files
 
 ## Overview
 
 Ensconce has the ability to deploy files either performing a copy function to add files, or a replace option to completely remove all existing files and replace with new files.
 
-It is also possible to use a [deployment substitution]({{ '/' | relative_url }}substitutions) as part of the deployment of files.
+If the files you are deploying are applications, you should see the [Deploying Applications]({{ '/' | relative_url }}cli/deploy-apps) page.
 
 ## Syntax
 
@@ -15,11 +15,3 @@ It is also possible to use a [deployment substitution]({{ '/' | relative_url }}s
 ### Replace Files
 
 `--deployFrom=[sourcePath] --deployTo=[destinationPath] --replace`
-
-### Update Config
-
-This can be used with a `--copyTo` or a `--replace`
-
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig`
-
-This will assume there is a file alongside your calling location called `substitutions.xml`.
