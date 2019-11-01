@@ -30,12 +30,19 @@
     border-top-width: 0;
 }
 
+.list-group.list-group-root>.list-group-item {
+    padding-left: 10px;
+}
+
 .list-group.list-group-root>.list-group>.list-group-item {
     padding-left: 30px;
 }
 
 .list-group.list-group-root>.list-group>.list-group>.list-group-item {
-    padding-left: 45px;
+    padding-left: 50px;
+
+}.list-group.list-group-root>.list-group>.list-group>.list-group>.list-group-item {
+    padding-left: 70px;
 }
 
 @media (min-width: 992px) {

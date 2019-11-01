@@ -5,7 +5,6 @@
 * Database deployment
 * Reports deployment
 * Extracting tag dictionary
-* Treat as template filter
 * Drop databases
 * Creating backups
 

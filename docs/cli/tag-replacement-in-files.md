@@ -7,16 +7,10 @@ description: How to update files which have Ensconce template tags
 
 ## Overview
 
-Ensconce has the ability to deploy files either performing a copy function to add files, or a replace option to completely remove all existing files and replace with new files.
+With Ensconce you can perform template tag replacement in any file without the need for any substitution files.
 
-If the files you are deploying are applications, you should see the [Deploying Applications]({{ '/' | relative_url }}cli/deploy-apps) page.
+Providing a wildcard pattern for searching files, Ensconce will parse each of those files & update the contents.
 
 ## Syntax
 
-### Copy Files
-
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo`
-
-### Replace Files
-
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --replace`
+`--deployFrom=[sourcePath] --treatAsTemplateFilter=[searchPattern]`
