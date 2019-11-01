@@ -1,5 +1,5 @@
 ---
-title: Command Line Tasks Home
+title: Command Line Tasks
 description: The home of command line task documentation
 ---
 

@@ -23,35 +23,35 @@ defaults:
       path: "cli"
       type: "pages"
     values:
-      layout: "cli"
+      layout: "sidebar"
       image: /images/15below_green.png
   -
     scope:
       path: "powershell"
       type: "pages"
     values:
-      layout: "powershell"
+      layout: "sidebar"
       image: /images/15below_green.png
   -
     scope:
       path: "config"
       type: "pages"
     values:
-      layout: "config"
+      layout: "sidebar"
       image: /images/15below_green.png
   -
     scope:
       path: "substitutions"
       type: "pages"
     values:
-      layout: "substitutions"
+      layout: "sidebar"
       image: /images/15below_green.png
   -
     scope:
       path: "templates"
       type: "pages"
     values:
-      layout: "templates"
+      layout: "sidebar"
       image: /images/15below_green.png
 
 #Plugins

@@ -1,5 +1,5 @@
 ---
-title: Subsitution Files Home
+title: Substitution Files
 description: The home of substitution files documentation
 ---
 

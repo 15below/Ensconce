@@ -1,5 +1,5 @@
 ---
-title: Powershell Helpers Home
+title: Powershell Helpers
 description: The home of Powershell helper documentation
 ---
 

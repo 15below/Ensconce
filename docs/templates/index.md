@@ -1,5 +1,5 @@
 ---
-title: Template Syntax Tasks
+title: Template Syntax
 description: The home of template syntax documentation
 ---
 # Template Syntax

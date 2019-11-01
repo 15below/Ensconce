@@ -1,5 +1,5 @@
 ---
-title: Deployment Configuration Home
+title: Deployment Configuration
 description: The home of deployment configuration documentation
 ---
 

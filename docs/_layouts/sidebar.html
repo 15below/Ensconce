@@ -1,0 +1,67 @@
+---
+layout: default
+---
+{% assign url_parts = page.url | split: '/' %}
+{% assign url_parts_size = url_parts | size %}
+<div class="row p-2 full-height">
+    <div class="col-lg-9">
+            <nav>
+                    <ol class="breadcrumb">
+                        {% for part in url_parts %}
+                        {% for node in site.pages %}
+                        {% assign node_url_parts = node.url | split: '/' %}
+                        {% assign rm = node_url_parts | last %}
+                        {% if rm == part %}
+                        {% if node.url != page.url %}
+                        <li class="breadcrumb-item"><a href="{{ node.url | relative_url }}">{{ node.title }}</a></li>                        
+                        {% else %}
+                        <li class="breadcrumb-item active">{{ node.title }}</li>                        
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+                    </ol>
+                </nav>
+        {{ content }}
+    </div>
+    <div class="col-lg-3 nav-col">
+        
+        <div class="list-group list-group-root">
+            <span
+                class="list-group-item list-group-item-action active">{{ page.title }}</span>
+            {% for node in site.pages %}
+            {% if node.url contains page.url and node.url != page.url %}
+            {% assign node_url_parts = node.url | split: '/' %}
+            {% assign node_url_parts_size = node_url_parts | size | minus: 1 %}
+            {% if url_parts_size == node_url_parts_size %}
+            <a href="{{ node.url | relative_url }}" class="list-group-item list-group-item-action">{{ node.title }}</a>
+            <div class="list-group">
+                {% for node2 in site.pages %}
+                {% if node2.url contains node.url and node2.url != node.url %}
+                {% assign node2_url_parts = node2.url | split: '/' %}
+                {% assign node2_url_parts_size = node2_url_parts | size | minus: 2 %}
+                {% if node_url_parts_size == node2_url_parts_size %}
+                <a href="{{ node2.url | relative_url }}"
+                    class="list-group-item list-group-item-action">{{ node2.title }}</a>
+                <div class="list-group">
+                    {% for node3 in site.pages %}
+                    {% if node3.url contains node2.url and node3.url != node2.url %}
+                    {% assign node3_url_parts = node3.url | split: '/' %}
+                    {% assign node3_url_parts_size = node3_url_parts | size | minus: 3 %}
+                    {% if node2_url_parts_size == node3_url_parts_size %}
+                    <a href="{{ node3.url | relative_url }}"
+                        class="list-group-item list-group-item-action">{{ node3.title }}</a>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
