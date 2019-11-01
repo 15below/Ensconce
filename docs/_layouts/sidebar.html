@@ -28,7 +28,7 @@ layout: default
         <h5>{{ page.title }} Navigation</h5>
         {% assign haveSubPages = false %}
         <div class="list-group list-group-root">
-            {% for node in site.pages %}
+            {% for node in site.pages | sort_natural %}
             {% if node.url contains page.url and node.url != page.url %}
             {% assign node_url_parts = node.url | split: '/' %}
             {% assign node_url_parts_size = node_url_parts | size | minus: 1 %}
