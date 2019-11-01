@@ -1,3 +1,8 @@
+---
+title: Powershell Helpers Home
+description: The home of Powershell helper documentation
+---
+
 # Powershell Helpers
 
 ## Overview

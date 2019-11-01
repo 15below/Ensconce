@@ -1,3 +1,8 @@
+---
+title: Deploying Files
+description: File deployment details
+---
+
 # Deploying Files
 
 ## Overview

@@ -1,3 +1,7 @@
+---
+title: Template Syntax Tasks
+description: The home of template syntax documentation
+---
 # Template Syntax
 
 ## Overview

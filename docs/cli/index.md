@@ -1,3 +1,8 @@
+---
+title: Command Line Tasks Home
+description: The home of command line task documentation
+---
+
 # Command Line Tasks
 
 ## Overview

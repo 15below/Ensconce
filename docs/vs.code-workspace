@@ -1,7 +1,12 @@
 {
-    "folders": [
+	"folders": [
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"markdownlint.config": {
+			"MD025": false
+		}
+	}
 }

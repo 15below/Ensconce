@@ -1,3 +1,8 @@
+---
+title: Subsitution Files Home
+description: The home of substitution files documentation
+---
+
 # Substitution Files
 
 ## Overview

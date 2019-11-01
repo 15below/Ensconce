@@ -1,3 +1,8 @@
+---
+title: Deploying Apps
+description: Application deployment details
+---
+
 # Deploying Apps
 
 ## Overview

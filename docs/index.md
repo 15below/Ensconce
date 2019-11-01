@@ -1,3 +1,8 @@
+---
+title: Home
+description: The home of the 15below Ensconce documentation
+---
+
 # Overview
 
 The 15below Ensconce command line tool is the perfect tool to help deploy your applications onto Windows machines.
