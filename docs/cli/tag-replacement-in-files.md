@@ -7,7 +7,7 @@ description: How to update files which have Ensconce template tags
 
 ## Overview
 
-With Ensconce you can perform template tag replacement in any file without the need for any substitution files.
+With Ensconce you can perform [template tag]({{ '/' | relative_url }}templates) replacement in any file without the need for any substitution files.
 
 Providing a wildcard pattern for searching files, Ensconce will parse each of those files & update the contents.
 

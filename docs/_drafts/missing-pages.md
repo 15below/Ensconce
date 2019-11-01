@@ -12,11 +12,6 @@
 
 ## Deployment configuration
 
-* Client/Environment
-* Properties
-* Property Groups
-* DB Logins
-* XSD
 
 ## Substitutions
 
