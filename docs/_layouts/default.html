@@ -26,7 +26,8 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    {% for node in site.pages | sort_natural %}
+                    {% assign sortedPages = site.pages | sort_natural: "url" %}
+                    {% for node in sortedPages %}
                     {% assign node_url_parts = node.url | split: '/' %}
                     {% assign node_url_parts_size = node_url_parts | size%}
                     {% if node_url_parts_size == 2 and node.hideNav != true and node.title %}
