@@ -1,9 +1,9 @@
 ---
-title: Deploying Apps
-description: Application deployment details
+title: Deploying Applications
+description: How to deploy applications with a configuration update
 ---
 
-# Deploying Apps
+# Deploying Applications
 
 ## Overview
 
