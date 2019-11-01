@@ -14,6 +14,7 @@ It's also possible to specify an entire database connection string.
 ## Example
 
 ```xml
+{% raw %}
 <Structure xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
   ...
   <DbLogins>
@@ -28,4 +29,5 @@ It's also possible to specify an entire database connection string.
     </DbLogin>
   </DbLogins>
 </Structure>
+{% endraw %}
 ```

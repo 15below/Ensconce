@@ -18,6 +18,7 @@ A property group can also be defined with multiple labels, but this syntax is mu
 ## Example
 
 ```xml
+{% raw %}
 <Structure xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
   ...
   <PropertyGroups>
@@ -42,4 +43,5 @@ A property group can also be defined with multiple labels, but this syntax is mu
   </PropertyGroups>
   ...
 </Structure>
+{% endraw %}
 ```

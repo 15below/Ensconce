@@ -16,6 +16,7 @@ Properties can contain dynamic content using the [template tag syntax]({{ '/' | 
 ## Example
 
 ```xml
+{% raw %}
 <Structure xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
   ...
   <Properties>
@@ -25,4 +26,5 @@ Properties can contain dynamic content using the [template tag syntax]({{ '/' | 
   </Properties>
   ...
 </Structure>
+{% endraw %}
 ```

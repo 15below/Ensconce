@@ -14,6 +14,7 @@ This section of the documentation will explain all about the deployment configur
 ## Basic Structure
 
 ```xml
+{% raw %}
 <Structure xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
   <ClientCode>AAA</ClientCode>
   <Environment>PRD</Environment>
@@ -40,4 +41,5 @@ This section of the documentation will explain all about the deployment configur
     </DbLogin>
   </DbLogins>
 </Structure>
+{% endraw %}
 ```
