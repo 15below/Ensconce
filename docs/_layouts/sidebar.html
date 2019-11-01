@@ -5,35 +5,35 @@ layout: default
 {% assign url_parts_size = url_parts | size %}
 <div class="row p-2 full-height">
     <div class="col-lg-9">
-            <nav>
-                    <ol class="breadcrumb">
-                        {% for part in url_parts %}
-                        {% for node in site.pages %}
-                        {% assign node_url_parts = node.url | split: '/' %}
-                        {% assign rm = node_url_parts | last %}
-                        {% if rm == part %}
-                        {% if node.url != page.url %}
-                        <li class="breadcrumb-item"><a href="{{ node.url | relative_url }}">{{ node.title }}</a></li>                        
-                        {% else %}
-                        <li class="breadcrumb-item active">{{ node.title }}</li>                        
-                        {% endif %}
-                        {% endif %}
-                        {% endfor %}
-                        {% endfor %}
-                    </ol>
-                </nav>
+        <nav>
+            <ol class="breadcrumb">
+                {% for part in url_parts %}
+                {% for node in site.pages %}
+                {% assign node_url_parts = node.url | split: '/' %}
+                {% assign rm = node_url_parts | last %}
+                {% if rm == part %}
+                {% if node.url != page.url %}
+                <li class="breadcrumb-item"><a href="{{ node.url | relative_url }}">{{ node.title }}</a></li>
+                {% else %}
+                <li class="breadcrumb-item active">{{ node.title }}</li>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+            </ol>
+        </nav>
         {{ content }}
     </div>
     <div class="col-lg-3 nav-col">
-        
+        <h5>{{ page.title }} Navigation</h5>
+        {% assign haveSubPages = false %}
         <div class="list-group list-group-root">
-            <span
-                class="list-group-item list-group-item-action active">{{ page.title }}</span>
             {% for node in site.pages %}
             {% if node.url contains page.url and node.url != page.url %}
             {% assign node_url_parts = node.url | split: '/' %}
             {% assign node_url_parts_size = node_url_parts | size | minus: 1 %}
             {% if url_parts_size == node_url_parts_size %}
+            {% assign haveSubPages = true %}
             <a href="{{ node.url | relative_url }}" class="list-group-item list-group-item-action">{{ node.title }}</a>
             <div class="list-group">
                 {% for node2 in site.pages %}
@@ -62,6 +62,12 @@ layout: default
             {% endif %}
             {% endif %}
             {% endfor %}
+
+            {% if haveSubPages == false %}
+            <div class="alert alert-secondary" role="alert">
+                No child pages
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
