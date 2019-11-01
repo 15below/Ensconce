@@ -30,3 +30,9 @@ This will assume there is a file alongside your calling location called `substit
 This can be used with a `--copyTo` or a `--replace`.
 
 `--deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig --substitutionPath=[substitutionFilePath]`
+
+### Output Partially Applied Output On Failure
+
+This can be used with a `--copyTo` or a `--replace`.
+
+`--deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig --outputFailureContext`

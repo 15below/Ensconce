@@ -2,12 +2,6 @@
 
 ## Command Line Tasks
 
-* Database deployment
-* Reports deployment
-* Extracting tag dictionary
-* Drop databases
-* Creating backups
-
 ## Powershell Helpers
 
 * deployHelp.ps1
