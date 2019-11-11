@@ -13,9 +13,9 @@ layout: default
                 {% assign rm = node_url_parts | last %}
                 {% if rm == part %}
                 {% if node.url != page.url %}
-                <li class="breadcrumb-item"><a href="{{ node.url | relative_url }}">{{ node.title }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ node.url | relative_url }}">{% if node.linkText %}{{ node.linkText }}{% else %}{{ node.title }}{% endif %}</a></li>
                 {% else %}
-                <li class="breadcrumb-item active">{{ node.title }}</li>
+                <li class="breadcrumb-item active">{% if node.linkText %}{{ node.linkText }}{% else %}{{ node.title }}{% endif %}</li>
                 {% endif %}
                 {% endif %}
                 {% endfor %}
@@ -34,7 +34,7 @@ layout: default
             {% assign rm = node_url_parts | last %}
             {% if rm == part %}
             {% if node.url != page.url %}
-            <a href="{{ node.url | relative_url }}" class="list-group-item list-group-item-action">{{ node.title }}</a>
+            <a href="{{ node.url | relative_url }}" class="list-group-item list-group-item-action">{% if node.linkText %}{{ node.linkText }}{% else %}{{ node.title }}{% endif %}</a>
             <div class="list-group">
                 {% endif %}
                 {% endif %}
@@ -42,7 +42,7 @@ layout: default
                 {% endfor %}
 
                 <a href="{{ page.url | relative_url }}"
-                    class="list-group-item list-group-item-action active">{{ page.title }}</a>
+                    class="list-group-item list-group-item-action active">{% if page.linkText %}{{ page.linkText }}{% else %}{{ page.title }}{% endif %}</a>
                 <div class="list-group">
                     {% assign sortedPages = site.pages | sort_natural: "url" %}
                     {% for node in sortedPages %}
@@ -51,7 +51,7 @@ layout: default
                     {% assign node_url_parts_size = node_url_parts | size | minus: 1 %}
                     {% if url_parts_size == node_url_parts_size %}
                     <a href="{{ node.url | relative_url }}"
-                        class="list-group-item list-group-item-action">{{ node.title }}</a>
+                        class="list-group-item list-group-item-action">{% if node.linkText %}{{ node.linkText }}{% else %}{{ node.title }}{% endif %}</a>
                     <div class="list-group">
                         {% for node2 in site.pages %}
                         {% if node2.url contains node.url and node2.url != node.url %}
@@ -59,7 +59,7 @@ layout: default
                         {% assign node2_url_parts_size = node2_url_parts | size | minus: 2 %}
                         {% if node_url_parts_size == node2_url_parts_size %}
                         <a href="{{ node2.url | relative_url }}"
-                            class="list-group-item list-group-item-action">{{ node2.title }}</a>
+                            class="list-group-item list-group-item-action">{% if node2.linkText %}{{ node2.linkText }}{% else %}{{ node2.title }}{% endif %}</a>
                         <div class="list-group">
                             {% for node3 in site.pages %}
                             {% if node3.url contains node2.url and node3.url != node2.url %}
@@ -67,7 +67,7 @@ layout: default
                             {% assign node3_url_parts_size = node3_url_parts | size | minus: 3 %}
                             {% if node2_url_parts_size == node3_url_parts_size %}
                             <a href="{{ node3.url | relative_url }}"
-                                class="list-group-item list-group-item-action">{{ node3.title }}</a>
+                                class="list-group-item list-group-item-action">{% if node3.linkText %}{{ node3.linkText }}{% else %}{{ node3.title }}{% endif %}</a>
                             {% endif %}
                             {% endif %}
                             {% endfor %}

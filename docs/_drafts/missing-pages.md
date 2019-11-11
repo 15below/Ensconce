@@ -4,14 +4,12 @@
 
 ## Powershell Helpers
 
-* deployHelp.ps1
 * createWebsites.ps1
 * dnsHelpers.ps1
 * serviceManagement.ps1
 * userManagement.ps1
 
 ## Deployment configuration
-
 
 ## Substitutions
 
