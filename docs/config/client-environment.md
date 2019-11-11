@@ -17,7 +17,7 @@ But if you are not using Octopus, the `ClientCode` and `Environment` nodes can b
 
 ## Example
 
-```xml
+```XML
 {% raw %}
 <Structure xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
   <ClientCode>AAA</ClientCode>

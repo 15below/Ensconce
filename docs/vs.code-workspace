@@ -6,7 +6,8 @@
 	],
 	"settings": {
 		"markdownlint.config": {
-			"MD025": false
+			"MD025": false,
+			"MD036": false
 		}
 	}
 }

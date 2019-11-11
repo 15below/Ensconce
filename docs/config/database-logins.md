@@ -13,7 +13,7 @@ It's also possible to specify an entire database connection string.
 
 ## Example
 
-```xml
+```XML
 {% raw %}
 <Structure xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
   ...
