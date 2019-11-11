@@ -14,7 +14,7 @@ is64Bit
 
 ## Description
 
-The `is64Bit` function with check the current machine is a 64bit installation
+The `is64Bit` function will check the current machine is a 64bit installation
 
 ## Examples
 

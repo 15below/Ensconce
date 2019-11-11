@@ -13,10 +13,10 @@ These can be included as part of your deployment powershell to make deployment s
 
 ## Available Files
 
+* [createWebSite.ps1](create-website)
 * [deployHelp.ps1](deploy-help)
 
 <!---
-* [createWebSite.ps1](create-website)
 * [serviceManagement.ps1](service-management)
 * [userManagement.ps1](user-management)
 -->

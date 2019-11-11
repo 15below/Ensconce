@@ -6,5 +6,9 @@
         "markdown",
         "latex",
         "plaintext"
+    ],
+    "cSpell.words": [
+        "endraw",
+        "markdownlint"
     ]
 }
