@@ -6,4 +6,4 @@ description: Details of the substitution file XSD
 
 # Substitution Files XSD
 
-Placeholder Page
+Placeholder - This page has not been written yet!

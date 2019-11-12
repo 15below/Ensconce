@@ -6,4 +6,4 @@ description: Cut Template Filter
 
 # Cut Template Filter
 
-Placeholder Page
+Placeholder - This page has not been written yet!

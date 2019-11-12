@@ -44,7 +44,13 @@ Each type of structure can be found on dedicated pages
 
 ## Types Of Substitution
 
-* [File Node](file)
 * [JSON](json)
 * [XML (Legacy format)](legacy-xml)
 * [XML](xml)
+
+## Other Important Sections
+
+* [Change Filters](filters)
+* [Change Paths](change-paths)
+* [File Node](file-node)
+* [Namespaces](namespaces)
