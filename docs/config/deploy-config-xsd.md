@@ -1,5 +1,6 @@
 ---
-title: XSD
+title: Deploy configuration XSD
+linkText: XSD
 description: Details of the deployment configuration XSD
 ---
 

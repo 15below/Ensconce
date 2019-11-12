@@ -147,7 +147,7 @@ function StartWebSite([string]$name)
 	}
 }
 
-function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation)
+function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80)
 {
 	# check if web site exists and delete it - for testing purposes
 	"    Creating IIS website for " + $name
@@ -158,7 +158,7 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 		$bindingClass = [wmiclass]'root\MicrosoftIISv2:ServerBinding'
 		$bindings = $bindingClass.CreateInstance()
-		$bindings.Port = "80"
+		$bindings.Port = $port
 		$bindings.Hostname = $hostname
 
 		EnsurePath $localPath
@@ -246,7 +246,7 @@ function CreateWebApplication([string]$webSite, [string]$appName, [string] $appP
 	$newDir.AppCreate3(2, $appPool, $True)
 }
 
-function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$installDir)
+function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
 {
   "Creating $virtualDir pointing at $installDir" | Write-Host
   $webServerSettings  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$webSite%'"

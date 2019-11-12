@@ -9,7 +9,7 @@ description: Details about the createWebsite.ps1 helper script
 
 The `createWebsite.ps1` script does not actually contain any functionality.
 
-It is a wrapper to load the correct version of the IIS scripts.
+It is a wrapper to load the correct version of the IIS scripts which is either `createiis6app.ps1` or `createiis7app.ps1` (the IIS7 script works with version higher than 7 as well)
 
 This section will detail the functions and which version of IIS the function is supported in.
 
@@ -45,6 +45,8 @@ This section will detail the functions and which version of IIS the function is 
 * CheckIfWebSiteExists([string]$name)
 * CreateAppPool([string]$name)
 * CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir, [string]$SubFolders)
+* CreateWebSite([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80)
+* CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
 * DefaultApplicationPoolGroup()
 * RestartAppPool([string]$name)
 * SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
@@ -52,15 +54,3 @@ This section will detail the functions and which version of IIS the function is 
 * StartWebSite([string]$name)
 * StopAppPool([string]$name)
 * StopWebSite([string]$name)
-
-### IIS6 & IIS7 (Differing Signatures)
-
-#### IIS6
-
-* CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$installDir)
-* CreateWebSite([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation)
-
-#### IIS7
-
-* CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
-* CreateWebSite([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80)
