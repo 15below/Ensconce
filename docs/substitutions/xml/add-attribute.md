@@ -1,9 +1,9 @@
 ---
-title: XML Change Attribute
-linkText: Change Attribute
-description: Change attribute XML format
+title: XML Add Attribute
+linkText: Add Attribute
+description: Add attribute XML format
 ---
 
-# XML Change Attribute
+# XML Add Attribute
 
 Placeholder - This page has not been written yet!

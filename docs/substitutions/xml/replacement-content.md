@@ -1,9 +1,9 @@
 ---
-title: XML Change Attribute
-linkText: Change Attribute
-description: Change attribute XML format
+title: XML Replacement Content
+linkText: Replacement Content
+description: Replacement Content XML format
 ---
 
-# XML Change Attribute
+# XML Replacement Content
 
 Placeholder - This page has not been written yet!
