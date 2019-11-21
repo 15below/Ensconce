@@ -1,13 +1,6 @@
 ﻿Write-Host "Ensconce - DeployHelp Loading"
 $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
-if (test-path "$env:ProgramFiles\7-Zip\7z.exe"){
-	set-alias 7z "$env:ProgramFiles\7-Zip\7z.exe"
-}
-else {
-	set-alias 7z "$env:ProgramFiles(x86)\7-Zip\7z.exe"
-}
-
 if (Test-Path variable:\OctopusParameters)
 {
     foreach($kp in $OctopusParameters.GetEnumerator())
@@ -63,6 +56,16 @@ function CreateDesktopShortcut($exePath, $shortcutName)
 	$Shortcut = $WshShell.CreateShortcut((Join-Path $wshShell.SpecialFolders.Item("AllUsersDesktop") "$shortcutName.lnk"))
 	$Shortcut.TargetPath = $exePath
 	$Shortcut.Save()
+}
+
+
+function Get7zip() {
+	if ((Test-Path 'C:\Program Files\7-zip\7z.exe') -eq $true) {
+		return ('C:\"Program Files"\7-zip\7z.exe')
+	}
+	elseif ((Test-Path 'C:\Program Files (x86)\7-zip\7z.exe') -eq $true) {
+		return ('C:\"Program Files (x86)"\7-zip\7z.exe')
+	}
 }
 
 Write-Host "Ensconce - DeployHelp Loaded"
