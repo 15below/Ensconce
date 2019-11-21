@@ -1,6 +1,13 @@
 ﻿Write-Host "Ensconce - DeployHelp Loading"
 $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
+if (test-path "$env:ProgramFiles\7-Zip\7z.exe"){
+	set-alias 7z "$env:ProgramFiles\7-Zip\7z.exe"
+}
+else {
+	set-alias 7z "$env:ProgramFiles(x86)\7-Zip\7z.exe"
+}
+
 if (Test-Path variable:\OctopusParameters)
 {
     foreach($kp in $OctopusParameters.GetEnumerator())
