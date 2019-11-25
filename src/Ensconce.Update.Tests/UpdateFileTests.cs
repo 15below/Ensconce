@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -15,10 +16,12 @@ namespace Ensconce.Update.Tests
     public class UpdateFileTests
     {
         private Dictionary<string, string> fileContent;
+        private readonly Mutex singleThreadTest = new Mutex(false, "SingleThreadTest-UpdateFileTests");
 
         [SetUp]
         public void Setup()
         {
+            singleThreadTest.WaitOne();
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
 
             var wd = Path.Combine(Environment.CurrentDirectory, "TestUpdateFiles");
@@ -41,6 +44,7 @@ namespace Ensconce.Update.Tests
             {
                 File.WriteAllText(file.Key, file.Value);
             }
+            singleThreadTest.ReleaseMutex();
         }
 
         [Test]

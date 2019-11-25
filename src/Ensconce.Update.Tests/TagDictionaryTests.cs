@@ -10,18 +10,28 @@ namespace Ensconce.Update.Tests
     [TestFixture]
     public class TagDictionaryTests
     {
-        public TagDictionaryTests()
-        {
-            testLock = new Mutex();
-        }
+        private readonly Mutex singleThreadTest = new Mutex(false, "SingleThreadTest-TagDictionaryTests");
+        private const string EnvEnvironment = "LOC";
+        private const string EnvClientCode = "FAA";
+        private const string IsSys = "IsSys";
+        private const string IsSysValue = "SYS";
+        private const string XMLFilename = "structure.xml";
+        private const string QueAppServer = "QueueAppServer";
+        private const string Avalue = "avalue";
+        private const string Idvalue = "idvalue";
 
-        #region Setup/Teardown
+        private readonly Lazy<string> xml = new Lazy<string>(() => new StreamReader(File.OpenRead(@"webservice-structure.xml")).ReadToEnd());
+
+        private string XmlData
+        {
+            get { return xml.Value; }
+        }
 
         [SetUp]
         public void SetUp()
         {
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
-            testLock.WaitOne();
+            singleThreadTest.WaitOne();
             var testEnv = new Dictionary<string, string>
                               {
                                   {IsSys, IsSys},
@@ -38,26 +48,7 @@ namespace Ensconce.Update.Tests
         public void TearDown()
         {
             Directory.SetCurrentDirectory("..");
-            testLock.ReleaseMutex();
-        }
-
-        #endregion Setup/Teardown
-
-        private Mutex testLock;
-        private const string EnvEnvironment = "LOC";
-        private const string EnvClientCode = "FAA";
-        private const string IsSys = "IsSys";
-        private const string IsSysValue = "SYS";
-        private const string XMLFilename = "structure.xml";
-        private const string QueAppServer = "QueueAppServer";
-        private const string Avalue = "avalue";
-        private const string Idvalue = "idvalue";
-
-        private readonly Lazy<string> xml = new Lazy<string>(() => new StreamReader(File.OpenRead(@"webservice-structure.xml")).ReadToEnd());
-
-        private string XmlData
-        {
-            get { return xml.Value; }
+            singleThreadTest.ReleaseMutex();
         }
 
         [Test]
@@ -700,6 +691,14 @@ namespace Ensconce.Update.Tests
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             Assert.AreEqual("888", "{{ LabelGrouped1.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("888", "{{ LabelGrouped2.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
+        }
+
+        [Test]
+        public void InvalidIfStatement_Throws()
+        {
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            //Environment = LOC
+            Assert.Throws<ArgumentException>(() => "{% if Environment|lower == \"uat\" or if Environment|lower == \"tst\" %}True{% else %}False{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
     }
 }
