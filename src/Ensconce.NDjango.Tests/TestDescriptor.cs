@@ -2,8 +2,6 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -90,18 +88,14 @@ namespace Ensconce.NDjango.Tests
             Vars = vars;
         }
 
-        public string runTemplate(Interfaces.ITemplateManager manager, string templateName, IDictionary<string, object> context)
+        public string RunTemplate(Interfaces.ITemplateManager manager, string templateName, IDictionary<string, object> context)
         {
-            Stopwatch stopwatch = new Stopwatch();
             string retStr = "";
-            stopwatch.Start();
             for (int i = 0; i < 1; i++)
             {
                 var template = manager.RenderTemplate(templateName, context);
                 retStr = template.ReadToEnd();
             }
-            using (TextWriter stream = System.IO.File.AppendText("Timers.txt"))
-                stream.WriteLine(Name + "," + stopwatch.ElapsedTicks);
             return retStr;
         }
 
@@ -161,7 +155,7 @@ namespace Ensconce.NDjango.Tests
             {
                 if (resultGetter != null)
                     Result = resultGetter();
-                Assert.AreEqual(Result[0], runTemplate(manager, Template, context), "** Invalid rendering result");
+                Assert.AreEqual(Result[0], RunTemplate(manager, Template, context), "** Invalid rendering result");
                 //if (Vars.Length != 0)
                 //    Assert.AreEqual(Vars, manager.GetTemplateVariables(Template), "** Invalid variable list");
             }
@@ -171,7 +165,15 @@ namespace Ensconce.NDjango.Tests
                 // or it's the type of the exception the calling code expects.
                 if (resultGetter != null)
                     Result = resultGetter();
-                Assert.AreEqual(Result[0], ex.GetType(), "Exception: " + ex.Message);
+
+                if (Result[0] is Type)
+                {
+                    Assert.AreEqual(Result[0], ex.GetType(), "Exception: " + ex.Message);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 

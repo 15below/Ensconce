@@ -49,6 +49,7 @@
     <Compile Include="NDjango.Custom.Filters\DecryptFilter.cs" />
     <Compile Include="NDjango.Custom.Filters\ContainsFilter.cs" />
     <Compile Include="NDjango.Custom.Filters\EndsWithFilter.cs" />
+    <Compile Include="NDjango.Custom.Filters\Loader.cs" />
     <Compile Include="NDjango.Custom.Filters\StartsWithFilter.cs" />
     <Compile Include="SubTagDictionary.cs" />
     <Compile Include="NDjango.Custom.Filters\ConcatFilter.cs" />

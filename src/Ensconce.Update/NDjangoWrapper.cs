@@ -1,8 +1,4 @@
 ﻿using Ensconce.NDjango.Core;
-using Ensconce.NDjango.Core.Filters.HtmlFilters;
-using Ensconce.NDjango.Core.Filters.List;
-using Ensconce.NDjango.Core.Filters.StringFilters;
-using Ensconce.Update.NDjango.Custom.Filters;
 using System;
 using System.IO;
 using System.Threading;
@@ -17,45 +13,6 @@ namespace Ensconce.Update
         private static readonly Lazy<Interfaces.ITemplateManager> TemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(false));
         private static readonly Lazy<Interfaces.ITemplateManager> XmlTemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(true));
 
-        private static readonly Filter[] Filters =
-        {
-            //Core Filters
-            new Filter("add", new AddFilter()),
-            new Filter("get_digit", new GetDigit()),
-            new Filter("divisibleby", new DivisibleByFilter()),
-            new Filter("addslashes", new AddSlashesFilter()),
-            new Filter("capfirst", new CapFirstFilter()),
-            new Filter("escapejs", new EscapeJSFilter()),
-            new Filter("fix_ampersands", new FixAmpersandsFilter()),
-            new Filter("floatformat", new FloatFormatFilter()),
-            new Filter("linenumbers", new LineNumbersFilter()),
-            new Filter("lower", new LowerFilter()),
-            new Filter("upper", new UpperFilter()),
-            new Filter("make_list", new MakeListFilter()),
-            new Filter("wordcount", new WordCountFilter()),
-            new Filter("ljust", new LJustFilter()),
-            new Filter("rjust", new RJustFilter()),
-            new Filter("center", new CenterFilter()),
-            new Filter("cut", new CutFilter()),
-            new Filter("title", new TitleFilter()),
-            new Filter("removetags", new RemoveTagsFilter()),
-            new Filter("first", new FirstFilter()),
-            new Filter("last", new LastFilter()),
-            new Filter("length", new LengthFilter()),
-            new Filter("length_is", new LengthIsFilter()),
-            new Filter("random", new RandomFilter()),
-            new Filter("slice", new SliceFilter()),
-            //Custom Filters
-            new Filter("concat", new ConcatFilter()),
-            new Filter("default", new NDjango.Custom.Filters.DefaultFilter()), //DO NOT USE STANDARD DEFAULT FILTER
-            new Filter("exists", new ExistsFilter()),
-            new Filter("empty", new EmptyFilter()),
-            new Filter("contains", new ContainsFilter()),
-            new Filter("startsWith", new StartsWithFilter()),
-            new Filter("endsWith", new EndsWithFilter()),
-            new Filter("decrypt", new DecryptFilter())
-        };
-
         private static Interfaces.ITemplateManager GetTemplateManager(bool xmlSafe)
         {
             return new TemplateManagerProvider().WithLoader(new StringLoader())
@@ -63,7 +20,10 @@ namespace Ensconce.Update
                                                 .WithSetting(Constants.DEFAULT_AUTOESCAPE, xmlSafe)
                                                 .WithSetting(Constants.EXCEPTION_IF_ERROR, true)
                                                 .WithSetting(Constants.RELOAD_IF_UPDATED, false)
-                                                .WithFilters(Filters)
+                                                .WithFilters(NDjango.Custom.Filters.Loader.CustomFilters)
+                                                .WithFilters(Ensconce.NDjango.Core.Filters.Loader.StringFilters)
+                                                .WithFilters(Ensconce.NDjango.Core.Filters.Loader.HtmlFilters)
+                                                .WithFilters(Ensconce.NDjango.Core.Filters.Loader.ListFilters)
                                                 .GetNewManager();
         }
 
