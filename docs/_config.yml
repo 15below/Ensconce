@@ -1,0 +1,62 @@
+#Basic Settings
+title: 15below Ensconce
+description: "A .net command line tool for aiding deployment of server components."
+
+# GitHub Settings
+repository: 15below/Ensconce.github.io
+github: [metadata]
+
+#Link Format
+permalink: pretty
+
+#Defaults
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+      image: /images/15below_green.png
+  -
+    scope:
+      path: "cli"
+      type: "pages"
+    values:
+      layout: "sidebar"
+      image: /images/15below_green.png
+  -
+    scope:
+      path: "powershell"
+      type: "pages"
+    values:
+      layout: "sidebar"
+      image: /images/15below_green.png
+  -
+    scope:
+      path: "config"
+      type: "pages"
+    values:
+      layout: "sidebar"
+      image: /images/15below_green.png
+  -
+    scope:
+      path: "substitutions"
+      type: "pages"
+    values:
+      layout: "sidebar"
+      image: /images/15below_green.png
+  -
+    scope:
+      path: "templates"
+      type: "pages"
+    values:
+      layout: "sidebar"
+      image: /images/15below_green.png
+
+#Plugins
+plugins:
+  - jekyll-redirect-from
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-github-metadata

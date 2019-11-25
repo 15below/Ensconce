@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ '/' | relative_url }}favicon.ico">
+    <link href="{{ '/' | relative_url }}feed.xml" rel="alternate" title="{{site.title}}" type="application/atom+xml">
+    <link href="{{ '/' | relative_url }}css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    {% seo %}
+</head>
+<body>
+    <div class="container-fluid full-height">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="{{ '/' | relative_url }}">
+                <img src="{{ '/' | relative_url }}images/15below_green.png" width="30" height="30"
+                    class="d-inline-block align-top" alt="">
+                Ensconce</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    {% assign sortedPages = site.pages | sort_natural: "url" %}
+                    {% for node in sortedPages %}
+                    {% assign node_url_parts = node.url | split: '/' %}
+                    {% assign node_url_parts_size = node_url_parts | size%}
+                    {% if node_url_parts_size == 2 and node.hideNav != true and node.title %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ node.url | relative_url }}">{{ node.title }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </nav>
+        <div class="content full-height">
+            {{ content }}
+        </div>
+        <nav class="navbar navbar-expand navbar-dark bg-dark fixed-bottom">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/15below/Ensconce/edit/master/docs/{{ page.path }}"
+                        target="_blank">Edit Page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/15below/Ensconce" target="_blank">View On GitHub</a>
+                </li>
+            </ul>
+            <span class="navbar-text ml-auto">
+                &copy; 15below
+            </span>
+        </nav>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
