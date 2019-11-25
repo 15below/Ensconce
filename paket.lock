@@ -1,4 +1,5 @@
 REDIRECTS: FORCE
+STRATEGY: MIN
 RESTRICTION: == net471
 NUGET
   remote: https://www.nuget.org/api/v2
@@ -17,14 +18,14 @@ NUGET
     FSharp.Core (4.7)
     Iesi.Collections (4.0.4)
     log4net (2.0.8)
-    Microsoft.Build.Framework (16.3)
+    Microsoft.Build.Framework (16.0.461)
       System.Runtime.Serialization.Primitives (>= 4.1.1)
       System.Threading.Thread (>= 4.0)
     Microsoft.Win32.Registry (4.6)
       System.Security.AccessControl (>= 4.6)
       System.Security.Principal.Windows (>= 4.6)
-    Newtonsoft.Json (12.0.3)
-    NHibernate (5.2.6)
+    Newtonsoft.Json (12.0.2)
+    NHibernate (5.2.5)
       Antlr3.Runtime (>= 3.5.1 < 4.0)
       Iesi.Collections (>= 4.0.4 < 5.0)
       Remotion.Linq (>= 2.2 < 3.0)
@@ -45,7 +46,7 @@ NUGET
     NUnit.Extension.TeamCityEventListener (1.0.7)
     NUnit.Extension.VSProjectLoader (3.8)
     OctoPack (3.6.4)
-    Polly (7.1.1)
+    Polly (7.1)
     Remotion.Linq (2.2)
     Remotion.Linq.EagerFetching (2.2)
       Remotion.Linq (>= 2.2)
@@ -67,13 +68,13 @@ NUGET
       System.Data.SqlClient (>= 4.6.1)
     System.Data.Common (4.3)
     System.Data.SqlClient (4.7)
-    System.Drawing.Common (4.6.1)
+    System.Drawing.Common (4.6)
     System.Management (4.6)
-    System.Runtime.Serialization.Primitives (4.3)
+    System.Runtime.Serialization.Primitives (4.1.1)
     System.Security.AccessControl (4.6)
       System.Security.Principal.Windows (>= 4.6)
     System.Security.Principal.Windows (4.6)
-    System.Threading.Thread (4.3)
+    System.Threading.Thread (4.0)
     System.ValueTuple (4.5)
     TextCopy (1.7.1)
 GITHUB

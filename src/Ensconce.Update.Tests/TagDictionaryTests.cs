@@ -41,7 +41,7 @@ namespace Ensconce.Update.Tests
             testLock.ReleaseMutex();
         }
 
-        #endregion
+        #endregion Setup/Teardown
 
         private Mutex testLock;
         private const string EnvEnvironment = "LOC";

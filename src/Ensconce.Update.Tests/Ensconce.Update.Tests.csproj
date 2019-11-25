@@ -391,4 +391,5 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Import Project="..\..\packages\ApprovalTests\build\ApprovalTests.targets" Condition="Exists('..\..\packages\ApprovalTests\build\ApprovalTests.targets')" Label="Paket" />
 </Project>
