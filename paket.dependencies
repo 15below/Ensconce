@@ -1,6 +1,6 @@
 source https://nuget.org/api/v2/
 framework: auto-detect
-redirects: force
+redirects: on
 strategy: min
 
 nuget ApprovalTests
