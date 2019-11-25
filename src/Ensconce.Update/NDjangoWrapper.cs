@@ -1,10 +1,11 @@
-﻿using System;
-using System.IO;
-using Ensconce.NDjango.Core;
+﻿using Ensconce.NDjango.Core;
 using Ensconce.NDjango.Core.Filters.HtmlFilters;
 using Ensconce.NDjango.Core.Filters.List;
 using Ensconce.NDjango.Core.Filters.StringFilters;
 using Ensconce.Update.NDjango.Custom.Filters;
+using System;
+using System.IO;
+using System.Threading;
 
 namespace Ensconce.Update
 {
@@ -12,8 +13,10 @@ namespace Ensconce.Update
     {
         private const string StringProvider = "ensconceString://";
         private static readonly ErrorTemplate Error = new ErrorTemplate();
+        private static readonly Mutex ErrorMutex = new Mutex(false, "EnsconceError");
         private static readonly Lazy<Interfaces.ITemplateManager> TemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(false));
         private static readonly Lazy<Interfaces.ITemplateManager> XmlTemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(true));
+
         private static readonly Filter[] Filters =
         {
             //Core Filters
@@ -66,53 +69,66 @@ namespace Ensconce.Update
 
         public static string RenderTemplate(this string template, Lazy<TagDictionary> values)
         {
-            return Render(template, values, TemplateManager.Value);
+            try
+            {
+                ErrorMutex.WaitOne();
+                return Render(template, values, TemplateManager.Value);
+            }
+            finally
+            {
+                ErrorMutex.ReleaseMutex();
+            }
         }
 
         public static string RenderXmlTemplate(this string template, Lazy<TagDictionary> values)
         {
-            return Render(template, values, XmlTemplateManager.Value);
+            try
+            {
+                ErrorMutex.WaitOne();
+                return Render(template, values, XmlTemplateManager.Value);
+            }
+            finally
+            {
+                ErrorMutex.ReleaseMutex();
+            }
         }
 
         private static string Render(string template, Lazy<TagDictionary> values, Interfaces.ITemplateManager templateManager)
         {
-            lock (Error)
+            if (!template.Contains("{{") && !template.Contains("{%"))
             {
-                if (!template.Contains("{{") && !template.Contains("{%"))
-                {
-                    //Use an empty tag dictionary because we don't have tags
-                    //For some reason, this "fixes" something in files...but i have no idea what!
-                    values = new Lazy<TagDictionary>(TagDictionary.Empty);
-                }
-
-                Exception exception = null;
-                string replacementValue;
-
-                try
-                {
-                    Error.Invoked = false;
-                    replacementValue = templateManager.RenderTemplate(StringProvider + template, values.Value).ReadToEnd();
-                }
-                catch (Exception ex)
-                {
-                    exception = ex;
-                    replacementValue = string.Empty;
-                    Error.Invoked = true;
-                }
-
-                if (Error.Invoked)
-                {
-                    if (string.IsNullOrWhiteSpace(replacementValue) || !replacementValue.Contains(Error.ToString()))
-                    {
-                        throw new ArgumentException($"Tag substitution errored on template string:\n{template}", exception);
-                    }
-
-                    var attemptedRender = replacementValue.Replace(Error.ToString(), "[ERROR OCCURRED HERE]");
-                    throw new ArgumentException($"Tag substitution failed on template string:\n{template}\n\nAttempted rendering was:\n{attemptedRender}", exception);
-                }
-
-                return replacementValue;
+                //Use an empty tag dictionary because we don't have tags
+                //For some reason, this "fixes" something in files...but i have no idea what!
+                values = new Lazy<TagDictionary>(TagDictionary.Empty);
             }
+
+            Exception exception = null;
+            string replacementValue;
+
+            try
+            {
+                Error.Invoked = false;
+                replacementValue = templateManager.RenderTemplate(StringProvider + template, values.Value).ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                replacementValue = string.Empty;
+                Error.Invoked = true;
+            }
+
+            if (Error.Invoked)
+            {
+                if (string.IsNullOrWhiteSpace(replacementValue) || !replacementValue.Contains(Error.ToString()))
+                {
+                    throw new ArgumentException($"Tag substitution errored on template string:\n{template}", exception);
+                }
+
+                var attemptedRender = replacementValue.Replace(Error.ToString(), "[ERROR OCCURRED HERE]");
+                throw new ArgumentException($"Tag substitution failed on template string:\n{template}\n\nAttempted rendering was:\n{attemptedRender}", exception);
+            }
+
+            return replacementValue;
         }
 
         public class StringLoader : Interfaces.ITemplateLoader
