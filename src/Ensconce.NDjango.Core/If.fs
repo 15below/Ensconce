@@ -184,23 +184,17 @@ module internal If =
 
                     | _ -> raise (SyntaxError ("invalid conditional expression in 'if' tag"))
 
-                let rec build_mult parser tokens =
+                let rec build_expression parser tokens =
                     let left, tail = build_term parser tokens
                     match tail with
                     | Lexer.MatchToken("and")::tail ->
-                        let right, tail = build_mult parser tail
-                        AndNode(left, right) :> Node,
-                        tail
-                    | _ ->
-                        left, tail
-
-                let rec build_expression parser tokens =
-                    let left, tail = build_mult parser tokens
-                    match tail with
+                        let right, tail = build_expression parser tail
+                        AndNode(left, right) :> Node, tail
                     | Lexer.MatchToken("or")::tail ->
                         let right, tail = build_expression parser tail
-                        OrNode(left, right) :> Node,
-                        tail
+                        OrNode(left, right) :> Node, tail
+                    | (x:Lexer.TextToken)::_->
+                        raise (SyntaxError (sprintf "invalid statement join expression in 'if' tag, expected 'and' or 'or' but got '%s'" x.Value))
                     | _ ->
                         left, tail
 
