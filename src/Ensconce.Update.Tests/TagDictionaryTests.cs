@@ -700,5 +700,13 @@ namespace Ensconce.Update.Tests
             //Environment = LOC
             Assert.Throws<ArgumentException>(() => "{% if Environment|lower == \"uat\" or if Environment|lower == \"tst\" %}True{% else %}False{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
+
+        [Test]
+        public void InvalidIfInStatement_Throws()
+        {
+            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            //Environment = LOC
+            Assert.Throws<ArgumentException>(() => "{% if Environment|lower in (\"uat\",\"tst\") %}True{% else %}False{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+        }
     }
 }
