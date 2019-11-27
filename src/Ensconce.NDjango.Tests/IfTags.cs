@@ -23,6 +23,7 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("if-tag < 03", "{% if foo < bar %}yes{% else %}no{% endif %}", ContextObjects.p("foo", 2, "bar", 1), ContextObjects.p("no")));
             lst.Add(new TestDescriptor("if-tag < 04", "{% if foo > bar %}yes{% else %}no{% endif %}", ContextObjects.p("foo", 1, "bar", 2), ContextObjects.p("no")));
             lst.Add(new TestDescriptor("if-tag < 05", "{% if foo == bar %}yes{%else %}no{% endif %}", ContextObjects.p("foo", 1, "bar", 2), ContextObjects.p("no")));
+            lst.Add(new TestDescriptor("if-tag < 06", "{% if foo = bar %}yes{%else %}no{% endif %}", ContextObjects.p("foo", 1, "bar", 2), ContextObjects.p("no")));
 
             // AND and OR raised a TemplateSyntaxError in django 1.1 but we can use OR and AND in one expression since django 1.2
             lst.Add(new TestDescriptor("if-tag-orand", "{% if foo or bar and baz %}yes{% else %}no{% endif %}", ContextObjects.p("foo", false, "bar", false), ContextObjects.p("no")));

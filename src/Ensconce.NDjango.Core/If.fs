@@ -156,7 +156,8 @@ module internal If =
                         ) |> nodeBuilder :> Node
 
                     match tokens with
-                    | left::Lexer.MatchToken("==")::right::tail ->
+                    | left::Lexer.MatchToken("==")::right::tail
+                    | left::Lexer.MatchToken("=")::right::tail ->
                         Comparer(parser, left, right, (=)), tail
 
                     | left::Lexer.MatchToken("!=")::right::tail ->
