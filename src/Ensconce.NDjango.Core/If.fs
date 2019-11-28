@@ -87,7 +87,6 @@ module internal If =
                     | :? System.Boolean as b -> b                                             // boolean value, take literal
                     | :? System.Collections.IEnumerable as e -> e.GetEnumerator().MoveNext()  // some sort of collection, take if empty
                     | null -> false                                                           // null evaluates to false
-                    | v when v.ToString() = Constants.TEMPLATE_STRING_IF_INVALID -> false     // resolution is a string which is the error string
                     | _ -> false                                                              // anything else. true because it's there
             )
 
