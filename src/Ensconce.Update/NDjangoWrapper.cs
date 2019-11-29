@@ -10,6 +10,7 @@ namespace Ensconce.Update
         private static readonly ErrorTemplate Error = new ErrorTemplate();
         private static readonly Lazy<Interfaces.ITemplateManager> TemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(false));
         private static readonly Lazy<Interfaces.ITemplateManager> XmlTemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(true));
+        private static readonly object Locker = new object();
 
         private static Interfaces.ITemplateManager GetTemplateManager(bool xmlSafe)
         {
@@ -27,19 +28,17 @@ namespace Ensconce.Update
 
         public static string RenderTemplate(this string template, Lazy<TagDictionary> values)
         {
-            return RenderLocked(template, values, TemplateManager.Value);
+            lock (Locker)
+            {
+                return Render(template, values, TemplateManager.Value);
+            }
         }
 
         public static string RenderXmlTemplate(this string template, Lazy<TagDictionary> values)
         {
-            return RenderLocked(template, values, XmlTemplateManager.Value);
-        }
-
-        private static string RenderLocked(string template, Lazy<TagDictionary> values, Interfaces.ITemplateManager templateManager)
-        {
-            lock (Error)
+            lock (Locker)
             {
-                return Render(template, values, templateManager);
+                return Render(template, values, XmlTemplateManager.Value);
             }
         }
 
