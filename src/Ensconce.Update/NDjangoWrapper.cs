@@ -1,7 +1,6 @@
 ﻿using Ensconce.NDjango.Core;
 using System;
 using System.IO;
-using System.Threading;
 
 namespace Ensconce.Update
 {
@@ -9,7 +8,6 @@ namespace Ensconce.Update
     {
         private const string StringProvider = "ensconceString://";
         private static readonly ErrorTemplate Error = new ErrorTemplate();
-        private static readonly Mutex ErrorMutex = new Mutex(false, "EnsconceError");
         private static readonly Lazy<Interfaces.ITemplateManager> TemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(false));
         private static readonly Lazy<Interfaces.ITemplateManager> XmlTemplateManager = new Lazy<Interfaces.ITemplateManager>(() => GetTemplateManager(true));
 
@@ -29,27 +27,19 @@ namespace Ensconce.Update
 
         public static string RenderTemplate(this string template, Lazy<TagDictionary> values)
         {
-            try
-            {
-                ErrorMutex.WaitOne();
-                return Render(template, values, TemplateManager.Value);
-            }
-            finally
-            {
-                ErrorMutex.ReleaseMutex();
-            }
+            return RenderLocked(template, values, TemplateManager.Value);
         }
 
         public static string RenderXmlTemplate(this string template, Lazy<TagDictionary> values)
         {
-            try
+            return RenderLocked(template, values, XmlTemplateManager.Value);
+        }
+
+        private static string RenderLocked(string template, Lazy<TagDictionary> values, Interfaces.ITemplateManager templateManager)
+        {
+            lock (Error)
             {
-                ErrorMutex.WaitOne();
-                return Render(template, values, XmlTemplateManager.Value);
-            }
-            finally
-            {
-                ErrorMutex.ReleaseMutex();
+                return Render(template, values, templateManager);
             }
         }
 
