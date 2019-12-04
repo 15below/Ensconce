@@ -13,21 +13,20 @@ Function ExtractZip([string]$sourceFile, [string]$destinationFolder)
 }
 
 Function Get7zip() {
-  if ((Test-Path 'C:\Program Files\7-zip\7z.exe') -eq $true) {
-    return ('C:\"Program Files"\7-zip\7z.exe')
-  }
-  elseif ((Test-Path 'C:\Program Files (x86)\7-zip\7z.exe') -eq $true) {
-    return ('C:\"Program Files (x86)"\7-zip\7z.exe')
-  }
+	if ((Test-Path 'C:\Program Files\7-zip\7z.exe') -eq $true) {
+		return ('C:\"Program Files"\7-zip\7z.exe')
+	}
+	elseif ((Test-Path 'C:\Program Files (x86)\7-zip\7z.exe') -eq $true) {
+		return ('C:\"Program Files (x86)"\7-zip\7z.exe')
+	}
+	else{
+		throw 'Could not find 7-zip location'
+	}
 }
 
 Function Create7z([string]$sourcePath, [string]$destinationFile)
 {
 	$7Zip = Get7zip
-	if ($7Zip -eq $null) {
-		throw 'Could not find 7-zip location'
-	}
-
 	Write-Host "Compressing '$sourcePath' into '$destinationFile'"
 	Invoke-Expression ("$7Zip a $destinationFile $sourcePath")
 }
@@ -35,10 +34,6 @@ Function Create7z([string]$sourcePath, [string]$destinationFile)
 Function Extract7z([string]$sourceFile, [string]$destinationFolder)
 {
 	$7Zip = Get7zip
-	if ($7Zip -eq $null) {
-		throw 'Could not find 7-zip location'
-	}
-
 	Write-Host "Extracting '$sourceFile' into '$destinationFolder'"
 	Invoke-Expression ("$7Zip x $sourceFile -y -o$destinationFolder")
 }
