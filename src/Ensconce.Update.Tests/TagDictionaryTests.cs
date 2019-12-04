@@ -279,7 +279,7 @@ namespace Ensconce.Update.Tests
         public void UseAnInvalidProperty_Throws()
         {
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{{ NotARealProperty }}".RenderTemplate(sut.ToLazyTagDictionary()));
+            var error = Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{{ NotARealProperty }}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution failed on template string:\n{{ NotARealProperty }}\n\nAttempted rendering was:\n[ERROR OCCURRED HERE]", error.Message);
         }
 
@@ -287,7 +287,7 @@ namespace Ensconce.Update.Tests
         public void ForLoopAccessGlobalPropertyFromInstance_Throws()
         {
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            var error = Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution failed on template string:\n{% for instance in GDS %}{{ instance.DbUser }}{% endfor %}\n\nAttempted rendering was:\n[ERROR OCCURRED HERE][ERROR OCCURRED HERE]", error.Message);
         }
 
@@ -295,7 +295,7 @@ namespace Ensconce.Update.Tests
         public void ForLoopAccessGlobalPropertyFromInstanceInIf_Throws()
         {
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            var error = Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% if instance.DbUser == \"true\" %}TextHere{% endif %}{% endfor %}", error.Message);
             Assert.AreEqual("Object must be of type String.", error.InnerException.Message);
         }
@@ -304,7 +304,7 @@ namespace Ensconce.Update.Tests
         public void ForLoopAccessGlobalPropertyFromInstanceInIfEqual_Throws()
         {
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            var error = Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% ifequal instance.DbUser \"true\" %}TextHere{% endifequal %}{% endfor %}", error.Message);
         }
 
@@ -312,7 +312,7 @@ namespace Ensconce.Update.Tests
         public void ForLoopAccessGlobalPropertyFromInstanceInIfNotEqual_Throws()
         {
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            var error = Assert.Throws<ArgumentException>(() => "{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            var error = Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("Tag substitution errored on template string:\n{% for instance in GDS %}{% ifnotequal instance.DbUser \"true\" %}TextHere{% endifnotequal %}{% endfor %}", error.Message);
         }
 
@@ -439,7 +439,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Data|contains:'' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% if Data|contains:'' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -455,7 +455,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Undata|contains:'al' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% if Undata|contains:'al' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -507,7 +507,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Data|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% if Data|startsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -523,7 +523,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -575,7 +575,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Data|endsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% if Data|endsWith:'' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -591,7 +591,7 @@ namespace Ensconce.Update.Tests
                                                       <DbLogins />
                                                   </Structure>");
 
-            Assert.Throws<ArgumentException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% if Undata|startsWith:'V' %}true{% else %}false{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -667,7 +667,7 @@ namespace Ensconce.Update.Tests
             Assert.AreEqual("ABC123", "{{ Label1.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("ABC123", "{{ Label2.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
             Assert.AreEqual("321CBA", "{{ Label1.1.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
-            Assert.Throws<ArgumentException>(() => "{{ Label2.1.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{{ Label2.1.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -698,7 +698,7 @@ namespace Ensconce.Update.Tests
         {
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             //Environment = LOC
-            Assert.Throws<ArgumentException>(() => "{% if Environment|lower == \"uat\" or if Environment|lower == \"tst\" %}True{% else %}False{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% if Environment|lower == \"uat\" or if Environment|lower == \"tst\" %}True{% else %}False{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
@@ -706,7 +706,7 @@ namespace Ensconce.Update.Tests
         {
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             //Environment = LOC
-            Assert.Throws<ArgumentException>(() => "{% if Environment|lower in (\"uat\",\"tst\") %}True{% else %}False{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% if Environment|lower in (\"uat\",\"tst\") %}True{% else %}False{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
     }
 }

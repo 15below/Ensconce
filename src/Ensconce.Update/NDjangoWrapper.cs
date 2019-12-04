@@ -70,11 +70,11 @@ namespace Ensconce.Update
             {
                 if (string.IsNullOrWhiteSpace(replacementValue) || !replacementValue.Contains(Error.ToString()))
                 {
-                    throw new ArgumentException($"Tag substitution errored on template string:\n{template}", exception);
+                    throw new NDjangoWrapperException($"Tag substitution errored on template string:\n{template}", exception);
                 }
 
                 var attemptedRender = replacementValue.Replace(Error.ToString(), "[ERROR OCCURRED HERE]");
-                throw new ArgumentException($"Tag substitution failed on template string:\n{template}\n\nAttempted rendering was:\n{attemptedRender}", exception);
+                throw new NDjangoWrapperException($"Tag substitution failed on template string:\n{template}\n\nAttempted rendering was:\n{attemptedRender}", exception);
             }
 
             return replacementValue;
@@ -121,6 +121,13 @@ namespace Ensconce.Update
             {
                 Invoked = true;
                 return -1;
+            }
+        }
+
+        public class NDjangoWrapperException : Exception
+        {
+            public NDjangoWrapperException(string message, Exception innerException) : base(message, innerException)
+            {
             }
         }
     }

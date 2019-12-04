@@ -115,13 +115,13 @@ namespace Ensconce.Update.Tests
         [Test]
         public void ThrowNewMissingArgExceptionIfNoTagValue()
         {
-            Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
         }
 
         [Test]
         public void DoNotCreatePartialOutputFileIfExceptionDuringProcessWhenIndicated()
         {
-            Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
             var fileName = @"TestUpdateFiles\TestConfig1.xml_partial";
 
             Assert.False(File.Exists(fileName));
@@ -130,7 +130,7 @@ namespace Ensconce.Update.Tests
         [Test]
         public void CreatePartialOutputFileIfExceptionDuringProcessWhenIndicated()
         {
-            Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml", outputFailureContext: true));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml", outputFailureContext: true));
 
             var fileName = @"TestUpdateFiles\TestConfig1.xml_partial";
 
@@ -338,7 +338,7 @@ namespace Ensconce.Update.Tests
         [Test]
         public void UpdateAllWhenError_SingleError_ThrowsArgumentException()
         {
-            Assert.Throws<ArgumentException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution32.xml", new Lazy<TagDictionary>(), false));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution32.xml", new Lazy<TagDictionary>(), false));
         }
 
         [Test]
