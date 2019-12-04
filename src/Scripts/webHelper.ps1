@@ -33,4 +33,10 @@ Function UploadValuesAndGetStringResponse([string]$url, [System.Collections.Spec
 	$response
 }
 
+Function DownloadFile([string]$url, [string]$destinationPath)
+{
+	Write-Host "Downloading $url to $destinationPath"
+	Invoke-WebRequest -Uri $url -OutFile $destinationPath
+}
+
 Write-Host "Ensconce - WebHelper Loaded"
