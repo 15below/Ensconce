@@ -3,7 +3,13 @@ Write-Host "Ensconce - CompressionHelper Loading"
 Function CreateZip([string]$sourcePath, [string]$destinationFile)
 {
 	Write-Host "Compressing '$sourcePath' into '$destinationFile'"
-	Compress-Archive -Path $sourcePath -DestinationPath $destinationFile
+	Compress-Archive -Path $sourcePath -DestinationPath $destinationFile -Force
+}
+
+Function ExtractZip([string]$sourceFile, [string]$destinationFolder)
+{
+	Write-Host "Extracting '$sourceFile' into '$destinationFolder'"
+	Expand-Archive -Path $sourceFile -DestinationPath $destinationFolder -Force
 }
 
 Function Get7zip() {
@@ -15,6 +21,17 @@ Function Get7zip() {
   }
 }
 
+Function Create7z([string]$sourcePath, [string]$destinationFile)
+{
+	$7Zip = Get7zip
+	if ($7Zip -eq $null) {
+		throw 'Could not find 7-zip location'
+	}
+
+	Write-Host "Compressing '$sourcePath' into '$destinationFile'"
+	Invoke-Expression ("$7Zip a $destinationFile $sourcePath")
+}
+
 Function Extract7z([string]$sourceFile, [string]$destinationFolder)
 {
 	$7Zip = Get7zip
@@ -23,7 +40,6 @@ Function Extract7z([string]$sourceFile, [string]$destinationFolder)
 	}
 
 	Write-Host "Extracting '$sourceFile' into '$destinationFolder'"
-
 	Invoke-Expression ("$7Zip x $sourceFile -y -o$destinationFolder")
 }
 
