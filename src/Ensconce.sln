@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{293126C5-4E8E-4167-993B-C91607B73228}"
 	ProjectSection(SolutionItems) = preProject
@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8354CDF3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{3ABEA4FE-D441-4705-AB6F-FD72130A5334}"
 	ProjectSection(SolutionItems) = preProject
+		Scripts\backupHelper.ps1 = Scripts\backupHelper.ps1
+		Scripts\compressionHelper.ps1 = Scripts\compressionHelper.ps1
 		Scripts\createiis6app.ps1 = Scripts\createiis6app.ps1
 		Scripts\createiis7app.ps1 = Scripts\createiis7app.ps1
 		Scripts\createWebSite.ps1 = Scripts\createWebSite.ps1
@@ -36,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{3ABE
 		Scripts\dnsHelper.ps1 = Scripts\dnsHelper.ps1
 		Scripts\serviceManagement.ps1 = Scripts\serviceManagement.ps1
 		Scripts\userManagement.ps1 = Scripts\userManagement.ps1
+		Scripts\webHelper.ps1 = Scripts\webHelper.ps1
 	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ensconce.NDjango.Core", "Ensconce.NDjango.Core\Ensconce.NDjango.Core.fsproj", "{771C5998-6E25-4DC2-9ECF-D40DA78C4C78}"
