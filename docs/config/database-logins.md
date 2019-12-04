@@ -13,7 +13,7 @@ It's also possible to specify an entire database connection string.
 
 If no connection string is populated, you should have a general property called `DbServer`.
 
-The connection string will become `Data Source={{ DbServer }}; Initial Catalog={{ DefaultDb }}; User ID={{ Name }}; Password={{ Password }};`
+The connection string will become `Data Source=[ DbServer ]; Initial Catalog=[ DefaultDb ]; User ID=[ Name ]; Password=[ Password ];`
 
 ## Example
 
