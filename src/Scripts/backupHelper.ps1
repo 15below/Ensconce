@@ -40,7 +40,7 @@ Function CreateDatedBackup([string]$destFolder, [string]$baseName, [string[]]$so
 
 Function Create7DayRollingDatedBackup([string]$destFolder, [string]$baseName, [string[]]$sources)
 {
-	CleanBackupsWithDate $destFolder 7
+	CleanBackups $destFolder 7
 	CreateDatedBackup $destFolder $baseName $sources
 }
 
