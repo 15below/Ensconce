@@ -39,3 +39,4 @@ Function Extract7z([string]$sourceFile, [string]$destinationFolder)
 }
 
 Write-Host "Ensconce - CompressionHelper Loaded"
+$compressionHelperLoaded = $true

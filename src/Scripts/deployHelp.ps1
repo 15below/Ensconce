@@ -58,4 +58,5 @@ function CreateDesktopShortcut($exePath, $shortcutName)
 	$Shortcut.Save()
 }
 
-Write-Host "Ensconce - DeployHelp Loaded"
+Write-Host "Ensconce - DeployHelp Loaded"Write-Host "Ensconce - DeployHelp Loaded"
+$deployHelpLoaded = $true

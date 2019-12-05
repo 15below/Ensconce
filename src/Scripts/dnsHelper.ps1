@@ -99,3 +99,4 @@ function AddHostsEntry ([string]$Address, [string]$FullyQualifiedName)
 }
 
 Write-Host "Ensconce - dnsHelper Loaded"
+$dnsHelperLoaded = $true

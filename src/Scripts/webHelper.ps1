@@ -57,3 +57,4 @@ Function DownloadString([string]$url)
 }
 
 Write-Host "Ensconce - WebHelper Loaded"
+$webHelperLoaded = $true

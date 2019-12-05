@@ -25,3 +25,4 @@ else
 }
 
 Write-Host "Ensconce - CreateWebsite Loaded"
+$createWebSiteLoaded = $true

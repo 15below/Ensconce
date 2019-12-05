@@ -82,3 +82,4 @@ Function InstallTopshelfServiceWithInstance([string]$serviceName, [string]$exePa
 }
 
 Write-Host "Ensconce - ServiceManagement Loaded"
+$serviceManagementLoaded = $true

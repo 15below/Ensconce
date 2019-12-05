@@ -12,3 +12,4 @@ Function CleanBackups([string]$backupDir, [int]$daysToKeep)
 }
 
 Write-Host "Ensconce - BackupHelper Loaded"
+$backupHelperLoaded = $true

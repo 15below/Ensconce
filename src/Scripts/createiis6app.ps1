@@ -26,7 +26,7 @@ function CheckIfWebApplicationExists ([string]$webSite, [string]$appName)
 	$tempApp = (gwmi -namespace "root\MicrosoftIISv2" -class "IISWebDirectory" | where {$_.name -like "$tempWebSite/*$appName" })
 	if ($tempApp -ne $NULL)
 	{
-    $tempApp.AppGetStatus().returnvalue -ne 2
+	$tempApp.AppGetStatus().returnvalue -ne 2
 	}
 	else
 	{ $False }
@@ -50,7 +50,6 @@ function CreateAppPool ([string]$name)
 	"    Creating ISS app pool for " + $name
 	$tempPool = gwmi -namespace "root\MicrosoftIISv2" -class "IISApplicationPoolSetting" -filter "Name like '%$name%'"
 	if (($tempPool -eq $NULL)) {
-
 		# create Application Pool
 		$appPoolSettings = [wmiclass] "root\MicrosoftIISv2:IISApplicationPoolSetting"
 		$newPool = $appPoolSettings.CreateInstance()
@@ -153,7 +152,6 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 	"    Creating IIS website for " + $name
 	$tempWebsite  = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '%$name%'"
 	if (($tempWebsite -eq $NULL)) {
-
 		$iisWebService  = gwmi -namespace "root\MicrosoftIISv2" -class "IIsWebService"
 
 		$bindingClass = [wmiclass]'root\MicrosoftIISv2:ServerBinding'
@@ -210,15 +208,15 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 			else {
 				"Adding additional host-header binding of: $hostHeader, port: $port" | Write-Host
 				"Ignoring protocol of: '$protocol' - IIS6 does not have this concept "| Write-Host
-				$site.ServerBindings.Insert($site.ServerBindings.Count, ":$port:$hostHeader")
+				$site.ServerBindings.Insert($site.ServerBindings.Count, ":$port`:$hostHeader")
 			}
 		}
-		else {
+		else
+		{
 			"Http host header already exists - no need to add" | Write-Host
 		}
 	}
 }
-
 
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir ,[string]$subFolders)
 {
@@ -227,7 +225,6 @@ function CreateWebApplication([string]$webSite, [string]$appName, [string] $appP
 
 	if ($subFolders -eq $null -or $subFolders -eq "" )
 	{
-
 		$dirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebDirectory"
 		$newDir = $dirSettings.CreateInstance()
 		$newDir.Name = ($webServerSettings.Name + '/ROOT/' + $appName)
@@ -253,7 +250,7 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
   $virtualDirSettings = [wmiclass] "root\MicrosoftIISv2:IIsWebVirtualDirSetting"
   $virtualDirName = $virtualDir
   if ($virtualDirName.StartsWith("\")) {
-    $virtualDirName = $VirtualDirName.substring(1)
+	$virtualDirName = $VirtualDirName.substring(1)
   }
   $newVDir = $virtualDirSettings.CreateInstance()
   $newVDir.Name = ($webServerSettings.Name + '/ROOT/' + $virtualDirName)
@@ -274,7 +271,6 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 		$websitePort = "/P:443"
 		$addToTrusted = "/T"
 		$quietMode = "/Q"
-
 
 		$webServerSetting = gwmi -namespace "root\MicrosoftIISv2" -class "IISWebServerSetting" -filter "ServerComment like '$websiteName'"
 		$websiteId ="/S:" + $webServerSetting.name.substring($webServerSetting.name.lastindexof('/')+1)
@@ -373,3 +369,4 @@ function SetManagedRuntimeToNoManagedCode([string] $appPoolName, [string] $runti
 }
 
 Write-Host "Ensconce - CreateIIS6App Loaded"
+$createIIS6AppLoaded = $true
