@@ -17,23 +17,41 @@ if(!(Test-Path "env:\ConfigOnly"))
     Set-Content "env:\ConfigOnly" $false
 }
 
-function ensconce
+function ensconceWithArgs($passedArgs)
 {
     if (@($input).Count -ne 0)
     {
         $input.Reset()
-        $results = $input | & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $args
+        $results = $input | & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $passedArgs
     }
-    else {
-        $results = & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $args
+    else
+	{
+        $results = & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $passedArgs
     }
+
     if ($LASTEXITCODE -ne 0)
     {
         Write-Host "Ensconce failure"
         $results
         exit $LASTEXITCODE
     }
-    $results
+    else
+    {
+        $results
+    }
+}
+
+function ensconce
+{
+    if (@($input).Count -ne 0)
+    {
+        $input.Reset()
+        $input | ensconceWithArgs $args
+    }
+    else
+	{
+        ensconceWithArgs $args
+    }
 }
 
 function EnsurePath([string]$name)
@@ -58,5 +76,5 @@ function CreateDesktopShortcut($exePath, $shortcutName)
 	$Shortcut.Save()
 }
 
-Write-Host "Ensconce - DeployHelp Loaded"Write-Host "Ensconce - DeployHelp Loaded"
+Write-Host "Ensconce - DeployHelp Loaded"
 $deployHelpLoaded = $true
