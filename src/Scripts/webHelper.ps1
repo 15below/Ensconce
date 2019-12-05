@@ -1,3 +1,9 @@
+if($compressionHelperLoaded -eq $null)
+{
+	$currentPath = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+	. $currentPath\compressionHelper.ps1
+}
+
 Write-Host "Ensconce - WebHelper Loading"
 
 Function UploadFileAndGetStringResponse([string]$url, [string]$file)
@@ -15,10 +21,9 @@ Function UploadFolderAsZipAndGetStringResponse([string]$url, [string]$sourcePath
 {
 	$file = "Temp.zip"
 
-	Write-Host "Compressing '$sourcePath' into '$file'"
-	Compress-Archive -Path $sourcePath -DestinationPath $file
+	CreateZip $sourcePath $file
 
-	UploadFileAndGetStringResponse($url, $file)
+	UploadFileAndGetStringResponse $url $file
 }
 
 Function UploadValuesAndGetStringResponse([string]$url, [System.Collections.Specialized.NameValueCollection]$values)
