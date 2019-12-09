@@ -79,7 +79,7 @@ Function DownloadStringUntilOK([string]$url, [int] $maxChecks, [int] $sleepSecon
 		{
 			throw "Got '$responseText' from API on attempt $checkedTimes, this indicates a failure"
 		}
-		elseif($okText.Contains($runStatus))
+		elseif($okText.Contains($responseText))
 		{
 			Write-Host "Got '$responseText' from API on attempt $checkedTimes, this indicates a success"
 			break
