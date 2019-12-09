@@ -19,8 +19,9 @@ Function UploadFileAndGetStringResponse([string]$url, [string]$file)
 
 Function UploadFolderAsZipAndGetStringResponse([string]$url, [string]$sourcePath)
 {
-	$file = "Temp.zip"
-
+	$basePath = Get-Location
+	$file = "$basePath\Temp.zip"
+		
 	CreateZip $sourcePath $file
 
 	UploadFileAndGetStringResponse $url $file
