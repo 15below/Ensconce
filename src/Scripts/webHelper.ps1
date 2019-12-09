@@ -62,5 +62,40 @@ Function DownloadString([string]$url)
 	$response
 }
 
+Function DownloadStringUntilOK([string]$url, [int] $maxChecks, [int] $sleepSeconds, [String[]] $okText, [String[]] $failText)
+{
+	$responseText = ""
+	$checkedTimes = 0
+	$webClient = New-Object System.Net.WebClient
+	$webClient.UseDefaultCredentials = $true
+
+	while($checkedTimes -lt $maxChecks)
+	{
+		$checkedTimes++
+		Write-Host "Downloading $url on attempt $checkedTimes"
+		$responseText = $webClient.DownloadString($url)
+
+		if($failText.Contains($responseText))
+		{
+			throw "Got '$responseText' from API on attempt $checkedTimes, this indicates a failure"
+		}
+		elseif($okText.Contains($runStatus))
+		{
+			Write-Host "Got '$responseText' from API on attempt $checkedTimes, this indicates a success"
+			break
+		}
+		else
+		{
+			Write-Host "Got '$responseText' from API on attempt $checkedTimes, this is unknown - sleeping for $sleepSeconds seconds"
+			Start-Sleep -s $sleepSeconds
+		}
+	}
+
+	if($checkedTimes -ge $maxChecks)
+	{
+		throw "API text checking timed out after the maxiumum $maxChecks checks"
+	}
+}
+
 Write-Host "Ensconce - WebHelper Loaded"
 $webHelperLoaded = $true
