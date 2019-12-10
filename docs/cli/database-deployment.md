@@ -37,3 +37,9 @@ Ensconce tries to prevent the default roundhousE output, however roundhousE will
 The path for this by default is `E:\RH`.  This can be overridden.
 
 `--deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString] --roundhouseOutputPath=[pathToOutput]`
+
+### roundhousE Timeout
+
+This is the timeout for SQL queries run by roundhousE, there is a default of 30 seconds.
+
+`--deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString] --databaseCommandTimeout=[CustomTimeoutValue]`
