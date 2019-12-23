@@ -374,15 +374,20 @@ namespace Ensconce.ReportingServices
             {
                 foreach (var subscriptionFileInfo in subscriptionFileInfos)
                 {
-                    CreateSubscription(subscriptionFileInfo, reportPath);
+                    var subscriptionInfoText = File.ReadAllLines(subscriptionFileInfo.FullName);
+                    var subscription = GetSubscription(subscriptionInfoText, reportPath, subscriptionFileInfo.Name);
+                    if (subscription.Enabled)
+                    {
+                        Log("Creating subscription '{0}'", subscription.Name);
+                        rs.CreateSubscription(subscription.Path, subscription.ExtensionSettings, subscription.Description, subscription.EventType, subscription.ScheduleXml, subscription.Parameters);
+                        Log("Created subscription '{0}'", subscription.Name);
+                    }
                 }
             }
         }
 
-        private void CreateSubscription(FileInfo subscriptionFile, string reportPath)
+        public ReportSubscription GetSubscription(string[] subscriptionInfoText, string subscriptionPath, string subscriptionName)
         {
-            var subscriptionInfoText = File.ReadAllLines(subscriptionFile.FullName);
-
             if (SubscriptionInfo(subscriptionInfoText, "subscriptionOn").ToLower() == "true")
             {
                 var eventType = SubscriptionInfo(subscriptionInfoText, "eventType");
@@ -418,17 +423,27 @@ namespace Ensconce.ReportingServices
                 }
                 else
                 {
-                    Log("Subscription report parameters not found in '{0}'", subscriptionFile.Name);
+                    Log("Subscription report parameters not found in '{0}'", subscriptionName);
                 }
 
-                Log("Creating subscription '{0}'", subscriptionFile.Name);
-                rs.CreateSubscription(reportPath, extSettings, subscriptionFile.Name + " - Subscription", eventType, scheduleXml, reportParameterValues);
-                Log("Created subscription '{0}'", subscriptionFile.Name);
+                return new ReportSubscription
+                {
+                    Enabled = true,
+                    Name = subscriptionName,
+                    Path = subscriptionPath,
+                    ExtensionSettings = extSettings,
+                    Description = $"{subscriptionName} - Subscription",
+                    EventType = eventType,
+                    ScheduleXml = scheduleXml,
+                    Parameters = reportParameterValues
+                };
             }
-            else
+
+            Log("Subscription not set to 'On' for '{0}'", subscriptionName);
+            return new ReportSubscription
             {
-                Log("Subscription not set to 'On' for '{0}'", subscriptionFile.Name);
-            }
+                Enabled = false
+            };
         }
 
         private ParameterValue[] GetSubscriptionTypeParameters(string[] subscriptionInfoText)

@@ -45,6 +45,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ensconce.NDjango.Core", "En
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.NDjango.Core.Filters", "Ensconce.NDjango.Core.Filters\Ensconce.NDjango.Core.Filters.csproj", "{89DC9575-C706-4D0D-944A-79E5865FFE88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.ReportingServices.Tests", "Ensconce.ReportingServices.Tests\Ensconce.ReportingServices.Tests.csproj", "{95E44E2F-963E-4BD5-8E5F-C7322F7057EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{89DC9575-C706-4D0D-944A-79E5865FFE88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89DC9575-C706-4D0D-944A-79E5865FFE88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89DC9575-C706-4D0D-944A-79E5865FFE88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95E44E2F-963E-4BD5-8E5F-C7322F7057EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95E44E2F-963E-4BD5-8E5F-C7322F7057EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95E44E2F-963E-4BD5-8E5F-C7322F7057EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95E44E2F-963E-4BD5-8E5F-C7322F7057EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{53F246CF-6D01-4BA0-B774-4F4A9588DD75} = {8354CDF3-74E6-408E-902A-99702D366608}
 		{4E884DFE-E8D7-4742-AA5A-618FECE890CD} = {8354CDF3-74E6-408E-902A-99702D366608}
 		{025EDC49-0088-4F5A-9270-E0A7461B4AFD} = {8354CDF3-74E6-408E-902A-99702D366608}
+		{95E44E2F-963E-4BD5-8E5F-C7322F7057EB} = {8354CDF3-74E6-408E-902A-99702D366608}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5BC0B658-048B-4F67-A7AB-C246BEAE6533}
