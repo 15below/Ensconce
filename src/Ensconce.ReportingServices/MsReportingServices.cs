@@ -465,11 +465,11 @@ namespace Ensconce.ReportingServices
                             Name = "PASSWORD",
                             Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_Password")
                         };
-                    var subscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
+                    var fileShareSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
                     extensionParams[5] = new ParameterValue
                         {
                             Name = "RENDER_FORMAT",
-                            Value = !string.IsNullOrEmpty(subscriptionRenderFormat) ? subscriptionRenderFormat : "CSV"
+                            Value = !string.IsNullOrEmpty(fileShareSubscriptionRenderFormat) ? fileShareSubscriptionRenderFormat.ToUpper() : "CSV"
                         };
                     extensionParams[6] = new ParameterValue { Name = "WRITEMODE", Value = "Overwrite" };
                     return extensionParams;
@@ -492,7 +492,12 @@ namespace Ensconce.ReportingServices
                         };
                     extensionParams[3] = new ParameterValue { Name = "ReplyTo", Value = "system@15below.com" };
                     extensionParams[4] = new ParameterValue { Name = "IncludeReport", Value = "True" };
-                    extensionParams[5] = new ParameterValue { Name = "RenderFormat", Value = "EXCEL" };
+                    var emailSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
+                    extensionParams[5] = new ParameterValue
+                    {
+                        Name = "RENDER_FORMAT",
+                        Value = !string.IsNullOrEmpty(emailSubscriptionRenderFormat) ? emailSubscriptionRenderFormat.ToUpper() : "EXCEL"
+                    };
                     extensionParams[6] = new ParameterValue
                         {
                             Name = "Subject",
