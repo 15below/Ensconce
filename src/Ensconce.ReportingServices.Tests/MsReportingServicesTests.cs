@@ -53,7 +53,7 @@ namespace Ensconce.ReportingServices.Tests
                                           "BCC: bcc@test.com" +
                                           "ReplyTo: system@15below.com" +
                                           "IncludeReport: True" +
-                                          "RENDER_FORMAT: EXCEL" +
+                                          "RenderFormat: EXCEL" +
                                           "Subject: Test Report - @ReportName executed at @ExecutionTime" +
                                           "Comment: Your report is attached" +
                                           "IncludeLink: False" +
@@ -131,7 +131,11 @@ namespace Ensconce.ReportingServices.Tests
                 result = sut.GetSubscription(mockFileShareSubInfoContents.ToArray(), "D:/MockPath", "TestSubscription");
             }
 
-            return result.ExtensionSettings.ParameterValues.Select(p1 => (ParameterValue)p1).FirstOrDefault(p2 => p2.Name == "RENDER_FORMAT")?.Value;
+            return result.ExtensionSettings.ParameterValues
+                .Select(p1 => (ParameterValue)p1)
+                .FirstOrDefault(p2 => subscriptionType == "FileShare" && p2.Name == "RENDER_FORMAT" ||
+                                      subscriptionType == "Email" && p2.Name == "RenderFormat")
+                ?.Value;
         }
 
         private static string ParameterValueOrFieldReferencesToString(IReadOnlyList<ParameterValueOrFieldReference> parameters)
