@@ -510,7 +510,7 @@ namespace Ensconce.ReportingServices
                     var emailSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
                     extensionParams[5] = new ParameterValue
                     {
-                        Name = "RENDER_FORMAT",
+                        Name = "RenderFormat",
                         Value = !string.IsNullOrEmpty(emailSubscriptionRenderFormat) ? emailSubscriptionRenderFormat.ToUpper() : "EXCEL"
                     };
                     extensionParams[6] = new ParameterValue
