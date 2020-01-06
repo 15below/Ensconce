@@ -196,7 +196,6 @@ function SetManagedPipelineModeClassic ([string]$name)
 	Set-ItemProperty IIS:\AppPools\$name managedPipelineMode 1
 }
 
-
 function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 {
 	$appPool = Get-Item "IIS:\AppPools\$name"
@@ -399,3 +398,4 @@ function SetManagedRuntimeToNoManagedCode([string] $appPoolName, [string] $runti
 }
 
 Write-Host "Ensconce - CreateIIS7App Loaded"
+$createIIS7AppLoaded = $true

@@ -143,3 +143,4 @@ Function SetServiceAccount([string]$serviceName, [string]$account, [string]$pass
 }
 
 Write-Host "Ensconce - UserManagement Loaded"
+$userManagementLoaded = $true

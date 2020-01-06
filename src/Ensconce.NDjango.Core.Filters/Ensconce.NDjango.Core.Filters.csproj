@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Loader.cs" />
     <Compile Include="HtmlFilters\RemoveTagsFilter.cs" />
     <Compile Include="List\FirstFilter.cs" />
     <Compile Include="List\LastFilter.cs" />

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 
 namespace Ensconce.Console
 {
@@ -82,7 +81,6 @@ namespace Ensconce.Console
             if (Arguments.Replace)
             {
                 Arguments.DeployTo.ForEach(FileInteraction.DeleteDirectory);
-                Thread.Sleep(500); // Allow for the delete to complete
             }
 
             if (Arguments.CopyTo || Arguments.Replace)

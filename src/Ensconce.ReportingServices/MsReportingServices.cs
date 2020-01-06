@@ -374,15 +374,20 @@ namespace Ensconce.ReportingServices
             {
                 foreach (var subscriptionFileInfo in subscriptionFileInfos)
                 {
-                    CreateSubscription(subscriptionFileInfo, reportPath);
+                    var subscriptionInfoText = File.ReadAllLines(subscriptionFileInfo.FullName);
+                    var subscription = GetSubscription(subscriptionInfoText, reportPath, subscriptionFileInfo.Name);
+                    if (subscription.Enabled)
+                    {
+                        Log("Creating subscription '{0}'", subscription.Name);
+                        rs.CreateSubscription(subscription.Path, subscription.ExtensionSettings, subscription.Description, subscription.EventType, subscription.ScheduleXml, subscription.Parameters);
+                        Log("Created subscription '{0}'", subscription.Name);
+                    }
                 }
             }
         }
 
-        private void CreateSubscription(FileInfo subscriptionFile, string reportPath)
+        public ReportSubscription GetSubscription(string[] subscriptionInfoText, string subscriptionPath, string subscriptionName)
         {
-            var subscriptionInfoText = File.ReadAllLines(subscriptionFile.FullName);
-
             if (SubscriptionInfo(subscriptionInfoText, "subscriptionOn").ToLower() == "true")
             {
                 var eventType = SubscriptionInfo(subscriptionInfoText, "eventType");
@@ -418,17 +423,27 @@ namespace Ensconce.ReportingServices
                 }
                 else
                 {
-                    Log("Subscription report parameters not found in '{0}'", subscriptionFile.Name);
+                    Log("Subscription report parameters not found in '{0}'", subscriptionName);
                 }
 
-                Log("Creating subscription '{0}'", subscriptionFile.Name);
-                rs.CreateSubscription(reportPath, extSettings, subscriptionFile.Name + " - Subscription", eventType, scheduleXml, reportParameterValues);
-                Log("Created subscription '{0}'", subscriptionFile.Name);
+                return new ReportSubscription
+                {
+                    Enabled = true,
+                    Name = subscriptionName,
+                    Path = subscriptionPath,
+                    ExtensionSettings = extSettings,
+                    Description = $"{subscriptionName} - Subscription",
+                    EventType = eventType,
+                    ScheduleXml = scheduleXml,
+                    Parameters = reportParameterValues
+                };
             }
-            else
+
+            Log("Subscription not set to 'On' for '{0}'", subscriptionName);
+            return new ReportSubscription
             {
-                Log("Subscription not set to 'On' for '{0}'", subscriptionFile.Name);
-            }
+                Enabled = false
+            };
         }
 
         private ParameterValue[] GetSubscriptionTypeParameters(string[] subscriptionInfoText)
@@ -465,11 +480,11 @@ namespace Ensconce.ReportingServices
                             Name = "PASSWORD",
                             Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_Password")
                         };
-                    var subscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
+                    var fileShareSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
                     extensionParams[5] = new ParameterValue
                         {
                             Name = "RENDER_FORMAT",
-                            Value = !string.IsNullOrEmpty(subscriptionRenderFormat) ? subscriptionRenderFormat : "CSV"
+                            Value = !string.IsNullOrEmpty(fileShareSubscriptionRenderFormat) ? fileShareSubscriptionRenderFormat.ToUpper() : "CSV"
                         };
                     extensionParams[6] = new ParameterValue { Name = "WRITEMODE", Value = "Overwrite" };
                     return extensionParams;
@@ -492,7 +507,12 @@ namespace Ensconce.ReportingServices
                         };
                     extensionParams[3] = new ParameterValue { Name = "ReplyTo", Value = "system@15below.com" };
                     extensionParams[4] = new ParameterValue { Name = "IncludeReport", Value = "True" };
-                    extensionParams[5] = new ParameterValue { Name = "RenderFormat", Value = "EXCEL" };
+                    var emailSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
+                    extensionParams[5] = new ParameterValue
+                    {
+                        Name = "RenderFormat",
+                        Value = !string.IsNullOrEmpty(emailSubscriptionRenderFormat) ? emailSubscriptionRenderFormat.ToUpper() : "EXCEL"
+                    };
                     extensionParams[6] = new ParameterValue
                         {
                             Name = "Subject",

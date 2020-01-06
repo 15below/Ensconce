@@ -1,6 +1,6 @@
+using Ensconce.Update;
 using System;
 using System.IO;
-using Ensconce.Update;
 
 namespace Ensconce.Console
 {
@@ -8,7 +8,7 @@ namespace Ensconce.Console
     {
         public static readonly Lazy<TagDictionary> TagDictionary = new Lazy<TagDictionary>(() => Retry.Do(BuildTagDictionary,
                                                                                                  TimeSpan.FromSeconds(5),
-                                                                                                 new[] { typeof(InvalidDataException) }));
+                                                                                                 new[] { typeof(InvalidDataException), typeof(NDjangoWrapper.NDjangoWrapperException) }));
 
         internal static string Render(this string s)
         {

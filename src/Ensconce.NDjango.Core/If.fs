@@ -80,17 +80,15 @@ module internal If =
         inherit Node(
             [value],
             fun context ->
-                match value.Resolve context true |> fst with
+                match value.Resolve context false |> fst with
                 | None -> false
                 | Some v ->
                     match v with
-                    | :? System.Boolean as b -> b                           // boolean value, take literal
-                    | :? System.Collections.IEnumerable as e
-                                          -> e.GetEnumerator().MoveNext()   // some sort of collection, take if empty
-                    | null -> false                                         // null evaluates to false
-                    | _ -> true                                             // anything else. true because it's there
+                    | :? System.Boolean as b -> b                                             // boolean value, take literal
+                    | :? System.Collections.IEnumerable as e -> e.GetEnumerator().MoveNext()  // some sort of collection, take if empty
+                    | null -> false                                                           // null evaluates to false
+                    | _ -> false                                                              // anything else. true because it's there
             )
-
 
     let Comparer (parser, left:Lexer.TextToken, right:Lexer.TextToken, comparer) =
         let compare (left:Expressions.FilterExpression) (right:Expressions.FilterExpression) (comparer: int->int-> bool) context =
@@ -148,7 +146,6 @@ module internal If =
                             [], remaining
                     | _ -> [], remaining
 
-
                 let build_term parser tokens =
 
                     let build_comparer parser left right nodeBuilder =
@@ -158,7 +155,8 @@ module internal If =
                         ) |> nodeBuilder :> Node
 
                     match tokens with
-                    | left::Lexer.MatchToken("==")::right::tail ->
+                    | left::Lexer.MatchToken("==")::right::tail
+                    | left::Lexer.MatchToken("=")::right::tail ->
                         Comparer(parser, left, right, (=)), tail
 
                     | left::Lexer.MatchToken("!=")::right::tail ->
@@ -186,24 +184,17 @@ module internal If =
 
                     | _ -> raise (SyntaxError ("invalid conditional expression in 'if' tag"))
 
-
-                let rec build_mult parser tokens =
+                let rec build_expression parser tokens =
                     let left, tail = build_term parser tokens
                     match tail with
                     | Lexer.MatchToken("and")::tail ->
-                        let right, tail = build_mult parser tail
-                        AndNode(left, right) :> Node,
-                        tail
-                    | _ ->
-                        left, tail
-
-                let rec build_expression parser tokens =
-                    let left, tail = build_mult parser tokens
-                    match tail with
+                        let right, tail = build_expression parser tail
+                        AndNode(left, right) :> Node, tail
                     | Lexer.MatchToken("or")::tail ->
                         let right, tail = build_expression parser tail
-                        OrNode(left, right) :> Node,
-                        tail
+                        OrNode(left, right) :> Node, tail
+                    | (x:Lexer.TextToken)::_->
+                        raise (SyntaxError (sprintf "invalid statement join expression in 'if' tag, expected 'and' or 'or' but got '%s'" x.Value))
                     | _ ->
                         left, tail
 
@@ -221,5 +212,3 @@ module internal If =
                     new TagNode(context, token, (this :> ITag), expression, node_list_true, node_list_false)
                     :> INodeImpl),
                     context, remaining2)
-
-

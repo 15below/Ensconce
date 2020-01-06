@@ -1,11 +1,13 @@
+source https://nuget.org/api/v2/
 framework: auto-detect
 redirects: force
-source https://nuget.org/api/v2/
+strategy: min
 
+nuget ApprovalTests
+nuget FSharp.Core
 nuget NUnit
 nuget RhinoMocks
 nuget roundhouse.sqlserver
-nuget FSharp.Core
-nuget ApprovalTests
+nuget System.ValueTuple
 
 github 15below/Build.Tools:V1.1

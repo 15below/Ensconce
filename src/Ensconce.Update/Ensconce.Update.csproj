@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,12 +42,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Content Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="NDjango.Custom.Filters\DecryptFilter.cs" />
     <Compile Include="NDjango.Custom.Filters\ContainsFilter.cs" />
     <Compile Include="NDjango.Custom.Filters\EndsWithFilter.cs" />
+    <Compile Include="NDjango.Custom.Filters\Loader.cs" />
     <Compile Include="NDjango.Custom.Filters\StartsWithFilter.cs" />
     <Compile Include="SubTagDictionary.cs" />
     <Compile Include="NDjango.Custom.Filters\ConcatFilter.cs" />
@@ -83,6 +86,9 @@
       <Name>Ensconce.NDjango.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="paket.references" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -91,4 +97,15 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.7.1'">
+      <ItemGroup>
+        <Reference Include="Newtonsoft.Json">
+          <HintPath>..\..\packages\Newtonsoft.Json\lib\net45\Newtonsoft.Json.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
 </Project>

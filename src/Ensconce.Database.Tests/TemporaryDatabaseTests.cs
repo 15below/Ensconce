@@ -47,6 +47,7 @@ namespace Ensconce.Database.Tests
             {
                 sut.Deploy(Path.Combine(Assembly.GetExecutingAssembly().Directory(), "Scripts1"));
                 Assert.That(sut.GetTables().Select(x => x.Name), Has.Member("Table1"));
+                Assert.That(sut.GetTables().Select(x => x.Name), Has.Member("Table2"));
             }
         }
 
@@ -65,20 +66,6 @@ namespace Ensconce.Database.Tests
         {
             // This version number is set in _BuildInfo.txt which lives at the root of the database scripts
             const string currentVersion = "1.1.1.1";
-            using (var sut = GetTemporaryDatabase())
-            {
-                sut.Deploy(Path.Combine(Assembly.GetExecutingAssembly().Directory(), "Scripts1"));
-                Assert.That(sut.ReadVersion(), Is.EqualTo(currentVersion));
-            }
-        }
-
-        [Test]
-        [Ignore("TODO: Allow db deploy to detect version from Environment variable and use this instead, if present. This would be useful for Octopus Deploy and would remove the necessity for a version file to be present for tag replacement")]
-        public void should_stamp_version_from_environment_variable_when_deployed()
-        {
-            // This version number is set in _BuildInfo.txt which lives at the root of the database scripts
-            const string currentVersion = "1.1.1.2";
-            Environment.SetEnvironmentVariable("PackageVersion", currentVersion);
             using (var sut = GetTemporaryDatabase())
             {
                 sut.Deploy(Path.Combine(Assembly.GetExecutingAssembly().Directory(), "Scripts1"));
@@ -106,7 +93,6 @@ namespace Ensconce.Database.Tests
             using (var sut = GetTemporaryDatabase(restoreOptions))
             {
                 sut.Deploy(Path.Combine(Assembly.GetExecutingAssembly().Directory(), "Scripts1"));
-                Assert.That(sut.GetTables().Select(x => x.Name), Has.Member("Table1"));
                 Assert.That(sut.GetTables().Select(x => x.Name), Has.Member("Table2"));
             }
         }

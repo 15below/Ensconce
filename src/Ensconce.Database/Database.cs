@@ -1,4 +1,5 @@
-﻿using roundhouse;
+﻿using System;
+using roundhouse;
 using roundhouse.databases;
 using roundhouse.infrastructure.logging;
 using System.Data.Common;
@@ -45,8 +46,11 @@ namespace Ensconce
             Deploy(Directory.GetCurrentDirectory());
         }
 
-        public void Deploy(string schemaScriptsFolder, string repository = "", bool dropDatabase = false)
+        public void Deploy(string schemaScriptsFolder, string repository = "", bool dropDatabase = false, TimeSpan? commandTimeout = null)
         {
+            if (commandTimeout == null)
+                commandTimeout = TimeSpan.FromSeconds(30);
+
             if (schemaScriptsFolder == string.Empty)
                 schemaScriptsFolder = Assembly.GetExecutingAssembly().Directory();
 
@@ -64,6 +68,7 @@ namespace Ensconce
                 .Set(x => x.VersionFile = Path.Combine(schemaScriptsFolder, "_BuildInfo.txt"))
                 .Set(x => x.WithTransaction = WithTransaction)
                 .Set(x => x.Silent = true)
+                .Set(x => x.CommandTimeout = Convert.ToInt32(commandTimeout.Value.TotalSeconds))
                 .Set(x =>
                 {
                     if (!string.IsNullOrEmpty(OutputPath))

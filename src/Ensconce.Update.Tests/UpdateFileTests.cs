@@ -1,8 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -13,9 +15,13 @@ namespace Ensconce.Update.Tests
     [TestFixture]
     public class UpdateFileTests
     {
+        private Dictionary<string, string> fileContent;
+        private readonly Mutex singleThreadTest = new Mutex(false, "SingleThreadTest-UpdateFileTests");
+
         [SetUp]
         public void Setup()
         {
+            singleThreadTest.WaitOne();
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
 
             var wd = Path.Combine(Environment.CurrentDirectory, "TestUpdateFiles");
@@ -23,6 +29,22 @@ namespace Ensconce.Update.Tests
             {
                 File.Delete(file);
             }
+
+            fileContent = new Dictionary<string, string>();
+            foreach (var file in Directory.EnumerateFiles(wd, "*.*"))
+            {
+                fileContent.Add(file, File.ReadAllText(file));
+            }
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            foreach (var file in fileContent)
+            {
+                File.WriteAllText(file.Key, file.Value);
+            }
+            singleThreadTest.ReleaseMutex();
         }
 
         [Test]
@@ -93,13 +115,13 @@ namespace Ensconce.Update.Tests
         [Test]
         public void ThrowNewMissingArgExceptionIfNoTagValue()
         {
-            Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
         }
 
         [Test]
         public void DoNotCreatePartialOutputFileIfExceptionDuringProcessWhenIndicated()
         {
-            Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml"));
             var fileName = @"TestUpdateFiles\TestConfig1.xml_partial";
 
             Assert.False(File.Exists(fileName));
@@ -108,7 +130,7 @@ namespace Ensconce.Update.Tests
         [Test]
         public void CreatePartialOutputFileIfExceptionDuringProcessWhenIndicated()
         {
-            Assert.Throws<ArgumentException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml", outputFailureContext: true));
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => UpdateFile.Update(@"TestUpdateFiles\TestSubstitution5.xml", @"TestUpdateFiles\TestConfig1.xml", outputFailureContext: true));
 
             var fileName = @"TestUpdateFiles\TestConfig1.xml_partial";
 
@@ -199,46 +221,34 @@ namespace Ensconce.Update.Tests
         [Test]
         public void ReplacementContentWorksWithAmpersandInTag()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution24.xml", new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("t&his*text", document.XPathSelectElement("/root/value").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
         public void AddChildContenWorksWithAmpersandInTag()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution25.xml", new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("t&his*text", document.XPathSelectElement("/root/value/testing").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
         public void AppendAfterWorksWithAmpersandInTag()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution26.xml", new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
             var nms = new XmlNamespaceManager(new NameTable());
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("t&his*text", document.XPathSelectElement("/root/testing").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
@@ -263,9 +273,6 @@ namespace Ensconce.Update.Tests
         [Test]
         public void UpdateAllTouchesAllFiles()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-            var content2 = XDocument.Load(@"TestUpdateFiles\TestConfig2.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution3.xml", new Dictionary<string, object> { { "tagValue", "Tagged!" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
@@ -274,64 +281,64 @@ namespace Ensconce.Update.Tests
             nms.AddNamespace("c", "http://madeup.com");
             Assert.AreEqual("newvalue", document2.XPathSelectElement("/c:root/c:value", nms).Value);
             Assert.AreEqual("Tagged!", document.XPathSelectElement("/root/value").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
-            content2.Save(@"TestUpdateFiles\TestConfig2.xml");
         }
 
         [Test]
         public void UpdateAllKnowsAboutTaggedFiles()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig-TaggedPath.xml");
-
             UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution13.xml", new Dictionary<string, object> { { "FilePath", "TaggedPath" } }.ToLazyTagDictionary(), false);
 
             var document = XDocument.Load(@"TestUpdateFiles\TestConfig-TaggedPath.xml");
             Assert.AreEqual("newvalue", document.XPathSelectElement("/root/value").Value);
-
-            content.Save(@"TestUpdateFiles\TestConfig-TaggedPath.xml");
         }
 
         [Test]
         public void UpdateAllWhenError_ThrowsAggregateException()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-            var content2 = XDocument.Load(@"TestUpdateFiles\TestConfig2.xml");
-
             Assert.Throws<AggregateException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution31.xml", new Lazy<TagDictionary>(), false));
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
-            content.Save(@"TestUpdateFiles\TestConfig2.xml");
         }
 
         [Test]
         public void ChangeAttributeWhenDoesntExists_ThrowsApplicationException()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             Assert.Throws<ApplicationException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution33.xml", new Lazy<TagDictionary>(), false));
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
         }
 
         [Test]
         public void AddAttributeWhenAlreadyExists_ThrowsApplicationException()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
             Assert.Throws<ApplicationException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution34.xml", new Lazy<TagDictionary>(), false));
+        }
 
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
+        [Test]
+        public void UpdateMultipleXPathMatches()
+        {
+            var newConfig = XDocument.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution35.xml",
+                @"TestUpdateFiles\TestConfig5.xml"
+            ));
+
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate1'][1]").Attribute("value").Value);
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate1'][2]").Attribute("value").Value);
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate1'][3]").Attribute("value").Value);
+            Assert.AreEqual("UpdateFirst", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate2'][1]").Attribute("value").Value);
+            Assert.AreEqual("NotSet", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate2'][2]").Attribute("value").Value);
+            Assert.AreEqual("NotSet", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate3'][1]").Attribute("value").Value);
+            Assert.AreEqual("UpdateLast", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate3'][2]").Attribute("value").Value);
+
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate4'][1]").Attribute("value").Value);
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate4'][2]").Attribute("value").Value);
+            Assert.AreEqual("UpdateAll", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate4'][3]").Attribute("value").Value);
+            Assert.AreEqual("UpdateFirst", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate5'][1]").Attribute("value").Value);
+            Assert.AreEqual("NotSet", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate5'][2]").Attribute("value").Value);
+            Assert.AreEqual("NotSet", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate6'][1]").Attribute("value").Value);
+            Assert.AreEqual("UpdateLast", newConfig.XPathSelectElement("/configuration/appSettings/add[@name='TestDuplicate6'][2]").Attribute("value").Value);
         }
 
         [Test]
         public void UpdateAllWhenError_SingleError_ThrowsArgumentException()
         {
-            var content = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
-
-            Assert.Throws<ArgumentException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution32.xml", new Lazy<TagDictionary>(), false));
-
-            content.Save(@"TestUpdateFiles\TestConfig1.xml");
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => UpdateFile.UpdateFiles(@"TestUpdateFiles\TestSubstitution32.xml", new Lazy<TagDictionary>(), false));
         }
 
         [Test]
@@ -468,6 +475,32 @@ namespace Ensconce.Update.Tests
             Assert.AreEqual("new-value", newConfig.XPathSelectElement("/root/testing/test[2]").Value);
             Assert.NotNull(newConfig.XPathSelectElement("/root/myValue"));
             Assert.AreEqual("nodeValue", newConfig.XPathSelectElement("/root/myValue").Value);
+        }
+
+        [Test]
+        public void JsonTest()
+        {
+            var data = UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution36.xml", @"TestUpdateFiles\TestJson01.json"
+            );
+            dynamic newJson = JObject.Parse(data);
+            Assert.AreEqual("NewData", (string)newJson.Data);
+            Assert.AreEqual(2, (int)newJson.Data2);
+            Assert.AreEqual("NotItem1", (string)newJson.Collection[0].NotData);
+            Assert.AreEqual("NotItem2", (string)newJson.Collection[1].NotData);
+            Assert.AreEqual("Value1", (string)newJson.ComplexData.Complex1);
+            Assert.AreEqual("Value2", (string)newJson.ComplexData.Complex2);
+            Assert.AreEqual("Value3", (string)newJson.ComplexData.Complex3);
+            Assert.AreEqual("Bill", (string)newJson.SubTrees.DataPoint.Value);
+        }
+
+        [Test]
+        public void JsonTest_WithFilePath()
+        {
+            dynamic newJson = JObject.Parse(UpdateFile.Update(
+                @"TestUpdateFiles\TestSubstitution37.xml", @"TestUpdateFiles\TestJson01.json"
+            ));
+            Assert.AreEqual("C:\\Temp", (string)newJson.Data);
         }
 
         [Test]

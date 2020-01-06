@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.XPath;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Ensconce.Update
 {
@@ -16,7 +18,8 @@ namespace Ensconce.Update
     {
         public class Substitution
         {
-            public string XPath;
+            public string Path;
+            public bool PathMatchAll;
             public string ReplacementContent;
             public bool HasReplacementContent;
             public bool RemoveCurrentAttributes;
@@ -33,7 +36,7 @@ namespace Ensconce.Update
 
             public Substitution()
             {
-                XPath = "";
+                Path = "";
                 ReplacementContent = "";
                 HasReplacementContent = false;
                 RemoveCurrentAttributes = false;
@@ -54,6 +57,12 @@ namespace Ensconce.Update
         {
             public string Uri;
             public string Prefix;
+        }
+
+        private enum FileType
+        {
+            Xml,
+            Json
         }
 
         public static void UpdateFiles(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext)
@@ -119,32 +128,68 @@ namespace Ensconce.Update
 
             string baseData = null;
 
-            var replacementTemplateElement = fileElement.XPathSelectElement("s:ReplacementTemplate", nsm);
-            if (replacementTemplateElement != null)
+            var replacementTemplateValue = fileElement.XPathSelectElement("s:ReplacementTemplate", nsm)?.Value ?? fileElement.Attribute("ReplacementTemplate")?.Value;
+            if (!string.IsNullOrWhiteSpace(replacementTemplateValue))
             {
-                var replacementTemplate = replacementTemplateElement.Value.RenderTemplate(tagValues);
+                var replacementTemplate = replacementTemplateValue.RenderTemplate(tagValues);
                 baseData = File.ReadAllText(replacementTemplate).RenderTemplate(tagValues);
             }
 
+            if (!Enum.TryParse(fileElement.Attribute("FileType")?.Value, true, out FileType fileType))
+            {
+                if (Path.GetExtension(baseFile).Equals(".json", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    fileType = FileType.Json;
+                }
+                else
+                {
+                    fileType = FileType.Xml;
+                }
+            }
+
             var subs = fileElement.XPathSelectElements("s:Changes/s:Change", nsm)
-                                  .Select(change => BuildSubstitions(change, nsm, tagValues))
+                                  .Select(change => BuildSubstitions(change, nsm, tagValues, fileType))
                                   .ToList();
             if (subs.Any())
             {
                 if (baseData == null) baseData = File.ReadAllText(baseFile);
-                var baseXml = XDocument.Parse(baseData);
-                try
+
+                switch (fileType)
                 {
-                    return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
-                }
-                catch (Exception)
-                {
-                    if (outputFailureContext)
-                    {
-                        var partialFilename = $"{baseFile}_partial";
-                        baseXml.Save(partialFilename);
-                    }
-                    throw;
+                    case FileType.Xml:
+                        var baseXml = XDocument.Parse(baseData);
+                        try
+                        {
+                            return UpdateXml(tagValues, subs, baseXml, nsm, subsXml);
+                        }
+                        catch (Exception)
+                        {
+                            if (outputFailureContext)
+                            {
+                                var partialFilename = $"{baseFile}_partial";
+                                baseXml.Save(partialFilename);
+                            }
+                            throw;
+                        }
+
+                    case FileType.Json:
+                        var baseJson = JObject.Parse(baseData);
+                        try
+                        {
+                            return UpdateJson(tagValues, subs, baseJson, nsm, subsXml);
+                        }
+                        catch (Exception)
+                        {
+                            if (outputFailureContext)
+                            {
+                                var partialFilename = $"{baseFile}_partial";
+                                File.WriteAllText(baseJson.ToString(Formatting.Indented), partialFilename);
+                            }
+                            throw;
+                        }
+
+                    default:
+                        throw new ApplicationException("Unknown file type");
                 }
             }
 
@@ -169,42 +214,52 @@ namespace Ensconce.Update
 
             foreach (var sub in subs.Where(x => x.Execute))
             {
-                Logging.Log($"Updating xpath {sub.XPath}");
+                Logging.Log($"Updating xpath {sub.Path}");
 
-                var activeNode = baseXml.XPathSelectElement(sub.XPath.RenderTemplate(tagValues), baseNsm);
+                var xPathMatches = baseXml.XPathSelectElements(sub.Path.RenderTemplate(tagValues), baseNsm).ToList();
 
-                if (activeNode == null)
+                if (xPathMatches.Count == 0)
                 {
-                    throw new ApplicationException($"XPath select of {sub.XPath} returned null");
+                    throw new ApplicationException($"XPath select of {sub.Path} returned no matches.");
                 }
 
-                if (sub.HasAddChildContent) AddChildContentToActive(tagValues, activeNode, sub);
-                if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
-                if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
-                if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
-                if (sub.HasChangeValue) activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
-
-                foreach (var (attribute, value) in sub.AddAttributes)
+                if (!sub.PathMatchAll && xPathMatches.Count > 1)
                 {
-                    if (activeNode.Attribute(attribute) == null)
-                    {
-                        activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
-                    }
-                    else
-                    {
-                        throw new ApplicationException($"XPath of {sub.XPath} with attribute {attribute} already exists, cannot add");
-                    }
+                    Logging.LogError($"XPath select of {sub.Path} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the XPath or Change node.");
+                    Logging.Log("In order to be non breaking, this will NOT fail the deployment YET - This should be fixed to prevent future failures");
+                    //throw new ApplicationException($"XPath select of {sub.Path} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the XPath or Change node.");
                 }
 
-                foreach (var (attribute, value) in sub.ChangeAttributes)
+                foreach (var activeNode in sub.PathMatchAll ? xPathMatches : xPathMatches.Take(1))
                 {
-                    if (activeNode.Attribute(attribute) != null)
+                    if (sub.HasAddChildContent) AddChildContentToActive(tagValues, activeNode, sub);
+                    if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
+                    if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
+                    if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
+                    if (sub.HasChangeValue) activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
+
+                    foreach (var (attribute, value) in sub.AddAttributes)
                     {
-                        activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                        if (activeNode.Attribute(attribute) == null)
+                        {
+                            activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                        }
+                        else
+                        {
+                            throw new ApplicationException($"XPath of {sub.Path} with attribute {attribute} already exists, cannot add");
+                        }
                     }
-                    else
+
+                    foreach (var (attribute, value) in sub.ChangeAttributes)
                     {
-                        throw new ApplicationException($"XPath of {sub.XPath} with attribute {attribute} does not exist, cannot change");
+                        if (activeNode.Attribute(attribute) != null)
+                        {
+                            activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                        }
+                        else
+                        {
+                            throw new ApplicationException($"XPath of {sub.Path} with attribute {attribute} does not exist, cannot change");
+                        }
                     }
                 }
             }
@@ -236,82 +291,170 @@ namespace Ensconce.Update
             activeNode.ReplaceNodes(children);
         }
 
-        private static Substitution BuildSubstitions(XElement change, IXmlNamespaceResolver nsm, Lazy<TagDictionary> tagValues)
+        private static string UpdateJson(Lazy<TagDictionary> tagValues, IEnumerable<Substitution> subs, JObject baseJson, IXmlNamespaceResolver nsm, XNode subsXml)
+        {
+            foreach (var sub in subs.Where(x => x.Execute))
+            {
+                Logging.Log($"Updating JsonPath {sub.Path}");
+
+                var jsonPathMatches = baseJson.SelectTokens(sub.Path.RenderTemplate(tagValues)).ToList();
+
+                if (jsonPathMatches.Count == 0)
+                {
+                    throw new ApplicationException($"JsonPath select of {sub.Path} returned no matches.");
+                }
+
+                if (!sub.PathMatchAll && jsonPathMatches.Count > 1)
+                {
+                    throw new ApplicationException($"JsonPath select of {sub.Path} returned multiple matches. If the intention was to update all matches, use the attribute matchAll=\"true\" on the JsonPath or Change node.");
+                }
+
+                foreach (var activeObject in sub.PathMatchAll ? jsonPathMatches : jsonPathMatches.Take(1))
+                {
+                    //Should never get to this, but just in case!
+                    if (sub.RemoveCurrentAttributes) throw new ApplicationException("Remove attributes is not supported with json files");
+                    if (sub.AddAttributes.Any()) throw new ApplicationException("Add attributes is not supported with json files");
+                    if (sub.ChangeAttributes.Any()) throw new ApplicationException("Change attributes is not supported with json files");
+                    if (sub.HasAppendAfter) throw new ApplicationException("Append after is not supported with json files");
+                    if (sub.HasAddChildContent) throw new ApplicationException("Add child is not supported with json files");
+                    if (sub.HasReplacementContent) throw new ApplicationException("Replacement content is not supported with json files");
+
+                    var updatedData = sub.ChangeValue.RenderTemplate(tagValues);
+
+                    JToken value;
+                    if (updatedData.TrimStart().StartsWith("{") || updatedData.TrimStart().StartsWith("["))
+                    {
+                        var formatted = $"{{ fakeRoot: {updatedData} }}";
+                        var jObject = JObject.Parse(formatted);
+                        value = jObject.GetValue("fakeRoot");
+                    }
+                    else
+                    {
+                        value = new JValue(updatedData);
+                    }
+
+                    if (sub.HasChangeValue) activeObject.Replace(value);
+                }
+            }
+
+            return baseJson.ToString(Formatting.Indented);
+        }
+
+        private static Substitution BuildSubstitions(XElement change, IXmlNamespaceResolver nsm, Lazy<TagDictionary> tagValues, FileType fileType)
         {
             //Default everything off
             var sub = new Substitution();
 
             if (change.Attribute("type") == null)
             {
-                sub.ReplacementContent = change.XPathSelectElement("s:ReplacementContent", nsm)?.Value;
-                sub.HasReplacementContent = sub.ReplacementContent != null;
-
-                sub.AddChildContent = change.XPathSelectElement("s:AddChildContent", nsm)?.Value;
-                sub.HasAddChildContent = sub.AddChildContent != null;
-                sub.AddChildContentIfNotExists = change.XPathSelectElement("s:AddChildContent", nsm)?.Attribute("ifNotExists")?.Value;
-
-                sub.AppendAfter = change.XPathSelectElement("s:AppendAfter", nsm)?.Value;
-                sub.HasAppendAfter = sub.AppendAfter != null;
-
-                sub.XPath = (change.Attribute("xPath")?.Value ?? change.XPathSelectElement("s:XPath", nsm)?.Value).RenderTemplate(tagValues);
-
-                sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
-
-                foreach (var ca in change.XPathSelectElements("s:AddAttribute", nsm))
+                //Old style long hand
+                switch (fileType)
                 {
-                    sub.AddAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                    case FileType.Xml:
+                        sub.Path = (change.Attribute("xPath")?.Value ?? change.XPathSelectElement("s:XPath", nsm)?.Value).RenderTemplate(tagValues);
+                        sub.PathMatchAll = (change.Attribute("matchAll")?.Value ?? change.XPathSelectElement("s:XPath", nsm)?.Attribute("matchAll")?.Value ?? "false").RenderTemplate(tagValues).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+                        break;
+
+                    case FileType.Json:
+                        sub.Path = (change.Attribute("jsonPath")?.Value ?? change.XPathSelectElement("s:JsonPath", nsm)?.Value).RenderTemplate(tagValues);
+                        sub.PathMatchAll = (change.Attribute("matchAll")?.Value ?? change.XPathSelectElement("s:JsonPath", nsm)?.Attribute("matchAll")?.Value ?? "false").RenderTemplate(tagValues).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+                        break;
+
+                    default:
+                        throw new ApplicationException("Unknown file type");
                 }
 
-                foreach (var ca in change.XPathSelectElements("s:ChangeAttribute", nsm))
+                if (fileType == FileType.Xml)
                 {
-                    sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                    sub.AddChildContent = change.XPathSelectElement("s:AddChildContent", nsm)?.Value;
+                    sub.HasAddChildContent = sub.AddChildContent != null;
+                    sub.AddChildContentIfNotExists = change.XPathSelectElement("s:AddChildContent", nsm)?.Attribute("ifNotExists")?.Value;
+
+                    sub.AppendAfter = change.XPathSelectElement("s:AppendAfter", nsm)?.Value;
+                    sub.HasAppendAfter = sub.AppendAfter != null;
+
+                    sub.RemoveCurrentAttributes = XmlConvert.ToBoolean(change.TryXPathValueWithDefault("s:RemoveCurrentAttributes", nsm, "false"));
+
+                    foreach (var ca in change.XPathSelectElements("s:AddAttribute", nsm))
+                    {
+                        sub.AddAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                    }
+
+                    foreach (var ca in change.XPathSelectElements("s:ChangeAttribute", nsm))
+                    {
+                        sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                    }
+
+                    sub.ReplacementContent = change.XPathSelectElement("s:ReplacementContent", nsm)?.Value;
+                    sub.HasReplacementContent = sub.ReplacementContent != null;
                 }
 
-                sub.ChangeValue = change.XPathSelectElement("s:ChangeValue", nsm)?.Attribute("value")?.Value;
+                var changeValue = change.XPathSelectElement("s:ChangeValue", nsm);
+                sub.ChangeValue = changeValue?.Attribute("value") != null ? changeValue?.Attribute("value")?.Value : changeValue?.Value;
                 sub.HasChangeValue = sub.ChangeValue != null;
+
+                if (change.Attribute("if") != null)
+                {
+                    sub.Execute = bool.Parse($"{{% if {change.Attribute("if")?.Value} %}}true{{% else %}}false{{% endif %}}".RenderTemplate(tagValues));
+                }
             }
             else
             {
+                //New style short hand
+                switch (fileType)
+                {
+                    case FileType.Xml:
+                        sub.Path = change.Attribute("xPath")?.Value.RenderTemplate(tagValues);
+                        break;
+
+                    case FileType.Json:
+                        sub.Path = change.Attribute("jsonPath")?.Value.RenderTemplate(tagValues);
+                        break;
+
+                    default:
+                        throw new ApplicationException("Unknown file type");
+                }
+
+                sub.PathMatchAll = change.Attribute("matchAll")?.Value.RenderTemplate(tagValues).Equals("true", StringComparison.CurrentCultureIgnoreCase) ?? false;
+
                 switch (change.Attribute("type")?.Value.ToLower())
                 {
-                    case "replacementcontent":
+                    case "replacementcontent" when fileType == FileType.Xml:
                         sub.ReplacementContent = change.Value;
                         sub.HasReplacementContent = true;
                         break;
 
-                    case "addchildcontent":
+                    case "addchildcontent" when fileType == FileType.Xml:
                         sub.AddChildContent = change.Value;
                         sub.HasAddChildContent = true;
                         sub.AddChildContentIfNotExists = change.Attribute("ifNotExists")?.Value;
                         break;
 
-                    case "appendafter":
+                    case "appendafter" when fileType == FileType.Xml:
                         sub.AppendAfter = change.Value;
                         sub.HasAppendAfter = true;
                         break;
 
-                    case "removecurrentattributes":
+                    case "removecurrentattributes" when fileType == FileType.Xml:
                         sub.RemoveCurrentAttributes = true;
                         break;
 
-                    case "addattribute":
+                    case "addattribute" when fileType == FileType.Xml:
                         sub.AddAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
                         break;
 
-                    case "changeattribute":
+                    case "changeattribute" when fileType == FileType.Xml:
                         sub.ChangeAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
                         break;
 
                     case "changevalue":
-                        sub.ChangeValue = change.Attribute("value")?.Value;
+                        sub.ChangeValue = change.Attribute("value") != null ? change.Attribute("value")?.Value : change.Value;
                         sub.HasChangeValue = true;
                         break;
 
                     default:
                         throw new Exception($"Unknown change type '{change.Attribute("type")?.Value}'");
                 }
-
-                sub.XPath = change.Attribute("xPath")?.Value.RenderTemplate(tagValues);
 
                 if (change.Attribute("if") != null)
                 {

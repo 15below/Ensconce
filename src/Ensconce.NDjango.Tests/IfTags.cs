@@ -7,7 +7,6 @@ namespace Ensconce.NDjango.Tests
 {
     public partial class TestsRunner
     {
-
         [Test, TestCaseSource("GetIfTagTests")]
         public void IfTag(TestDescriptor test)
         {
@@ -16,7 +15,6 @@ namespace Ensconce.NDjango.Tests
 
         public static IList<TestDescriptor> GetIfTagTests()
         {
-
             IList<TestDescriptor> lst = new List<TestDescriptor>();
 
             // ### SMART IF TAG ################################################################
@@ -25,6 +23,7 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("if-tag < 03", "{% if foo < bar %}yes{% else %}no{% endif %}", ContextObjects.p("foo", 2, "bar", 1), ContextObjects.p("no")));
             lst.Add(new TestDescriptor("if-tag < 04", "{% if foo > bar %}yes{% else %}no{% endif %}", ContextObjects.p("foo", 1, "bar", 2), ContextObjects.p("no")));
             lst.Add(new TestDescriptor("if-tag < 05", "{% if foo == bar %}yes{%else %}no{% endif %}", ContextObjects.p("foo", 1, "bar", 2), ContextObjects.p("no")));
+            lst.Add(new TestDescriptor("if-tag < 06", "{% if foo = bar %}yes{%else %}no{% endif %}", ContextObjects.p("foo", 1, "bar", 2), ContextObjects.p("no")));
 
             // AND and OR raised a TemplateSyntaxError in django 1.1 but we can use OR and AND in one expression since django 1.2
             lst.Add(new TestDescriptor("if-tag-orand", "{% if foo or bar and baz %}yes{% else %}no{% endif %}", ContextObjects.p("foo", false, "bar", false), ContextObjects.p("no")));
@@ -108,8 +107,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("if-tag-not34", "{% if not foo or not bar %}yes{% else %}no{% endif %}", ContextObjects.p("foo", false, "bar", true), ContextObjects.p("yes")));
             lst.Add(new TestDescriptor("if-tag-not35", "{% if not foo or not bar %}yes{% else %}no{% endif %}", ContextObjects.p("foo", false, "bar", false), ContextObjects.p("yes")));
 
-
-
             lst.Add(new TestDescriptor("if-tag-error01", "{% if foo and %}yes{% else %}no{% endif %}", ContextObjects.p("foo", true), ContextObjects.p(typeof(Interfaces.SyntaxException))));
             lst.Add(new TestDescriptor("if-tag-error02", "{% if foo or %}yes{% else %}no{% endif %}", ContextObjects.p("foo", true), ContextObjects.p(typeof(Interfaces.SyntaxException))));
             lst.Add(new TestDescriptor("if-tag-error03", "{% if not foo and %}yes{% else %}no{% endif %}", ContextObjects.p("foo", true), ContextObjects.p(typeof(Interfaces.SyntaxException))));
@@ -123,6 +120,10 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("ifequal-tag-04", "{% ifnotequal foo bar %}yes{% else %}no{% endifnotequal %}", ContextObjects.p("foo", true, "bar", false), ContextObjects.p("yes")));
             lst.Add(new TestDescriptor("ifequal-tag-05", "{% ifequal foo \"true\" %}yes{% else %}no{% endifequal %}", ContextObjects.p("foo", "true"), ContextObjects.p("yes")));
             lst.Add(new TestDescriptor("ifequal-tag-06", "{% ifequal foo bar %}yes{% else %}no{% endifequal %}", ContextObjects.p("foo", "true", "bar", false), ContextObjects.p("no")));
+
+            //Unsupported
+            lst.Add(new TestDescriptor("unsupported-elif", "{% if foo == bar %}yes{% elif foo == baz %}{% else %}no{% endif %}", ContextObjects.p("foo", 1, "bar", 2, "baz", 2), ContextObjects.p(typeof(Interfaces.SyntaxException))));
+            lst.Add(new TestDescriptor("unsupported-in", "{% if foo in (\"a\",\"b\",\"c\") %}yes{% else %}no{% endif %}", ContextObjects.p("foo", "a"), ContextObjects.p(typeof(Interfaces.SyntaxException))));
 
             return lst;
         }
