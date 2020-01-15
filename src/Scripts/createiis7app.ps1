@@ -132,26 +132,33 @@ function StopWebSite([string]$name)
 
 function StartWebSite([string]$name)
 {
-	$status = "Unknown"
+    $status = "Unknown"
 
-	try
-	{
-		$status = (Get-WebsiteState -Name $name).Value
+    try
+    {
+        $status = (Get-WebsiteState -Name $name).Value
 
-		if ($status -ne "Started")
-		{
-			"Starting WebSite: " + $name | Write-Host
-			Start-WebSite -Name $name
-		}
-		else
-		{
-			"WebSite already in Started state: " + $name | Write-Host
-		}
-	}
-	catch
-	{
-		"Error Starting WebSite: " + $name | Write-Host
-	}
+        if ($status -ne "Started")
+        {
+            "Starting WebSite: " + $name | Write-Host
+            Start-WebSite -Name $name
+            $status = (Get-WebsiteState -Name $name).Value
+            
+            if ($status -ne "Started")
+            {
+                throw "Not started"
+            }
+        }
+        else
+        {
+            "WebSite already in Started state: " + $name | Write-Host
+        }
+    }
+    catch
+    {
+        Write-Host "Error Starting WebSite"
+        throw
+    }
 }
 
 function CheckIfWebApplicationExists ([string]$webSite, [string]$appName)

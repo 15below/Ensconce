@@ -76,5 +76,43 @@ function CreateDesktopShortcut($exePath, $shortcutName)
 	$Shortcut.Save()
 }
 
+# https://stackoverflow.com/questions/45470999/powershell-try-catch-and-retry
+function Retry-Command {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [scriptblock]$ScriptBlock,
+
+        [Parameter(Position=1, Mandatory=$false)]
+        [int]$Maximum = 5,
+
+        [Parameter(Position=2, Mandatory=$false)]
+        [int]$Delay = 100
+    )
+
+    Begin {
+        $count = 0
+    }
+
+    Process {
+        do {
+            $count++
+            try {
+                $ScriptBlock.Invoke()
+                return
+            }
+            catch {
+                Write-Error $_.Exception.Message -ErrorAction Continue
+                Write-Host "Retrying in $Delay ms..."
+                Start-Sleep -Milliseconds $Delay
+            }
+        } while ($count -lt $Maximum)
+
+        # Throw an error after $Maximum unsuccessful invocations. Doesn't need
+        # a condition, since the function returns upon successful invocation.
+        throw 'Execution failed.'
+    }
+}
+
 Write-Host "Ensconce - DeployHelp Loaded"
 $deployHelpLoaded = $true
