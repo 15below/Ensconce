@@ -151,14 +151,23 @@ function StartWebSite([string]$name)
 
     try
     {
-        $status = (Get-WebsiteState -Name $name).Value
+        $siteProtocol = "http"
+        
+        (Get-WebBinding -Name $name) | ForEach-Object{
+            if($_.Protocol -eq "ftp")
+            {
+                $siteProtocol = "ftp"
+            }
+        }       
+
+        $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
         if ($status -ne "Started")
         {
-            "Starting WebSite: " + $name | Write-Host
-            Start-WebSite -Name $name
+            "Starting WebSite: " + $name + " Protocol " + $siteProtocol | Write-Host
+            Start-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol
             
-            $status = (Get-WebsiteState -Name $name).Value
+            $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
             
             if ($status -ne "Started")
             {
@@ -172,7 +181,7 @@ function StartWebSite([string]$name)
     }
     catch
     {
-        "Error Starting WebSite" + $name | Write-Host
+        "Error Starting WebSite " + $name | Write-Host
         throw
     }
 }
