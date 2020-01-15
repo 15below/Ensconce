@@ -78,17 +78,32 @@ function UpdateAppPoolRecycling([string]$name, [string]$periodicRestart="02:00:0
 
 function StartAppPool([string]$name)
 {
-	$status = (Get-WebAppPoolState -Name $name).Value
+    $status = (Get-WebAppPoolState -Name $name).Value
 
-	if ($status -ne "Started")
-	{
-		"Starting AppPool: " + $name | Write-Host
-		Start-WebAppPool "$name"
-	}
-	else
-	{
-		"AppPool already in Started state: " + $name | Write-Host
-	}
+    try
+    {
+        if ($status -ne "Started")
+        {
+            "Starting AppPool: " + $name | Write-Host
+            Start-WebAppPool "$name"
+            
+            $status = (Get-WebAppPoolState -Name $name).Value
+            
+            if ($status -ne "Started")
+            {
+                throw "Not started"
+            }
+        }
+        else
+        {
+            "AppPool already in Started state: " + $name | Write-Host
+        }
+    }
+    catch
+    {
+        "Error Starting AppPool " + $name | Write-Host
+        throw
+    }
 }
 
 function RestartAppPool([string]$name)
@@ -142,6 +157,7 @@ function StartWebSite([string]$name)
         {
             "Starting WebSite: " + $name | Write-Host
             Start-WebSite -Name $name
+            
             $status = (Get-WebsiteState -Name $name).Value
             
             if ($status -ne "Started")
@@ -156,7 +172,7 @@ function StartWebSite([string]$name)
     }
     catch
     {
-        Write-Host "Error Starting WebSite"
+        "Error Starting WebSite" + $name | Write-Host
         throw
     }
 }
