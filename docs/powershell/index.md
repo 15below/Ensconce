@@ -18,6 +18,7 @@ These can be included as part of your deployment powershell to make deployment s
 * [createWebSite.ps1](create-website)
 * [deployHelp.ps1](deploy-help)
 * [dnsHelper.ps1](dns-helper)
+* [kubernetesHelper.ps1](kubernetes-helper)
 * [serviceManagement.ps1](service-management)
 * [userManagement.ps1](user-management)
 * [webHelper.ps1](web-helper)
