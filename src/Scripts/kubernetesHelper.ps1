@@ -9,7 +9,7 @@ Write-Host "Ensconce - KubernetesHelper Loading"
 $KubeCtlExe = "$currentDirectory\Tools\Kubernetes\kubectl.exe"
 $KubeValExe = "$currentDirectory\Tools\Kubernetes\kubeval.exe"
 
-function DeployYamlFilesToK8sClusters([string]$yamlDirectory)
+function DeployYamlFilesToK8sClusters([string]$yamlDirectory, [string] $kubernetesContext)
 {
 	Write-Host "Replace tags in yaml in $yamlDirectory"
 	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
@@ -23,18 +23,18 @@ function DeployYamlFilesToK8sClusters([string]$yamlDirectory)
 		exit $LASTEXITCODE
 	}
 
-	Write-Host "Working with cluster $KubernetesContext"
-	& $KubeCtlExe config use-context $KubernetesContext
+	Write-Host "Working with cluster $kubernetesContext"
+	& $KubeCtlExe config use-context $kubernetesContext
 	
 	if ($LASTEXITCODE -ne 0)
 	{
-		Write-Error "Error setting kubernetes context to $KubernetesContext"
+		Write-Error "Error setting kubernetes context to $kubernetesContext"
 		exit $LASTEXITCODE
 	}
 	
 	$deploymentName = ""
 	& $KubeCtlExe apply -f $yamlDirectory | foreach-object {
-		write-host $_
+		Write-Host $_
 		if($_.StartsWith("deployment.apps/"))
 		{
 			$deploymentLineName = $_.Substring(0, $_.IndexOf(' '))
