@@ -9,7 +9,7 @@ Write-Host "Ensconce - KubernetesHelper Loading"
 $KubeCtlExe = "$currentDirectory\Tools\Kubernetes\kubectl.exe"
 $KubeValExe = "$currentDirectory\Tools\Kubernetes\kubeval.exe"
 
-function DeployYamlFilesToK8sClusters([string]$yamlDirectory, [string] $kubernetesContext)
+function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernetesConfigFile, [string] $kubernetesContext)
 {
 	Write-Host "Replace tags in yaml in $yamlDirectory"
 	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
@@ -22,9 +22,12 @@ function DeployYamlFilesToK8sClusters([string]$yamlDirectory, [string] $kubernet
 		Write-Error "Invalid yaml in $yamlDirectory"
 		exit $LASTEXITCODE
 	}
+	
+	$kubernetesConfigFilePath = "$Home\.kube\$kubernetesConfigFile"
+	Write-Host "Working with kube config file $kubernetesConfigFilePath"
 
 	Write-Host "Working with cluster $kubernetesContext"
-	& $KubeCtlExe config use-context $kubernetesContext
+	& $KubeCtlExe config use-context $kubernetesContext --kubeconfig=$kubernetesConfigFilePath
 	
 	if ($LASTEXITCODE -ne 0)
 	{
@@ -33,7 +36,7 @@ function DeployYamlFilesToK8sClusters([string]$yamlDirectory, [string] $kubernet
 	}
 	
 	$deploymentName = ""
-	& $KubeCtlExe apply -f $yamlDirectory | foreach-object {
+	& $KubeCtlExe apply -f $yamlDirectory --kubeconfig=$kubernetesConfigFilePath | foreach-object {
 		Write-Host $_
 		if($_.StartsWith("deployment.apps/"))
 		{
@@ -62,14 +65,14 @@ function DeployYamlFilesToK8sClusters([string]$yamlDirectory, [string] $kubernet
 	}
 	
 	For ($i=0; $i -lt 5; $i++) {
-		& $KubeCtlExe get $deploymentName
+		& $KubeCtlExe get $deploymentName --kubeconfig=$kubernetesConfigFilePath
 		if ($LASTEXITCODE -eq 0) {
 			break
 		}
 		Start-Sleep 5
 	}
 	
-	& $KubeCtlExe rollout status $deploymentName
+	& $KubeCtlExe rollout status $deploymentName --kubeconfig=$kubernetesConfigFilePath
 	if ($LASTEXITCODE -ne 0)
 	{
 		Write-Error "Rollout of $deploymentName was not successful"
