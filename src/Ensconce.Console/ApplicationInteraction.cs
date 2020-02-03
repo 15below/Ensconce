@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -52,7 +54,19 @@ namespace Ensconce.Console
                 {
                     if (!string.IsNullOrEmpty(item.Path) && Path.GetFullPath(item.Path).Contains(new DirectoryInfo(directory).FullName))
                     {
-                        item.Process.Kill();
+                        const int Win32ErrorCodeAccessDenied = 5;
+                        try
+                        {
+                            item.Process.Kill();
+                        }
+                        catch (Win32Exception ex) when (ex.NativeErrorCode == Win32ErrorCodeAccessDenied)
+                        {
+                            // Process is already terminating.
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            // Process has already terminated.
+                        }
                         item.Process.WaitForExit();
                     }
                 }
