@@ -8,12 +8,10 @@ if($deployHelpLoaded -eq $null)
 Write-Host "Ensconce - KubernetesHelper Loading"
 $KubeCtlExe = "$currentDirectory\Tools\Kubernetes\kubectl.exe"
 $KubeValExe = "$currentDirectory\Tools\Kubernetes\kubeval.exe"
+$kubernetesConfigFilePath = "$Home\.kube"
 
-function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernetesConfigFile, [string] $kubernetesContext)
+function ValidateK8sYaml([string]$yamlDirectory)
 {
-	Write-Host "Replace tags in yaml in $yamlDirectory"
-	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
-
 	Write-Host "Validating yaml in $yamlDirectory"
 	& $KubeValExe -d $yamlDirectory
 	
@@ -22,11 +20,12 @@ function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernete
 		Write-Error "Invalid yaml in $yamlDirectory"
 		exit $LASTEXITCODE
 	}
-	
-	$kubernetesConfigFilePath = "$Home\.kube\$kubernetesConfigFile"
-	Write-Host "Working with kube config file $kubernetesConfigFilePath"
+}
 
+function SetK8sContext([string] $kubernetesConfigFile, [string] $kubernetesContext)
+{
 	Write-Host "Working with cluster $kubernetesContext"
+	$kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
 	& $KubeCtlExe config use-context $kubernetesContext --kubeconfig=$kubernetesConfigFilePath
 	
 	if ($LASTEXITCODE -ne 0)
@@ -34,7 +33,11 @@ function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernete
 		Write-Error "Error setting kubernetes context to $kubernetesContext"
 		exit $LASTEXITCODE
 	}
-	
+}
+
+function DeployToK8s([string]$yamlDirectory, [string] $kubernetesConfigFile)
+{
+	$kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
 	$deploymentName = ""
 	& $KubeCtlExe apply -f $yamlDirectory --kubeconfig=$kubernetesConfigFilePath | foreach-object {
 		Write-Host $_
@@ -78,6 +81,18 @@ function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernete
 		Write-Error "Rollout of $deploymentName was not successful"
 		exit $LASTEXITCODE
 	}
+}
+
+function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernetesConfigFile, [string] $kubernetesContext)
+{
+	Write-Host "Replace tags in yaml in $yamlDirectory"
+	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
+	
+	ValidateK8sYaml	$yamlDirectory
+
+	SetK8sContext $kubernetesConfigFile $kubernetesContext
+	
+	DeployToK8s $kubernetesConfigFile $kubernetesContext 
 }
 
 Write-Host "Ensconce - KubernetesHelper Loaded"
