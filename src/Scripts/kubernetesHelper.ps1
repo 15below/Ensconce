@@ -92,7 +92,7 @@ function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernete
 
 	SetK8sContext $kubernetesConfigFile $kubernetesContext
 	
-	DeployToK8s $kubernetesConfigFile $kubernetesContext 
+	DeployToK8s $yamlDirectory $kubernetesConfigFile
 }
 
 Write-Host "Ensconce - KubernetesHelper Loaded"
