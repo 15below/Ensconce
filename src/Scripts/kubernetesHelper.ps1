@@ -8,7 +8,7 @@ if($deployHelpLoaded -eq $null)
 Write-Host "Ensconce - KubernetesHelper Loading"
 $KubeCtlExe = "$currentDirectory\Tools\Kubernetes\kubectl.exe"
 $KubeValExe = "$currentDirectory\Tools\Kubernetes\kubeval.exe"
-$kubernetesConfigFilePath = "$Home\.kube"
+$rootConfigPath = "$Home\.kube"
 
 function ValidateK8sYaml([string]$yamlDirectory)
 {
