@@ -82,13 +82,13 @@ function ValidateUserAccess([string]$serverAddress, [string]$user, [string]$pass
 
 function CreateRabbitUserAndVHost([string]$deployUser, [string]$deployPassword, [string]$serverAddress, [string]$user, [string]$password, [string]$vHost)
 {
-	CreateRabbitVHost $deployUser $deployPassword $vHost
+	CreateRabbitVHost $deployUser $deployPassword $serverAddress $vHost
 	
-	CreateRabbitUser $deployUser $deployPassword $user $password
+	CreateRabbitUser $deployUser $deployPassword $serverAddress $user $password
 	
-	AddUserToVHost $deployUser $deployPassword $user $vHost
+	AddUserToVHost $deployUser $deployPassword $serverAddress $user $vHost
 	
-	ValidateUserAccess $user $password $vHost
+	ValidateUserAccess $serverAddress $user $password $vHost
 }
 
 
