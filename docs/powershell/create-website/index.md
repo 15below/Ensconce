@@ -22,7 +22,9 @@ This section will detail the functions and which version of IIS the function is 
 ### IIS7 Only
 
 * AddAuthoringRule([string] $websiteName, [string] $userName, [string] $access)
-* CheckIfSslBindingExists([string]$webSite, [string]$hostHeader)
+* AddSslCertificate([string] $websiteName, [string] $friendlyName, [string] $hostHeader, [string] $ipAddress="*")
+* CheckIfSslBindingExists([string]$webSite, [string]$hostHeader, [string]$hostHeader, [string] $ipAddress="*")
+* CreateWebSite([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80, [string] $ipAddress="*")
 * Enable32BitApps([string] $appPoolName)
 * EnableBasicAuthentication([string] $websiteName)
 * EnableParentPaths([string] $websiteName)
