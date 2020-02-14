@@ -329,7 +329,7 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
 	New-WebVirtualDirectory -Site $webSite -Name $virtualDir -PhysicalPath $physicalPath
 }
 
-function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [string] $hostHeader,, [string] $ipAddress)
+function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [string] $hostHeader, [string] $ipAddress)
 {
 	# accounts for possible empty strings
 	if(!$ipAddress)
