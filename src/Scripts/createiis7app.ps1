@@ -198,9 +198,9 @@ function CheckIfVirtualDirectoryExists ([string]$webSite, [string]$virtualDir)
 	$tempApp -ne $NULL
 }
 
-function CheckIfSslBindingExists ([string]$webSite, [string]$hostHeader)
+function CheckIfSslBindingExists ([string]$webSite, [string]$hostHeader, [string] $ipAddress="*")
 {
-	$tempApp = Get-WebBinding -Name $webSite -HostHeader $hostHeader -Protocol https
+	$tempApp = Get-WebBinding -Name $webSite -IPAddress $ipAddress -HostHeader $hostHeader -Protocol https
 	$tempApp -ne $NULL
 }
 
@@ -251,32 +251,44 @@ function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 	$appPool | set-item
 }
 
-function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80)
+function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80, [string] $ipAddress="*")
 {
+	# accounts for possible empty strings
+	if(!$ipAddress)
+    {
+        $ipAddress = "*"
+    }
+
 	$site = Get-WebSite | where { $_.Name -eq $name }
 	if($site -eq $null)
 	{
 		EnsurePath $localPath
 		if ($port -eq 443) {
-			New-WebSite $name -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName -ssl
+			New-WebSite $name -IPAddress $ipAddress -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName -ssl
 		} else {
-			New-WebSite $name -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName
+			New-WebSite $name -IPAddress $ipAddress -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName
 		}
 	}
 
 	Set-ItemProperty IIS:\Sites\$name -name logFile.directory -value $logLocation
 }
 
-function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [string] $protocol)
+function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [string] $protocol, [string] $ipAddress="*")
 {
 	if($protocol -eq "" ) {
 		$protocol = "http"
 	}
+	
+	# accounts for possible empty strings
+	if(!$ipAddress)
+    {
+        $ipAddress = "*"
+    }
 
 	$site = Get-WebSite | where { $_.Name -eq $siteName }
 	if($site -ne $null)
 	{
-		$webBinding = Get-WebBinding -Name $siteName -IPAddress "*" -Port $port -HostHeader $hostHeader -Protocol $protocol
+		$webBinding = Get-WebBinding -Name $siteName -IPAddress $ipAddress -Port $port -HostHeader $hostHeader -Protocol $protocol
 		if($webBinding -eq $null) {
 			if( $hostHeader -eq "" ) {
 				"Host-header is empty, cannot add" | Write-Host
@@ -285,7 +297,7 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 				$supportedProtocols = "http", "https", "net.tcp", "net.pipe", "net.msmq", "msmq.formatname"
 				if($supportedProtocols -contains $protocol) {
 					"Adding additional host-header binding of: $hostHeader, port: $port, protocol: $protocol" | Write-Host
-					New-WebBinding -Name $siteName -IPAddress "*" -Port $port -HostHeader $hostHeader -Protocol $protocol
+					New-WebBinding -Name $siteName -IPAddress $ipAddress -Port $port -HostHeader $hostHeader -Protocol $protocol
 				}
 				else {
 					"Error - cant add binding, protocol: $protocol is not supported in IIS7" | Write-Host
@@ -317,11 +329,17 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
 	New-WebVirtualDirectory -Site $webSite -Name $virtualDir -PhysicalPath $physicalPath
 }
 
-function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [string] $hostHeader)
+function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [string] $hostHeader, [string] $ipAddress)
 {
+	# accounts for possible empty strings
+	if(!$ipAddress)
+    {
+        $ipAddress = "*"
+    }
+
 	$checkBinding = CheckIfSslBindingExists $instanceName $hostHeader
 	if ( $checkBinding -eq $False) {
-		New-WebBinding -Name $websiteName -IP "*" -Port 443 -Protocol https -HostHeader $hostHeader
+		New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader
 	}
 
 	try

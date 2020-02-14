@@ -18,11 +18,15 @@ This section will detail the functions and which version of IIS the function is 
 ### IIS6 Only
 
 * [AddWildcardMap [-websiteName] &lt;String&gt; [-subFolders]  &lt;String&gt;](add-wildcard-map)
+* AddSslCertificate([string] $websiteName, [string] $friendlyName, [string] $hostHeader)
+* CreateWebSite([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80)
 
 ### IIS7 Only
 
 * AddAuthoringRule([string] $websiteName, [string] $userName, [string] $access)
-* CheckIfSslBindingExists([string]$webSite, [string]$hostHeader)
+* AddSslCertificate([string] $websiteName, [string] $friendlyName, [string] $hostHeader, [string] $ipAddress="*")
+* CheckIfSslBindingExists([string]$webSite, [string]$hostHeader, [string]$hostHeader, [string] $ipAddress="*")
+* CreateWebSite([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80, [string] $ipAddress="*")
 * Enable32BitApps([string] $appPoolName)
 * EnableBasicAuthentication([string] $websiteName)
 * EnableParentPaths([string] $websiteName)
@@ -38,14 +42,12 @@ This section will detail the functions and which version of IIS the function is 
 
 * AddDefaultDocument([string] $websiteName, [string] $defaultDocumentName)
 * AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [string] $protocol)
-* AddSslCertificate([string] $websiteName, [string] $friendlyName, [string] $hostHeader)
 * CheckIfAppPoolExists([string]$name)
 * CheckIfVirtualDirectoryExists([string]$webSite, [string]$virtualDir)
 * CheckIfWebApplicationExists([string]$webSite, [string]$appName)
 * CheckIfWebSiteExists([string]$name)
 * CreateAppPool([string]$name)
 * CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir, [string]$SubFolders)
-* CreateWebSite([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80)
 * CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
 * DefaultApplicationPoolGroup()
 * RestartAppPool([string]$name)
