@@ -7,13 +7,12 @@ if($deployHelpLoaded -eq $null)
 
 Write-Host "Ensconce - KubernetesHelper Loading"
 $KubeCtlExe = "$currentDirectory\Tools\Kubernetes\kubectl.exe"
-$KubeValExe = "$currentDirectory\Tools\Kubernetes\kubeval.exe"
 $rootConfigPath = "$Home\.kube"
 
-function ValidateK8sYaml([string]$yamlDirectory)
+function ValidateK8sYaml([string]$yamlDirectory, [string] $kubernetesConfigFile)
 {
 	Write-Host "Validating yaml in $yamlDirectory"
-	& $KubeValExe -d $yamlDirectory
+	& $KubeCtlExe apply -f $yamlDirectory --kubeconfig=$kubernetesConfigFilePath --server-dry-run=true
 	
 	if ($LASTEXITCODE -ne 0)
 	{
@@ -88,7 +87,7 @@ function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernete
 	Write-Host "Replace tags in yaml in $yamlDirectory"
 	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
 	
-	ValidateK8sYaml	$yamlDirectory
+	ValidateK8sYaml	$yamlDirectory $kubernetesConfigFile
 
 	SetK8sContext $kubernetesConfigFile $kubernetesContext
 	
