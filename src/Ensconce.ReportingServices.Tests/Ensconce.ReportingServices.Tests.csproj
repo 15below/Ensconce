@@ -83,6 +83,17 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.7.1'">
       <ItemGroup>
+        <Reference Include="EmptyFiles">
+          <HintPath>..\..\packages\EmptyFiles\lib\netstandard2.0\EmptyFiles.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.7.1'">
+      <ItemGroup>
         <Reference Include="mscorlib">
           <Paket>True</Paket>
         </Reference>
@@ -121,20 +132,6 @@
       <ItemGroup>
         <Reference Include="System.Data.SqlClient">
           <HintPath>..\..\packages\System.Data.SqlClient\lib\net461\System.Data.SqlClient.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.7.1'">
-      <ItemGroup>
-        <Reference Include="System.Drawing">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.Drawing.Common">
-          <HintPath>..\..\packages\System.Drawing.Common\lib\net461\System.Drawing.Common.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -184,4 +181,5 @@
     </When>
   </Choose>
   <Import Project="..\..\packages\ApprovalTests\build\ApprovalTests.targets" Condition="Exists('..\..\packages\ApprovalTests\build\ApprovalTests.targets')" Label="Paket" />
+  <Import Project="..\..\packages\EmptyFiles\build\EmptyFiles.targets" Condition="Exists('..\..\packages\EmptyFiles\build\EmptyFiles.targets')" Label="Paket" />
 </Project>
