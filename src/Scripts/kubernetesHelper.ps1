@@ -34,11 +34,11 @@ function SetK8sContext([string] $kubernetesConfigFile, [string] $kubernetesConte
 	}
 }
 
-function DeployToK8s([string]$yamlDirectory, [string] $kubernetesConfigFile)
+function DeployToK8s([string]$yamlDirectory, [string] $kubernetesConfigFile, [string] $pruneSelector)
 {
 	$kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
 	$deploymentName = ""
-	& $KubeCtlExe apply -f $yamlDirectory --kubeconfig=$kubernetesConfigFilePath | foreach-object {
+	& $KubeCtlExe apply -f $yamlDirectory --kubeconfig=$kubernetesConfigFilePath --prune=true --selector=$pruneSelector | foreach-object {
 		Write-Host $_
 		if($_.StartsWith("deployment.apps/"))
 		{
@@ -82,7 +82,7 @@ function DeployToK8s([string]$yamlDirectory, [string] $kubernetesConfigFile)
 	}
 }
 
-function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernetesConfigFile, [string] $kubernetesContext)
+function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string] $kubernetesConfigFile, [string] $kubernetesContext, [string] $pruneSelector)
 {
 	Write-Host "Replace tags in yaml in $yamlDirectory"
 	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
