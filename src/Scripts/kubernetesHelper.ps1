@@ -72,7 +72,7 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
 			Write-Host "  Checking $resource is accessible"
 			$cani = & $KubeCtlExe auth can-i list $resource --kubeconfig=$kubernetesConfigFilePath
 			
-			if ($LASTEXITCODE -eq 1 -and $cani -eq "yes")
+			if ($LASTEXITCODE -eq 0 -and $cani -eq "yes")
 			{
 				$resources += $resource
 			}
