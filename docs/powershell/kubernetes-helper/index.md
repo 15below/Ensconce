@@ -13,7 +13,8 @@ The `kubernetesHelper.ps1` script has functionality to interact with a Kubernete
 
 ## Functions
 
-* ValidateK8sYaml([string]$yamlDirectory, [string] $kubernetesConfigFile)
-* SetK8sContext([string] $kubernetesConfigFile, [string] $kubernetesContext)
-* DeployToK8s([string]$yamlDirectory, [string] $kubernetesConfigFile, [string] $pruneSelector)
-* DeployYamlFilesToK8sClusters([string]$yamlDirectory, [string] $kubernetesContext, [string] $pruneSelector)
+* ValidateK8sYaml([string]$yamlDirectory, [string]$kubernetesConfigFile)
+* SetK8sContext([string]$kubernetesConfigFile)
+* GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selector)
+* DeployToK8s([string]$yamlDirectory, [string]$kubernetesConfigFile, [string]$pruneSelector)
+* DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string]$kubernetesConfigFile, [string]$pruneSelector)
