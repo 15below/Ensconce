@@ -29,12 +29,12 @@ function ensconceWithArgs($passedArgs)
     }
     else
 	{
-        $results = & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $passedArgs
+        $results = & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $passedArgs | Write-Host
     }
 
     if ($LASTEXITCODE -ne 0)
     {
-        Write-Host "Ensconce failure"
+        Write-Error "Ensconce failure"
         $results
         exit $LASTEXITCODE
     }
