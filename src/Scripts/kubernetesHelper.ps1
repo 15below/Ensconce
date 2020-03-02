@@ -1,7 +1,7 @@
 ﻿$currentDirectory = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
 if($deployHelpLoaded -eq $null)
-{	
+{
 	. $currentDirectory\deployHelp.ps1
 }
 
@@ -9,25 +9,56 @@ Write-Host "Ensconce - KubernetesHelper Loading"
 $KubeCtlExe = "$currentDirectory\Tools\Kubernetes\kubectl.exe"
 $rootConfigPath = "$Home\.kube"
 
-function ValidateK8sYaml([string]$yamlDirectory, [string]$kubernetesConfigFile)
+function PreProcessYaml([string]$yamlDirectory)
 {
-	$kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
-	
-	Write-Host "Validating yaml in $yamlDirectory (local)"
-	& $KubeCtlExe apply --dry-run -f $yamlDirectory --kubeconfig=$kubernetesConfigFilePath
-	
+	if((Test-Path -Path "$yamlDirectory\kustomization.yaml") -eq $false)
+	{
+		Write-Host "Creating kustomization.yaml"
+		Add-Content -Path "$yamlDirectory\kustomization.yaml" -Value "resources:"
+		Get-ChildItem "$yamlDirectory" -Filter *.yaml | Foreach-Object {
+			if($_.Name -ne "kustomization.yaml")
+			{
+				Add-Content -Path "$yamlDirectory\kustomization.yaml" -Value $_.Name
+			}
+		}
+	}
+
+	Write-Host "Running kustomize in $yamlDirectory"
+	$output = & $KubeCtlExe kustomize $yamlDirectory
+
 	if ($LASTEXITCODE -ne 0)
 	{
-		Write-Error "Invalid yaml in $yamlDirectory"
+		Write-Error "Kustomize error processing $kustomizationPath"
 		exit $LASTEXITCODE
 	}
-	
-	Write-Host "Validating yaml in $yamlDirectory (server-side)"
-	& $KubeCtlExe apply --server-dry-run  -f $yamlDirectory --kubeconfig=$kubernetesConfigFilePath
-	
+
+	Out-File -FilePath "$yamlDirectory\kustomization-output.yaml" -InputObject $output
+
+	Write-Host "Replace tags in yaml in $yamlDirectory"
+	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=kustomization-output.yaml | Write-Host
+
+	"$yamlDirectory\kustomization-output.yaml"
+}
+
+function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
+{
+	$kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
+
+	Write-Host "Validating yaml file $yamlFile (local)"
+	& $KubeCtlExe apply --dry-run -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
+
 	if ($LASTEXITCODE -ne 0)
 	{
-		Write-Error "Invalid yaml in $yamlDirectory"
+		Write-Error "Invalid yaml file $yamlFile"
+		exit $LASTEXITCODE
+	}
+
+	Write-Host "Validating yaml file $yamlFile (server-side)"
+	& $KubeCtlExe apply --server-dry-run  -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
+
+	if ($LASTEXITCODE -ne 0)
+	{
+		Write-Error "Invalid yaml file $yamlFile"
 		exit $LASTEXITCODE
 	}
 }
@@ -35,10 +66,10 @@ function ValidateK8sYaml([string]$yamlDirectory, [string]$kubernetesConfigFile)
 function SetK8sContext([string]$kubernetesConfigFile)
 {
 	$kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
-	
+
 	Write-Host "Working with cluster 'k8s-cluster'"
 	& $KubeCtlExe config use-context "k8s-cluster" --kubeconfig=$kubernetesConfigFilePath
-	
+
 	if ($LASTEXITCODE -ne 0)
 	{
 		Write-Error "Error setting kubernetes context to 'k8s-cluster'"
@@ -51,15 +82,15 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
 	Write-Host "Get Accessible Resources"
 	$resourceVersions = @()
 	$resources = @()
-		
+
 	$rawResources = & $KubeCtlExe api-resources --verbs=list --namespaced -o name --kubeconfig=$kubernetesConfigFilePath
-	
+
 	if ($LASTEXITCODE -ne 0)
 	{
 		Write-Error "Error all api resources"
 		exit $LASTEXITCODE
 	}
-	
+
 	foreach($resource in $rawResources)
 	{
 		if($resource.Contains("."))
@@ -71,22 +102,22 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
 		{
 			Write-Host "  Checking $resource is accessible"
 			$cani = & $KubeCtlExe auth can-i list $resource --kubeconfig=$kubernetesConfigFilePath
-			
+
 			if ($LASTEXITCODE -eq 0 -and $cani -eq "yes")
 			{
 				$resources += $resource
 			}
 		}
 	}
-	
+
 	Write-Host "Accessible Server Resources: $resources"
 	Write-Host "Getting Resources Used On Selector: $selector"
-	
+
 	foreach($resource in $resources)
 	{
 		Write-Host "  Getting: $resource"
-		$output = & $KubeCtlExe get $resource -l $selector -o json --kubeconfig=$kubernetesConfigFilePath | ConvertFrom-Json	
-			
+		$output = & $KubeCtlExe get $resource -l $selector -o json --kubeconfig=$kubernetesConfigFilePath | ConvertFrom-Json
+
 		if ($LASTEXITCODE -ne 0)
 		{
 			Write-Error "Error getting $resource"
@@ -109,22 +140,22 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
 			}
 		}
 	}
-	
+
 	Write-Host "Used API Versions: $resourceVersions"
 	$resourceVersions
 }
 
-function DeployToK8s([string]$yamlDirectory, [string]$kubernetesConfigFile, [string]$pruneSelector)
+function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$pruneSelector)
 {
 	$kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
-	
+
 	$prunableList = GetResourceVersionsUsed $kubernetesConfigFile $pruneSelector
-	
+
 	$deploymentName = ""
-	Write-Host "Deploying yaml in $yamlDirectory"
-	#Run using Invoke-Expression because of dynamic parameters	
+	Write-Host "Deploying yaml file $yamlFile"
+	#Run using Invoke-Expression because of dynamic parameters
 	$pruneWhiteList = $prunableList -join " --prune-whitelist="
-	Invoke-Expression "$KubeCtlExe apply -f $yamlDirectory --prune -l $pruneSelector --prune-whitelist=$pruneWhiteList --kubeconfig=$kubernetesConfigFilePath" | foreach-object {
+	Invoke-Expression "$KubeCtlExe apply -f $yamlFile --prune -l $pruneSelector --prune-whitelist=$pruneWhiteList --kubeconfig=$kubernetesConfigFilePath" | foreach-object {
 		Write-Host $_
 		if($_.StartsWith("deployment.apps/"))
 		{
@@ -136,22 +167,22 @@ function DeployToK8s([string]$yamlDirectory, [string]$kubernetesConfigFile, [str
 			else
 			{
 				Write-Warning "Second deployment detected in package with name $deploymentLineName - This will not be checked for rollout"
-			}			
+			}
 		}
 	}
-	
+
 	if ($LASTEXITCODE -ne 0)
 	{
-		Write-Error "Error applying yaml in $yamlDirectory"
+		Write-Error "Error applying yaml file $yamlFile"
 		exit $LASTEXITCODE
 	}
-	
+
 	if ($deploymentName -eq "")
 	{
 		Write-Error "Unable to establish deployment name"
 		exit -1
 	}
-	
+
 	For ($i=0; $i -lt 5; $i++) {
 		& $KubeCtlExe get $deploymentName --kubeconfig=$kubernetesConfigFilePath
 		if ($LASTEXITCODE -eq 0) {
@@ -159,7 +190,7 @@ function DeployToK8s([string]$yamlDirectory, [string]$kubernetesConfigFile, [str
 		}
 		Start-Sleep 5
 	}
-	
+
 	& $KubeCtlExe rollout status $deploymentName --kubeconfig=$kubernetesConfigFilePath
 	if ($LASTEXITCODE -ne 0)
 	{
@@ -170,14 +201,13 @@ function DeployToK8s([string]$yamlDirectory, [string]$kubernetesConfigFile, [str
 
 function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string]$kubernetesConfigFile, [string]$pruneSelector)
 {
-	Write-Host "Replace tags in yaml in $yamlDirectory"
-	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
-	
+	$yamlFile = PreProcessYaml $yamlDirectory
+
 	SetK8sContext $kubernetesConfigFile
-	
-	ValidateK8sYaml	$yamlDirectory $kubernetesConfigFile	
-	
-	DeployToK8s $yamlDirectory $kubernetesConfigFile $pruneSelector
+
+	ValidateK8sYaml	$yamlFile $kubernetesConfigFile
+
+	DeployToK8s $yamlFile $kubernetesConfigFile $pruneSelector
 }
 
 Write-Host "Ensconce - KubernetesHelper Loaded"
