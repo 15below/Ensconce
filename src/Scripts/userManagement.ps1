@@ -101,14 +101,14 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 
 	$exe = "$EnsconceDir\Tools\Grant\Grant.exe"
 	$osInfo = Get-WmiObject -Class Win32_OperatingSystem
-    if($osInfo.ProductType -eq 2)
-    {
-	    $userName = "$env:UserDomain\$name"
-    }
-    else
-    {
-	    $userName = "$env:computername\$name"
-    }
+	if($osInfo.ProductType -eq 2)
+	{
+		$userName = "$env:UserDomain\$name"
+	}
+	else
+	{
+		$userName = "$env:computername\$name"
+	}
 	&$exe ADD SeServiceLogonRight $userName
 }
 

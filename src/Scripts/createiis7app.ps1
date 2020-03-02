@@ -7,42 +7,42 @@ $ModuleLoaded = $false
 $LoadAsSnapin = $false
 
 if ($PSVersionTable.PSVersion.Major -ge 2) {
-    if ((Get-Module -ListAvailable | ForEach-Object {$_.Name}) -contains $ModuleName) {
-        write-host "Module $ModuleName Is Avaliable!"
+	if ((Get-Module -ListAvailable | ForEach-Object {$_.Name}) -contains $ModuleName) {
+		write-host "Module $ModuleName Is Avaliable!"
 		write-host "Running: Import-Module $ModuleName"
 		Import-Module $ModuleName
-        if ((Get-Module | ForEach-Object {$_.Name}) -contains $ModuleName) {
-            $ModuleLoaded = $true
+		if ((Get-Module | ForEach-Object {$_.Name}) -contains $ModuleName) {
+			$ModuleLoaded = $true
 			write-host "Loaded $ModuleName As Module"
-        } else {
-            $LoadAsSnapin = $true
+		} else {
+			$LoadAsSnapin = $true
 			write-host "Didn't Load Module For $ModuleName Will Try Snap In"
-        }
-    } elseif ((Get-Module | ForEach-Object {$_.Name}) -contains $ModuleName) {
-        $ModuleLoaded = $true
+		}
+	} elseif ((Get-Module | ForEach-Object {$_.Name}) -contains $ModuleName) {
+		$ModuleLoaded = $true
 		write-host "The Module $ModuleName Is Already Available & Imported"
-    } else {
-        $LoadAsSnapin = $true
+	} else {
+		$LoadAsSnapin = $true
 		write-host "Module $ModuleName Not Found Will Try Snap In"
-    }
+	}
 } else {
-    $LoadAsSnapin = $true
+	$LoadAsSnapin = $true
 	write-host "Not Powershell >= 2, Will Try Snap In"
 }
 
 if ($LoadAsSnapin) {
-    if ((Get-PSSnapin -Registered | ForEach-Object {$_.Name}) -contains $ModuleName) {
-        write-host "Snap-In $ModuleName Is Avaliable!"
+	if ((Get-PSSnapin -Registered | ForEach-Object {$_.Name}) -contains $ModuleName) {
+		write-host "Snap-In $ModuleName Is Avaliable!"
 		write-host "Add-PSSnapin $ModuleName"
 		Add-PSSnapin $ModuleName
-        if ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName) {
-            $ModuleLoaded = $true
+		if ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName) {
+			$ModuleLoaded = $true
 			write-host "Loaded $ModuleName As Snap In"
-        }
-    } elseif ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName) {
-        $ModuleLoaded = $true
+		}
+	} elseif ((Get-PSSnapin | ForEach-Object {$_.Name}) -contains $ModuleName) {
+		$ModuleLoaded = $true
 		write-host "The Snap In $ModuleName Is Already Available & Imported"
-    } else
+	} else
 	{
 		write-host "Couldn't Load Module Or Snap In For $ModuleName"
 		write-host "Returning Error As Cannot Process Any Functions"
@@ -78,32 +78,32 @@ function UpdateAppPoolRecycling([string]$name, [string]$periodicRestart="02:00:0
 
 function StartAppPool([string]$name)
 {
-    $status = (Get-WebAppPoolState -Name $name).Value
+	$status = (Get-WebAppPoolState -Name $name).Value
 
-    try
-    {
-        if ($status -ne "Started")
-        {
-            "Starting AppPool: " + $name | Write-Host
-            Start-WebAppPool "$name"
-            
-            $status = (Get-WebAppPoolState -Name $name).Value
-            
-            if ($status -ne "Started")
-            {
-                throw "Not started"
-            }
-        }
-        else
-        {
-            "AppPool already in Started state: " + $name | Write-Host
-        }
-    }
-    catch
-    {
-        "Error Starting AppPool " + $name | Write-Host
-        throw
-    }
+	try
+	{
+		if ($status -ne "Started")
+		{
+			"Starting AppPool: " + $name | Write-Host
+			Start-WebAppPool "$name"
+
+			$status = (Get-WebAppPoolState -Name $name).Value
+
+			if ($status -ne "Started")
+			{
+				throw "Not started"
+			}
+		}
+		else
+		{
+			"AppPool already in Started state: " + $name | Write-Host
+		}
+	}
+	catch
+	{
+		"Error Starting AppPool " + $name | Write-Host
+		throw
+	}
 }
 
 function RestartAppPool([string]$name)
@@ -147,43 +147,43 @@ function StopWebSite([string]$name)
 
 function StartWebSite([string]$name)
 {
-    $status = "Unknown"
+	$status = "Unknown"
 
-    try
-    {
-        $siteProtocol = "http"
-        
-        (Get-WebBinding -Name $name) | ForEach-Object{
-            if($_.Protocol -eq "ftp")
-            {
-                $siteProtocol = "ftp"
-            }
-        }       
+	try
+	{
+		$siteProtocol = "http"
 
-        $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+		(Get-WebBinding -Name $name) | ForEach-Object{
+			if($_.Protocol -eq "ftp")
+			{
+				$siteProtocol = "ftp"
+			}
+		}
 
-        if ($status -ne "Started")
-        {
-            "Starting WebSite: " + $name + " Protocol " + $siteProtocol | Write-Host
-            Start-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol
-            
-            $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
-            
-            if ($status -ne "Started")
-            {
-                throw "Not started"
-            }
-        }
-        else
-        {
-            "WebSite already in Started state: " + $name | Write-Host
-        }
-    }
-    catch
-    {
-        "Error Starting WebSite " + $name | Write-Host
-        throw
-    }
+		$status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+
+		if ($status -ne "Started")
+		{
+			"Starting WebSite: " + $name + " Protocol " + $siteProtocol | Write-Host
+			Start-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol
+
+			$status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+
+			if ($status -ne "Started")
+			{
+				throw "Not started"
+			}
+		}
+		else
+		{
+			"WebSite already in Started state: " + $name | Write-Host
+		}
+	}
+	catch
+	{
+		"Error Starting WebSite " + $name | Write-Host
+		throw
+	}
 }
 
 function CheckIfWebApplicationExists ([string]$webSite, [string]$appName)
@@ -255,9 +255,9 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 {
 	# accounts for possible empty strings
 	if(!$ipAddress)
-    {
-        $ipAddress = "*"
-    }
+	{
+		$ipAddress = "*"
+	}
 
 	$site = Get-WebSite | where { $_.Name -eq $name }
 	if($site -eq $null)
@@ -278,12 +278,12 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 	if($protocol -eq "" ) {
 		$protocol = "http"
 	}
-	
+
 	# accounts for possible empty strings
 	if(!$ipAddress)
-    {
-        $ipAddress = "*"
-    }
+	{
+		$ipAddress = "*"
+	}
 
 	$site = Get-WebSite | where { $_.Name -eq $siteName }
 	if($site -ne $null)
@@ -333,9 +333,9 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 {
 	# accounts for possible empty strings
 	if(!$ipAddress)
-    {
-        $ipAddress = "*"
-    }
+	{
+		$ipAddress = "*"
+	}
 
 	$checkBinding = CheckIfSslBindingExists $instanceName $hostHeader
 	if ( $checkBinding -eq $False) {
