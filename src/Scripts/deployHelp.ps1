@@ -1,6 +1,9 @@
 ﻿Write-Host "Ensconce - DeployHelp Loading"
 $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
+$psVersion = (Get-Host).Version
+Write-Host "Ensconce - Powershell Version: $psVersion"
+
 Write-Host "Ensconce - Setting SecurityProtocol to TLS 1.1 or TLS 1.2"
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls11 -bor [System.Net.SecurityProtocolType]::Tls12;
 
