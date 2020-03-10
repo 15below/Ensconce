@@ -22,7 +22,7 @@ function PreProcessYaml([string]$yamlDirectory)
 			}
 		}
 	}
-	
+
 	Write-Host "Replace tags in yaml in $yamlDirectory"
 	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
 
