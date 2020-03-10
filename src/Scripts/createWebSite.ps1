@@ -52,6 +52,11 @@ if ($LoadAsSnapin) {
 	}
 }
 
+$iisInfo = Get-ItemProperty HKLM:\SOFTWARE\Microsoft\InetStp\
+$iisVersion = [decimal]"$($iisInfo.MajorVersion).$($iisInfo.MinorVersion)"
+
+Write-Host "IIS Version: $iisVersion"
+
 function CheckIfAppPoolExists ([string]$name)
 {
 	Test-Path "IIS:\AppPools\$name"
@@ -299,7 +304,14 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 				$supportedProtocols = "http", "https", "net.tcp", "net.pipe", "net.msmq", "msmq.formatname"
 				if($supportedProtocols -contains $protocol) {
 					"Adding additional host-header binding of: $hostHeader, port: $port, protocol: $protocol" | Write-Host
-					New-WebBinding -Name $siteName -IPAddress $ipAddress -Port $port -HostHeader $hostHeader -Protocol $protocol
+					if($iisVersion -gt 8 -and $protocol -eq "https")
+					{
+						New-WebBinding -Name $siteName -IPAddress $ipAddress -Port $port -HostHeader $hostHeader -Protocol $protocol -SslFlags 1
+					}
+					else
+					{
+						New-WebBinding -Name $siteName -IPAddress $ipAddress -Port $port -HostHeader $hostHeader -Protocol $protocol
+					}
 				}
 				else {
 					"Error - cant add binding, protocol: $protocol is not supported in IIS7" | Write-Host
@@ -341,7 +353,14 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 
 	$checkBinding = CheckIfSslBindingExists $instanceName $hostHeader
 	if ( $checkBinding -eq $False) {
-		New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader
+		if($iisVersion -gt 8)
+		{
+			New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader -SslFlags 1
+		}
+		else
+		{
+			New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader
+		}
 	}
 
 	try
