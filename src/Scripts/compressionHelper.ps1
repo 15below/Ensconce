@@ -7,7 +7,7 @@ Function CreateZip([string]$sourcePath, [string]$destinationFile)
 {
 	if($sourcePath -match "\\\*\*$")
 	{
-        Write-Warning "Path $sourcePath ends with '\**' which is not needed, removing from path"
+		Write-Warning "Path $sourcePath ends with '\**' which is not needed, removing from path"
 		$sourcePath = $sourcePath.Substring(0, $sourcePath.Length - 3)
 	}
 	Write-Host "Compressing '$sourcePath' into '$destinationFile'"
