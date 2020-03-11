@@ -375,12 +375,39 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 		$bindings=Get-ChildItem IIS:\SslBindings
 	}
 
-	if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq "0.0.0.0"}) -eq $Null)
+	$cert = get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1
+	Set-Location IIS:\sslbindings
+
+	if($iisVersion -gt 8)
 	{
-		Set-Location IIS:\sslbindings
-		get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1 | new-item 0.0.0.0!443
-		Set-Location $scriptDir
+		if($ipAddress -eq "*")
+		{
+			if (($bindings | where-object {$_.port -eq "443" -and $_.Host -eq $hostHeader}) -eq $Null)
+			{
+				new-item *!443!$hostHeader -Thumbprint $cert.Thumbprint -SSLFlags 1
+			}
+		}
+		else
+		{
+			if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq $ipAddress -and $_.Host -eq $hostHeader}) -eq $Null)
+			{
+				new-item $ipAddress!443!$hostHeader -Thumbprint $cert.Thumbprint -SSLFlags 1
+			}
+		}
 	}
+	else
+	{
+		if($ipAddress -eq "*")
+		{
+			$ipAddress = "0.0.0.0"
+		}
+
+		if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq $ipAddress}) -eq $Null)
+		{
+			new-item $ipAddress!443 -Thumbprint $cert.Thumbprint
+		}
+	}
+	Set-Location $scriptDir
 }
 
 function EnableWebDav ([string] $websiteName)
