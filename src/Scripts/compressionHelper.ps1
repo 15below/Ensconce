@@ -1,15 +1,23 @@
 Write-Host "Ensconce - CompressionHelper Loading"
 
+Add-Type -Assembly System.IO.Compression.FileSystem
+$compressionLevel = [System.IO.Compression.CompressionLevel]::Optimal
+
 Function CreateZip([string]$sourcePath, [string]$destinationFile)
 {
+	if($sourcePath -match "\\\*\*$")
+	{
+		Write-Warning "Path $sourcePath ends with '\**' which is not needed, removing from path"
+		$sourcePath = $sourcePath.Substring(0, $sourcePath.Length - 3)
+	}
 	Write-Host "Compressing '$sourcePath' into '$destinationFile'"
-	Compress-Archive -Path $sourcePath -DestinationPath $destinationFile -Force
+	[System.IO.Compression.ZipFile]::CreateFromDirectory($sourcePath, $destinationFile, $compressionLevel, $false)
 }
 
 Function ExtractZip([string]$sourceFile, [string]$destinationFolder)
 {
 	Write-Host "Extracting '$sourceFile' into '$destinationFolder'"
-	Expand-Archive -Path $sourceFile -DestinationPath $destinationFolder -Force
+	[System.IO.Compression.ZipFile]::ExtractToDirectory($sourceFile, $destinationFolder, $compressionLevel, $false)
 }
 
 Function Get7zip() {
