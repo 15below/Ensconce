@@ -66,14 +66,31 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 function SetK8sContext([string]$kubernetesConfigFile)
 {
 	$kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
+	$targetContext = "k8s-cluster"
 
-	Write-Host "Working with cluster 'k8s-cluster'"
-	& $KubeCtlExe config use-context "k8s-cluster" --kubeconfig=$kubernetesConfigFilePath
-
+	Write-Host "Getting current context"
+	$currentContext = & $KubeCtlExe config current-context --kubeconfig=$kubernetesConfigFilePath
+	
 	if ($LASTEXITCODE -ne 0)
 	{
-		Write-Error "Error setting kubernetes context to 'k8s-cluster'"
+		Write-Error "Error getting current kubernetes context"
 		exit $LASTEXITCODE
+	}
+	
+	if($currentContext -ne $targetContext)
+	{
+	    Write-Host "Switching from '$currentContext' context to '$targetContext' context"
+	    & $KubeCtlExe config use-context "$targetContext" --kubeconfig=$kubernetesConfigFilePath
+	
+	    if ($LASTEXITCODE -ne 0)
+	    {
+		    Write-Error "Error setting kubernetes context to '$targetContext'"
+		    exit $LASTEXITCODE
+	    }
+	}
+	else
+	{
+	    Write-Host "Already working with '$targetContext' context"
 	}
 }
 
