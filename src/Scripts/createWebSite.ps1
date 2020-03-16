@@ -376,6 +376,12 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 	}
 
 	$cert = get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1
+	
+	if ($cert -eq $null)
+	{
+	    throw "SSL Cert $friendlyName not found"
+	}
+	
 	Set-Location IIS:\sslbindings
 
 	if($iisVersion -gt 8)
