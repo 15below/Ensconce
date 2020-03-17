@@ -2,9 +2,9 @@
 $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
 $ensconceVersion = "Unknown"
-if(Test-Path $DeployToolsDir\releaseVersion.txt -eq $true)
+if((Test-Path $DeployToolsDir\releaseVersion.txt) -eq $true)
 {
-	$ensconceVersion = Get-Content -Path $DeployToolsDir\releaseVersion.txt -TotalCount 5
+	$ensconceVersion = Get-Content -Path $DeployToolsDir\releaseVersion.txt -TotalCount 1
 }
 Write-Host "Ensconce - Ensconce Version: $ensconceVersion"
 
