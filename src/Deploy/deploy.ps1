@@ -25,17 +25,17 @@ else
 	Remove-Item "$scriptDir\Content\kubernetesHelper.ps1" -Force
 }
 
-Write-Host "Deploying Tools to $DeployPath"
-
 Get-ChildItem -Path $scriptDir\Content\*.ps1 | ForEach-Object {
 	$scriptName = $_.Name
-	Write-Host "Deploying script $scriptName"
-	Copy-Item $_ $DeployPath -Force
+	$scriptFullName = $_.FullName
+	Write-Host "Deploying script $scriptName to $DeployPath"
+	Copy-Item -Path $scriptFullName -Destination $DeployPath -Force
 }
 
 Get-ChildItem -Path $scriptDir\Content\Tools | ForEach-Object {
 	$toolName = $_.Name
-	Write-Host "Deploying tool $toolName"
-	New-Item -Path "$DeployPath\Tools" -Name $toolName -ItemType "Directory"
-	Copy-Item $_ $DeployPath\Tools -Force -Recurse
+	$toolFullName = $_.FullName
+	Write-Host "Deploying tool $toolName to $DeployPath\Tools"
+	New-Item -Path "$DeployPath\Tools" -Name $toolName -ItemType "Directory" -Force
+	Copy-Item -Path $toolFullName -Destination $DeployPath\Tools -Force -Recurse
 }
