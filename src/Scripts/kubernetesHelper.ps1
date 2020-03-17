@@ -126,39 +126,54 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
 			}
 		}
 	}
-
-	Write-Host "Accessible Server Resources: $resources"
-	Write-Host "Getting Resources Used On Selector: $selector"
-
-	foreach($resource in $resources)
+	
+	if($resources.Count -gt 0)
 	{
-		Write-Host "  Getting: $resource"
-		$output = & $KubeCtlExe get $resource -l $selector -o json --kubeconfig=$kubernetesConfigFilePath | ConvertFrom-Json
+		Write-Host "Accessible Server Resources: $resources"
+		Write-Host "Getting Resources Used On Selector: $selector"
 
-		if ($LASTEXITCODE -ne 0)
+		foreach($resource in $resources)
 		{
-			Write-Error "Error getting $resource"
-			exit $LASTEXITCODE
+			Write-Host "  Getting: $resource"
+			$output = & $KubeCtlExe get $resource -l $selector -o json --kubeconfig=$kubernetesConfigFilePath | ConvertFrom-Json
+
+			if ($LASTEXITCODE -ne 0)
+			{
+				Write-Error "Error getting $resource"
+				exit $LASTEXITCODE
+			}
+
+			foreach($item in $output.items)
+			{
+				$groupVersion = $item.apiVersion
+				if(-not($groupVersion.Contains("/")))
+				{
+					$groupVersion = "core/${groupVersion}"
+				}
+				$kind = $item.kind
+				$GroupVersionKind = "${groupVersion}/${kind}"
+
+				if($resourceVersions -notcontains $GroupVersionKind)
+				{
+					$resourceVersions += $GroupVersionKind
+				}
+			}
 		}
-
-		foreach($item in $output.items)
+		
+		if($resourceVersions.Count -gt 0)
+		{	
+			Write-Host "Used API Versions: $resourceVersions"
+		}
+		else
 		{
-			$groupVersion = $item.apiVersion
-			if(-not($groupVersion.Contains("/")))
-			{
-				$groupVersion = "core/${groupVersion}"
-			}
-			$kind = $item.kind
-			$GroupVersionKind = "${groupVersion}/${kind}"
-
-			if($resourceVersions -notcontains $GroupVersionKind)
-			{
-				$resourceVersions += $GroupVersionKind
-			}
+			Write-Host "No User API Versions"
 		}
 	}
-
-	Write-Host "Used API Versions: $resourceVersions"
+	else
+	{
+		Write-Host "No Accessible Server Resources"
+	}
+	
 	$resourceVersions
 }
 
@@ -171,8 +186,17 @@ function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$
 	$deploymentName = ""
 	Write-Host "Deploying yaml file $yamlFile"
 	#Run using Invoke-Expression because of dynamic parameters
-	$pruneWhiteList = $prunableList -join " --prune-whitelist="
-	Invoke-Expression "$KubeCtlExe apply -f $yamlFile --prune -l $pruneSelector --prune-whitelist=$pruneWhiteList --kubeconfig=$kubernetesConfigFilePath" | foreach-object {
+	if($prunableList.Count -gt 0)
+	{
+		$pruneWhiteList = $prunableList -join " --prune-whitelist="
+		$command = "$KubeCtlExe apply -f $yamlFile --prune -l $pruneSelector --prune-whitelist=$pruneWhiteList --kubeconfig=$kubernetesConfigFilePath"
+	}
+	else
+	{
+		$command = "$KubeCtlExe apply -f $yamlFile --kubeconfig=$kubernetesConfigFilePath"
+	}
+	
+	Invoke-Expression $command | foreach-object {
 		Write-Host $_
 		if($_.StartsWith("deployment.apps/"))
 		{
