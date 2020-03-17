@@ -6,7 +6,7 @@ if($deployHelpLoaded -eq $null)
 }
 
 Write-Host "Ensconce - KubernetesHelper Loading"
-$KubeCtlExe = "$currentDirectory\Tools\Kubernetes\kubectl.exe"
+$KubeCtlExe = "$currentDirectory\Tools\KubeCtl\kubectl.exe"
 $rootConfigPath = "$Home\.kube"
 
 function PreProcessYaml([string]$yamlDirectory)
