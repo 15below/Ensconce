@@ -36,6 +36,9 @@ Get-ChildItem -Path $scriptDir\Content\Tools | ForEach-Object {
 	$toolName = $_.Name
 	$toolFullName = $_.FullName
 	Write-Host "Deploying tool $toolName to $DeployPath\Tools"
-	New-Item -Path "$DeployPath\Tools" -Name $toolName -ItemType "Directory" -Force
+	New-Item -Path "$DeployPath\Tools" -Name $toolName -ItemType "Directory" -Force | Out-Null
 	Copy-Item -Path $toolFullName -Destination $DeployPath\Tools -Force -Recurse
 }
+
+Write-Host "Create releaseVersion.txt"
+New-Item -Path $DeployPath -Name "releaseVersion.txt" -ItemType "file" -Value $VersionNumber

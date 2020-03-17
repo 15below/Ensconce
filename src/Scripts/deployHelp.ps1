@@ -1,6 +1,13 @@
 ﻿Write-Host "Ensconce - DeployHelp Loading"
 $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
+$ensconceVersion = "Unknown"
+if(Test-Path $DeployToolsDir\releaseVersion.txt -eq $true)
+{
+	$ensconceVersion = Get-Content -Path $DeployToolsDir\releaseVersion.txt -TotalCount 5
+}
+Write-Host "Ensconce - Ensconce Version: $ensconceVersion"
+
 $psVersion = (Get-Host).Version
 Write-Host "Ensconce - Powershell Version: $psVersion"
 
