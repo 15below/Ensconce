@@ -42,4 +42,5 @@ This section will detail the functions that can be performed on IIS.
 * DefaultApplicationPoolGroup()
 * RestartAppPool([string]$name)
 * SetAppPoolIdentity([string]$name,[string]$user,[string]$virtualDir,[string]$virtualDir)
-* CheckIfWebApplicationExists([string]$webSite
+* CheckIfWebApplicationExists([string]$webSite)
+* GetSslCert([string] $friendlyName)
