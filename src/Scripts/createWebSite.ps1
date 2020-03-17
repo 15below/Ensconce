@@ -374,13 +374,6 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 		$firstentry | New-ItemProperty -Name "SslCertStoreName" -Value "MY"
 		$bindings=Get-ChildItem IIS:\SslBindings
 	}
-
-	$cert = get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1
-	
-	if ($cert -eq $null)
-	{
-	    throw "SSL Cert $friendlyName not found"
-	}
 	
 	Set-Location IIS:\sslbindings
 
@@ -390,6 +383,7 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 		{
 			if (($bindings | where-object {$_.port -eq "443" -and $_.Host -eq $hostHeader}) -eq $Null)
 			{
+				$cert = GetSslCert $friendlyName
 				new-item *!443!$hostHeader -Thumbprint $cert.Thumbprint -SSLFlags 1
 			}
 		}
@@ -397,6 +391,7 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 		{
 			if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq $ipAddress -and $_.Host -eq $hostHeader}) -eq $Null)
 			{
+				$cert = GetSslCert $friendlyName
 				new-item $ipAddress!443!$hostHeader -Thumbprint $cert.Thumbprint -SSLFlags 1
 			}
 		}
@@ -410,10 +405,24 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 
 		if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq $ipAddress}) -eq $Null)
 		{
+			$cert = GetSslCert $friendlyName
 			new-item $ipAddress!443 -Thumbprint $cert.Thumbprint
 		}
 	}
+	
 	Set-Location $scriptDir
+}
+
+function GetSslCert([string] $friendlyName)
+{
+	$cert = get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1
+	
+	if ($cert -eq $null)
+	{
+	    throw "SSL Cert $friendlyName not found"
+	}
+	
+	$cert
 }
 
 function EnableWebDav ([string] $websiteName)
