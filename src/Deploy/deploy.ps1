@@ -36,5 +36,6 @@ Get-ChildItem -Path $scriptDir\Content\*.ps1 | ForEach-Object {
 Get-ChildItem -Path $scriptDir\Content\Tools | ForEach-Object {
 	$toolName = $_.Name
 	Write-Host "Deploying tool $toolName"
+	New-Item -Path "$DeployPath\Tools" -Name $toolName -ItemType "Directory"
 	Copy-Item $_ $DeployPath\Tools -Force -Recurse
 }
