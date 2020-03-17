@@ -17,10 +17,21 @@ A .net command line tool for aiding deployment of server components.
 * Cope with multiple instances of the same component
 * Deploy SSRS reports
 
+Deploying A Release
+-------------------
+
+Each release contains a nuget package which is an [Octopus](https://octopus.com/) deployment package.
+
+There are 3 required variables, these are:
+
+* DeployPath - set to the folder you want to deploy Ensconce too
+* IncludeK8s - set to `True` or `False` depending on if you want Kubernetes deployments
+* VersionNumber - set as `#{Octopus.Release.Number}` in order to get the right version number
+
 How do I use it?
 ----------------
 
-* Get a copy of your component with default configuration to the target server (at 15below we use [Octopus](http://octopusdeploy.com))
+* Get a copy of your component with default configuration to the target server (at 15below we use [Octopus](https://octopus.com/))
 * Set up your environment; Ensconce expects one of the following environment variables sets to exist:
 	* ClientCode
 	* Environment
