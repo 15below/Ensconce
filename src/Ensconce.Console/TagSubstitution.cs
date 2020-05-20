@@ -36,7 +36,7 @@ namespace Ensconce.Console
                 }
             });
 
-            if (exceptions.Count > 1) throw new AggregateException(exceptions);
+            if (exceptions.Count > 0) throw new AggregateException(exceptions);
         }
 
         private static void UpdateSingleFile(FileInfo templateFile)
