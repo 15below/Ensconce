@@ -23,6 +23,9 @@ function PreProcessYaml([string]$yamlDirectory)
 		}
 	}
 
+	Write-Host "Replace tags in yaml in $yamlDirectory"
+	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
+
 	Write-Host "Running kustomize in $yamlDirectory"
 	$output = & $KubeCtlExe kustomize $yamlDirectory
 
@@ -33,9 +36,6 @@ function PreProcessYaml([string]$yamlDirectory)
 	}
 
 	Out-File -FilePath "$yamlDirectory\kustomization-output.yaml" -InputObject $output
-
-	Write-Host "Replace tags in $yamlDirectory\kustomization-output.yaml"
-	ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=kustomization-output.yaml | Write-Host
 
 	"$yamlDirectory\kustomization-output.yaml"
 }
