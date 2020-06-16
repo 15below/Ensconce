@@ -91,6 +91,7 @@ namespace Ensconce.Console
             if (waitAttempt >= maxWait)
             {
                 Logging.LogError("Service {0} didn't stop in {1} seconds!", serviceName, maxWait);
+                throw new Exception($"{serviceName} failed to stop in {maxWait} seconds");
             }
         }
 
@@ -112,6 +113,7 @@ namespace Ensconce.Console
             if (waitAttempt >= maxWait)
             {
                 Logging.LogError("Service {0} still installed after {1} seconds!", serviceName, maxWait);
+                throw new Exception($"{serviceName} failed to uninstall in {maxWait} seconds");
             }
         }
 

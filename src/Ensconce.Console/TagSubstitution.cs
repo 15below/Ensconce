@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +22,7 @@ namespace Ensconce.Console
 
             var files = new DirectoryInfo(Arguments.DeployFrom).GetFiles(Arguments.TemplateFilters, SearchOption.AllDirectories);
 
-            var exceptions = new ConcurrentBag<Exception>();
+            var exceptions = new ConcurrentQueue<Exception>();
 
             Parallel.ForEach(files, file =>
             {
@@ -33,12 +32,11 @@ namespace Ensconce.Console
                 }
                 catch (Exception e)
                 {
-                    exceptions.Add(e);
+                    exceptions.Enqueue(e);
                 }
             });
 
-            if (exceptions.Count == 1) throw exceptions.First();
-            if (exceptions.Count > 1) throw new AggregateException(exceptions);
+            if (exceptions.Count > 0) throw new AggregateException(exceptions);
         }
 
         private static void UpdateSingleFile(FileInfo templateFile)
