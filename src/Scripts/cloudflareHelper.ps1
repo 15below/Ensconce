@@ -1,0 +1,83 @@
+Write-Host "Ensconce - cloudflare Loading"
+
+function CallCloudflare([string]$token, [string]$urlPart, [WebRequestMethod]$method, [string]$body = $null) {
+    $baseurl = "https://api.cloudflare.com/client/v4"
+
+    $headers = @{
+	    "Content-Type" = "application/json"
+        "Authorization" = "Bearer $token"
+    }
+
+    $url = "$baseurl/$urlPart"
+    
+    if($body -eq $null) {
+        Invoke-RestMethod -Uri $url -Method $method -Headers $headers
+    } else {
+        Invoke-RestMethod -Uri $url -Method $method -Headers $headers -Body $body
+    }    
+}
+
+function GetCloudflareDnsZone([string]$token, [string]$domain) {
+    $zoneurl = "zones/?name=$domain"
+    $zone = CallCloudflare $token $zoneurl Get
+
+    if($zone.result.Count -gt 0){
+        $zone.result
+    } else {
+        throw "Unable to locate zone $domain"
+    }
+}
+
+function GetCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record) {    
+    $recordurl = "zones/$zoneid/dns_records/?name=$record.$domain"
+    $record = CallCloudflare $token $recordurl Get
+
+    if($record.result.Count -gt 0){
+        $record.result
+    } else {
+        throw "Unable to locate record $record.$domain"
+    }
+}
+
+function GetCloudflareDnsIp([string]$token, [string]$domain, [string]$record) {
+    $zone = GetCloudflareDnsZone $token $domain
+
+    $zoneid = $zone.id    
+    $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
+
+    $dnsRecord.content
+}
+
+function AddOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr) {
+    $zone = GetCloudflareDnsZone $token $domain
+    $zoneid = $zone.id    
+    
+    $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
+
+    if($dnsRecord -eq $null) {
+        $newDnsRecord = @{
+		    "type" = "A"
+		    "name" =  "$record.$domain"
+		    "content" = $ipaddr
+	    }
+
+        $body = $newDnsRecord | ConvertTo-Json
+
+        $newrecordurl = "zones/$zoneid/dns_records"
+        $result = CallCloudflare $token $newrecordurl Post $body
+
+        Write-Host "Record $record.$domain has been updated to the IP $($result.result.content)"
+    } else {
+        $recordid = $dnsRecord.id	
+        $dnsRecord | Add-Member "content" $ipaddr -Force 
+        $body = $dnsRecord | ConvertTo-Json 
+
+        $updateurl = "zones/$zoneid/dns_records/$recordid/" 
+        $result = CallCloudflare $token $updateurl Put $body
+
+        Write-Host "New record $record.$domain has been created with the ID $($result.result.id)"
+    }
+}
+
+Write-Host "Ensconce - cloudflare Loaded"
+$cloudflareHelperLoaded = $true
