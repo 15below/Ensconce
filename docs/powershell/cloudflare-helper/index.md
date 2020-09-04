@@ -11,8 +11,9 @@ The `cloudflareHelper.ps1` script has functionality to assist interacting with t
 
 ## Functions
 
-* CallCloudflare([string]$token, [string]$urlPart, [WebRequestMethod]$method, [string]$body = $null)
+* CallCloudflare([string]$token, [string]$urlPart, [Microsoft.PowerShell.Commands.WebRequestMethod]$method, [string]$body = $null)
 * GetCloudflareDnsZone([string]$token, [string]$domain)
 * GetCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record)
+* CheckCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record)
 * GetCloudflareDnsIp([string]$token, [string]$domain, [string]$record)
 * AddOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr)
