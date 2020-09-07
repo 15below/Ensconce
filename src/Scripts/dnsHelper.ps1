@@ -16,7 +16,7 @@ function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 
 function CheckCNameValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 {
-	$result = dnscmd $dnsServer /EnumRecords $domain $name
+	$result = dnscmd $dnsServer /EnumRecords $domain $name /node
 	$outcome = $False
 	foreach ($item in $result)
 	{
@@ -108,7 +108,7 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
 
 function CheckARecordValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
 {
-	$result = dnscmd $dnsServer /EnumRecords $domain $name
+	$result = dnscmd $dnsServer /EnumRecords $domain $name /node
 	$outcome = $False
 	foreach ($item in $result)
 	{
