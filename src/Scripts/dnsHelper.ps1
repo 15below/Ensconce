@@ -28,15 +28,16 @@ function CheckCNameValue ([string]$dnsServer, [string]$domain, [string]$name, [s
 	$outcome
 }
 
-function CheckARecordValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
+function DeleteCName ([string]$dnsServer, [string]$domain, [string]$name)
 {
-	$result = dnscmd $dnsServer /EnumRecords $domain $name
-	$outcome = $False
+	write-host "Deleting DNS CNAME record for $name.$domain"
+	$result = dnscmd $dnsServer /recordDelete $domain $name CNAME /f
+	$outcome = $false
 	foreach ($item in $result)
 	{
-		if ($item.Contains("3600 A") -and ($item.Contains($ipAddress)))
+		if ($item.Contains("3600 CNAME") -And $item.Contains("Command completed successfully"))
 		{
-			$outcome = $True
+			$outcome = $true
 		}
 	}
 	$outcome
@@ -57,6 +58,83 @@ function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 	$outcome
 }
 
+function UpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
+{
+	$outcome = $false
+	if(DeleteCName $dnsServer $domain $name)
+	{
+		$outcome = CreateCName $dnsServer $domain $name $server
+	}
+	$outcome
+}
+
+function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
+{
+	$outcome = $false
+	if(CheckName $dnsServer $domain $name)
+	{
+		if(CheckCNameValue $dnsServer $domain $name $server)
+		{
+			write-host "DNS CNAME record for $name.$domain already pointing at $server"
+			$outcome = $true
+		}
+		else
+		{
+			if(UpdateCName $dnsServer $domain $name $server)
+			{
+				$outcome = $true
+				write-host "DNS CNAME record for $name.$domain updated to point at $server"
+			}
+			else
+			{
+				write-error "Failed to update DNS CNAME record for $name.$domain"
+			}
+		}
+	}
+	else
+	{
+		if(CreateCName $dnsServer $domain $name $server)
+		{
+			$outcome = $true
+			write-host "DNS CNAME record for $name.$domain created pointing at $server"
+			else
+			{
+				write-error "Failed to create DNS CNAME record for $name.$domain"
+			}
+		}
+	}
+	$outcome
+}
+
+function CheckARecordValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
+{
+	$result = dnscmd $dnsServer /EnumRecords $domain $name
+	$outcome = $False
+	foreach ($item in $result)
+	{
+		if ($item.Contains("3600 A") -and ($item.Contains($ipAddress)))
+		{
+			$outcome = $True
+		}
+	}
+	$outcome
+}
+
+function DeleteARecord ([string]$dnsServer, [string]$domain, [string]$name)
+{
+	write-host "Deleting DNS A record for $name.$domain"
+	$result = dnscmd $dnsServer /recordDelete $domain $name A /f
+	$outcome = $false
+	foreach ($item in $result)
+	{
+		if ($item.Contains("3600 A") -And $item.Contains("Command completed successfully"))
+		{
+			$outcome = $true
+		}
+	}
+	$outcome
+}
+
 function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
 {
 	write-host "Creating DNS A record for $name.$domain pointing at $ipAddress"
@@ -70,6 +148,67 @@ function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [str
 		}
 	}
 	$outcome
+}
+
+function UpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
+{
+	$outcome = $false
+	if(DeleteARecord $dnsServer $domain $name)
+	{
+		$outcome = CreateARecord $dnsServer $domain $name $ipAddress
+	}	
+	$outcome
+}
+
+function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
+{
+	$outcome = $false
+	if(CheckName $dnsServer $domain $name)
+	{
+		if(CheckARecordValue $dnsServer $domain $name $ipAddress)
+		{
+			write-host "DNS A record for $name.$domain already pointing at $ipAddress"
+			$outcome = $true
+		}
+		else
+		{
+			if(UpdateARecord $dnsServer $domain $name $ipAddress)
+			{
+				$outcome = $true
+				write-host "DNS A record for $name.$domain updated to point at $ipAddress"
+			}
+			else
+			{
+				write-error "Failed to update DNS A record for $name.$domain"
+			}
+		}
+	}
+	else
+	{
+		if(CreateARecord $dnsServer $domain $name $ipAddress)
+		{
+			$outcome = $true
+			write-host "DNS A record for $name.$domain created pointing at $ipAddress"
+		}
+		else
+		{
+			write-error "Failed to create DNS A record for $name.$domain"
+		}
+	}
+	$outcome
+}
+
+function CreateOrUpdateDns ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddressOrServer)
+{
+	$isIp = $ipAddressOrServer -match "^\d+\.\d+\.\d+\.\d+$";
+	if($isIp)
+	{
+		CreateOrUpdateARecord $dnsServer $domain $name $ipAddressOrServer
+	}
+	else
+	{
+		CreateOrUpdateCNAME $dnsServer $domain $name $ipAddressOrServer
+	}
 }
 
 function CheckHostsEntry ([string]$Address, [string]$FullyQualifiedName)
