@@ -92,18 +92,14 @@ function CreateCloudflareARecord([string]$token, [string]$zoneid, [string]$domai
     Write-Host "New record $record.$domain has been created with the ID $($result.result.id)"
 }
 
-function UpdateCloudflareARecord([string]$token, [string]$zoneid, [string]$domain, [string]$record, [string]$ipaddr)
+function UpdateCloudflareARecord([string]$token, [string]$zoneid, [string]$recordid, [string]$domain, [string]$record, [string]$ipaddr)
 {
-    $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
-        
-        $recordid = $dnsRecord.id	
-        $dnsRecord | Add-Member "content" $ipaddr -Force 
-        $body = $dnsRecord | ConvertTo-Json 
+    $dnsRecord | Add-Member "content" $ipaddr -Force 
+    $body = $dnsRecord | ConvertTo-Json 
 
-        $updateurl = "zones/$zoneid/dns_records/$recordid/" 
-        $result = CallCloudflare $token $updateurl Put $body
-
-        Write-Host "Record $record.$domain has been updated to the IP $($result.result.content)"
+    $updateurl = "zones/$zoneid/dns_records/$recordid/" 
+    $result = CallCloudflare $token $updateurl Put $body
+    Write-Host "Record $record.$domain has been updated to the IP $($result.result.content)"
 }
 
 function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr) 
@@ -115,7 +111,16 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
 
     if($recordExists -eq $true) 
     {
-        UpdateCloudflareARecord $token $zoneid $domain $record $ipaddr
+        $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
+        $recordid = $dnsRecord.id
+        if($dnsRecord.content -eq $ipaddr)
+        {
+            Write-Host "Record $record.$domain already has the value $ipaddr" 
+        }
+        else
+        {
+            UpdateCloudflareARecord $token $zoneid $recordid $domain $record $ipaddr
+        }        
     } 
     else 
     {
