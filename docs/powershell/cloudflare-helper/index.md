@@ -17,5 +17,5 @@ The `cloudflareHelper.ps1` script has functionality to assist interacting with t
 * CheckCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record)
 * GetCloudflareDnsIp([string]$token, [string]$domain, [string]$record)
 * CreateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr)
-* UpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr)
-* CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr)
+* UpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr, [bool]$warnOnUpdate = $false)
+* CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr, [bool]$warnOnUpdate = $false)

@@ -68,7 +68,7 @@ function UpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 	$outcome
 }
 
-function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
+function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server, [bool]$warnOnUpdate = $false)
 {
 	$outcome = $false
 	if(CheckName $dnsServer $domain $name)
@@ -83,7 +83,14 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
 			if(UpdateCName $dnsServer $domain $name $server)
 			{
 				$outcome = $true
-				write-host "DNS CNAME record for $name.$domain updated to point at $server"
+				if($warnOnUpdate)
+				{
+					write-warning "DNS CNAME record for $name.$domain updated to point at $ipAddress"
+				}
+				else
+				{
+					write-host "DNS CNAME record for $name.$domain updated to point at $server"
+				}				
 			}
 			else
 			{
@@ -160,7 +167,7 @@ function UpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [str
 	$outcome
 }
 
-function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
+function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress, [bool]$warnOnUpdate = $false)
 {
 	$outcome = $false
 	if(CheckName $dnsServer $domain $name)
@@ -175,7 +182,14 @@ function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$na
 			if(UpdateARecord $dnsServer $domain $name $ipAddress)
 			{
 				$outcome = $true
-				write-host "DNS A record for $name.$domain updated to point at $ipAddress"
+				if($warnOnUpdate)
+				{
+					write-warning "DNS A record for $name.$domain updated to point at $ipAddress"
+				}
+				else
+				{
+					write-host "DNS A record for $name.$domain updated to point at $ipAddress"
+				}				
 			}
 			else
 			{

@@ -92,17 +92,24 @@ function CreateCloudflareARecord([string]$token, [string]$zoneid, [string]$domai
     Write-Host "New record $record.$domain has been created with the ID $($result.result.id)"
 }
 
-function UpdateCloudflareARecord([string]$token, [string]$zoneid, [string]$recordid, [string]$domain, [string]$record, [string]$ipaddr)
+function UpdateCloudflareARecord([string]$token, [string]$zoneid, [string]$recordid, [string]$domain, [string]$record, [string]$ipaddr, [bool]$warnOnUpdate = $false)
 {
     $dnsRecord | Add-Member "content" $ipaddr -Force 
     $body = $dnsRecord | ConvertTo-Json 
 
     $updateurl = "zones/$zoneid/dns_records/$recordid/" 
     $result = CallCloudflare $token $updateurl Put $body
-    Write-Host "Record $record.$domain has been updated to the IP $($result.result.content)"
+    if($warnOnUpdate)
+    {
+        Write-Warning "Record $record.$domain has been updated to the IP $($result.result.content)"
+    }
+    else
+    {
+        Write-Host "Record $record.$domain has been updated to the IP $($result.result.content)"
+    }
 }
 
-function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr) 
+function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr, [bool]$warnOnUpdate = $false) 
 {
     $zone = GetCloudflareDnsZone $token $domain
     $zoneid = $zone.id    
@@ -119,7 +126,7 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
         }
         else
         {
-            UpdateCloudflareARecord $token $zoneid $recordid $domain $record $ipaddr
+            UpdateCloudflareARecord $token $zoneid $recordid $domain $record $ipaddr $warnOnUpdate
         }        
     } 
     else 
