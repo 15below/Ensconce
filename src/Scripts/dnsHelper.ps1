@@ -61,12 +61,9 @@ function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 
 function UpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 {
-	$outcome = $false
-	if(DeleteCName $dnsServer $domain $name)
-	{
-		$outcome = CreateCName $dnsServer $domain $name $server
-	}
-	$outcome
+	DeleteCName $dnsServer $domain $name
+	DeleteARecord $dnsServer $domain $name
+	CreateCName $dnsServer $domain $name $server
 }
 
 function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server, [bool]$warnOnUpdate = $false)
@@ -108,7 +105,7 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
         }
 		else
 		{
-				write-error "Failed to create DNS CNAME record for $name.$domain"
+			write-error "Failed to create DNS CNAME record for $name.$domain"
 		}
 	}
 	$outcome
@@ -160,12 +157,9 @@ function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [str
 
 function UpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
 {
-	$outcome = $false
-	if(DeleteARecord $dnsServer $domain $name)
-	{
-		$outcome = CreateARecord $dnsServer $domain $name $ipAddress
-	}	
-	$outcome
+	DeleteCName $dnsServer $domain $name
+	DeleteARecord $dnsServer $domain $name
+	CreateARecord $dnsServer $domain $name $ipAddress
 }
 
 function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress, [bool]$warnOnUpdate = $false)
