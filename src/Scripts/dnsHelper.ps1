@@ -17,6 +17,7 @@ function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 function CheckCNameValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 {
 	$result = dnscmd $dnsServer /EnumRecords $domain $name /node
+    
 	$outcome = $False
 	foreach ($item in $result)
 	{
@@ -35,7 +36,7 @@ function DeleteCName ([string]$dnsServer, [string]$domain, [string]$name)
 	$outcome = $false
 	foreach ($item in $result)
 	{
-		if ($item.Contains("3600 CNAME") -And $item.Contains("Command completed successfully"))
+		if ($item.Contains("Command completed successfully"))
 		{
 			$outcome = $true
 		}
@@ -50,7 +51,7 @@ function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 	$outcome = $false
 	foreach ($item in $result)
 	{
-		if ($item.Contains("3600 CNAME") -And $item.Contains("Command completed successfully"))
+		if ($item.Contains("Command completed successfully"))
 		{
 			$outcome = $true
 		}
@@ -104,10 +105,10 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
 		{
 			$outcome = $true
 			write-host "DNS CNAME record for $name.$domain created pointing at $server"
-			else
-			{
+        }
+		else
+		{
 				write-error "Failed to create DNS CNAME record for $name.$domain"
-			}
 		}
 	}
 	$outcome
@@ -134,7 +135,7 @@ function DeleteARecord ([string]$dnsServer, [string]$domain, [string]$name)
 	$outcome = $false
 	foreach ($item in $result)
 	{
-		if ($item.Contains("3600 A") -And $item.Contains("Command completed successfully"))
+		if ($item.Contains("Command completed successfully"))
 		{
 			$outcome = $true
 		}
@@ -149,7 +150,7 @@ function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [str
 	$outcome = $false
 	foreach ($item in $result)
 	{
-		if ($item.Contains("3600 A") -And $item.Contains("Command completed successfully"))
+		if ($item.Contains("Command completed successfully"))
 		{
 			$outcome = $true
 		}
