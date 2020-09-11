@@ -89,7 +89,16 @@ function CreateCloudflareARecord([string]$token, [string]$zoneid, [string]$domai
     $newrecordurl = "zones/$zoneid/dns_records"
     $result = CallCloudflare $token $newrecordurl Post $body
 
-    Write-Host "New record $record.$domain has been created with the ID $($result.result.id)"
+    if($result.success)
+    {
+        Write-Host "New record $record.$domain has been created with the ID $($result.result.id)"
+        $true
+    }
+    else
+    {
+        Write-Error "Error creating record $record.$domain"
+        $false
+    }    
 }
 
 function UpdateCloudflareARecord([string]$token, [string]$zoneid, [string]$recordid, [string]$domain, [string]$record, [string]$ipaddr, [bool]$warnOnUpdate = $false)
@@ -99,14 +108,23 @@ function UpdateCloudflareARecord([string]$token, [string]$zoneid, [string]$recor
 
     $updateurl = "zones/$zoneid/dns_records/$recordid/" 
     $result = CallCloudflare $token $updateurl Put $body
-    if($warnOnUpdate)
+    if($result.success)
     {
-        Write-Warning "Record $record.$domain has been updated to the IP $($result.result.content)"
+        if($warnOnUpdate)
+        {
+            Write-Warning "Record $record.$domain has been updated to the IP $($result.result.content)"
+        }
+        else
+        {
+            Write-Host "Record $record.$domain has been updated to the IP $($result.result.content)"
+        }
+        $true
     }
     else
     {
-        Write-Host "Record $record.$domain has been updated to the IP $($result.result.content)"
-    }
+        Write-Error "Error updating record $record.$domain"
+        $false
+    } 
 }
 
 function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr, [bool]$warnOnUpdate = $false) 
@@ -122,7 +140,8 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
         $recordid = $dnsRecord.id
         if($dnsRecord.content -eq $ipaddr)
         {
-            Write-Host "Record $record.$domain already has the value $ipaddr" 
+            Write-Host "Record $record.$domain already has the value $ipaddr"
+            $true
         }
         else
         {
