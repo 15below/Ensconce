@@ -31,7 +31,7 @@ function CheckCNameValue ([string]$dnsServer, [string]$domain, [string]$name, [s
 
 function DeleteCName ([string]$dnsServer, [string]$domain, [string]$name)
 {
-	write-host "Deleting DNS CNAME record for $name.$domain"
+	write-host "Deleting DNS CNAME records for $name.$domain"
 	$result = dnscmd $dnsServer /recordDelete $domain $name CNAME /f
 	$outcome = $false
 	foreach ($item in $result)
@@ -127,7 +127,7 @@ function CheckARecordValue ([string]$dnsServer, [string]$domain, [string]$name, 
 
 function DeleteARecord ([string]$dnsServer, [string]$domain, [string]$name)
 {
-	write-host "Deleting DNS A record for $name.$domain"
+	write-host "Deleting DNS A records for $name.$domain"
 	$result = dnscmd $dnsServer /recordDelete $domain $name A /f
 	$outcome = $false
 	foreach ($item in $result)

@@ -5,7 +5,6 @@ function CallCloudflare([string]$token, [string]$urlPart, [Microsoft.PowerShell.
     $baseurl = "https://api.cloudflare.com/client/v4"
 
     $headers = @{
-	    "Content-Type" = "application/json"
         "Authorization" = "Bearer $token"
     }
 
