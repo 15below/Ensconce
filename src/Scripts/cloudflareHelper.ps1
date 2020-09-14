@@ -1,4 +1,4 @@
-Write-Host "Ensconce - cloudflare Loading"
+Write-Host "Ensconce - cloudflare helper Loading"
 
 function CallCloudflare([string]$token, [string]$urlPart, [Microsoft.PowerShell.Commands.WebRequestMethod]$method, [string]$body = $null) 
 {
@@ -153,5 +153,5 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
     }
 }
 
-Write-Host "Ensconce - cloudflare Loaded"
+Write-Host "Ensconce - cloudflare helper Loaded"
 $cloudflareHelperLoaded = $true
