@@ -86,14 +86,25 @@ function CreateDesktopShortcut([string]$exePath, [string]$shortcutName, [string]
 	$WshShell = New-Object -comObject WScript.Shell
 	$Shortcut = $WshShell.CreateShortcut((Join-Path $wshShell.SpecialFolders.Item("AllUsersDesktop") "$shortcutName.lnk"))
 	$Shortcut.TargetPath = $exePath
-	if($iconPath -ne "")
+	
+    if($iconPath -ne "")
 	{
 		$Shortcut.IconLocation = $iconPath
 	}
+    else
+    {
+        $Shortcut.IconLocation = $exePath
+    }
+
 	if($arguments -ne "")
 	{
 		$Shortcut.Arguments = $arguments
 	}
+    else
+    {
+        $Shortcut.Arguments = ""
+    }
+
 	$Shortcut.Save()
 }
 
