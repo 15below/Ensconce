@@ -146,10 +146,6 @@ function ScheduledTask-Run([string] $taskName, [string] $taskPath)
         $false
     }
 }
-        Write-Host "Scheduled task '\$taskPath\$taskName' does not exist"
-        $true
-    }
-}
 
 function ScheduledTask-CreateFromXml([string] $taskName, [string] $taskPath, [string] $taskXmlPath)
 {
@@ -197,7 +193,6 @@ function ScheduledTask-Run([string] $taskName, [string] $taskPath)
     $ErrorActionPreference = 'Stop'
     try 
     {
-        #TODO write this function
         Write-Host "Checking if scheduled task '\$taskPath\$taskName' exists"
 
         $response = & "schtasks" "/query" "/TN" "\$taskPath\$taskName"
