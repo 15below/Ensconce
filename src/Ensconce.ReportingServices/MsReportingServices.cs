@@ -65,7 +65,7 @@ namespace Ensconce.ReportingServices
 
                 Log("Attempting to retrieve a list of all existing policies for itemPath: '{0}'", itemPath);
 
-                bool inheritParent;
+                bool inheritParent = true;
                 Policy policy;
 
                 var existingPolicies = rs.GetPolicies(itemPath, out inheritParent);
