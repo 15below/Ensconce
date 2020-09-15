@@ -14,6 +14,7 @@ These are based functions that are useful for all deployment tasks.
 ## Functions
 
 * [is64Bit](64bit)
-* [CreateDesktopShortcut [-exePath] &lt;String&gt; [-shortcutName] &lt;String&gt;](create-desktop-shortcut)
+* [CreateDesktopShortcut](create-desktop-shortcut)
 * [ensconce](ensconce)
-* [EnsurePath [-name] &lt;String&gt;](ensure-path)
+* [EnsurePath](ensure-path)
+* Retry-Command

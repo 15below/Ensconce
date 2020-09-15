@@ -81,11 +81,19 @@ function is64bit() {
   return ( (Get-WmiObject Win32_OperatingSystem).OSArchitecture -eq "64-bit")
 }
 
-function CreateDesktopShortcut($exePath, $shortcutName)
+function CreateDesktopShortcut([string]$exePath, [string]$shortcutName, [string]$iconPath = "", [string]$arguments = "")
 {
 	$WshShell = New-Object -comObject WScript.Shell
 	$Shortcut = $WshShell.CreateShortcut((Join-Path $wshShell.SpecialFolders.Item("AllUsersDesktop") "$shortcutName.lnk"))
 	$Shortcut.TargetPath = $exePath
+	if($iconPath -ne "")
+	{
+		$Shortcut.IconLocation = $iconPath
+	}
+	if($arguments -ne "")
+	{
+		$Shortcut.Arguments = $arguments
+	}
 	$Shortcut.Save()
 }
 
