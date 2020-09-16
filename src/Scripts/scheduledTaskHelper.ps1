@@ -2,29 +2,32 @@ Write-Host "Ensconce - scheduledTaskHelper Loading"
 
 function ScheduledTask-CheckExists([string] $taskName, [string] $taskPath)
 {
-    $ErrorActionPreference = 'Stop'
     try 
     {
         Write-Host "Checking if scheduled task '\$taskPath\$taskName' exists"
 
-        $response = & "schtasks" "/query" "/TN" "\$taskPath\$taskName"
+        $response = & "schtasks" "/query" "/TN" "\$taskPath\$taskName" 2>&1
 
-        if($response -match ".*$taskName.*")
+        if($LASTEXITCODE -eq 0 -and $response -match ".*$taskName.*")
         {
+            Write-Host "Task '\$taskPath\$taskName' does exist"
             $true
         }
         else
         {
+            Write-Host "Task '\$taskPath\$taskName' does NOT exist"
             $false
         }
     }
     catch
     {
+        Write-Host "Checking if task '\$taskPath\$taskName' exist errored - $_"
         $false
     }
     finally
     {
-        $ErrorActionPreference = 'Continue'
+        #Reset last exit code, because otherwise deploys fail - the error is handled in this function
+        $global:LASTEXITCODE = $null
     }
 }
 
@@ -32,14 +35,13 @@ function ScheduledTask-Delete([string] $taskName, [string] $taskPath)
 {
     if((ScheduledTask-CheckExists $taskName $taskPath) -eq $true)
     {
-        $ErrorActionPreference = 'Stop'
         try 
         {
             Write-Host "Deleting scheduled task '\$taskPath\$taskName'"
 
-            $response = & "schtasks" "/delete" "/TN" "\$taskPath\$taskName" "/f"
+            $response = & "schtasks" "/delete" "/TN" "\$taskPath\$taskName" "/f" 2>&1
 
-            if($response -match ".*SUCCESS.*")
+            if($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
             {
                 Write-Host "Scheduled task '\$taskPath\$taskName' deleted"
                 $true
@@ -52,29 +54,25 @@ function ScheduledTask-Delete([string] $taskName, [string] $taskPath)
         }
         catch
         {
-            Write-Error "Error deleting scheduled task '$taskPath\$taskName'"
+            Write-Error "Error deleting scheduled task '$taskPath\$taskName' - $_"
             $false
-        }
+        }  
         finally
         {
-            $ErrorActionPreference = 'Continue'
-        }       
-    }
-    else
-    {
-        Write-Host "Scheduled task '\$taskPath\$taskName' does not exist"
-        $true
+            #Reset last exit code, because otherwise deploys fail - the error is handled in this function
+            $global:LASTEXITCODE = $null
+        }  
     }
 }
 
 function ScheduledTask-CreateFromXml([string] $taskName, [string] $taskPath, [string] $taskXmlPath)
 {
-    $ErrorActionPreference = 'Continue'
     try 
     {
         Write-Host "Creating scheduled task '\$taskPath\$taskName'"
-        $response = & "schtasks" "/create" "/XML" $taskXmlPath "/TN" "\$taskPath\$taskName" "/F"
-        if($response -match ".*SUCCESS.*")
+        $response = & "schtasks" "/create" "/XML" $taskXmlPath "/TN" "\$taskPath\$taskName" "/F" 2>&1
+        
+        if($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
         {
             Write-Host "Scheduled task '\$taskPath\$taskName' created"
             $true
@@ -87,13 +85,14 @@ function ScheduledTask-CreateFromXml([string] $taskName, [string] $taskPath, [st
     }
     catch
     {
-        Write-Error "Error creating scheduled task '$taskPath\$taskName'"
+        Write-Error "Error creating scheduled task '$taskPath\$taskName' - $_"
         $false
     }
     finally
     {
-        $ErrorActionPreference = 'Continue'
-    }    
+        #Reset last exit code, because otherwise deploys fail - the error is handled in this function
+        $global:LASTEXITCODE = $null
+    }
 }
 
 function ScheduledTask-CreateOrUpdateFromXml([string] $taskName, [string] $taskPath, [string] $taskXmlPath)
@@ -112,14 +111,13 @@ function ScheduledTask-Run([string] $taskName, [string] $taskPath)
 {
     if((ScheduledTask-CheckExists $taskName $taskPath) -eq $true)
     {
-        $ErrorActionPreference = 'Stop'
         try 
         {
             Write-Host "Running scheduled task '\$taskPath\$taskName'"
 
-            $response = & "schtasks" "/run" "/TN" "\$taskPath\$taskName"
+            $response = & "schtasks" "/run" "/TN" "\$taskPath\$taskName" 2>&1
 
-            if($response -match ".*SUCCESS.*")
+            if($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
             {
                 Write-Host "Scheduled task '\$taskPath\$taskName' ran"
                 $true
@@ -132,18 +130,14 @@ function ScheduledTask-Run([string] $taskName, [string] $taskPath)
         }
         catch
         {
-            Write-Error "Error running scheduled task '$taskPath\$taskName'"
+            Write-Error "Error running scheduled task '$taskPath\$taskName' - $_"
             $false
         }
         finally
         {
-            $ErrorActionPreference = 'Continue'
-        }       
-    }
-    else
-    {
-        Write-Error "Scheduled task '\$taskPath\$taskName' does not exist"
-        $false
+            #Reset last exit code, because otherwise deploys fail - the error is handled in this function
+            $global:LASTEXITCODE = $null
+        }   
     }
 }
 
