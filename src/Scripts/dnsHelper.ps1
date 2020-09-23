@@ -2,7 +2,7 @@ Write-Host "Ensconce - dnsHelper Loading"
 
 function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 {
-	$result = dnscmd $dnsServer /EnumRecords $domain $lookupName
+	$result = dnscmd $dnsServer /EnumRecords $domain $lookupName /node
 	$outcome = $False
 	foreach ($item in $result)
 	{
@@ -11,6 +11,12 @@ function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 			$outcome = $True
 		}
 	}
+		
+	if($outcome -eq $false)
+	{
+		write-host "dnscmd: $result"
+	}
+	
 	$outcome
 }
 
@@ -26,6 +32,12 @@ function CheckCNameValue ([string]$dnsServer, [string]$domain, [string]$name, [s
 			$outcome = $True
 		}
 	}
+	
+	if($outcome -eq $false)
+	{
+		write-host "dnscmd: $result"
+	}
+	
 	$outcome
 }
 
@@ -41,6 +53,12 @@ function DeleteCName ([string]$dnsServer, [string]$domain, [string]$name)
 			$outcome = $true
 		}
 	}
+	
+	if($outcome -eq $false)
+	{
+		write-host "dnscmd: $result"
+	}
+	
 	$outcome
 }
 
@@ -56,6 +74,12 @@ function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 			$outcome = $true
 		}
 	}
+	
+	if($outcome -eq $false)
+	{
+		write-host "dnscmd: $result"
+	}
+	
 	$outcome
 }
 
@@ -108,6 +132,7 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
 			write-error "Failed to create DNS CNAME record for $name.$domain"
 		}
 	}
+
 	$outcome
 }
 
@@ -122,6 +147,12 @@ function CheckARecordValue ([string]$dnsServer, [string]$domain, [string]$name, 
 			$outcome = $True
 		}
 	}
+	
+	if($outcome -eq $false)
+	{
+		write-host "dnscmd: $result"
+	}
+	
 	$outcome
 }
 
@@ -137,6 +168,12 @@ function DeleteARecord ([string]$dnsServer, [string]$domain, [string]$name)
 			$outcome = $true
 		}
 	}
+	
+	if($outcome -eq $false)
+	{
+		write-host "dnscmd: $result"
+	}
+	
 	$outcome
 }
 
@@ -152,6 +189,12 @@ function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [str
 			$outcome = $true
 		}
 	}
+	
+	if($outcome -eq $false)
+	{
+		write-host "dnscmd: $result"
+	}
+	
 	$outcome
 }
 
