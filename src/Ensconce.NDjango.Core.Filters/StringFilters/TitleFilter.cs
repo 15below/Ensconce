@@ -9,7 +9,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
     [Interfaces.Name("title")]
     public class TitleFilter : Interfaces.ISimpleFilter
     {
-
         private static string capString(Match matchString)
         {
             string strTemp = matchString.ToString();
@@ -24,6 +23,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return Regex.Replace(str, @"[\w\']+", new MatchEvaluator(capString));
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

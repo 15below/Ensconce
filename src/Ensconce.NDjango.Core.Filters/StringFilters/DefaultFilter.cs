@@ -25,7 +25,7 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return (Convert.ToString(__p1) == string.Empty) ? __p2 : __p1;
         }
 
-        #endregion
+        #endregion IFilter Members
 
         #region ISimpleFilter Members
 
@@ -34,6 +34,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

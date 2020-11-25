@@ -19,6 +19,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return Convert.ToString(__p1).ToLower();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

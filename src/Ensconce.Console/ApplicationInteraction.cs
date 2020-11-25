@@ -34,7 +34,10 @@ namespace Ensconce.Console
 
         internal static void StopProcessesInDirectory(string directory)
         {
-            if (!directory.EndsWith(@"\")) directory = directory + @"\";
+            if (!directory.EndsWith(@"\"))
+            {
+                directory = directory + @"\";
+            }
 
             Logging.Log("Stopping processes in directory: {0}", directory);
             var wmiQueryString = "SELECT ProcessId, ExecutablePath, CommandLine FROM Win32_Process";
@@ -119,7 +122,10 @@ namespace Ensconce.Console
 
         private static IEnumerable<ServiceDetails> GetServicesInstalledInDirectory(string directory)
         {
-            if (!directory.EndsWith(@"\")) directory = directory + @"\";
+            if (!directory.EndsWith(@"\"))
+            {
+                directory = directory + @"\";
+            }
 
             var wqlObjectQuery = new WqlObjectQuery("SELECT * FROM Win32_Service");
             var managementObjectSearcher = new ManagementObjectSearcher(wqlObjectQuery);

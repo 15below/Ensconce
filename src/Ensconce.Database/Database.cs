@@ -1,7 +1,7 @@
-﻿using System;
-using roundhouse;
+﻿using roundhouse;
 using roundhouse.databases;
 using roundhouse.infrastructure.logging;
+using System;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
@@ -49,19 +49,32 @@ namespace Ensconce
         public void Deploy(string schemaScriptsFolder, string repository = "", bool dropDatabase = false, TimeSpan? commandTimeout = null)
         {
             if (commandTimeout == null)
+            {
                 commandTimeout = TimeSpan.FromSeconds(30);
+            }
 
             if (schemaScriptsFolder == string.Empty)
+            {
                 schemaScriptsFolder = Assembly.GetExecutingAssembly().Directory();
+            }
 
             if (!Directory.Exists(schemaScriptsFolder))
+            {
                 throw new DirectoryNotFoundException(
                     string.Format(
                         "Database schema scripts folder {0}\r\ndoes not exist", schemaScriptsFolder));
+            }
 
             var roundhouseMigrate = new Migrate();
-            if (DatabaseFolderStructure != null) DatabaseFolderStructure.SetMigrateFolders(roundhouseMigrate, schemaScriptsFolder);
-            if (databaseRestoreOptions != null) databaseRestoreOptions.SetRunRestoreOptions(roundhouseMigrate);
+            if (DatabaseFolderStructure != null)
+            {
+                DatabaseFolderStructure.SetMigrateFolders(roundhouseMigrate, schemaScriptsFolder);
+            }
+
+            if (databaseRestoreOptions != null)
+            {
+                databaseRestoreOptions.SetRunRestoreOptions(roundhouseMigrate);
+            }
 
             roundhouseMigrate.Set(x => x.ConnectionString = ConnectionString)
                 .Set(x => x.SqlFilesDirectory = schemaScriptsFolder)

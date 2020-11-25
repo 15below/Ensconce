@@ -27,7 +27,7 @@ namespace Ensconce.NDjango.Core.Filters.List
             return Convert.ToInt32(__p2) == ((IEnumerable)toConvert).OfType<object>().Count();
         }
 
-        #endregion
+        #endregion IFilter Members
 
         #region ISimpleFilter Members
 
@@ -36,6 +36,6 @@ namespace Ensconce.NDjango.Core.Filters.List
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

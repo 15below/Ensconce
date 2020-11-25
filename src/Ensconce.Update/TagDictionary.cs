@@ -15,7 +15,9 @@ namespace Ensconce.Update
     {
         private readonly IDictionary<string, object> innerDictionary;
 
-        private TagDictionary() : this(new Dictionary<string, object>()) { }
+        private TagDictionary() : this(new Dictionary<string, object>())
+        {
+        }
 
         private TagDictionary(IDictionary<string, object> baseDictionary)
         {
@@ -62,7 +64,10 @@ namespace Ensconce.Update
 
         private void LoadDictionary(string identifier, Dictionary<TagSource, string> sources)
         {
-            if (!string.IsNullOrEmpty(identifier)) this.AddOrDiscard("identity", identifier);
+            if (!string.IsNullOrEmpty(identifier))
+            {
+                this.AddOrDiscard("identity", identifier);
+            }
 
             //Load environment 1st
             if (sources.ContainsKey(TagSource.Environment))
@@ -152,10 +157,16 @@ namespace Ensconce.Update
         private void BasePropertiesFromXml(XDocument doc)
         {
             var environmentNode = doc.XPathSelectElement("/Structure/Environment");
-            if (environmentNode != null) this.AddOrDiscard("Environment", environmentNode.Value);
+            if (environmentNode != null)
+            {
+                this.AddOrDiscard("Environment", environmentNode.Value);
+            }
 
             var clientCode = doc.XPathSelectElement("/Structure/ClientCode");
-            if (clientCode != null) this.AddOrDiscard("ClientCode", clientCode.Value);
+            if (clientCode != null)
+            {
+                this.AddOrDiscard("ClientCode", clientCode.Value);
+            }
         }
 
         private void IdentityPropertyGroupsFromXml(string identifier, XDocument doc)

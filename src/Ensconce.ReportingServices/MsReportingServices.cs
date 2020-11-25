@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Ensconce.ReportingServices.SSRS2010;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Ensconce.ReportingServices.SSRS2010;
 
 namespace Ensconce.ReportingServices
 {
@@ -12,23 +12,32 @@ namespace Ensconce.ReportingServices
 
         public MsReportingServices(string reportingServicesUrl, string networkDomain, string networkLogin, string networkPassword)
         {
-            Uri reportingServicesUri;
             Log("Creating MsReportingServices instance");
-            if (!Uri.TryCreate(reportingServicesUrl, UriKind.RelativeOrAbsolute, out reportingServicesUri))
+            if (!Uri.TryCreate(reportingServicesUrl, UriKind.RelativeOrAbsolute, out Uri reportingServicesUri))
+            {
                 throw new UriFormatException(string.Format("reporting services uri of '{0}' is invalid!", reportingServicesUri));
+            }
 
             if (string.IsNullOrWhiteSpace(networkPassword))
+            {
                 throw new NullReferenceException("networkPassword is null or empty!");
+            }
+
             if (string.IsNullOrWhiteSpace(networkDomain))
+            {
                 throw new NullReferenceException("networkDomain is null or empty!");
+            }
+
             if (string.IsNullOrWhiteSpace(networkLogin))
+            {
                 throw new NullReferenceException("networkLogin is null or empty!");
+            }
 
             rs = new ReportingService2010
-                {
-                    Url = reportingServicesUri.AbsoluteUri,
-                    Credentials = new NetworkCredential(networkLogin, networkPassword, networkDomain)
-                };
+            {
+                Url = reportingServicesUri.AbsoluteUri,
+                Credentials = new NetworkCredential(networkLogin, networkPassword, networkDomain)
+            };
         }
 
         #region Public Methods
@@ -65,10 +74,9 @@ namespace Ensconce.ReportingServices
 
                 Log("Attempting to retrieve a list of all existing policies for itemPath: '{0}'", itemPath);
 
-                bool inheritParent = true;
                 Policy policy;
 
-                var existingPolicies = rs.GetPolicies(itemPath, out inheritParent);
+                var existingPolicies = rs.GetPolicies(itemPath, out bool inheritParent);
 
                 if (reportingUserToAddRoleFor.Contains("\\"))
                 {
@@ -88,10 +96,10 @@ namespace Ensconce.ReportingServices
                     Log("Adding new policy for User: '{0}' to existing policy list", reportingUserToAddRoleFor);
 
                     policy = new Policy()
-                        {
-                            GroupUserName = reportingUserToAddRoleFor.ToUpperInvariant(),
-                            Roles = new Role[] { }
-                        };
+                    {
+                        GroupUserName = reportingUserToAddRoleFor.ToUpperInvariant(),
+                        Roles = new Role[] { }
+                    };
 
                     existingPolicies = existingPolicies.Concat(new[] { policy }).ToArray();
                 }
@@ -114,9 +122,9 @@ namespace Ensconce.ReportingServices
                 {
                     Log("Adding new role of: '{0}' for User: '{1}'.", reportingRoleToAdd, reportingUserToAddRoleFor);
                     role = new Role()
-                        {
-                            Name = reportingRoleToAdd
-                        };
+                    {
+                        Name = reportingRoleToAdd
+                    };
                     policy.Roles = existingRoles.Concat(new[] { role }).ToArray();
                 }
                 else
@@ -135,7 +143,10 @@ namespace Ensconce.ReportingServices
             }
             finally
             {
-                if (rs != null) rs.Dispose();
+                if (rs != null)
+                {
+                    rs.Dispose();
+                }
             }
         }
 
@@ -172,7 +183,6 @@ namespace Ensconce.ReportingServices
                                      dataSourceUserName, dataSourcePassword);
                     CreateReportsAndSubscriptions(parentFolder, subFolder, reportSourceFolder, dataSourceName);
                 }
-
             }
             catch (Exception ex)
             {
@@ -182,11 +192,14 @@ namespace Ensconce.ReportingServices
             }
             finally
             {
-                if (rs != null) rs.Dispose();
+                if (rs != null)
+                {
+                    rs.Dispose();
+                }
             }
         }
 
-        #endregion
+        #endregion Public Methods
 
         #region Private Helper Methods
 
@@ -296,9 +309,8 @@ namespace Ensconce.ReportingServices
         private void CreateReport(string reportName, string sourceFolder, string targetFolder)
         {
             var reportDefinition = GetReportDefinition(reportName, sourceFolder);
-            Warning[] warnings;
             Log("Creating report '{0}'", reportName);
-            var catalogItem = rs.CreateCatalogItem("Report", reportName, targetFolder, true, reportDefinition, null, out warnings);
+            var catalogItem = rs.CreateCatalogItem("Report", reportName, targetFolder, true, reportDefinition, null, out Warning[] warnings);
 
             if (catalogItem == null)
             {
@@ -395,10 +407,10 @@ namespace Ensconce.ReportingServices
                 var subscriptionType = SubscriptionInfo(subscriptionInfoText, "subscriptionType");
                 var subscriptionTypeParameters = GetSubscriptionTypeParameters(subscriptionInfoText);
                 var extSettings = new ExtensionSettings
-                    {
-                        ParameterValues = subscriptionTypeParameters,
-                        Extension = string.IsNullOrEmpty(subscriptionType) ? "Report Server Email" : "Report Server FileShare"
-                    };
+                {
+                    ParameterValues = subscriptionTypeParameters,
+                    Extension = string.IsNullOrEmpty(subscriptionType) ? "Report Server Email" : "Report Server FileShare"
+                };
 
                 ParameterValue[] reportParameterValues = null;
                 var reportParameters = SubscriptionInfo(subscriptionInfoText, "reportParameters");
@@ -451,60 +463,60 @@ namespace Ensconce.ReportingServices
             ParameterValue[] extensionParams;
             switch (SubscriptionInfo(subscriptionInfoText, "subscriptionType"))
             {
-
                 case "FILESHARE":
                 case "fileshare":
                 case "CSV":
                 case "csv":
                     extensionParams = new ParameterValue[7];
                     extensionParams[0] = new ParameterValue
-                        {
-                            Name = "PATH",
-                            Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FilePath")
-                        };
+                    {
+                        Name = "PATH",
+                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FilePath")
+                    };
                     //Set the filename to always have a timestamp
                     extensionParams[1] = new ParameterValue
-                        {
-                            Name = "FILENAME",
-                            Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FileName") + "_@timestamp"
-                        };
+                    {
+                        Name = "FILENAME",
+                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FileName") + "_@timestamp"
+                    };
                     // Add a file extension always
                     extensionParams[2] = new ParameterValue { Name = "FILEEXTN", Value = "True" };
                     extensionParams[3] = new ParameterValue
-                        {
-                            Name = "USERNAME",
-                            Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_UserName")
-                        };
+                    {
+                        Name = "USERNAME",
+                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_UserName")
+                    };
                     extensionParams[4] = new ParameterValue
-                        {
-                            Name = "PASSWORD",
-                            Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_Password")
-                        };
+                    {
+                        Name = "PASSWORD",
+                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_Password")
+                    };
                     var fileShareSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
                     extensionParams[5] = new ParameterValue
-                        {
-                            Name = "RENDER_FORMAT",
-                            Value = !string.IsNullOrEmpty(fileShareSubscriptionRenderFormat) ? fileShareSubscriptionRenderFormat.ToUpper() : "CSV"
-                        };
+                    {
+                        Name = "RENDER_FORMAT",
+                        Value = !string.IsNullOrEmpty(fileShareSubscriptionRenderFormat) ? fileShareSubscriptionRenderFormat.ToUpper() : "CSV"
+                    };
                     extensionParams[6] = new ParameterValue { Name = "WRITEMODE", Value = "Overwrite" };
                     return extensionParams;
+
                 default:
                     extensionParams = new ParameterValue[10];
                     extensionParams[0] = new ParameterValue
-                        {
-                            Name = "TO",
-                            Value = SubscriptionInfo(subscriptionInfoText, "subscriptionSendTo")
-                        };
+                    {
+                        Name = "TO",
+                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionSendTo")
+                    };
                     extensionParams[1] = new ParameterValue
-                        {
-                            Name = "CC",
-                            Value = SubscriptionInfo(subscriptionInfoText, "subscriptionCCto")
-                        };
+                    {
+                        Name = "CC",
+                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionCCto")
+                    };
                     extensionParams[2] = new ParameterValue
-                        {
-                            Name = "BCC",
-                            Value = SubscriptionInfo(subscriptionInfoText, "subscriptionBCCto")
-                        };
+                    {
+                        Name = "BCC",
+                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionBCCto")
+                    };
                     extensionParams[3] = new ParameterValue { Name = "ReplyTo", Value = "system@15below.com" };
                     extensionParams[4] = new ParameterValue { Name = "IncludeReport", Value = "True" };
                     var emailSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
@@ -514,15 +526,15 @@ namespace Ensconce.ReportingServices
                         Value = !string.IsNullOrEmpty(emailSubscriptionRenderFormat) ? emailSubscriptionRenderFormat.ToUpper() : "EXCEL"
                     };
                     extensionParams[6] = new ParameterValue
-                        {
-                            Name = "Subject",
-                            Value = SubscriptionInfo(subscriptionInfoText, "subjectPrefix") + " - @ReportName executed at @ExecutionTime"
-                        };
+                    {
+                        Name = "Subject",
+                        Value = SubscriptionInfo(subscriptionInfoText, "subjectPrefix") + " - @ReportName executed at @ExecutionTime"
+                    };
                     extensionParams[7] = new ParameterValue
-                        {
-                            Name = "Comment",
-                            Value = SubscriptionInfo(subscriptionInfoText, "emailBodyText")
-                        };
+                    {
+                        Name = "Comment",
+                        Value = SubscriptionInfo(subscriptionInfoText, "emailBodyText")
+                    };
                     extensionParams[8] = new ParameterValue { Name = "IncludeLink", Value = "False" };
                     extensionParams[9] = new ParameterValue { Name = "Priority", Value = "NORMAL" };
                     return extensionParams;
@@ -542,6 +554,6 @@ namespace Ensconce.ReportingServices
             return string.Empty;
         }
 
-        #endregion
+        #endregion Private Helper Methods
     }
 }

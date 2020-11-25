@@ -61,7 +61,6 @@ module internal ASTNodes =
 
         override this.nodelist with get() = nodes
 
-
     //During parsing the templates, we build(see ExtendsNode) dictionary "__blockmap" consisting
     //of different blocks. For each block name we have a list of blocks,
     //where the most child block is in the head and the most parental - in the tail of the list.
@@ -121,7 +120,6 @@ module internal ASTNodes =
                 token,
                 []
             )
-
 
         /// produces a flattened list of all nodes and child nodes within a 'node list'.
         /// the 'node list' is a list of all nodes collected from Nodes property of the INode interface

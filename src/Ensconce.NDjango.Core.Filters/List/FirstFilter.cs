@@ -21,10 +21,13 @@ namespace Ensconce.NDjango.Core.Filters.List
 
             IEnumerator enList = ((IEnumerable)toConvert).GetEnumerator();
             if (enList.MoveNext())
+            {
                 return enList.Current;
+            }
+
             return string.Empty;
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

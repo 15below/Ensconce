@@ -15,7 +15,9 @@ namespace Ensconce
         public void SetRunRestoreOptions(Migrate migrateSettings)
         {
             if (!string.IsNullOrWhiteSpace(restorePath) && !File.Exists(restorePath))
+            {
                 throw new FileNotFoundException(string.Format("Restore Path {0}\r\ndoes not exist", restorePath));
+            }
 
             if (!string.IsNullOrWhiteSpace(restorePath))
             {

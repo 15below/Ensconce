@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Ensconce.ReportingServices.SSRS2010;
+using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Ensconce.ReportingServices.SSRS2010;
-using NUnit.Framework;
 
 namespace Ensconce.ReportingServices.Tests
 {

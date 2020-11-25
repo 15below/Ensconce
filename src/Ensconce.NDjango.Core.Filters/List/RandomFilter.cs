@@ -17,7 +17,7 @@ namespace Ensconce.NDjango.Core.Filters.List
     {
         #region ISimpleFilter Members
 
-        private static Random rnd = new Random();
+        private static readonly Random rnd = new Random();
 
         public object Perform(object __p1)
         {
@@ -27,6 +27,6 @@ namespace Ensconce.NDjango.Core.Filters.List
             return (count == 0) ? string.Empty : enumToProcess.ElementAt<object>(rnd.Next(count));
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

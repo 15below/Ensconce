@@ -8,7 +8,7 @@ namespace Ensconce.NDjango.Tests
 {
     public partial class TestsRunner
     {
-        List<TestDescriptor> tests = new List<TestDescriptor>();
+        private List<TestDescriptor> tests = new List<TestDescriptor>();
 
         [SetUp]
         public void SetupStandartdValues()
@@ -22,7 +22,6 @@ namespace Ensconce.NDjango.Tests
             standardTags = () => ((IDictionary<string, Interfaces.ITag>)((Interfaces.ITemplateManagerProvider)provider).Tags).Keys;
             standardFilters = () => ((IDictionary<string, Interfaces.ISimpleFilter>)((Interfaces.ITemplateManagerProvider)provider).Filters).Keys;
         }
-
 
         //        [Test, TestCaseSource("GetDesignerTests")]
         public void DesignerTests(TestDescriptor test)
@@ -81,7 +80,6 @@ namespace Ensconce.NDjango.Tests
                                      "GetHashCode", "GetType", "Field1", "Field2")
                     }
                 ).Run(managerForDesigner);
-
         }
 
         public IEnumerable<TestDescriptor> GetDesignerTests()
@@ -215,7 +213,6 @@ namespace Ensconce.NDjango.Tests
 
         /* END OF IF BLOCK /*
 
-
         /* FOR BLOCK */
 
         [Test]
@@ -327,8 +324,8 @@ namespace Ensconce.NDjango.Tests
 
         /* END OF FOR BLOCK */
 
-
         /* IFEQUAL */
+
         [Test]
         public void ifequal_tag_designer()
         {
@@ -637,9 +634,13 @@ namespace Ensconce.NDjango.Tests
         private DesignerData ErrorNode(int position, int length, string[] values, int errorSeverity, string errorMessage)
         {
             if (values.Length == 0)
+            {
                 return new DesignerData(position, length, EmptyList, errorSeverity, errorMessage);
+            }
             else
+            {
                 return new DesignerData(position, length, AddToStandardList(values), errorSeverity, errorMessage);
+            }
         }
 
         private DesignerData VariableNode(int position, int length, int severity, string errorMessage, params string[] values)
@@ -669,8 +670,9 @@ namespace Ensconce.NDjango.Tests
             return Type.GetType(type_name);
         }
 
-        #endregion
+        #endregion ITypeResolver Members
     }
+
     public class EmptyClass { }
 
     //this class is required for model tests
@@ -678,15 +680,31 @@ namespace Ensconce.NDjango.Tests
     {
         public string Field1 { get; set; }
         public string Field2 { get; set; }
-        public string MethodString() { return null; }
-        public int MethodInt() { return 0; }
+
+        public string MethodString()
+        {
+            return null;
+        }
+
+        public int MethodInt()
+        {
+            return 0;
+        }
     }
 
     public class TestModel2
     {
         public string _Field1 { get; set; }
         public string _Field2 { get; set; }
-        public string _MethodString() { return null; }
-        public int _MethodInt() { return 0; }
+
+        public string _MethodString()
+        {
+            return null;
+        }
+
+        public int _MethodInt()
+        {
+            return 0;
+        }
     }
 }

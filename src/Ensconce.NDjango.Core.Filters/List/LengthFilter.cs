@@ -22,6 +22,6 @@ namespace Ensconce.NDjango.Core.Filters.List
             return ((IEnumerable)toConvert).OfType<object>().Count();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

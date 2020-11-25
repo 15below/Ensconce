@@ -7,7 +7,6 @@ namespace Ensconce.NDjango.Tests
 {
     public partial class TestsRunner
     {
-
         [Test, TestCaseSource("GetLoopTagsTests")]
         public void LoopTags(TestDescriptor test)
         {
@@ -16,10 +15,9 @@ namespace Ensconce.NDjango.Tests
 
         public static IList<TestDescriptor> GetLoopTagsTests()
         {
-
             IList<TestDescriptor> lst = new List<TestDescriptor>();
 
-            // CYCLE TAG 
+            // CYCLE TAG
             lst.Add(new TestDescriptor("cycle01", "{% cycle a %}", ContextObjects.empty, ContextObjects.p(typeof(Interfaces.RenderingException))));
             lst.Add(new TestDescriptor("cycle02", "{% cycle a,b,c as abc %}{% cycle abc %}", ContextObjects.empty, ContextObjects.p("ab")));
             lst.Add(new TestDescriptor("cycle03", "{% cycle a,b,c as abc %}{% cycle abc %}{% cycle abc %}", ContextObjects.empty, ContextObjects.p("abc")));

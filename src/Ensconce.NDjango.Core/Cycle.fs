@@ -81,7 +81,6 @@ module internal Cycle =
                     | _ when value.RawText.Contains(",") -> true
                     | _ -> false
 
-
         interface ITag with
             member x.is_header_tag = false
             member this.Perform token context tokens =
@@ -114,4 +113,3 @@ module internal Cycle =
 
                 let values = List.map (fun v -> new Variables.Variable(context, v)) values
                 ((new TagNode(context, token, (this :> ITag), name, values) :> INodeImpl), context, tokens)
-

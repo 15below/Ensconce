@@ -88,8 +88,15 @@ namespace Ensconce.Update
                 }
             });
 
-            if (exceptions.Count == 1) throw exceptions.First();
-            if (exceptions.Count > 1) throw new AggregateException(exceptions);
+            if (exceptions.Count == 1)
+            {
+                throw exceptions.First();
+            }
+
+            if (exceptions.Count > 1)
+            {
+                throw new AggregateException(exceptions);
+            }
         }
 
         public static string Update(string substitutionFile, string baseFile, Lazy<TagDictionary> tagValues = null, bool outputFailureContext = false)
@@ -124,7 +131,10 @@ namespace Ensconce.Update
             var fileElement = subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)
                                      .SingleOrDefault(el => ((string)el.Attribute("Filename")).RenderTemplate(tagValues) == baseFile);
 
-            if (fileElement == null) return File.ReadAllText(baseFile);
+            if (fileElement == null)
+            {
+                return File.ReadAllText(baseFile);
+            }
 
             string baseData = null;
 
@@ -152,7 +162,10 @@ namespace Ensconce.Update
                                   .ToList();
             if (subs.Any())
             {
-                if (baseData == null) baseData = File.ReadAllText(baseFile);
+                if (baseData == null)
+                {
+                    baseData = File.ReadAllText(baseFile);
+                }
 
                 switch (fileType)
                 {
@@ -232,11 +245,30 @@ namespace Ensconce.Update
 
                 foreach (var activeNode in sub.PathMatchAll ? xPathMatches : xPathMatches.Take(1))
                 {
-                    if (sub.HasAddChildContent) AddChildContentToActive(tagValues, activeNode, sub);
-                    if (sub.HasReplacementContent) ReplaceChildNodes(tagValues, activeNode, sub);
-                    if (sub.HasAppendAfter) AppendAfterActive(tagValues, activeNode, sub);
-                    if (sub.RemoveCurrentAttributes) activeNode.RemoveAttributes();
-                    if (sub.HasChangeValue) activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
+                    if (sub.HasAddChildContent)
+                    {
+                        AddChildContentToActive(tagValues, activeNode, sub);
+                    }
+
+                    if (sub.HasReplacementContent)
+                    {
+                        ReplaceChildNodes(tagValues, activeNode, sub);
+                    }
+
+                    if (sub.HasAppendAfter)
+                    {
+                        AppendAfterActive(tagValues, activeNode, sub);
+                    }
+
+                    if (sub.RemoveCurrentAttributes)
+                    {
+                        activeNode.RemoveAttributes();
+                    }
+
+                    if (sub.HasChangeValue)
+                    {
+                        activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
+                    }
 
                     foreach (var (attribute, value) in sub.AddAttributes)
                     {
@@ -312,12 +344,35 @@ namespace Ensconce.Update
                 foreach (var activeObject in sub.PathMatchAll ? jsonPathMatches : jsonPathMatches.Take(1))
                 {
                     //Should never get to this, but just in case!
-                    if (sub.RemoveCurrentAttributes) throw new ApplicationException("Remove attributes is not supported with json files");
-                    if (sub.AddAttributes.Any()) throw new ApplicationException("Add attributes is not supported with json files");
-                    if (sub.ChangeAttributes.Any()) throw new ApplicationException("Change attributes is not supported with json files");
-                    if (sub.HasAppendAfter) throw new ApplicationException("Append after is not supported with json files");
-                    if (sub.HasAddChildContent) throw new ApplicationException("Add child is not supported with json files");
-                    if (sub.HasReplacementContent) throw new ApplicationException("Replacement content is not supported with json files");
+                    if (sub.RemoveCurrentAttributes)
+                    {
+                        throw new ApplicationException("Remove attributes is not supported with json files");
+                    }
+
+                    if (sub.AddAttributes.Any())
+                    {
+                        throw new ApplicationException("Add attributes is not supported with json files");
+                    }
+
+                    if (sub.ChangeAttributes.Any())
+                    {
+                        throw new ApplicationException("Change attributes is not supported with json files");
+                    }
+
+                    if (sub.HasAppendAfter)
+                    {
+                        throw new ApplicationException("Append after is not supported with json files");
+                    }
+
+                    if (sub.HasAddChildContent)
+                    {
+                        throw new ApplicationException("Add child is not supported with json files");
+                    }
+
+                    if (sub.HasReplacementContent)
+                    {
+                        throw new ApplicationException("Replacement content is not supported with json files");
+                    }
 
                     var updatedData = sub.ChangeValue.RenderTemplate(tagValues);
 
@@ -333,7 +388,10 @@ namespace Ensconce.Update
                         value = new JValue(updatedData);
                     }
 
-                    if (sub.HasChangeValue) activeObject.Replace(value);
+                    if (sub.HasChangeValue)
+                    {
+                        activeObject.Replace(value);
+                    }
                 }
             }
 

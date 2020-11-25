@@ -163,7 +163,6 @@ module public Now =
                         } :> INodeImpl), context, tokens
                     | _ -> raise (SyntaxError ("malformed 'now' tag"))
 
-
     /// Formats a date according to the given format (same as the now tag).
     ///
     ///For example:
@@ -185,7 +184,6 @@ module public Now =
 
                 format |> dt.ToString :> obj
 
-
     type public TimeFilter() =
         interface IFilter with
             member x.DefaultValue = "t" :> obj
@@ -198,7 +196,6 @@ module public Now =
                     | _ as o -> DateTime.TryParse(o |> Convert.ToString) |> snd
 
                 format |> dt.ToString :> obj
-
 
     let internal timeSinceUntil value args (subtract:(DateTime*DateTime) -> TimeSpan) =
         let arrNames = ["year","years";
@@ -248,7 +245,6 @@ module public Now =
             (daysLeft  / divider),
             (daysLeft % divider)
 
-
         let totalYears,years,leftDays = GetTotal dtDiff.Days 365
         let totalMonths,months,leftDays = GetTotal leftDays 30
         let totalWeeks,weeks,leftDays = GetTotal leftDays 7
@@ -267,7 +263,6 @@ module public Now =
                          then "0 minutes"
                          else result
         result :> obj
-
 
     type public TimeSinceFilter() =
         interface IFilter with

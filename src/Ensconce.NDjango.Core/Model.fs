@@ -60,6 +60,3 @@ module Model =
                             | _ -> walker
                     }
                     :> INodeImpl), context.WithNewModel(context.Model.Add(context.Resolver, model)), tokens
-
-
-

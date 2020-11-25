@@ -12,7 +12,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
     [Interfaces.Name("upper")]
     public class UpperFilter : Interfaces.ISimpleFilter
     {
-
         #region ISimpleFilter Members
 
         public object Perform(object __p1)
@@ -20,6 +19,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return Convert.ToString(__p1).ToUpper();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

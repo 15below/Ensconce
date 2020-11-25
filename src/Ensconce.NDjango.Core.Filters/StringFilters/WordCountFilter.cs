@@ -15,6 +15,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return Convert.ToString(__p1).Split((string[])null, StringSplitOptions.RemoveEmptyEntries).Length;
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

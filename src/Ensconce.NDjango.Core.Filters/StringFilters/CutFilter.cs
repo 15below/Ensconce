@@ -4,7 +4,7 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
 {
     /// <summary>
     ///     Removes all values of arg from the given string.
-    ///     
+    ///
     ///     For example:
     ///     {{ value|cut:" "}}
     ///     If value is "String with spaces", the output will be "Stringwithspaces".
@@ -12,7 +12,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
     [Interfaces.Name("cut")]
     public class CutFilter : Interfaces.IFilter
     {
-
         #region IFilter Members
 
         public object DefaultValue
@@ -25,7 +24,7 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return Convert.ToString(__p1).Replace(Convert.ToString(__p2), string.Empty);
         }
 
-        #endregion
+        #endregion IFilter Members
 
         #region ISimpleFilter Members
 
@@ -34,6 +33,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

@@ -304,7 +304,6 @@ module internal Misc =
                                 nodes,
                                 remaining))
 
-
     ///Output one of the syntax characters used to compose template tags.
     ///
     ///Since the template system has no concept of "escaping", to display one of the bits used in template tags, you must use the {% templatetag %} tag.
@@ -344,7 +343,6 @@ module internal Misc =
                         override this.walk manager walker =
                             {walker with buffer = buf}
                 } :> INodeImpl), context, tokens
-
 
     /// For creating bar charts and such, this tag calculates the ratio of a given
     /// value to a maximum value, and then applies that ratio to a constant.

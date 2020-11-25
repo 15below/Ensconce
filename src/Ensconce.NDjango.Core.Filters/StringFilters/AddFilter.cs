@@ -25,12 +25,16 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             var p2 = Utilities.get_int(__p2);
 
             if (p1.Item1 && p2.Item1)
+            {
                 return p1.Item2 + p2.Item2;
+            }
             else
+            {
                 return __p1;
+            }
         }
 
-        #endregion
+        #endregion IFilter Members
 
         #region ISimpleFilter Members
 
@@ -39,7 +43,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
-
 }

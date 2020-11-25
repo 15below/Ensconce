@@ -178,7 +178,6 @@ module Variables =
                     | None -> "" :> obj
             (result |> translator context, context.Autoescape)
 
-
     /// Discriminating union representing a variable
     /// can be either a Literal or a Reference
     type private VariableContent =

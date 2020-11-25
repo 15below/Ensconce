@@ -8,7 +8,6 @@ namespace Ensconce.NDjango.Tests
 {
     public partial class TestsRunner
     {
-
         [Test, TestCaseSource("GetMiscellaneousTagsTests")]
         public void MiscellaneousTags(TestDescriptor test)
         {
@@ -17,7 +16,6 @@ namespace Ensconce.NDjango.Tests
 
         public static IList<TestDescriptor> GetMiscellaneousTagsTests()
         {
-
             IList<TestDescriptor> lst = new List<TestDescriptor>();
             // autoescape tag
             lst.Add(new TestDescriptor("autoescape-tag", "before <{{ lt }} {% autoescape off %}inside <{{ lt }}{{ gt }}>{% endautoescape %} after {{ gt }}>", ContextObjects.p("lt", "<", "gt", ">"), ContextObjects.p("before <&lt; inside <<>> after &gt;>")));
@@ -63,62 +61,29 @@ namespace Ensconce.NDjango.Tests
             // Nested block tags
             lst.Add(new TestDescriptor("nestedblocks 01",
 @"{% extends ""tBaseNested"" %}
-{% block outer %}
-{{ block.super }}
-new stuff
+{% block outer %}{{ block.super }}new stuff
 {% endblock outer %}", null, ContextObjects.p(@"
-
-
 this is inner1
-
-
 this is inner2
-
-
 new stuff
 ")));
             lst.Add(new TestDescriptor("nestedblocks 02",
 @"{% extends ""tBaseNested"" %}
-{% block outer %}
-{{ block.super }}
-new stuff
-{% endblock outer %}
-{% block inner2 %}
-new inner2
-{% endblock inner2 %}", null, ContextObjects.p(@"
-
-
+{% block outer %}{{ block.super }}new stuff{% endblock outer %}
+{% block inner2 %}new inner2{% endblock inner2 %}", null, ContextObjects.p(@"
 this is inner1
-
-
 new inner2
-
-
-new stuff
-")));
+new stuff")));
             lst.Add(new TestDescriptor("nestedblocks 03 - \"don't do this!\"",
 @"{% extends ""tBaseNested"" %}
-{% block outer %}
-{{ block.super }}
-new stuff
-{% block inner2 %}
-new inner2
-{% endblock inner2 %}
+{% block outer %}{{ block.super }}new stuff
+{% block inner2 %}new inner2{% endblock inner2 %}
 {% endblock outer %}", null, ContextObjects.p(@"
-
-
 this is inner1
-
-
 new inner2
-
-
 new stuff
-
 new inner2
-
 ")));
-
 
             // filter tag
             lst.Add(new TestDescriptor("filter-tag", "before <{{ lt }} {% autoescape off %}inside <{{ lt }}{{ gt }}>{% filter escape %} inside filter <{{ lt }}{{ gt }}>{% endfilter %}{% endautoescape %} after {{ gt }}>"
@@ -137,51 +102,34 @@ new inner2
 
             // regroup tag
             lst.Add(new TestDescriptor("regroup-01",
-@"{% regroup people by gender as gender_list %}<ul>
-{% for gender in gender_list %}
+@"{% regroup people by gender as gender_list %}<ul>{% for gender in gender_list %}
     <li>{{ gender.grouper }}
-    <ul>
-        {% for item in gender.list %}
-        <li>{{ item.first_name }} {{ item.last_name }}</li>
-        {% endfor %}
+    <ul>{% for item in gender.list %}
+        <li>{{ item.first_name }} {{ item.last_name }}</li>{% endfor %}
     </ul>
-    </li>
-{% endfor %}
+    </li>{% endfor %}
 </ul>",
                 ContextObjects.p("people", people),
                 ContextObjects.p(
 @"<ul>
-
     <li>Male
     <ul>
-        
         <li>George Bush</li>
-        
         <li>Bill Clinton</li>
-        
     </ul>
     </li>
-
     <li>Female
     <ul>
-        
         <li>Margaret Thatcher</li>
-        
         <li>Condoleezza Rice</li>
-        
     </ul>
     </li>
-
     <li>Unknown
     <ul>
-        
         <li>Pat Smith</li>
-        
     </ul>
     </li>
-
-</ul>"
-                                )));
+</ul>")));
 
             // spaceless tag
             lst.Add(new TestDescriptor("spaceless-01", "{% spaceless %}templatetag<h1>  \r\n   </h1> !\r\n <h2> </h2>{% endspaceless %}", ContextObjects.empty, ContextObjects.p("templatetag<h1></h1> !\r\n <h2></h2>")));
@@ -216,7 +164,6 @@ new inner2
 
             // non-nested simple tag implementation
             lst.Add(new TestDescriptor("simple-non-nested-tag-01", "{% non-nested p1 \"p2\" %}woo", ContextObjects.p("p1", "parm1"), ContextObjects.p("parm1p2woo")));
-
 
             return lst;
         }

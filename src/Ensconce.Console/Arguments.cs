@@ -246,7 +246,10 @@ namespace Ensconce.Console
             {
                 System.Console.WriteLine("Configuration update console wrapper. See https://github.com/15below/Ensconce for details.");
                 p.WriteOptionDescriptions(System.Console.Out);
-                if (!showHelp) throw new OptionException("Invalid combination of options given, showing help.", "help");
+                if (!showHelp)
+                {
+                    throw new OptionException("Invalid combination of options given, showing help.", "help");
+                }
             }
 
             if (CopyTo || Replace)

@@ -20,12 +20,12 @@ namespace Ensconce.NDjango.Tests
         }
 
         #region Pluralize filter
+
         [Test, TestCaseSource("GetPluralizeFilters")]
         public void ProcessPluralizeFilters(TestDescriptor test)
         {
             InternalFilterProcess(test);
         }
-
 
         public static IList<TestDescriptor> GetPluralizeFilters()
         {
@@ -59,8 +59,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("pluralize-filter03s", "{{ value|pluralize}}", ContextObjects.p("value", "2"), ContextObjects.p("s")));
             lst.Add(new TestDescriptor("pluralize-filter03arr", "{{ value|pluralize}}", ContextObjects.p("value", ContextObjects.range(2)), ContextObjects.p("s")));
             lst.Add(new TestDescriptor("pluralize-filter03list", "{{ value|pluralize}}", ContextObjects.p("value", ContextObjects.list("first_element", "second_element")), ContextObjects.p("s")));
-
-
 
             //>>> pluralize(1,u'es')
             //u''
@@ -109,9 +107,9 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("pluralize-filter10", "{{ value|pluralize:'y,ies,error-spawning'}}", ContextObjects.p("value", 0), ContextObjects.p("")));
 
             return lst;
-
         }
-        #endregion
+
+        #endregion Pluralize filter
 
         #region Phone2Numeric filter
 
@@ -120,7 +118,6 @@ namespace Ensconce.NDjango.Tests
         {
             InternalFilterProcess(test);
         }
-
 
         public static IList<TestDescriptor> GetPhone2NumericFilters()
         {
@@ -134,15 +131,15 @@ namespace Ensconce.NDjango.Tests
             return lst;
         }
 
-        #endregion
+        #endregion Phone2Numeric filter
 
         #region DefaultIfNone filter
+
         [Test, TestCaseSource("GetDefaultIfNoneFilters")]
         public void ProcessDefaultIfNoneFilters(TestDescriptor test)
         {
             InternalFilterProcess(test);
         }
-
 
         public static IList<TestDescriptor> GetDefaultIfNoneFilters()
         {
@@ -161,9 +158,10 @@ namespace Ensconce.NDjango.Tests
             return lst;
         }
 
-        #endregion
+        #endregion DefaultIfNone filter
 
         #region FileSizeFormat filter
+
         [Test, TestCaseSource("GetFileSizeFormatFilters")]
         public void ProcessFileSizeFormatFilters(TestDescriptor test)
         {
@@ -178,16 +176,13 @@ namespace Ensconce.NDjango.Tests
             ///u'1023 bytes'
             lst.Add(new TestDescriptor("filesizeformat-filter01", "{{value|filesizeformat}}", ContextObjects.p("value", 1023), ContextObjects.p("1023 bytes")));
 
-
             ///>>> filesizeformat(1024)
             ///u'1.0 KB'
             lst.Add(new TestDescriptor("filesizeformat-filter02", "{{value|filesizeformat}}", ContextObjects.p("value", 1024), ContextObjects.p("1.0 KB")));
 
-
             ///>>> filesizeformat(10*1024)
             ///u'10.0 KB'
             lst.Add(new TestDescriptor("filesizeformat-filter03", "{{value|filesizeformat}}", ContextObjects.p("value", 10 * 1024), ContextObjects.p("10.0 KB")));
-
 
             ///>>> filesizeformat(1024*1024-1)
             ///u'1024.0 KB'
@@ -209,15 +204,10 @@ namespace Ensconce.NDjango.Tests
             ///u'1.0 GB'
             lst.Add(new TestDescriptor("filesizeformat-filter08", "{{value|filesizeformat}}", ContextObjects.p("value", 1024 * 1024 * 1024), ContextObjects.p("1.0 GB")));
 
-
-
-
             return lst;
         }
 
-
-        #endregion
-
+        #endregion FileSizeFormat filter
 
         public static IList<TestDescriptor> GetFilters()
         {
@@ -264,7 +254,6 @@ namespace Ensconce.NDjango.Tests
             //>>> get_digit(u'xyz', 0)
             //u'xyz'
 
-
             lst.Add(new TestDescriptor("default-filter01", "{{ value|default:\"default\"}}", ContextObjects.p("value", "val"), ContextObjects.p("val"), "value"));
             //>>> default(u"val", u"default")
             //u'val'
@@ -308,7 +297,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("capfirst-filter01", "{{value|capfirst}}", ContextObjects.p("value", "hello world"), ContextObjects.p("Hello world")));
             //>>> capfirst(u'hello world')
             //u'Hello world'
-
 
             lst.Add(new TestDescriptor("escapejs-filter01", "{% autoescape off %}{{value|escapejs}}{% endautoescape %}", ContextObjects.p("value", "\"double quotes\" and 'single quotes'"), ContextObjects.p("\\x22double quotes\\x22 and \\x27single quotes\\x27")));
             //>>> escapejs(u'"double quotes" and \'single quotes\'')
@@ -415,8 +403,8 @@ namespace Ensconce.NDjango.Tests
             //u'13.1031'
 
             lst.Add(new TestDescriptor("floatformat-filter18", "{{value|floatformat:2}}", ContextObjects.p("value", 18.125), ContextObjects.p(ContextObjects.InsertCultureSep("18{0}13"))));
-            //>>> floatformat(18.125, 2) 
-            //u'18.13' 
+            //>>> floatformat(18.125, 2)
+            //u'18.13'
 
             lst.Add(new TestDescriptor("floatformat-filter19", "{{value|floatformat:\"bar\"}}", ContextObjects.p("value", "foo"), ContextObjects.p("")));
             //>>> floatformat(u'foo', u'bar')
@@ -509,7 +497,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("make_list-filter01", "test{% for testVal in value|make_list %}{{ testVal }}{{ testVal }}{{ testVal }}{% endfor %}", ContextObjects.p("value", "abcd"), ContextObjects.p("testaaabbbcccddd")));
             //>>> make_list('abc')
             //[u'a', u'b', u'c']
-
 
             lst.Add(new TestDescriptor("make_list-filter02", "test{% for testVal in value|make_list %}{{ testVal }}{{ testVal }}{{ testVal }}{% endfor %}", ContextObjects.p("value", 1234), ContextObjects.p("test111222333444")));
             ////>>> make_list(1234)
@@ -669,8 +656,6 @@ namespace Ensconce.NDjango.Tests
 
             lst.Add(new TestDescriptor("slice-filter07", "test{% for testVal in value|make_list|slice:\"0::2\" %}{{ testVal }}{{ testVal }}{{ testVal }}{% endfor %}", ContextObjects.p("value", "abcd"), ContextObjects.p("testaaaccc")));
 
-
-
             lst.Add(new TestDescriptor("slugify-filter01", "{{value|slugify}}", ContextObjects.p("value", " Jack & Jill like numbers 1,2,3 and 4 and silly characters ?%.$!/"), ContextObjects.p("jack-jill-like-numbers-123-and-4-and-silly-characters")));
             ///>>> slugify(' Jack & Jill like numbers 1,2,3 and 4 and silly characters ?%.$!/')
             /// u'jack-jill-like-numbers-123-and-4-and-silly-characters'
@@ -691,7 +676,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("truncatewords-filter02-1", "{{value|truncatewords:8}}", ContextObjects.p("value", "A sentence with a few words in it"), ContextObjects.p("A sentence with a few words in it")));
             lst.Add(new TestDescriptor("truncatewords-filter02-2", "{{value|truncatewords:8}}", ContextObjects.p("value", "A sentence with a few words in it."), ContextObjects.p("A sentence with a few words in it.")));
 
-
             lst.Add(new TestDescriptor("truncatewords-filter03", "{{value|truncatewords:100}}", ContextObjects.p("value", "A sentence with a few words in it"), ContextObjects.p("A sentence with a few words in it")));
             ///>>> truncatewords(u'A sentence with a few words in it', 100)
             ///u'A sentence with a few words in it'
@@ -710,39 +694,37 @@ namespace Ensconce.NDjango.Tests
 
             lst.Add(new TestDescriptor("urlize-filter01", "{% autoescape off %}{{value|urlize}}{% endautoescape %}", ContextObjects.p("value", "http://google.com"), ContextObjects.p("<a href=\"http://google.com\">http://google.com</a>")));
             ////# Check normal urlize
-            ////>>> urlize('http://google.com') 
+            ////>>> urlize('http://google.com')
             ////u'<a href="http://google.com" rel="nofollow">http://google.com</a>'
 
             lst.Add(new TestDescriptor("urlize-filter02", "{% autoescape off %}{{value|urlize}}{% endautoescape %}", ContextObjects.p("value", "http://www.google.com"), ContextObjects.p("<a href=\"http://www.google.com\">http://www.google.com</a>")));
-            ////>>> urlize('http://www.google.com/') 
+            ////>>> urlize('http://www.google.com/')
             ////u'<a href="http://www.google.com/" rel="nofollow">http://www.google.com/</a>'
 
             lst.Add(new TestDescriptor("urlize-filter03", "{% autoescape off %}{{value|urlize}}{% endautoescape %}", ContextObjects.p("value", "www.google.com"), ContextObjects.p("<a href=\"http://www.google.com\">www.google.com</a>")));
-            ////>>> urlize('www.google.com') 
+            ////>>> urlize('www.google.com')
             ////u'<a href="http://www.google.com" rel="nofollow">www.google.com</a>'
 
             lst.Add(new TestDescriptor("urlize-filter04", "{% autoescape off %}{{value|urlize}}{% endautoescape %}", ContextObjects.p("value", "djangoproject.org"), ContextObjects.p("<a href=\"http://djangoproject.org\">djangoproject.org</a>")));
-            ////>>> urlize('djangoproject.org') 
+            ////>>> urlize('djangoproject.org')
             ////u'<a href="http://djangoproject.org" rel="nofollow">djangoproject.org</a>'
 
             lst.Add(new TestDescriptor("urlize-filter05", "{% autoescape off %}{{value|urlize}}{% endautoescape %}", ContextObjects.p("value", "info@djangoproject.org"), ContextObjects.p("<a href=\"mailto:info@djangoproject.org\">info@djangoproject.org</a>")));
-            ////>>> urlize('info@djangoproject.org') 
+            ////>>> urlize('info@djangoproject.org')
             ////u'<a href="mailto:info@djangoproject.org">info@djangoproject.org</a>'
 
             lst.Add(new TestDescriptor("urlize-filter06", "{% autoescape off %}{{value|urlize}}{% endautoescape %}", ContextObjects.p("value", "https://google.com"), ContextObjects.p("<a href=\"https://google.com\">https://google.com</a>")));
             ////# Check urlize with https addresses
-            ////>>> urlize('https://google.com') 
+            ////>>> urlize('https://google.com')
             ////u'<a href="https://google.com" rel="nofollow">https://google.com</a>'
 
             lst.Add(new TestDescriptor("urlize-filter07", "{% autoescape off %}{{value|urlize}}{% endautoescape %}", ContextObjects.p("value", "123"), ContextObjects.p("123")));
             ////>>> urlize(123)
             ////u'123'
 
-
             lst.Add(new TestDescriptor("urlize-filter08", "{% autoescape off %}{{value|urlize}}{% endautoescape %}", ContextObjects.p("value", "hello world http://www.hello.com"), ContextObjects.p("hello world <a href=\"http://www.hello.com\">http://www.hello.com</a>")));
             ////>>> urlize(123)
             ////u'123'
-
 
             lst.Add(new TestDescriptor("urlizetrunc-fitler01", "{% autoescape off %}{{value|urlizetrunc:20}}{% endautoescape %}",
                                        ContextObjects.p("value", "http://short.com/"),
@@ -759,7 +741,6 @@ namespace Ensconce.NDjango.Tests
             string uri = "http://31characteruri.com/test/";
             string uri2 = "this is a test text\r\n http://31characteruri.com/test/ and this is another test text";
 
-
             lst.Add(new TestDescriptor("urlizetrunc-fitler03", "{% autoescape off %}{{value|urlizetrunc:31}}{% endautoescape %}",
                            ContextObjects.p("value", uri),
                            ContextObjects.p("<a href=\"http://31characteruri.com/test/\">http://31characteruri.com/test/</a>")));
@@ -769,7 +750,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("urlizetrunc-fitler04", "{% autoescape off %}{{value|urlizetrunc:30}}{% endautoescape %}",
                            ContextObjects.p("value", uri),
                            ContextObjects.p("<a href=\"http://31characteruri.com/test/\">http://31characteruri.com/t...</a>")));
-
 
             lst.Add(new TestDescriptor("urlizetrunc-fitler05", "{% autoescape off %}{{value|urlizetrunc:30}}{% endautoescape %}",
                            ContextObjects.p("value", uri),
@@ -784,7 +764,6 @@ namespace Ensconce.NDjango.Tests
             ////>>> urlizetrunc(uri, 2)
             ////u'<a href="http://31characteruri.com/test/" rel="nofollow">...</a>'
 
-
             lst.Add(new TestDescriptor("urlizetrunc-filter07", "{% autoescape off %}{{value|urlizetrunc:2}}{% endautoescape %}",
                             ContextObjects.p("value", uri2),
                             ContextObjects.p("this is a test text\r\n <a href=\"http://31characteruri.com/test/\">...</a> and this is another test text")));
@@ -792,8 +771,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("urlizetrunc-filter08", "{% autoescape off %}{{value|urlizetrunc:12}}{% endautoescape %}",
                             ContextObjects.p("value", uri2),
                             ContextObjects.p("this is a test text\r\n <a href=\"http://31characteruri.com/test/\">http://31...</a> and this is another test text")));
-
-
 
             lst.Add(new TestDescriptor("wordwrap-filter01", "{% autoescape off %}{{value|wordwrap:14}}{% endautoescape %}",
                                        ContextObjects.p("value",
@@ -845,7 +822,6 @@ namespace Ensconce.NDjango.Tests
                                         ContextObjects.p("value", "line 1\n\nline 2"),
                                         ContextObjects.p("line 1<br /><br />line 2")));
 
-
             lst.Add(new TestDescriptor("striptags-filter01", "{% autoescape off %}{{value|striptags}}{% endautoescape %}",
                                         ContextObjects.p("value", "some <b>html</b> with <script>alert(\"Test alert\")</script> disallowed <img /> tags"), ContextObjects.p("some html with alert(\"Test alert\") disallowed  tags")));
             ////>>> join([0,1,2], u'glue')
@@ -855,11 +831,9 @@ namespace Ensconce.NDjango.Tests
                                         ContextObjects.p("value", ContextObjects.range(3)),
                                         ContextObjects.p("0glue1glue2")));
 
-
             lst.Add(new TestDescriptor("join-filter02", "{{value|join:\"glue\"}}",
                             ContextObjects.p("value", 345),
                             ContextObjects.p(typeof(Interfaces.RenderingException))));
-
 
             lst.Add(new TestDescriptor("yesno-filter01", "{{value|yesno}}",
                                         ContextObjects.p("value", true),
@@ -872,7 +846,6 @@ namespace Ensconce.NDjango.Tests
                                         ContextObjects.p("no")));
             ////>>> yesno(False)
             ////u'no'
-
 
             lst.Add(new TestDescriptor("yesno-filter03", "{{value|yesno:\"certainly,get out of town,perhaps\"}}",
                                         ContextObjects.p("value", true),
@@ -887,7 +860,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("yesno-filter05", "{{value|yesno:'certainly,get out of town'}}",
                 ContextObjects.p("value", false),
                 ContextObjects.p("get out of town")));
-
 
             var testList = new List<Dictionary<string, IComparable>>();
             var dict1 = ContextObjects.dictComp("age", 23, "name", "Barbara-Ann");
@@ -905,7 +877,6 @@ namespace Ensconce.NDjango.Tests
             testList1.Add(dictt2);
             testList1.Add(dictt3);
 
-
             lst.Add(new TestDescriptor("dictsort-filter01", "test1-{% for testVal in value|dictsort:\"age\" %}age:{{testVal.age}};name:{{testVal.name}};;{% endfor %}",
                 ContextObjects.p("value", testList),
                 ContextObjects.p("test1-age:18;name:Jonny B Goode;;age:23;name:Barbara-Ann;;age:63;name:Ra Ra Rasputin;;")));
@@ -921,8 +892,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("dictsortreversed-filter02", "test4-{% for testVal in value|dictsortreversed:\"age\" %}age:{{testVal.age}};name:{{testVal.name}};;{% endfor %}",
                 ContextObjects.p("value", testList1),
                 ContextObjects.p("test4-age:cc;name:Barbara-Ann;;age:bbb;name:Ra Ra Rasputin;;age:aa;name:Jonny B Goode;;")));
-
-
 
             lst.Add(new TestDescriptor("time-filter01", "{{ value|time:'h' }}", ContextObjects.p("value", new DateTime(2000, 12, 12, 15, 15, 15)), ContextObjects.p("03")));
             ////>>> time(datetime.time(13), u"h")
@@ -965,6 +934,7 @@ namespace Ensconce.NDjango.Tests
         }
 
         #region helper mock classes
+
         public class Aaa
         {
             public Aaa()
@@ -973,7 +943,6 @@ namespace Ensconce.NDjango.Tests
 
             public Bbb val1;
         }
-
 
         public class Bbb
         {
@@ -992,10 +961,7 @@ namespace Ensconce.NDjango.Tests
 
             public string val3;
         }
-        #endregion
 
-
-
-
+        #endregion helper mock classes
     }
 }

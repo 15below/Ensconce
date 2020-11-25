@@ -50,6 +50,7 @@ namespace Ensconce.Update
 
         public int Count { get; private set; }
         public bool IsReadOnly { get; private set; }
+
         public bool ContainsKey(string key)
         {
             return dict.ContainsKey(key);
@@ -75,7 +76,7 @@ namespace Ensconce.Update
             get { return dict[key]; }
             set { dict[key] = value; }
         }
-        
+
         public ICollection<string> Keys { get { return dict.Keys; } }
         public ICollection<IDictionary<string, object>> Values { get { return dict.Values; } }
     }

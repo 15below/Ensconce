@@ -39,7 +39,6 @@ module Defaults =
             ++ ("phone2numeric", (new Filters.Phone2numericFilter() :> ISimpleFilter))
             ++ ("filesizeformat", (new Filters.FileSizeFormatFilter() :> ISimpleFilter))
 
-
     let internal standardTags =
         new Map<string, ITag>([])
             ++ ("autoescape", (new Misc.AutoescapeTag() :> ITag))
@@ -290,7 +289,6 @@ type TemplateManagerProvider (settings:Map<string,obj>, tags, filters, loader:IT
                 then raise (SyntaxError(fail_closing context.TagClosures, nodes, tokens))
             (context, nodes, LazyList.empty<Lexer.Token>)
 
-
     /// tries to return a list positioned just after one of the elements of parse_until. Returns None
     /// if no such element was found.
     let rec seek_internal (context:IParsingContext) length tokens =
@@ -480,5 +478,3 @@ type TemplateManagerProvider (settings:Map<string,obj>, tags, filters, loader:IT
                 match close_tag with
                 | Some tag -> ParserNodes.CommentContextNode(context, start_pos, length) :> INodeImpl, tag, remainder
                 | None -> raise (SyntaxError (fail_closing parse_until, [ParserNodes.ParsingContextNode(context, start_pos, length) :> INodeImpl]))
-
-

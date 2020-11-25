@@ -208,8 +208,6 @@ module public ParserNodes =
 
         override x.Values = Seq.empty
 
-
-
     /// For tags decorated with this attribute the string given as a parmeter for the attribute
     /// will be shown in the tooltip for the tag
     type DescriptionAttribute(description: string) =
@@ -259,4 +257,3 @@ module public ParserNodes =
         /// Walking an error node throws an error
         override x.walk manager walker =
             raise (SyntaxException(error.Message, token))
-

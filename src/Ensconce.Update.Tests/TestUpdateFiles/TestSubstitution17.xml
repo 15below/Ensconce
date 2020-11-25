@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root xmlns="http://15below.com/Substitutions.xsd">
-  <Namespaces/>
+  <Namespaces />
   <Files>
     <File Filename="TestUpdateFiles\TestConfig1.xml">
       <Changes>
         <Change>
           <XPath>/root/value</XPath>
           <AddChildContent>
-          <![CDATA[ 
+          <![CDATA[
             <one>1</one>
             <two>2</two>
           ]]>
