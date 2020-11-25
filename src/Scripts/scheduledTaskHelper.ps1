@@ -2,7 +2,7 @@ Write-Host "Ensconce - scheduledTaskHelper Loading"
 
 function ScheduledTask-CheckExists([string] $taskName, [string] $taskPath)
 {
-    try 
+    try
     {
         Write-Host "Checking if scheduled task '\$taskPath\$taskName' exists"
 
@@ -35,7 +35,7 @@ function ScheduledTask-Delete([string] $taskName, [string] $taskPath)
 {
     if((ScheduledTask-CheckExists $taskName $taskPath) -eq $true)
     {
-        try 
+        try
         {
             Write-Host "Deleting scheduled task '\$taskPath\$taskName'"
 
@@ -56,22 +56,22 @@ function ScheduledTask-Delete([string] $taskName, [string] $taskPath)
         {
             Write-Error "Error deleting scheduled task '$taskPath\$taskName' - $_"
             $false
-        }  
+        }
         finally
         {
             #Reset last exit code, because otherwise deploys fail - the error is handled in this function
             $global:LASTEXITCODE = $null
-        }  
+        }
     }
 }
 
 function ScheduledTask-CreateFromXml([string] $taskName, [string] $taskPath, [string] $taskXmlPath)
 {
-    try 
+    try
     {
         Write-Host "Creating scheduled task '\$taskPath\$taskName'"
         $response = & "schtasks" "/create" "/XML" $taskXmlPath "/TN" "\$taskPath\$taskName" "/F" 2>&1
-        
+
         if($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
         {
             Write-Host "Scheduled task '\$taskPath\$taskName' created"
@@ -111,7 +111,7 @@ function ScheduledTask-Run([string] $taskName, [string] $taskPath)
 {
     if((ScheduledTask-CheckExists $taskName $taskPath) -eq $true)
     {
-        try 
+        try
         {
             Write-Host "Running scheduled task '\$taskPath\$taskName'"
 
@@ -137,7 +137,7 @@ function ScheduledTask-Run([string] $taskName, [string] $taskPath)
         {
             #Reset last exit code, because otherwise deploys fail - the error is handled in this function
             $global:LASTEXITCODE = $null
-        }   
+        }
     }
 }
 

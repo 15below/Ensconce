@@ -30,12 +30,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{3ABEA4FE-D441-4705-AB6F-FD72130A5334}"
 	ProjectSection(SolutionItems) = preProject
 		Scripts\backupHelper.ps1 = Scripts\backupHelper.ps1
+		Scripts\cloudflareHelper.ps1 = Scripts\cloudflareHelper.ps1
 		Scripts\compressionHelper.ps1 = Scripts\compressionHelper.ps1
 		Scripts\createWebSite.ps1 = Scripts\createWebSite.ps1
 		Scripts\deployHelp.ps1 = Scripts\deployHelp.ps1
 		Scripts\dnsHelper.ps1 = Scripts\dnsHelper.ps1
 		Scripts\kubernetesHelper.ps1 = Scripts\kubernetesHelper.ps1
 		Scripts\rabbitHelper.ps1 = Scripts\rabbitHelper.ps1
+		Scripts\scheduledTaskHelper.ps1 = Scripts\scheduledTaskHelper.ps1
 		Scripts\serviceManagement.ps1 = Scripts\serviceManagement.ps1
 		Scripts\userManagement.ps1 = Scripts\userManagement.ps1
 		Scripts\webHelper.ps1 = Scripts\webHelper.ps1

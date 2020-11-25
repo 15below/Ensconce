@@ -25,129 +25,129 @@ $ADS_UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION = 16777216 # 0x1000000
 
 Function AddUser([string]$name, [string]$password)
 {
-	$computer = [ADSI]"WinNT://$env:computername,computer"
-	$newuser = $computer.Create("user", $name)
-	$newuser.SetPassword($password)
-	$newuser.SetInfo()
+    $computer = [ADSI]"WinNT://$env:computername,computer"
+    $newuser = $computer.Create("user", $name)
+    $newuser.SetPassword($password)
+    $newuser.SetInfo()
 
-	$newuser.UserFlags = $ADS_UF_DONT_EXPIRE_PASSWD
-	$newuser.CommitChanges()
+    $newuser.UserFlags = $ADS_UF_DONT_EXPIRE_PASSWD
+    $newuser.CommitChanges()
 }
 
 Function AddUserToGroup([string]$name, [string]$group)
 {
-	"AddUserToGroup: $name, $group" | Write-Host
+    "AddUserToGroup: $name, $group" | Write-Host
 
-	$objComputer = [ADSI]("WinNT://$env:computername,computer")
+    $objComputer = [ADSI]("WinNT://$env:computername,computer")
 
-	$colUsers = $objComputer.psbase.children |
-		Where-Object {$_.psBase.schemaClassName -eq "User" -and $_.psBase.Name -eq $name}
+    $colUsers = $objComputer.psbase.children |
+        Where-Object {$_.psBase.schemaClassName -eq "User" -and $_.psBase.Name -eq $name}
 
-	if($colUsers -eq $null)
-	{
-		"Could not locate user: $user" | Write-Host
-	}
-	else
-	{
-		$searchgroup = ($objComputer.psbase.children |
-			Where {$_.psbase.schemaClassName -eq "group" -and $_.psbase.Name -eq $group} |
-			Select-Object -First 1)
+    if($colUsers -eq $null)
+    {
+        "Could not locate user: $user" | Write-Host
+    }
+    else
+    {
+        $searchgroup = ($objComputer.psbase.children |
+            Where {$_.psbase.schemaClassName -eq "group" -and $_.psbase.Name -eq $group} |
+            Select-Object -First 1)
 
-		if($searchgroup -eq $null)
-		{
-			"Could not locate group: $group" | Write-Host
-		}
-		else
-		{
-			$blnFound = $False
-			$members = @($searchgroup.psbase.Invoke("Members"))
-			ForEach ($Member In $Members)
-			{
-				$class = $member.GetType().InvokeMember("Class", 'GetProperty', $Null, $member, $Null)
-				$username = $member.GetType().InvokeMember("Name", 'GetProperty', $Null, $member, $Null)
-				if ($class -eq "User" -and $username -eq $name)
-				{
-					$blnFound = $True
-					"User already added to group: $name, $group" | Write-Host
-				}
-			}
+        if($searchgroup -eq $null)
+        {
+            "Could not locate group: $group" | Write-Host
+        }
+        else
+        {
+            $blnFound = $False
+            $members = @($searchgroup.psbase.Invoke("Members"))
+            ForEach ($Member In $Members)
+            {
+                $class = $member.GetType().InvokeMember("Class", 'GetProperty', $Null, $member, $Null)
+                $username = $member.GetType().InvokeMember("Name", 'GetProperty', $Null, $member, $Null)
+                if ($class -eq "User" -and $username -eq $name)
+                {
+                    $blnFound = $True
+                    "User already added to group: $name, $group" | Write-Host
+                }
+            }
 
-			if ($blnFound -eq $False) {
-				try {
-					net localgroup $group $name /add
-				}
-				catch [Exception] {
-					"Error caught" | Write-Host
-				}
-			}
-		}
-	}
+            if ($blnFound -eq $False) {
+                try {
+                    net localgroup $group $name /add
+                }
+                catch [Exception] {
+                    "Error caught" | Write-Host
+                }
+            }
+        }
+    }
 }
 
 Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 {
-	$objComputer = [ADSI]("WinNT://$env:computername,computer")
+    $objComputer = [ADSI]("WinNT://$env:computername,computer")
 
-	$colUsers = ($objComputer.psbase.children |
-		Where-Object {$_.psBase.schemaClassName -eq "User"} |
-			Select-Object -expand Name)
+    $colUsers = ($objComputer.psbase.children |
+        Where-Object {$_.psBase.schemaClassName -eq "User"} |
+            Select-Object -expand Name)
 
-	$blnFound = $colUsers -contains $name
+    $blnFound = $colUsers -contains $name
 
-	if ($blnFound -eq $False) {
-		AddUser $name $password
-		AddUserToGroup $name "administrators"
-	}
+    if ($blnFound -eq $False) {
+        AddUser $name $password
+        AddUserToGroup $name "administrators"
+    }
 
-	$exe = "$EnsconceDir\Tools\Grant\Grant.exe"
-	$osInfo = Get-WmiObject -Class Win32_OperatingSystem
-	if($osInfo.ProductType -eq 2)
-	{
-		$userName = "$env:UserDomain\$name"
-	}
-	else
-	{
-		$userName = "$env:computername\$name"
-	}
-	&$exe ADD SeServiceLogonRight $userName
+    $exe = "$EnsconceDir\Tools\Grant\Grant.exe"
+    $osInfo = Get-WmiObject -Class Win32_OperatingSystem
+    if($osInfo.ProductType -eq 2)
+    {
+        $userName = "$env:UserDomain\$name"
+    }
+    else
+    {
+        $userName = "$env:computername\$name"
+    }
+    &$exe ADD SeServiceLogonRight $userName
 }
 
 Function CheckAndCreateUserAccount([string]$name, [string]$password)
 {
-	$objComputer = [ADSI]("WinNT://$env:computername,computer")
+    $objComputer = [ADSI]("WinNT://$env:computername,computer")
 
-	$colUsers = ($objComputer.psbase.children |
-		Where-Object {$_.psBase.schemaClassName -eq "User"} |
-			Select-Object -expand Name)
+    $colUsers = ($objComputer.psbase.children |
+        Where-Object {$_.psBase.schemaClassName -eq "User"} |
+            Select-Object -expand Name)
 
-	$blnFound = $colUsers -contains $name
+    $blnFound = $colUsers -contains $name
 
-	if ($blnFound -eq $False) {
-		AddUser $name $password
+    if ($blnFound -eq $False) {
+        AddUser $name $password
 
-		net localgroup Users $name /add
-	}
+        net localgroup Users $name /add
+    }
 }
 
 Function SetServiceAccount([string]$serviceName, [string]$account, [string]$password)
 {
-	$svc = gwmi win32_service -filter ("Name=""$serviceName""")
+    $svc = gwmi win32_service -filter ("Name=""$serviceName""")
 
-	if ($svc -eq $null)
-	{
-		"Could not locate service $serviceName" | Write-Host
-	}
-	else
-	{
-		CheckAndCreateServiceAccount $account $password
+    if ($svc -eq $null)
+    {
+        "Could not locate service $serviceName" | Write-Host
+    }
+    else
+    {
+        CheckAndCreateServiceAccount $account $password
 
-		$inParams = $svc.psbase.getMethodParameters("Change")
-		$inParams["StartName"] = ".\$account"
-		$inParams["StartPassword"] = $password
-		$svc.invokeMethod("Change", $inParams, $null)
+        $inParams = $svc.psbase.getMethodParameters("Change")
+        $inParams["StartName"] = ".\$account"
+        $inParams["StartPassword"] = $password
+        $svc.invokeMethod("Change", $inParams, $null)
 
-		"Service $serviceName set to use account $account" | Write-Host
-	}
+        "Service $serviceName set to use account $account" | Write-Host
+    }
 }
 
 Write-Host "Ensconce - UserManagement Loaded"
