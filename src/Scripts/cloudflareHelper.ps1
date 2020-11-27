@@ -75,12 +75,13 @@ function GetCloudflareDnsIp([string]$token, [string]$domain, [string]$record)
     $dnsRecord.content
 }
 
-function CreateCloudflareARecord([string]$token, [string]$zoneid, [string]$domain, [string]$record, [string]$ipaddr)
+function CreateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record, [string]$content, [string]$type)
 {
+    $name = $record.$domain
     $newDnsRecord = @{
-        "type" = "A"
-        "name" =  "$record.$domain"
-        "content" = $ipaddr
+        "type" = $type
+        "name" =  $name
+        "content" = $content
     }
 
     $body = $newDnsRecord | ConvertTo-Json
@@ -90,19 +91,21 @@ function CreateCloudflareARecord([string]$token, [string]$zoneid, [string]$domai
 
     if($result.success)
     {
-        Write-Host "New record $record.$domain has been created with the ID $($result.result.id)"
+        Write-Host "New record $name has been created with the ID $($result.result.id)"
         $true
     }
     else
     {
-        Write-Error "Error creating record $record.$domain"
+        Write-Error "Error creating record $name"
         $false
     }
 }
 
-function UpdateCloudflareARecord([string]$token, [string]$zoneid, [string]$recordid, [string]$domain, [string]$record, [string]$ipaddr, [bool]$warnOnUpdate = $false)
+function UpdateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$recordid, [string]$domain, [string]$record, [string]$type, [string]$content, [bool]$warnOnUpdate = $false)
 {
-    $dnsRecord | Add-Member "content" $ipaddr -Force
+    $name = $record.$domain
+    $dnsRecord | Add-Member "type" $type -Force
+    $dnsRecord | Add-Member "content" $content -Force
     $body = $dnsRecord | ConvertTo-Json
 
     $updateurl = "zones/$zoneid/dns_records/$recordid/"
@@ -111,17 +114,17 @@ function UpdateCloudflareARecord([string]$token, [string]$zoneid, [string]$recor
     {
         if($warnOnUpdate)
         {
-            Write-Warning "Record $record.$domain has been updated to the IP $($result.result.content)"
+            Write-Warning "Record $name has been updated to the IP $($result.result.content)"
         }
         else
         {
-            Write-Host "Record $record.$domain has been updated to the IP $($result.result.content)"
+            Write-Host "Record $name has been updated to the IP $($result.result.content)"
         }
         $true
     }
     else
     {
-        Write-Error "Error updating record $record.$domain"
+        Write-Error "Error updating record $name"
         $false
     }
 }
@@ -137,19 +140,46 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
     {
         $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
         $recordid = $dnsRecord.id
-        if($dnsRecord.content -eq $ipaddr)
+        if($dnsRecord.content -eq $ipaddr -and $dnsRecord.type -eq "A")
         {
-            Write-Host "Record $record.$domain already has the value $ipaddr"
+            Write-Host "Record '$record.$domain' already has an 'A' record with the value '$ipaddr'"
             $true
         }
         else
         {
-            UpdateCloudflareARecord $token $zoneid $recordid $domain $record $ipaddr $warnOnUpdate
+            UpdateCloudflareDnsRecord $token $zoneid $recordid $domain $record "A" $ipaddr $warnOnUpdate
         }
     }
     else
     {
-        CreateCloudflareARecord $token $zoneid $domain $record $ipaddr
+        CreateCloudflareDnsRecord $token $zoneid "$record.$domain" $ipaddr "A"
+    }
+}
+
+function CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [string]$record, [string]$cnameValue, [bool]$warnOnUpdate = $false)
+{
+    $zone = GetCloudflareDnsZone $token $domain
+    $zoneid = $zone.id
+
+    $recordExists = CheckCloudflareDnsRecord $token $zoneid $domain $record
+
+    if($recordExists -eq $true)
+    {
+        $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
+        $recordid = $dnsRecord.id
+        if($dnsRecord.content -eq $cnameValue -and $dnsRecord.type -eq "CNAME")
+        {
+            Write-Host "Record '$record.$domain' already has an 'CNAME' record with the value '$cnameValue'"
+            $true
+        }
+        else
+        {
+            UpdateCloudflareDnsRecord $token $zoneid $recordid $domain $record "CNAME" $cnameValue $warnOnUpdate
+        }
+    }
+    else
+    {
+        CreateCloudflareDnsRecord $token $zoneid "$record.$domain" $cnameValue "CNAME"
     }
 }
 
