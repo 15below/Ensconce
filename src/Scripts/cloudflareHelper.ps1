@@ -91,7 +91,7 @@ function CreateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$dom
 
     if($result.success)
     {
-        Write-Host "New record $name has been created with the ID $($result.result.id)"
+        Write-Host "New record $name (type: $($result.result.type), content: $($result.result.content)) has been created with the ID $($result.result.id)"
         $true
     }
     else
@@ -114,11 +114,11 @@ function UpdateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$rec
     {
         if($warnOnUpdate)
         {
-            Write-Warning "Record $name has been updated to the IP $($result.result.content)"
+            Write-Warning "Record $name has been updated to type: $($result.result.type), content: $($result.result.content)"
         }
         else
         {
-            Write-Host "Record $name has been updated to the IP $($result.result.content)"
+            Write-Host "Record $name has been updated to type: $($result.result.type), content: $($result.result.content)"
         }
         $true
     }
