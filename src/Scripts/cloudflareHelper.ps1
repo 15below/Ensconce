@@ -22,8 +22,7 @@ function CallCloudflare([string]$token, [string]$urlPart, [Microsoft.PowerShell.
 
 function GetCloudflareDnsZone([string]$token, [string]$domain)
 {
-    $zoneurl = "zones/?name=$domain"
-    $zone = CallCloudflare $token $zoneurl Get
+    $zone = CallCloudflare $token "zones/?name=$domain" Get
 
     if($zone.result.Count -gt 0){
         $zone.result
@@ -36,8 +35,7 @@ function GetCloudflareDnsZone([string]$token, [string]$domain)
 
 function GetCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record)
 {
-    $recordurl = "zones/$zoneid/dns_records/?name=$record.$domain"
-    $dnsRecord = CallCloudflare $token $recordurl Get
+    $dnsRecord = CallCloudflare $token "zones/$zoneid/dns_records/?name=$record.$domain" Get
 
     if($dnsRecord.result.Count -gt 0)
     {
@@ -51,8 +49,7 @@ function GetCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain
 
 function CheckCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record)
 {
-    $recordurl = "zones/$zoneid/dns_records/?name=$record.$domain"
-    $dnsRecord = CallCloudflare $token $recordurl Get
+    $dnsRecord = CallCloudflare $token "zones/$zoneid/dns_records/?name=$record.$domain" Get
 
     if($dnsRecord.result.Count -gt 0)
     {
@@ -85,9 +82,10 @@ function CreateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$dom
     }
 
     $body = $newDnsRecord | ConvertTo-Json
-
-    $newrecordurl = "zones/$zoneid/dns_records"
-    $result = CallCloudflare $token $newrecordurl Post $body
+	
+	Write-Host "Create new DNS record '$name' in zone '$zoneid': $body"
+	
+    $result = CallCloudflare $token "zones/$zoneid/dns_records" Post $body
 
     if($result.success)
     {
@@ -107,9 +105,11 @@ function UpdateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$rec
     $dnsRecord | Add-Member "type" $type -Force
     $dnsRecord | Add-Member "content" $content -Force
     $body = $dnsRecord | ConvertTo-Json
-
-    $updateurl = "zones/$zoneid/dns_records/$recordid/"
-    $result = CallCloudflare $token $updateurl Put $body
+    	
+	Write-Host "Update dns record '$recordid' / named '$name' new DNS record in zone '$zoneid': $body"
+	
+    $result = CallCloudflare $token "zones/$zoneid/dns_records/$recordid/" Put $body
+	
     if($result.success)
     {
         if($warnOnUpdate)
@@ -152,7 +152,7 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
     }
     else
     {
-        CreateCloudflareDnsRecord $token $zoneid "$record.$domain" $ipaddr "A"
+        CreateCloudflareDnsRecord $token $zoneid $domain $record $ipaddr "A"
     }
 }
 
@@ -179,7 +179,7 @@ function CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [s
     }
     else
     {
-        CreateCloudflareDnsRecord $token $zoneid "$record.$domain" $cnameValue "CNAME"
+        CreateCloudflareDnsRecord $token $zoneid $domain $record $cnameValue "CNAME"
     }
 }
 
