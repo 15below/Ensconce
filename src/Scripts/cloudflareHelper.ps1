@@ -77,7 +77,7 @@ function GetCloudflareDnsIp([string]$token, [string]$domain, [string]$record)
 
 function CreateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record, [string]$content, [string]$type)
 {
-    $name = $record.$domain
+    $name = "$record.$domain"
     $newDnsRecord = @{
         "type" = $type
         "name" =  $name
@@ -103,7 +103,7 @@ function CreateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$dom
 
 function UpdateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$recordid, [string]$domain, [string]$record, [string]$type, [string]$content, [bool]$warnOnUpdate = $false)
 {
-    $name = $record.$domain
+    $name = "$record.$domain"
     $dnsRecord | Add-Member "type" $type -Force
     $dnsRecord | Add-Member "content" $content -Force
     $body = $dnsRecord | ConvertTo-Json
