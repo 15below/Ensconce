@@ -274,17 +274,44 @@ function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$na
     $outcome
 }
 
-function CreateOrUpdateDns ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddressOrServer)
+function CreateOrUpdateDns ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddressOrServer, [bool]$warnOnUpdate = $false)
 {
     $isIp = $ipAddressOrServer -match "^\d+\.\d+\.\d+\.\d+$";
     if($isIp)
     {
-        CreateOrUpdateARecord $dnsServer $domain $name $ipAddressOrServer
+        CreateOrUpdateARecord $dnsServer $domain $name $ipAddressOrServer $warnOnUpdate
     }
     else
     {
-        CreateOrUpdateCNAME $dnsServer $domain $name $ipAddressOrServer
+        CreateOrUpdateCNAME $dnsServer $domain $name $ipAddressOrServer $warnOnUpdate
     }
+}
+
+function DeleteDns([string]$dnsServer, [string]$domain, [string]$name, [bool]$warnOnUpdate = $false)
+{
+    $outcome = $false
+    if(CheckName $dnsServer $domain $name)
+    {
+        $cnameResult = DeleteCName $dnsServer $domain $name
+        $aResult = DeleteARecord $dnsServer $domain $name
+        if($cnameResult -or $aResult)
+        {
+            $outcome = $true
+            if($warnOnUpdate)
+            {
+                write-warning "DNS A record for $name.$domain has been removed"
+            }
+            else
+            {
+                write-host "DNS A record for $name.$domain has been removed"
+            }
+        }
+        else
+        {
+            write-error "Failed to remove DNS A record for $name.$domain"
+        }
+    }
+    $outcome
 }
 
 function CheckHostsEntry ([string]$Address, [string]$FullyQualifiedName)

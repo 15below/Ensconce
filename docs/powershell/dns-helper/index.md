@@ -23,3 +23,5 @@ The `dnsHelper.ps1` script has functionality to assist creating and checking DNS
 * CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
 * UpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
 * CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress, [bool]$warnOnUpdate = $false)
+* CreateOrUpdateDns ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddressOrServer, [bool]$warnOnUpdate = $false)
+* DeleteDns([string]$dnsServer, [string]$domain, [string]$name, [bool]$warnOnUpdate = $false)
