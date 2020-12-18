@@ -1,5 +1,29 @@
 Write-Host "Ensconce - dnsHelper Loading"
 
+function GetAllSubValues ([string]$dnsServer, [string]$domain, [string]$lookupName)
+{
+    $result = dnscmd $dnsServer /EnumRecords $domain $lookupName
+
+    $keys = New-Object Collections.Generic.List[string]
+    foreach ($item in $result)
+    {
+        if ($item.Contains("3600 CNAME") -or ($item.Contains("3600 A")))
+        {
+            $key = $item -replace "\s*3600.*", ""
+            if($key -eq "@")
+            {
+                $keys.Add("$lookupName")
+            }
+            else
+            {
+                $keys.Add("$key.$lookupName")
+            }
+        }
+    }
+
+    $keys
+}
+
 function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 {
     $result = dnscmd $dnsServer /EnumRecords $domain $lookupName /node

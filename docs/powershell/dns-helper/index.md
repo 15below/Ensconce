@@ -11,6 +11,7 @@ The `dnsHelper.ps1` script has functionality to assist creating and checking DNS
 
 ## Functions
 
+* GetAllSubValues ([string]$dnsServer, [string]$domain, [string]$lookupName)
 * CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 * CheckCNameValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 * DeleteCName ([string]$dnsServer, [string]$domain, [string]$name)
