@@ -22,3 +22,4 @@ The `cloudflareHelper.ps1` script has functionality to assist interacting with t
 * UpdateCloudflareRecord([string]$token, [string]$domain, [string]$record, [string]$type, [string]$content, [bool]$warnOnUpdate = $false)
 * CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr, [bool]$warnOnUpdate = $false)
 * CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [string]$record, [string]$cnameValue, [bool]$warnOnUpdate = $false)
+* RemoveCloudflareDnsRecord([string]$token, [string]$domain, [string]$record, [bool]$warnOnDelete = $false)

@@ -216,5 +216,42 @@ function CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [s
     }
 }
 
+function RemoveCloudflareDnsRecord([string]$token, [string]$domain, [string]$record, [bool]$warnOnDelete = $false)
+{
+    $zone = GetCloudflareDnsZone $token $domain
+    $zoneid = $zone.id
+
+    $recordExists = CheckCloudflareDnsRecord $token $zoneid $domain $record
+
+    if($recordExists -eq $true)
+    {
+        $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
+        $recordid = $dnsRecord.id
+        $result = CallCloudflare $token "zones/$zoneid/dns_records/$recordid" Delete
+        Write-Host $result
+        if($result.success)
+        {
+            if($warnOnDelete)
+            {
+                Write-Warning "Record $record.$domain has been deleted"
+            }
+            else
+            {
+                Write-Host "Record $record.$domain has been deleted"
+            }
+            $true
+        }
+        else
+        {
+            Write-Error "Error deleting record $record.$domain"
+            $false
+        }
+    }
+    else
+    {
+        $true
+    }
+}
+
 Write-Host "Ensconce - cloudflare helper Loaded"
 $cloudflareHelperLoaded = $true
