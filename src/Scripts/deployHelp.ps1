@@ -32,20 +32,35 @@ if(!(Test-Path "env:\ConfigOnly"))
 
 function ensconceWithArgs($passedArgs)
 {
+    $consolePath = "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe"
     if (@($input).Count -ne 0)
     {
         $input.Reset()
-        $results = $input | & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $passedArgs
+        $results = $input | & $consolePath $passedArgs *>&1
     }
     else
     {
-        $results = & "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe" $passedArgs | Write-Host
+        $results = & $consolePath $passedArgs *>&1
     }
 
     if ($LASTEXITCODE -ne 0)
     {
-        Write-Error "Ensconce failure"
-        $results
+        $message = ""
+        $results | foreach-object{
+            $type = $_.GetType().ToString()
+            if ($type -eq "System.String")
+            {
+                $line = $_
+                $message = "$message`r`n$line"
+            }
+            elseif($_.Exception -ne $null)
+            {
+                $line = $_.Exception.Message
+                $message = "$message`r`n$line"
+            }
+        }
+
+        Write-Error ("Ensconce failure (exit code : $LASTEXITCODE)`r`n-----`r`n`r`n$message`r`n-----`r`n")
         exit $LASTEXITCODE
     }
     else
