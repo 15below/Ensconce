@@ -32,6 +32,9 @@ if(!(Test-Path "env:\ConfigOnly"))
 
 function ensconceWithArgs($passedArgs)
 {
+    $OriginalErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+
     $consolePath = "$DeployToolsDir\Tools\Ensconce\Ensconce.Console.exe"
     if (@($input).Count -ne 0)
     {
@@ -42,6 +45,8 @@ function ensconceWithArgs($passedArgs)
     {
         $results = & $consolePath $passedArgs *>&1
     }
+
+    $ErrorActionPreference = $OriginalErrorActionPreference
 
     if ($LASTEXITCODE -ne 0)
     {
@@ -60,7 +65,7 @@ function ensconceWithArgs($passedArgs)
             }
         }
 
-        Write-Error ("Ensconce failure (exit code : $LASTEXITCODE)`r`n-----`r`n`r`n$message`r`n-----`r`n")
+        Write-Error ("Ensconce failure (exit code : $LASTEXITCODE).`r`nDetails`r`n>>------------------------------------`r`n$message`r`n------------------------------------<<`r`n")
         exit $LASTEXITCODE
     }
     else
