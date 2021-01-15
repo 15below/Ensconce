@@ -10,7 +10,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
     [Interfaces.Name("addslashes")]
     public class AddSlashesFilter : Interfaces.ISimpleFilter
     {
-
         #region ISimpleFilter Members
 
         public object Perform(object __p1)
@@ -18,6 +17,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return Convert.ToString(__p1).Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("'", "\\'");
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

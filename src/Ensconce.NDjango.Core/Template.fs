@@ -35,7 +35,6 @@ module internal Template =
             member x.GetTemplate name =
                 (x :> ITemplateManager).GetTemplate(name, (new TypeResolver.DefaultTypeResolver() :> TypeResolver.ITypeResolver), TypeResolver.ModelDescriptor(Seq.empty))
 
-
     /// Implements the template (ITemplate interface)
     and internal Impl(provider : ITemplateManagerProvider, template, resolver, model) =
 
@@ -100,4 +99,3 @@ module internal Template =
 
             member x.WithModelType model_type =
                 new Context(externalContext, variables, autoescape, translator, Some model_type) :> IContext
-

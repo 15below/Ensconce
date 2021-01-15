@@ -1,5 +1,5 @@
-using System.IO;
 using roundhouse;
+using System.IO;
 
 namespace Ensconce
 {
@@ -25,7 +25,10 @@ namespace Ensconce
         {
             foreach (var folderName in folderNames)
             {
-                if (Directory.Exists(Path.Combine(schemaScriptsFolder, folderName))) return folderName;
+                if (Directory.Exists(Path.Combine(schemaScriptsFolder, folderName)))
+                {
+                    return folderName;
+                }
             }
             return defaultFolderName;
         }
@@ -51,7 +54,7 @@ namespace Ensconce
         private string UpFolderName(string schemaScriptsFolder)
         {
             return getFolderNameIfExistsOrDefault(schemaScriptsFolder,
-                                                  new[] { "Change Scripts", @"Programmability\Change Scripts" }, "Up"); 
+                                                  new[] { "Change Scripts", @"Programmability\Change Scripts" }, "Up");
         }
 
         private string ViewsFolderName(string schemaScriptsFolder)

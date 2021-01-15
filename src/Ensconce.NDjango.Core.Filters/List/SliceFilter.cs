@@ -38,24 +38,34 @@ namespace Ensconce.NDjango.Core.Filters.List
             int stepCount = (sliceParams.Length >= 3 && sliceParams[2] != string.Empty) ? Convert.ToInt32(sliceParams[2]) : 1;
 
             if (sliceParams.Length == 1 && sliceParams[0] != string.Empty)
+            {
                 stopId = Convert.ToInt32(sliceParams[0]);
+            }
 
             if (count == 0 || stepCount == 0)
+            {
                 return string.Empty;
+            }
 
             if (stopId < 0)
+            {
                 stopId = count + stopId;
+            }
 
             List<object> retObjList = new List<object>();
             if (stepCount < 0)
             {
                 for (int i = (stopId - 1); i >= startId; i += stepCount)
+                {
                     retObjList.Add(enumToProcess.ElementAt(i));
+                }
             }
             else
             {
                 for (int i = startId; i < stopId; i += stepCount)
+                {
                     retObjList.Add(enumToProcess.ElementAt(i));
+                }
             }
 
             if (toConvert is string)
@@ -68,7 +78,7 @@ namespace Ensconce.NDjango.Core.Filters.List
             }
         }
 
-        #endregion
+        #endregion IFilter Members
 
         #region ISimpleFilter Members
 
@@ -77,6 +87,6 @@ namespace Ensconce.NDjango.Core.Filters.List
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

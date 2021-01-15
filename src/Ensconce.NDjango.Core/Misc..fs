@@ -304,7 +304,6 @@ module internal Misc =
                                 nodes,
                                 remaining))
 
-
     ///Output one of the syntax characters used to compose template tags.
     ///
     ///Since the template system has no concept of "escaping", to display one of the bits used in template tags, you must use the {% templatetag %} tag.
@@ -345,7 +344,6 @@ module internal Misc =
                             {walker with buffer = buf}
                 } :> INodeImpl), context, tokens
 
-
     /// For creating bar charts and such, this tag calculates the ratio of a given
     /// value to a maximum value, and then applies that ratio to a constant.
     ///
@@ -354,7 +352,7 @@ module internal Misc =
     ///     <img src='bar.gif' height='10' width='{% widthratio this_value max_value 100 %}' />
     ///
     /// Above, if ``this_value`` is 175 and ``max_value`` is 200, the the image in
-    /// the above example will be 88 pixels wide (because 175/200 = .875;
+    /// the above example will be 88 pixels wide (because 1.6.000 = .875;
     ///
     [<ParserNodes.Description("Calculates the ratio of a given value to a max value, and applies it to a constant.")>]
     type WidthRatioTag() =

@@ -8,7 +8,6 @@ namespace Ensconce.NDjango.Tests
 {
     public partial class TestsRunner
     {
-
         [Test, TestCaseSource("GetBasicTests")]
         public void BasicSyntax(TestDescriptor test)
         {
@@ -17,7 +16,6 @@ namespace Ensconce.NDjango.Tests
 
         public static IList<TestDescriptor> GetBasicTests()
         {
-
             IList<TestDescriptor> lst = new List<TestDescriptor>();
             //*
             // Plain text should go through the template parser untouched
@@ -31,7 +29,7 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("basic-syntax03", "{{ first }} --- {{ second }}", ContextObjects.p("first", 1, "second", 2),
                 ContextObjects.p("1 --- 2"), "first", "second"));
             int? p2 = null;
-            lst.Add(new TestDescriptor("basic-syntax03-1", "{{ first }} --- {{ second }}", ContextObjects.p("first", (int?)null, "second", p2), ContextObjects.p(" --- ")));
+            lst.Add(new TestDescriptor("basic-syntax03-1", "{{ first }} --- {{ second }}", ContextObjects.p("first", null, "second", p2), ContextObjects.p(" --- ")));
 
             // Fail silently when a variable is not found in the current context
             lst.Add(new TestDescriptor("basic-syntax04", "as{{ missing }}df", ContextObjects.empty, ContextObjects.p("asdf", "asINVALIDdf")));

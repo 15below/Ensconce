@@ -20,12 +20,8 @@ namespace Ensconce.NDjango.Tests
     {
         public class Loader : Interfaces.ITemplateLoader
         {
-
-
-
             public Loader()
             {
-
                 templates.Add("base", "<html xmlns=\"http://www.w3.org/1999/xhtml\">" +
 "<head runat=\"server\"><title>{% block Title %}{% endblock %}</title></head>" +
 "<body><div id=\"main\">{% block MainContent %}{% block Sub1 %}{% block SubSub %}{% endblock SubSub %}{% endblock Sub1 %}{% endblock %}</div></body></html>");
@@ -41,23 +37,23 @@ namespace Ensconce.NDjango.Tests
                 templates.Add("t21top", "{% extends \"t21middle\" %} {% block b2 %} {{block.super}} {% endblock %}");
                 templates.Add("tBaseNested",
 @"{% block outer %}
-{% block inner1 %}
-this is inner1
-{% endblock inner1 %}
-{% block inner2 %}
-this is inner2
-{% endblock inner2 %}
+{% block inner1 %}this is inner1{% endblock inner1 %}
+{% block inner2 %}this is inner2{% endblock inner2 %}
 {% endblock outer %}");
                 templates.Add("include-name", "inside included template {{ value }}");
             }
-            Dictionary<string, string> templates = new Dictionary<string, string>();
+
+            private readonly Dictionary<string, string> templates = new Dictionary<string, string>();
 
             #region ITemplateLoader Members
 
             public TextReader GetTemplate(string name)
             {
                 if (templates.ContainsKey(name))
+                {
                     return new StringReader(templates[name]);
+                }
+
                 return new StringReader(name);
             }
 
@@ -68,7 +64,7 @@ this is inner2
                 return false;
             }
 
-            #endregion
+            #endregion ITemplateLoader Members
         }
 
         public class TestUrlTag : Abstract.UrlTag
@@ -79,9 +75,9 @@ this is inner2
             }
         }
 
-        Interfaces.ITemplateManager manager;
-        Interfaces.ITemplateManager managerForDesigner;
-        TemplateManagerProvider provider;
+        private Interfaces.ITemplateManager manager;
+        private Interfaces.ITemplateManager managerForDesigner;
+        private TemplateManagerProvider provider;
         public Func<IEnumerable<string>> standardTags;
         public Func<IEnumerable<string>> standardFilters;
 
@@ -119,7 +115,6 @@ this is inner2
                 new Filter("default", new DefaultFilter())
             };
 
-
             provider = new TemplateManagerProvider()
                 .WithLoader(new Loader())
                 .WithTag("non-nested", new TestDescriptor.SimpleNonNestedTag())
@@ -139,9 +134,11 @@ this is inner2
                 this.provided = provided;
                 this.name = name;
             }
-            string name;
+
+            private readonly string name;
             public string[] expected;
             public string provided;
+
             public override string ToString()
             {
                 return name;
@@ -270,30 +267,41 @@ this is inner2
                 {
                     object value = null;
                     if (variable.Attributes["type"] != null && variable.Attributes["value"] != null)
+                    {
                         switch (variable.Attributes["type"].Value)
                         {
                             case "integer":
                                 value = int.Parse(variable.Attributes["value"].Value);
                                 break;
+
                             case "string":
                                 value = variable.Attributes["value"].Value;
                                 break;
+
                             case "boolean":
                                 value = bool.Parse(variable.Attributes["value"].Value);
                                 break;
                         }
+                    }
 
                     if (variable.Attributes["type"] == null && variable.Attributes["value"] != null)
+                    {
                         value = variable.Attributes["value"].Value;
+                    }
 
                     if (!result.ContainsKey(variable.Name))
+                    {
                         result.Add(variable.Name, value);
+                    }
                     else
                         if (result[variable.Name] is IList)
+                    {
                         ((IList)result[variable.Name]).Add(value);
+                    }
                     else
+                    {
                         result[variable.Name] = new System.Collections.Generic.List<object>(new object[] { result[variable.Name], value });
-
+                    }
                 }
             }
             return result;
@@ -307,7 +315,6 @@ this is inner2
         //    Assert.AreEqual(retBase, retVal, String.Format("RESULT!!!!!!!!!!!!!!!!:\r\n{0}", retVal));
         //}
 
-
         //public IEnumerable<string> TemplateTestEnum1
         //{
         //    get
@@ -317,9 +324,6 @@ this is inner2
         //        return result;
         //    }
         //}
-
-
-
 
         ////        [Test, TestCaseSource("TestEnumerator")]
         //        public void Test(string path)

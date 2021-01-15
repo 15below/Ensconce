@@ -2,15 +2,14 @@
 
 namespace Ensconce.NDjango.Tests.Data
 {
-
     public class AthleteList : System.Collections.IEnumerable
     {
-
         public AthleteList()
         {
             list = new List<Athlete>(new Athlete[] { new Athlete("Michael", "Jordan"), new Athlete("Magic", "Johnson") });
         }
-        List<Athlete> list;
+
+        private readonly List<Athlete> list;
 
         #region IEnumerable Members
 
@@ -19,16 +18,18 @@ namespace Ensconce.NDjango.Tests.Data
             return list.GetEnumerator();
         }
 
-        #endregion
+        #endregion IEnumerable Members
 
-        struct Athlete
+        private struct Athlete
         {
-            public Athlete(string fstName, string lstName) { FirstName = fstName; LastName = lstName; }
+            public Athlete(string fstName, string lstName)
+            {
+                FirstName = fstName; LastName = lstName;
+            }
+
             public string FirstName;
             public string LastName;
             public string name { get { return FirstName + ' ' + LastName; } }
         }
     }
-
-
 }

@@ -35,7 +35,7 @@ namespace Ensconce.NDjango.Tests
         public string[] Vars { get; set; }
         public int RecursionDepth { get; set; }
 
-        private ResultGetter resultGetter;
+        private readonly ResultGetter resultGetter;
 
         public override string ToString()
         {
@@ -109,7 +109,9 @@ namespace Ensconce.NDjango.Tests
             {
                 StringBuilder res = new StringBuilder();
                 foreach (object o in parms)
+                {
                     res.Append(o);
+                }
 
                 return res
                     .Append(contents)
@@ -127,7 +129,9 @@ namespace Ensconce.NDjango.Tests
             {
                 StringBuilder res = new StringBuilder();
                 foreach (object o in parms)
+                {
                     res.Append(o);
+                }
 
                 return res
                     .Append("start")
@@ -148,13 +152,20 @@ namespace Ensconce.NDjango.Tests
             var context = new Dictionary<string, object>();
 
             if (ContextValues != null)
+            {
                 for (int i = 0; i <= ContextValues.Length - 2; i += 2)
+                {
                     context.Add(ContextValues[i].ToString(), ContextValues[i + 1]);
+                }
+            }
 
             try
             {
                 if (resultGetter != null)
+                {
                     Result = resultGetter();
+                }
+
                 Assert.AreEqual(Result[0], RunTemplate(manager, Template, context), "** Invalid rendering result");
                 //if (Vars.Length != 0)
                 //    Assert.AreEqual(Vars, manager.GetTemplateVariables(Template), "** Invalid variable list");
@@ -164,7 +175,9 @@ namespace Ensconce.NDjango.Tests
                 // Result[0] is either some object, in which case this shouldn't have happened
                 // or it's the type of the exception the calling code expects.
                 if (resultGetter != null)
+                {
                     Result = resultGetter();
+                }
 
                 if (Result[0] is Type)
                 {

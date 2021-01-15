@@ -48,5 +48,3 @@ module internal FilterTag =
                                 "'filter' tag requires one argument",
                                 node_list,
                                 remaining))
-
-

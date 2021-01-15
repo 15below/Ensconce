@@ -45,27 +45,32 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
 
         public object PerformWithParam(object __p1, object __p2)
         {
-
             string input_val = Convert.ToString(__p1);
 
-            Decimal d;
-            if (!Decimal.TryParse(input_val, NumberStyles.Any, CultureInfo.CurrentCulture, out d))
+            if (!Decimal.TryParse(input_val, NumberStyles.Any, CultureInfo.CurrentCulture, out decimal d))
+            {
                 return string.Empty;
+            }
 
             var p2 = Utilities.get_int(__p2);
             if (!p2.Item1)
+            {
                 return input_val;
-            int p = p2.Item2;
+            }
 
+            int p = p2.Item2;
 
             bool isRound = Decimal.Truncate(d) - d == Decimal.Zero;
             if (isRound && (p < 0))
+            {
                 p = 0;
+            }
+
             int exp = Math.Abs(p);
             return Decimal.Round(d, exp, MidpointRounding.AwayFromZero).ToString(string.Format("F{0}", exp));
         }
 
-        #endregion
+        #endregion IFilter Members
 
         #region ISimpleFilter Members
 
@@ -74,6 +79,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

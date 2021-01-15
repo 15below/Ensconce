@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root xmlns="http://15below.com/Substitutions.xsd">
-  <Namespaces/>
+  <Namespaces />
   <Files>
     <File Filename="TestUpdateFiles\TestConfig3.xml">
       <Changes>

@@ -15,6 +15,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return Convert.ToString(__p1).Replace("&", "&amp;");
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

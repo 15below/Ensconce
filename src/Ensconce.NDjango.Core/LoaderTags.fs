@@ -39,7 +39,6 @@ module internal LoaderTags =
                             [ASTNodes.BlockNameNode(context, Lexer.Text (token.CreateToken(token.Location.Length - 2, 0))) :> INode],
                             remaining))
 
-
     /// Signal that this template extends a parent template.
     ///
     /// This tag may be used in two ways: ``{% extends "base" %}`` (with quotes)

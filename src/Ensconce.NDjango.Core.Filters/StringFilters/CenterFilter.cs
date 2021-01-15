@@ -23,7 +23,7 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return str.PadRight(width - (width - str.Length) / 2).PadLeft(width);
         }
 
-        #endregion
+        #endregion IFilter Members
 
         #region ISimpleFilter Members
 
@@ -32,6 +32,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

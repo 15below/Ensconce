@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Ensconce.ReportingServices;
+using System.Collections.Generic;
 
 namespace Ensconce.Console
 {
@@ -13,8 +13,15 @@ namespace Ensconce.Console
             var networkPassword = GetReportingVariable("networkPassword");
             var msreports = new MsReportingServices(reportingServicesUrl, networkDomain, networkLogin, networkPassword);
 
-            if (Arguments.DeployReportingRole) DeployReportingServiceRole(msreports);
-            if (Arguments.DeployReports) PublishReports(msreports);
+            if (Arguments.DeployReportingRole)
+            {
+                DeployReportingServiceRole(msreports);
+            }
+
+            if (Arguments.DeployReports)
+            {
+                PublishReports(msreports);
+            }
         }
 
         private static void PublishReports(MsReportingServices msreports)
@@ -40,7 +47,9 @@ namespace Ensconce.Console
         private static string GetReportingVariable(string key)
         {
             if (!Arguments.ReportingServiceVariables.ContainsKey(key))
+            {
                 throw new KeyNotFoundException(string.Format("required key: {0} not found in supplied reporting service variables.", key));
+            }
 
             return Arguments.ReportingServiceVariables[key];
         }

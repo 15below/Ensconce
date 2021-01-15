@@ -37,7 +37,6 @@ module TypeResolver =
                 let result = CLRTypeDjangoType(name, _type) :> IDjangoType
                 [result] |> List.toSeq |> Seq.append mbrs
 
-
             let validate_method (_method:MethodInfo) =
                 if _method.ContainsGenericParameters then false
                 else if _method.IsGenericMethodDefinition then false
@@ -48,7 +47,6 @@ module TypeResolver =
                 else if _type.GetProperties() |> Seq.exists (fun prop -> prop.GetGetMethod() = _method)
                     then false
                 else true
-
 
             if _type = null then Seq.empty
             else
@@ -104,5 +102,3 @@ module TypeResolver =
     type internal DefaultTypeResolver() =
         interface ITypeResolver with
             member x.Resolve type_name = null
-
-

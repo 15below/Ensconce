@@ -8,7 +8,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
     [Interfaces.Name("capfirst")]
     public class CapFirstFilter : Interfaces.ISimpleFilter
     {
-
         #region ISimpleFilter Members
 
         public object Perform(object __p1)
@@ -17,6 +16,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return strVal.Substring(0, 1).ToUpper() + strVal.Substring(1);
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

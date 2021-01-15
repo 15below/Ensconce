@@ -24,7 +24,7 @@ namespace Ensconce.Console
                 WithTransaction = Arguments.WithTransaction,
                 OutputPath = Arguments.RoundhouseOutputPath
             };
-            
+
             database.Deploy(Arguments.DeployFrom, Arguments.DatabaseRepository.Render(), Arguments.DropDatabase, Arguments.DatabaseCommandTimeout);
         }
     }

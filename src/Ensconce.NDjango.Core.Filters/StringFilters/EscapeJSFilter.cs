@@ -5,13 +5,14 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
 {
     /// <summary>
     ///     Hex encodes characters for use in JavaScript strings.
-    ///     This does not make the string safe for use in HTML, but does protect you from syntax errors 
+    ///     This does not make the string safe for use in HTML, but does protect you from syntax errors
     ///     when using templates to generate JavaScript/JSON.
     /// </summary>
     [Interfaces.Name("escapejs")]
     public class EscapeJSFilter : Interfaces.ISimpleFilter
     {
         #region ISimpleFilter Members
+
         private static IDictionary<string, string> jsEscapes;
 
         public object Perform(object __p1)
@@ -46,6 +47,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return strRetValue;
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

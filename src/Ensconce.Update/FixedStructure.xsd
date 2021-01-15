@@ -20,7 +20,7 @@
         <xs:element name="Environment" type="xs:string" />
         <xs:element name="Properties">
           <xs:complexType>
-            <xs:group ref="Property"/>
+            <xs:group ref="Property" />
           </xs:complexType>
         </xs:element>
         <xs:element name="PropertyGroups">
@@ -43,10 +43,10 @@
                       <xs:choice>
                         <xs:element name="Properties">
                           <xs:complexType>
-                            <xs:group ref="Property"/>
+                            <xs:group ref="Property" />
                           </xs:complexType>
                         </xs:element>
-                        <xs:group ref="Property"/>
+                        <xs:group ref="Property" />
                       </xs:choice>
                     </xs:sequence>
                     <xs:attribute name="identity" type="xs:string" use="required" />

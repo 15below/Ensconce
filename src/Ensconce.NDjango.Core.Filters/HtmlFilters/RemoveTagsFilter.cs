@@ -36,7 +36,7 @@ namespace Ensconce.NDjango.Core.Filters.HtmlFilters
             return retValue;
         }
 
-        #endregion
+        #endregion IFilter Members
 
         #region ISimpleFilter Members
 
@@ -45,6 +45,6 @@ namespace Ensconce.NDjango.Core.Filters.HtmlFilters
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

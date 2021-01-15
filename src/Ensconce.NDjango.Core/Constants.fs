@@ -87,7 +87,6 @@ module Constants =
                 Replace("%(i18n_open)s", !!I18N_OPEN).
                 Replace("%(i18n_close)s", !!I18N_CLOSE), RegexOptions.Compiled)
 
-
     /// <summary>
     /// Names for the standard settings - settings defined in the parser core
     /// Default value for the autoescape setting
@@ -118,7 +117,6 @@ module Constants =
     /// set it to 'false' to avoid overhead introduced by transaltion dictionary processing
     /// </summary>
     let USE_I18N = "settings.USE_I18N"
-
 
     /// <summary>
     /// List nodes representing the elements of the tag itself, including

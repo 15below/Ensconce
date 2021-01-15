@@ -4,17 +4,20 @@ using System.Globalization;
 
 namespace Ensconce.NDjango.Tests.Data
 {
-    class ContextObjects
+    internal class ContextObjects
     {
         public class OtherClass
         {
-            string value = "OtherClass.method";
-            public OtherClass() { }
+            private readonly string value = "OtherClass.method";
+
+            public OtherClass()
+            {
+            }
+
             public OtherClass(string value)
             {
                 this.value = value;
             }
-
 
             public string method()
             {
@@ -26,20 +29,41 @@ namespace Ensconce.NDjango.Tests.Data
         {
             public OtherClass otherclass = new OtherClass();
 
-            public string method() { return "SomeClass.method"; }
-            public object method2(object o) { return o; }
-            public string method3() { throw new Exception(); }
-            public string method4() { throw new ApplicationException(); }
+            public string method()
+            {
+                return "SomeClass.method";
+            }
+
+            public object method2(object o)
+            {
+                return o;
+            }
+
+            public string method3()
+            {
+                throw new Exception();
+            }
+
+            public string method4()
+            {
+                throw new ApplicationException();
+            }
 
             public List<OtherClass> classList = new List<OtherClass>(new OtherClass[] { new OtherClass("Instance 1"), new OtherClass("Instance 2") });
         }
 
-        public static object[] p(params object[] prs) { return prs; }
+        public static object[] p(params object[] prs)
+        {
+            return prs;
+        }
 
         public static int[] range(int max)
         {
             var res = new int[max];
-            for (int i = 0; i < max; i++) res[i] = i;
+            for (int i = 0; i < max; i++)
+            {
+                res[i] = i;
+            }
 
             return res;
         }
@@ -48,8 +72,12 @@ namespace Ensconce.NDjango.Tests.Data
         {
             var res = new int[maxI, maxJ];
             for (int j = 0; j < maxJ; j++)
+            {
                 for (int i = 0; i < maxI; i++)
+                {
                     res[i, j] = i;
+                }
+            }
 
             return res;
         }
@@ -66,7 +94,9 @@ namespace Ensconce.NDjango.Tests.Data
             {
                 res.Add(new List<string>(maxJ));
                 for (int j = 0; j < maxJ; j++)
+                {
                     res[i].Add(i + "-" + j);
+                }
             }
 
             return res;
@@ -76,7 +106,9 @@ namespace Ensconce.NDjango.Tests.Data
         {
             Dictionary<object, string> dict = new Dictionary<object, string>();
             for (int i = 0; i <= prs.Length - 2; i += 2)
+            {
                 dict.Add(prs[i], prs[i + 1].ToString());
+            }
 
             return dict;
         }
@@ -85,7 +117,9 @@ namespace Ensconce.NDjango.Tests.Data
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             for (int i = 0; i <= prs.Length - 2; i += 2)
+            {
                 dict.Add(prs[i].ToString(), prs[i + 1].ToString());
+            }
 
             return dict;
         }
@@ -94,11 +128,12 @@ namespace Ensconce.NDjango.Tests.Data
         {
             Dictionary<string, IComparable> dict = new Dictionary<string, IComparable>();
             for (int i = 0; i <= prs.Length - 2; i += 2)
+            {
                 dict.Add(prs[i].ToString(), (IComparable)(prs[i + 1]));
+            }
 
             return dict;
         }
-
 
         public static List<string> list(params string[] prs)
         {
@@ -115,10 +150,10 @@ namespace Ensconce.NDjango.Tests.Data
                 this.last_name = last_name;
                 this.gender = gender;
             }
+
             public string first_name;
             public string last_name;
             public string gender;
         }
-
     }
 }

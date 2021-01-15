@@ -43,14 +43,12 @@ type LazyList<'T> =
     interface System.Collections.IEnumerable with
         override s.GetEnumerator() = (s.GetEnumeratorImpl() :> System.Collections.IEnumerator)
 
-
 and
     [<NoEquality; NoComparison>]
     LazyCellStatus<'T> =
     | Delayed of (unit -> LazyListCell<'T> )
     | Value of LazyListCell<'T>
     | Exception of System.Exception
-
 
 and
     [<NoEquality; NoComparison>]
@@ -238,7 +236,6 @@ module LazyList =
 
     let (|Cons|Nil|) l = match getCell l with CellCons(a,b) -> Cons(a,b) | CellEmpty -> Nil
 
-
     let hd s = head s
 
     let tl s = tail s
@@ -258,4 +255,3 @@ module LazyList =
     let to_list l = toList l
 
     let to_array l = toArray l
-

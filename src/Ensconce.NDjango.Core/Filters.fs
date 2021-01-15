@@ -11,7 +11,6 @@ module internal Filters =
 
     type IEscapeFilter = interface end
 
-
     /// Escapes a string's HTML. Specifically, it makes these replacements:
     ///    * < is converted to &lt;
     ///    * > is converted to &gt;
@@ -62,8 +61,6 @@ module internal Filters =
                  let s = s.Trim()
                  sl2Regex.Replace(s, "-") :> obj
 
-
-
     /// Truncates a string after a certain number of words.
     ///
     ///Argument: Number of words to truncate after
@@ -96,7 +93,6 @@ module internal Filters =
             member x.Perform value =
                 let strVal = value |> Convert.ToString |> HttpUtility.UrlEncode
                 strVal :> obj
-
 
     /// function for Urlize and UrlizeTrunc
     let processUrlize (url:string) (trimCount) =
@@ -324,7 +320,6 @@ module internal Filters =
                             | _ -> strYesNoMaybe.[1]
                     retValue :> obj
 
-
     /// Takes a list of dictionaries and returns that list sorted by the key given in the argument.
     ///
     ///For example:
@@ -413,7 +408,6 @@ module internal Filters =
                             | 2 -> strPlurals.[1],strPlurals.[0]
                             | _ -> strPlurals.[0],""
 
-
                     let success, intNum = Utilities.get_int value
                     let numVal =
                         match value with
@@ -449,7 +443,6 @@ module internal Filters =
                             convertMap.[inputChar]
                         | _ -> inputChar
                 Convert.ToString(value) |> String.map getNumFromChar :>obj
-
 
     ///If value is None, use given default.
     type DefaultIfNoneFilter() =
@@ -489,4 +482,3 @@ module internal Filters =
                             output :> obj
                 else
                     "0 bytes" :> obj
-

@@ -3,7 +3,7 @@
 namespace Ensconce.NDjango.Core.Filters.StringFilters
 {
     /// <summary>
-    ///     Displays text with line numbers. Calculates maximum line number width 
+    ///     Displays text with line numbers. Calculates maximum line number width
     ///     to align text with correct padding.
     /// </summary>
     [Interfaces.Name("linenumbers")]
@@ -22,6 +22,6 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             return string.Join("\n", lines);
         }
 
-        #endregion
+        #endregion ISimpleFilter Members
     }
 }

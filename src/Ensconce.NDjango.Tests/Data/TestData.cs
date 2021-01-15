@@ -17,33 +17,43 @@ namespace Ensconce.NDjango.Tests.Data
                 {
                     object value = null;
                     if (variable.Attributes["type"] != null && variable.Attributes["value"] != null)
+                    {
                         switch (variable.Attributes["type"].Value)
                         {
                             case "integer":
                                 value = int.Parse(variable.Attributes["value"].Value);
                                 break;
+
                             case "string":
                                 value = variable.Attributes["value"].Value;
                                 break;
+
                             case "boolean":
                                 value = bool.Parse(variable.Attributes["value"].Value);
                                 break;
                         }
+                    }
 
                     if (variable.Attributes["type"] == null && variable.Attributes["value"] != null)
+                    {
                         value = variable.Attributes["value"].Value;
+                    }
 
                     if (!this.ContainsKey(variable.Name))
+                    {
                         this.Add(variable.Name, value);
+                    }
                     else
                         if (this[variable.Name] is IList)
+                    {
                         ((IList)this[variable.Name]).Add(value);
+                    }
                     else
+                    {
                         this[variable.Name] = new List<object>(new object[] { this[variable.Name], value });
-
+                    }
                 }
             }
         }
-
     }
 }

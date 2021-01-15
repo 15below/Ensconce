@@ -10,14 +10,22 @@ namespace Ensconce
 
         public static void Log(string message, params object[] values)
         {
-            if (Quiet || ReadFromStdIn) return;
+            if (Quiet || ReadFromStdIn)
+            {
+                return;
+            }
+
             Console.Write("+{0:mm\\:ss\\.fff} - ", DateTime.Now - Started);
             Console.WriteLine(message, values);
         }
 
         public static void LogError(string message, params object[] values)
         {
-            if (Quiet || ReadFromStdIn) return;
+            if (Quiet || ReadFromStdIn)
+            {
+                return;
+            }
+
             Console.Error.Write("+{0:mm\\:ss\\.fff} - ", DateTime.Now - Started);
             Console.Error.WriteLine(message, values);
         }

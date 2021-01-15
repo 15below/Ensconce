@@ -48,5 +48,3 @@ module ParsingContext =
 
             /// a reference to parsed parent template
             member x.Base = _base
-
-

@@ -182,7 +182,6 @@ module Expressions =
                     | "" -> None
                     | _ as s -> Some {walker with buffer = s}
 
-
             //TODO: django language spec allows 0 or 1 arguments to be passed to a filter, however the django implementation will handle any number
             //for filter, args in filters do
 
@@ -214,7 +213,6 @@ module Expressions =
                         :> IDictionary<string, IEnumerable<INode>>
             member x.Context = context
 
-
     /// Django type encapsulating a filter expression (i.e. in with tag)
     type ExpressionType(expression: FilterExpression, member_name:string) =
         interface TypeResolver.IDjangoType with
@@ -228,4 +226,3 @@ module Expressions =
     // python code
     //        if self.translate:
     //            return _(value)
-

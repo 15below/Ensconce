@@ -11,7 +11,10 @@ namespace Ensconce.Console
         {
             var sb = new StringBuilder(message);
 
-            if (!message.EndsWith(Environment.NewLine)) sb.Append(Environment.NewLine);
+            if (!message.EndsWith(Environment.NewLine))
+            {
+                sb.Append(Environment.NewLine);
+            }
 
             Recurse(sb, ex, 0);
 
@@ -20,7 +23,10 @@ namespace Ensconce.Console
 
         private static void Recurse(StringBuilder sb, Exception ex, int level = 0, int index = -1)
         {
-            if (ex == null) return;
+            if (ex == null)
+            {
+                return;
+            }
 
             if (ex is AggregateException agg)
             {

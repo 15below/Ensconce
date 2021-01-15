@@ -70,4 +70,3 @@ module internal IfEqual =
                                 sprintf "'%s' takes two arguments" tag.RawText,
                                 node_list_true @ node_list_false,
                                 remaining))
-

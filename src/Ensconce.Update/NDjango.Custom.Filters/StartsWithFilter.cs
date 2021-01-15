@@ -1,5 +1,5 @@
-﻿using System;
-using Ensconce.NDjango.Core;
+﻿using Ensconce.NDjango.Core;
+using System;
 
 namespace Ensconce.Update.NDjango.Custom.Filters
 {

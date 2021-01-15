@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json;
+using System.IO;
 using System.Net;
-using Newtonsoft.Json;
 
 namespace Ensconce.Console
 {

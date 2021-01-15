@@ -340,6 +340,3 @@ module internal For =
                     raise (SyntaxError ("malformed 'for' tag",
                                             List.append node_list_body node_list_empty,
                                             remaining2))
-
-
-

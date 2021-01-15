@@ -22,6 +22,7 @@ namespace Ensconce.NDjango.Core.Filters.List
             object retObject = ((IEnumerable)toConvert).OfType<object>().LastOrDefault<object>();
             return (retObject == null) ? string.Empty : retObject;
         }
-        #endregion
+
+        #endregion ISimpleFilter Members
     }
 }

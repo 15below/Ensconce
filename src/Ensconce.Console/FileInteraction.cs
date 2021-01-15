@@ -8,7 +8,10 @@ namespace Ensconce.Console
     {
         internal static void DeleteDirectory(string directory)
         {
-            if (!Directory.Exists(directory)) return;
+            if (!Directory.Exists(directory))
+            {
+                return;
+            }
 
             // Check for and uninstall services installed in directory
             ApplicationInteraction.StopAndDeleteServicesInDirectory(directory);
@@ -54,7 +57,10 @@ namespace Ensconce.Console
 
             try
             {
-                if (from.EndsWith(@"\") == false) from = from + @"\";
+                if (from.EndsWith(@"\") == false)
+                {
+                    from = from + @"\";
+                }
 
                 foreach (var file in Directory.EnumerateFiles(from, "*", SearchOption.AllDirectories))
                 {
