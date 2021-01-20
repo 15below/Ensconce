@@ -12,10 +12,12 @@ function CallCloudflare([string]$token, [string]$urlPart, [Microsoft.PowerShell.
 
     if($body -eq $null -or $body -eq "")
     {
+        Write-Verbose "Calling ($method) $url"
         Invoke-RestMethod -Uri $url -Method $method -Headers $headers
     }
     else
     {
+        Write-Verbose "Calling ($method) $url - body: $body"
         Invoke-RestMethod -Uri $url -Method $method -Headers $headers -Body $body
     }
 }
@@ -221,34 +223,39 @@ function RemoveCloudflareDnsRecord([string]$token, [string]$domain, [string]$rec
     $zone = GetCloudflareDnsZone $token $domain
     $zoneid = $zone.id
 
+    $name = "$record.$domain"
     $recordExists = CheckCloudflareDnsRecord $token $zoneid $domain $record
 
     if($recordExists -eq $true)
     {
         $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
         $recordid = $dnsRecord.id
+
+        Write-Host "Remove dns record '$recordid' / named '$name' new DNS record in zone '$zoneid'"
+
         $result = CallCloudflare $token "zones/$zoneid/dns_records/$recordid" Delete
-        Write-Host $result
+
         if($result.success)
         {
             if($warnOnDelete)
             {
-                Write-Warning "Record $record.$domain has been deleted"
+                Write-Warning "Record $name has been deleted"
             }
             else
             {
-                Write-Host "Record $record.$domain has been deleted"
+                Write-Host "Record $name has been deleted"
             }
             $true
         }
         else
         {
-            Write-Error "Error deleting record $record.$domain"
+            Write-Error "Error deleting record $name"
             $false
         }
     }
     else
     {
+        Write-Host "Record $name already doesn't exist"
         $true
     }
 }
