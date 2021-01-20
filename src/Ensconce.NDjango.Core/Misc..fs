@@ -352,7 +352,7 @@ module internal Misc =
     ///     <img src='bar.gif' height='10' width='{% widthratio this_value max_value 100 %}' />
     ///
     /// Above, if ``this_value`` is 175 and ``max_value`` is 200, the the image in
-    /// the above example will be 88 pixels wide (because 1.6.100 = .875;
+    /// the above example will be 88 pixels wide (because 1.6.200 = .875;
     ///
     [<ParserNodes.Description("Calculates the ratio of a given value to a max value, and applies it to a constant.")>]
     type WidthRatioTag() =
