@@ -69,7 +69,7 @@ function GetCloudflareDnsIp([string]$token, [string]$domain, [string]$record)
 
     $zoneid = $zone.id
 
-    $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
+    $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record | Select-Object -First 1
 
     $dnsRecord.content
 }
@@ -83,6 +83,7 @@ function ExportDnsRecords([string]$token, [string]$zoneid, [string]$domain)
         if ($item.Contains("IN	CNAME") -or ($item.Contains("IN	A")))
         {
             $value = ($item -split '[\s]')[0]
+            $value = $value.ToLower()
             $value = $value.Substring(0,$value.Length-1)
             $value = $value.Replace(".$domain".ToLower(), "")
             $records.Add($value)
@@ -173,16 +174,19 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
 
     if($recordExists -eq $true)
     {
-        $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
-        $recordid = $dnsRecord.id
-        if($dnsRecord.content -eq $ipaddr -and $dnsRecord.type -eq "A")
+        $dnsRecords = GetCloudflareDnsRecord $token $zoneid $domain $record
+        Foreach($dnsRecord in $dnsRecords)
         {
-            Write-Host "Record '$record.$domain' already has an 'A' record with the value '$ipaddr'"
-            $true
-        }
-        else
-        {
-            UpdateCloudflareDnsRecord $token $zoneid $recordid $domain $record "A" $ipaddr $warnOnUpdate
+            $recordid = $dnsRecord.id
+            if($dnsRecord.content -eq $ipaddr -and $dnsRecord.type -eq "A")
+            {
+                Write-Host "Record '$record.$domain' already has an 'A' record with the value '$ipaddr'"
+                $true
+            }
+            else
+            {
+                UpdateCloudflareDnsRecord $token $zoneid $recordid $domain $record "A" $ipaddr $warnOnUpdate
+            }
         }
     }
     else
@@ -200,16 +204,19 @@ function CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [s
 
     if($recordExists -eq $true)
     {
-        $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
-        $recordid = $dnsRecord.id
-        if($dnsRecord.content -eq $cnameValue -and $dnsRecord.type -eq "CNAME")
+        $dnsRecords = GetCloudflareDnsRecord $token $zoneid $domain $record
+        Foreach($dnsRecord in $dnsRecords)
         {
-            Write-Host "Record '$record.$domain' already has an 'CNAME' record with the value '$cnameValue'"
-            $true
-        }
-        else
-        {
-            UpdateCloudflareDnsRecord $token $zoneid $recordid $domain $record "CNAME" $cnameValue $warnOnUpdate
+            $recordid = $dnsRecord.id
+            if($dnsRecord.content -eq $cnameValue -and $dnsRecord.type -eq "CNAME")
+            {
+                Write-Host "Record '$record.$domain' already has an 'CNAME' record with the value '$cnameValue'"
+                $true
+            }
+            else
+            {
+                UpdateCloudflareDnsRecord $token $zoneid $recordid $domain $record "CNAME" $cnameValue $warnOnUpdate
+            }
         }
     }
     else
@@ -228,29 +235,32 @@ function RemoveCloudflareDnsRecord([string]$token, [string]$domain, [string]$rec
 
     if($recordExists -eq $true)
     {
-        $dnsRecord = GetCloudflareDnsRecord $token $zoneid $domain $record
-        $recordid = $dnsRecord.id
-
-        Write-Host "Remove dns record '$recordid' / named '$name' new DNS record in zone '$zoneid'"
-
-        $result = CallCloudflare $token "zones/$zoneid/dns_records/$recordid" Delete
-
-        if($result.success)
+        $dnsRecords = GetCloudflareDnsRecord $token $zoneid $domain $record
+        Foreach($dnsRecord in $dnsRecords)
         {
-            if($warnOnDelete)
+            $recordid = $dnsRecord.id
+
+            Write-Host "Remove dns record '$recordid' / named '$name' DNS record in zone '$zoneid'"
+
+            $result = CallCloudflare $token "zones/$zoneid/dns_records/$recordid" Delete
+
+            if($result.success)
             {
-                Write-Warning "Record $name has been deleted"
+                if($warnOnDelete)
+                {
+                    Write-Warning "Record $name has been deleted"
+                }
+                else
+                {
+                    Write-Host "Record $name has been deleted"
+                }
+                $true
             }
             else
             {
-                Write-Host "Record $name has been deleted"
+                Write-Error "Error deleting record $name"
+                $false
             }
-            $true
-        }
-        else
-        {
-            Write-Error "Error deleting record $name"
-            $false
         }
     }
     else

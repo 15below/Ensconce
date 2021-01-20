@@ -12,11 +12,11 @@ function GetAllSubValues ([string]$dnsServer, [string]$domain, [string]$lookupNa
             $key = $item -replace "\s*3600.*", ""
             if($key -eq "@")
             {
-                $keys.Add("$lookupName")
+                $keys.Add("$lookupName".ToLower())
             }
             else
             {
-                $keys.Add("$key.$lookupName")
+                $keys.Add("$key.$lookupName".ToLower())
             }
         }
     }
