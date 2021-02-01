@@ -131,7 +131,7 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
                 $outcome = $true
                 if($warnOnUpdate)
                 {
-                    write-warning "DNS CNAME record for $name.$domain updated to point at $ipAddress"
+                    write-warning "DNS CNAME record for $name.$domain updated to point at $server"
                 }
                 else
                 {
