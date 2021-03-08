@@ -1,6 +1,6 @@
 # Custom Stuff
 
-/tools/Modules
+tools/*
 
 paket-files/
 .fake

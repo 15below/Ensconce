@@ -40,4 +40,8 @@
     <Compile Include="ManagerProvider.fs" />
     <Compile Include="Compatibility.fs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="5.0.1" />
+  </ItemGroup>
 </Project>
