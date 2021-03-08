@@ -1,1 +1,0 @@
-﻿Some plain text. With a {% templatetag openvariable %} tag {% templatetag closevariable %}.

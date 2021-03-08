@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<root>
-  <value myAttr="before" duckAttr="quack">oldValue</value>
-  <myValue>{{ tagged }}</myValue>
-</root>

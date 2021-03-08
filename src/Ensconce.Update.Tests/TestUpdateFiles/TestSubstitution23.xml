@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Root xmlns="http://15below.com/Substitutions.xsd">
-  <Namespaces />
-  <Files>
-    <File Filename="TestUpdateFiles\PlainText03.txt">
-      <ReplacementTemplate>TestUpdateFiles\PlainText03.txt</ReplacementTemplate>
-    </File>
-  </Files>
-</Root>

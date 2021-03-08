@@ -1,3 +1,0 @@
-﻿Some plain text.
-
-With a {{ tag }}.
