@@ -111,9 +111,9 @@ Task("Push")
     DotNetCoreNuGetPush("./output/binaries/*.nupkg", new DotNetCoreNuGetPushSettings
     {
         ApiKey = apiKey,
-        Source = $"{apiKey}{endpoint}",
+        Source = $"{url}{endpoint}",
         SymbolApiKey = apiKey,
-        SymbolSource = $"{apiKey}{endpoint}",
+        SymbolSource = $"{url}{endpoint}",
         NoServiceEndpoint = true,
         SkipDuplicate = true,
     });
