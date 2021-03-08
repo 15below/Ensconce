@@ -24,7 +24,9 @@ Task("Versioning")
         }
         else
         {
-            subVersion = $"-{branchName}-{buildNumber}";
+            var versionBranch = branchName.Replace("feature/", "").Replace("pull/","pull-");
+            versionBranch = Regex.Replace(preReleaseTag, @"[^0-9A-Za-z-]", "-").ToLower();
+            subVersion = $"-{versionBranch}-{buildNumber}";
             subVersionNumber = $".{buildNumber}";
         }
     }
@@ -91,7 +93,7 @@ Task("Pack")
     {
         Configuration = configuration,
         NoBuild = true,
-        OutputDirectory = "./artifacts/",
+        OutputDirectory = "./output/",
     });
 });
 
