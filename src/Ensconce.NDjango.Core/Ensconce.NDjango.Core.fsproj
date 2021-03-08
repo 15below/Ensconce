@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Originally NDjango - See https://github.com/15below/Ensconce/tree/master/src/NDJANGO_README.MD</Description>
+    <Company>15below</Company>
+    <Product>Ensconce</Product>
+    <Authors>15below</Authors>
+    <Version>0.0.0-local-0</Version>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <FileVersion>0.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="LazyList.fs" />
+    <Compile Include="Utilities.fs" />
+    <Compile Include="Constants.fs" />
+    <Compile Include="Lexer.fs" />
+    <Compile Include="TypeResolver.fs" />
+    <Compile Include="Interfaces.fs" />
+    <Compile Include="ASTWalker.fs" />
+    <Compile Include="Filters.fs" />
+    <Compile Include="ParserNodes.fs" />
+    <Compile Include="Variables.fs" />
+    <Compile Include="Expressions.fs" />
+    <Compile Include="ASTNodes.fs" />
+    <Compile Include="Misc.fs" />
+    <Compile Include="Abstract.fs" />
+    <Compile Include="Cycle.fs" />
+    <Compile Include="Filter.fs" />
+    <Compile Include="For.fs" />
+    <Compile Include="If.fs" />
+    <Compile Include="IfChanged.fs" />
+    <Compile Include="IfEqual.fs" />
+    <Compile Include="ParsingContext.fs" />
+    <Compile Include="Model.fs" />
+    <Compile Include="Now.fs" />
+    <Compile Include="LoaderTags.fs" />
+    <Compile Include="Template.fs" />
+    <Compile Include="ManagerProvider.fs" />
+    <Compile Include="Compatibility.fs" />
+  </ItemGroup>
+</Project>

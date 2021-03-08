@@ -15,6 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{167DC009
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Database.Tests", "Ensconce.Database.Tests\Ensconce.Database.Tests.csproj", "{D6862E3F-59BD-487F-AF55-29721A284BEF}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ensconce.NDjango.Core", "Ensconce.NDjango.Core\Ensconce.NDjango.Core.fsproj", "{F099DF37-66EB-4375-874B-AC069B3CB3DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.NDjango.Core.Filters", "Ensconce.NDjango.Core.Filters\Ensconce.NDjango.Core.Filters.csproj", "{D9DB316B-08EE-47D1-87B9-552B65405BB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,30 @@ Global
 		{D6862E3F-59BD-487F-AF55-29721A284BEF}.Release|x64.Build.0 = Release|Any CPU
 		{D6862E3F-59BD-487F-AF55-29721A284BEF}.Release|x86.ActiveCfg = Release|Any CPU
 		{D6862E3F-59BD-487F-AF55-29721A284BEF}.Release|x86.Build.0 = Release|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Debug|x64.Build.0 = Debug|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Debug|x86.Build.0 = Debug|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Release|x64.ActiveCfg = Release|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Release|x64.Build.0 = Release|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Release|x86.ActiveCfg = Release|Any CPU
+		{F099DF37-66EB-4375-874B-AC069B3CB3DF}.Release|x86.Build.0 = Release|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Debug|x64.Build.0 = Debug|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Debug|x86.Build.0 = Debug|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Release|x64.ActiveCfg = Release|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Release|x64.Build.0 = Release|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Release|x86.ActiveCfg = Release|Any CPU
+		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
