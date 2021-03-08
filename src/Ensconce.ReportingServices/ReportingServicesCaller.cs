@@ -14,7 +14,7 @@ namespace Ensconce.ReportingServices
         {
             if (!Uri.TryCreate(reportingServicesUrl, UriKind.RelativeOrAbsolute, out Uri reportingServicesUri))
             {
-                throw new UriFormatException(string.Format("reporting services uri of '{0}' is invalid!", reportingServicesUri));
+                throw new UriFormatException($"reporting services uri of '{reportingServicesUri}' is invalid!");
             }
 
             if (string.IsNullOrWhiteSpace(networkPassword))

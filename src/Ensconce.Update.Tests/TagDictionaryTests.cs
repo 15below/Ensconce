@@ -183,7 +183,7 @@ namespace Ensconce.Update.Tests
         public void DbLoginNamesAreSubstituted()
         {
             var sut = TagDictionary.FromXml("ident", XmlData);
-            Assert.AreEqual(string.Format("{0}-{1}-AUDIT", Environment.GetEnvironmentVariable("ClientCode"), Environment.GetEnvironmentVariable("Environment")), GetDbLoginValue(sut, "AUDIT", "Username"));
+            Assert.AreEqual($"{Environment.GetEnvironmentVariable("ClientCode")}-{Environment.GetEnvironmentVariable("Environment")}-AUDIT", GetDbLoginValue(sut, "AUDIT", "Username"));
         }
 
         [Test]

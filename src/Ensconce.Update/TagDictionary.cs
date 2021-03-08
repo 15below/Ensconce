@@ -287,7 +287,7 @@ namespace Ensconce.Update
                     {
                         dbLoginDic.Add("Password", dbLoginElement.XPathSelectElement("Password").Value);
                         dbLoginDic.Add("DefaultDb", dbLoginElement.XPathSelectElement("DefaultDb").Value);
-                        dbLoginDic.Add("ConnectionString", string.Format("Data Source={{{{ DbServer }}}}; Initial Catalog={0}; User ID={1}; Password={2};", dbLoginElement.XPathSelectElement("DefaultDb").Value, username, dbLoginElement.XPathSelectElement("Password").Value));
+                        dbLoginDic.Add("ConnectionString", $"Data Source={{{{ DbServer }}}}; Initial Catalog={dbLoginElement.XPathSelectElement("DefaultDb").Value}; User ID={username}; Password={dbLoginElement.XPathSelectElement("Password").Value};");
                     }
                     else
                     {

@@ -31,20 +31,20 @@ namespace Ensconce.ReportingServices
 
                 if (string.IsNullOrWhiteSpace(itemPath) || !itemPath.StartsWith("/"))
                 {
-                    throw new ArgumentException(string.Format("itemPath: '{0}' cannot be null or empty and must begin with a '/'", itemPath));
+                    throw new ArgumentException($"itemPath: '{itemPath}' cannot be null or empty and must begin with a '/'");
                 }
                 if (string.IsNullOrWhiteSpace(reportingUserToAddRoleFor))
                 {
-                    throw new ArgumentException(string.Format("reportingUserToAddRoleFor: '{0}' cannot be null or empty", reportingUserToAddRoleFor));
+                    throw new ArgumentException($"reportingUserToAddRoleFor: '{reportingUserToAddRoleFor}' cannot be null or empty");
                 }
 
                 if (string.IsNullOrWhiteSpace(reportingRoleToAdd))
                 {
-                    throw new ArgumentException(string.Format("reportingRoleToAdd: '{0}' cannot be null or empty", reportingRoleToAdd));
+                    throw new ArgumentException($"reportingRoleToAdd: '{reportingRoleToAdd}' cannot be null or empty");
                 }
                 if (!supportedRoles.Contains(reportingRoleToAdd))
                 {
-                    throw new ArgumentOutOfRangeException(string.Format("reportingRoleToAdd: '{0}' is not supported. Only '{1}' are supported.", reportingRoleToAdd, string.Join(", ", supportedRoles)));
+                    throw new ArgumentOutOfRangeException($"reportingRoleToAdd: '{reportingRoleToAdd}' is not supported. Only '{string.Join(", ", supportedRoles)}' are supported.");
                 }
 
                 Log("Attempting to retrieve a list of all existing policies for itemPath: '{0}'", itemPath);
@@ -200,7 +200,7 @@ namespace Ensconce.ReportingServices
             if (subFolderExists)
             {
                 Log(@"Deleting sub folder '{0}\{1}'.", parentFolder, subFolder);
-                reportingServicesCaller.CallReport(rs => rs.DeleteItem(new DeleteItemRequest { ItemPath = string.Format("/{0}/{1}", parentFolder, subFolder) }));
+                reportingServicesCaller.CallReport(rs => rs.DeleteItem(new DeleteItemRequest { ItemPath = $"/{parentFolder}/{subFolder}"}));
                 Log(@"Deleted sub folder '{0}\{1}'.", parentFolder, subFolder);
             }
             else
@@ -250,7 +250,7 @@ namespace Ensconce.ReportingServices
             };
 
             Log("Creating data source {0} with value: {1}", dataSourceName, dataSourceConnectionString);
-            reportingServicesCaller.CallReport(rs => rs.CreateDataSource(new CreateDataSourceRequest { DataSource = dataSourceName, Parent = string.Format("/{0}/{1}", parentFolder, subFolder), Overwrite = true, Definition = definition }));
+            reportingServicesCaller.CallReport(rs => rs.CreateDataSource(new CreateDataSourceRequest { DataSource = dataSourceName, Parent = $"/{parentFolder}/{subFolder}", Overwrite = true, Definition = definition }));
             Log("Created data source {0}", dataSourceName);
         }
 
@@ -258,7 +258,7 @@ namespace Ensconce.ReportingServices
         {
             var reportsDirectoryInfo = new DirectoryInfo(reportSourceFolder);
             var reportFiles = reportsDirectoryInfo.GetFiles("*.rdl");
-            var targetFolder = string.Format("/{0}/{1}", parentFolder, subFolder);
+            var targetFolder = $"/{parentFolder}/{subFolder}";
             foreach (var fileInfo in reportFiles)
             {
                 var reportName = fileInfo.Name.Replace(".rdl", "");

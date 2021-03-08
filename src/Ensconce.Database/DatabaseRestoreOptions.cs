@@ -16,7 +16,7 @@ namespace Ensconce
         {
             if (!string.IsNullOrWhiteSpace(restorePath) && !File.Exists(restorePath))
             {
-                throw new FileNotFoundException(string.Format("Restore Path {0}\r\ndoes not exist", restorePath));
+                throw new FileNotFoundException($"Restore Path {restorePath}\r\ndoes not exist");
             }
 
             if (!string.IsNullOrWhiteSpace(restorePath))
