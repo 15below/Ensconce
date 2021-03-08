@@ -108,15 +108,19 @@ Task("Push")
     var url = BuildSystem.TeamCity.Environment.Build.ConfigProperties["nuget.url.binaries"];
     var endpoint = BuildSystem.TeamCity.Environment.Build.ConfigProperties["nuget.endpoint.binaries"];
 
-    DotNetCoreNuGetPush("./output/binaries/*.nupkg", new DotNetCoreNuGetPushSettings
+    var files = GetFiles("./output/binaries/*.nupkg");
+    foreach(var file in files)
     {
-        ApiKey = apiKey,
-        Source = $"{url}{endpoint}",
-        SymbolApiKey = apiKey,
-        SymbolSource = $"{url}{endpoint}",
-        NoServiceEndpoint = true,
-        SkipDuplicate = true,
-    });
+        DotNetCoreNuGetPush(file, new DotNetCoreNuGetPushSettings
+        {
+            ApiKey = apiKey,
+            Source = $"{url}{endpoint}",
+            SymbolApiKey = apiKey,
+            SymbolSource = $"{url}{endpoint}",
+            NoServiceEndpoint = true,
+            SkipDuplicate = true,
+        });
+    }
 });
 
 Task("Default")
