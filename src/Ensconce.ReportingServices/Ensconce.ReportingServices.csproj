@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Ensconce Wrapper Reporting Services</Description>
+    <Company>15below</Company>
+    <Product>Ensconce</Product>
+    <Authors>15below</Authors>
+    <Version>0.0.0-local-0</Version>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <FileVersion>0.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ServiceModel.Http" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+</Project>
