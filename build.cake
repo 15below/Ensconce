@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var baseVersion = "1.7.0";
@@ -24,8 +26,8 @@ Task("Versioning")
         }
         else
         {
-            var versionBranch = branchName.Replace("feature/", "").Replace("pull/","pull-");
-            versionBranch = Regex.Replace(preReleaseTag, @"[^0-9A-Za-z-]", "-").ToLower();
+            var versionBranch = branchName.Replace("feature/", "").Replace("pull/","pull-").ToLower();
+            versionBranch = Regex.Replace(versionBranch, @"[^0-9a-z-]", "-");
             subVersion = $"-{versionBranch}-{buildNumber}";
             subVersionNumber = $".{buildNumber}";
         }
