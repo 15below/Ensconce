@@ -9,19 +9,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{88B98F
 		..\build.cake = ..\build.cake
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Database", "Ensconce.Database\Ensconce.Database.csproj", "{05C0314F-89C1-4780-AE7C-CCF66EB7EA14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.Database", "Ensconce.Database\Ensconce.Database.csproj", "{05C0314F-89C1-4780-AE7C-CCF66EB7EA14}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{167DC009-706F-4180-B10B-A5451CA5571E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Database.Tests", "Ensconce.Database.Tests\Ensconce.Database.Tests.csproj", "{D6862E3F-59BD-487F-AF55-29721A284BEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.Database.Tests", "Ensconce.Database.Tests\Ensconce.Database.Tests.csproj", "{D6862E3F-59BD-487F-AF55-29721A284BEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Logging", "Ensconce.Logging\Ensconce.Logging.csproj", "{68A8D059-0579-4468-9FF2-D3D29CB1147D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.Logging", "Ensconce.Logging\Ensconce.Logging.csproj", "{68A8D059-0579-4468-9FF2-D3D29CB1147D}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ensconce.NDjango.Core", "Ensconce.NDjango.Core\Ensconce.NDjango.Core.fsproj", "{F099DF37-66EB-4375-874B-AC069B3CB3DF}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Ensconce.NDjango.Core", "Ensconce.NDjango.Core\Ensconce.NDjango.Core.fsproj", "{F099DF37-66EB-4375-874B-AC069B3CB3DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.NDjango.Core.Filters", "Ensconce.NDjango.Core.Filters\Ensconce.NDjango.Core.Filters.csproj", "{D9DB316B-08EE-47D1-87B9-552B65405BB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.NDjango.Core.Filters", "Ensconce.NDjango.Core.Filters\Ensconce.NDjango.Core.Filters.csproj", "{D9DB316B-08EE-47D1-87B9-552B65405BB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.NDjango.Tests", "Ensconce.NDjango.Tests\Ensconce.NDjango.Tests.csproj", "{896B8178-7AAC-4334-A905-D4ECFC695840}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.NDjango.Tests", "Ensconce.NDjango.Tests\Ensconce.NDjango.Tests.csproj", "{896B8178-7AAC-4334-A905-D4ECFC695840}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{C23AE314-584D-42D6-B80B-72B3048DE197}"
 	ProjectSection(SolutionItems) = preProject
@@ -39,13 +39,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{C23A
 		Scripts\webHelper.ps1 = Scripts\webHelper.ps1
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Update", "Ensconce.Update\Ensconce.Update.csproj", "{38F8125B-0E44-436F-A090-F4E3BBFB94D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.Update", "Ensconce.Update\Ensconce.Update.csproj", "{38F8125B-0E44-436F-A090-F4E3BBFB94D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Update.Tests", "Ensconce.Update.Tests\Ensconce.Update.Tests.csproj", "{8745AD45-EED9-41F5-846B-97F1204DAFEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.Update.Tests", "Ensconce.Update.Tests\Ensconce.Update.Tests.csproj", "{8745AD45-EED9-41F5-846B-97F1204DAFEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.ReportingServices", "Ensconce.ReportingServices\Ensconce.ReportingServices.csproj", "{2298BF6C-27C2-4D43-963E-D229F8F8844C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.ReportingServices", "Ensconce.ReportingServices\Ensconce.ReportingServices.csproj", "{2298BF6C-27C2-4D43-963E-D229F8F8844C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.ReportingServices.Tests", "Ensconce.ReportingServices.Tests\Ensconce.ReportingServices.Tests.csproj", "{1C56E856-62F9-4499-ACAF-50311559BAB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.ReportingServices.Tests", "Ensconce.ReportingServices.Tests\Ensconce.ReportingServices.Tests.csproj", "{1C56E856-62F9-4499-ACAF-50311559BAB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.Console", "Ensconce.Console\Ensconce.Console.csproj", "{560042FF-AF53-4925-9426-CA1D9AA4AD1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -177,6 +179,18 @@ Global
 		{1C56E856-62F9-4499-ACAF-50311559BAB2}.Release|x64.Build.0 = Release|Any CPU
 		{1C56E856-62F9-4499-ACAF-50311559BAB2}.Release|x86.ActiveCfg = Release|Any CPU
 		{1C56E856-62F9-4499-ACAF-50311559BAB2}.Release|x86.Build.0 = Release|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Debug|x64.Build.0 = Debug|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Debug|x86.Build.0 = Debug|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Release|x64.ActiveCfg = Release|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Release|x64.Build.0 = Release|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Release|x86.ActiveCfg = Release|Any CPU
+		{560042FF-AF53-4925-9426-CA1D9AA4AD1E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
