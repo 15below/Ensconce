@@ -19,6 +19,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ensconce.NDjango.Core", "En
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.NDjango.Core.Filters", "Ensconce.NDjango.Core.Filters\Ensconce.NDjango.Core.Filters.csproj", "{D9DB316B-08EE-47D1-87B9-552B65405BB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.NDjango.Tests", "Ensconce.NDjango.Tests\Ensconce.NDjango.Tests.csproj", "{896B8178-7AAC-4334-A905-D4ECFC695840}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,12 +79,25 @@ Global
 		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Release|x64.Build.0 = Release|Any CPU
 		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Release|x86.ActiveCfg = Release|Any CPU
 		{D9DB316B-08EE-47D1-87B9-552B65405BB1}.Release|x86.Build.0 = Release|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Debug|x64.Build.0 = Debug|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Debug|x86.Build.0 = Debug|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Release|x64.ActiveCfg = Release|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Release|x64.Build.0 = Release|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Release|x86.ActiveCfg = Release|Any CPU
+		{896B8178-7AAC-4334-A905-D4ECFC695840}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D6862E3F-59BD-487F-AF55-29721A284BEF} = {167DC009-706F-4180-B10B-A5451CA5571E}
+		{896B8178-7AAC-4334-A905-D4ECFC695840} = {167DC009-706F-4180-B10B-A5451CA5571E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CB3ADFA-25ED-4AC1-A653-AD40F44FCCF1}

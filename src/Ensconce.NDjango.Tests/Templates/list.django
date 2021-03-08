@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+
+<!-- macro was here -->
+
+<!-- styles -->
+    <!-- yui -->
+    <link href="{{root}}/Content/css/yui-complete.css" rel="stylesheet" type="text/css" />
+    <link href="{{root}}/Content/css/base.css" rel="stylesheet" type="text/css" />
+    <!-- end yui -->
+    
+    <!-- themes -->
+    <link href="{{root}}/Content/css/ui.all.css" rel="Stylesheet" type="text/css" />
+    <link href="{{root}}/Content/site.all.css" rel="stylesheet" type="text/css" />    
+    <!-- end themes -->
+<!-- end of styles -->
+
+<!-- scripts -->
+
+    <!-- jquery -->
+    <script src="../../Scripts/jquery-1.3.2.js" type="text/javascript"></script>    
+    <!-- end jquery -->
+
+    <!-- jquery-ui -->
+	<script src="../../Scripts/ui.core.js" type="text/javascript"></script>
+	<script src="../../Scripts/ui.sortable.js" type="text/javascript"></script>
+	<script src="../../Scripts/ui.draggable.js" type="text/javascript"></script>
+	<script src="../../Scripts/ui.datepicker.js" type="text/javascript"></script>
+	<script src="../../Scripts/ui.dialog.js" type="text/javascript"></script>
+	<script src="../../Scripts/ui.resizabl.js" type="text/javascript"></script>
+	<script src="../../Scripts/ui.accordion.js" type="text/javascript"></script>
+	<script src="../../Scripts/ui.draggable.js" type="text/javascript"></script>
+	<script src="../../Scripts/ui.droppable.js" type="text/javascript"></script>
+	<!-- end - jquery-ui -->
+    
+    <!-- 3rd party plugins -->
+    <script src="../../Scripts/jquery.json.js" type="text/javascript"></script>
+    <script src="../../Scripts/jquery.validate.js" type="text/javascript"></script>
+    <!-- end - 3rd party plugins -->
+
+	<script src="../../Scripts/debug.js" type="text/javascript"></script>
+
+<!-- end of scripts -->
+
+<title>{{pageTitle}}</title>
+
+</head>
+<body>
+
+    <div id="doc3">
+    
+            <div id="hd">
+            <a href="/default">&lt; -- Back to Home</a>
+        
+            <br /> 
+        
+            <div id="menucontainer">
+            
+                <ul id="menu">  
+                    <li><a href="/drug/listpage">Drugs</a></li>
+                    <li><a href="/diagnosis/createmodify">Diagnosis</a></li>
+                    <li><a href="/script/create">Script Editor</a></li>
+                    <li><a href="/script/visualizer">Visualizer</a></li>
+                </ul>
+            </div>        
+        
+        </div>
+
+<!-- end of main-header -->
+
+
+<style type="text/css">
+    .ui-datepicker { z-index: 9000; }
+</style>
+
+<script type="text/javascript">
+
+    var drugInEditMode = 0;
+
+    jQuery(function() {
+
+        initializeModal();
+        jQuery("#formMain").validate();
+
+        jQuery("#addDrugLink").click(function() { showModal(jQuery(this), 'add') });
+        jQuery("#categoryDropDown").change(function() { loadDrugs(); });
+
+        jQuery("#fromDateTextBox").datepicker({ showButtonPanel: true, closeText: 'Cancel' });
+        jQuery("#thruDateTextBox").datepicker({ showButtonPanel: true, closeText: 'Cancel'});
+    });
+
+    function loadDrugs() {
+
+        var showResults = (jQuery("#categoryDropDown").val() != "0");
+       (showResults) ? jQuery("#drugContent").show() : jQuery("#drugContent").hide() ;        
+        
+        jQuery.ajax({
+            type: "POST",
+            url: "/drug/list",
+            data: "categoryId=" + jQuery("#categoryDropDown").val(),
+            dataType: "json",
+            success: function(data) {
+                resetFields();
+                renderDrugList(data);
+            }
+        });
+
+    }
+
+    function initializeModal(parentId) {
+
+        jQuery("#modalWindow").dialog(
+            {
+                resizable: true,
+                autoOpen: false,
+                height: 300,
+                width: 500,
+                modal: true,
+                title: 'Save Drug',
+                
+                buttons: {
+                    'Save Drug': function() {
+                        if (jQuery("#formMain").valid()) {
+                            saveDrug(drugInEditMode);
+                            resetFields();
+                            jQuery(this).dialog('close');
+                        }
+                    },
+                    Cancel: function() {
+                        var validator = jQuery("#formMain").validate();
+                        validator.resetForm();
+                        jQuery(this).dialog('close');
+                    }
+                }
+            }
+        );
+    }
+
+    function saveDrug(drugId) {
+        jQuery.ajax({
+            type: "POST",
+            url: "/drug/save",
+            data: { 'drugId': drugId, 'categoryId': jQuery("#categoryDropDown").val(), 'drugName': jQuery("#drugNameTextBox").val(), 'fromDate': jQuery("#fromDateTextBox").val(), 'thruDate': jQuery("#thruDateTextBox").val(), 'jcode': jQuery("#jcodeDropDown").val() },
+            dataType: "json",
+            success: function(data) {
+
+                if (data.length != []) {
+                    loadDrugs();
+                }
+            }
+        });  
+    }
+    
+    function showModal(sender, mode)
+    {
+        isAdd = (mode == 'add') ? true : false;
+        var currentDrug = (isAdd) ? null : sender.data("drug");
+
+        drugInEditMode = (isAdd) ? 0 : currentDrug.DrugId;
+        loadJcodes( ((isAdd) ? 0 : currentDrug.Jcode) );
+
+        jQuery("#drugNameTextBox").val(((isAdd) ? '' : currentDrug.Name));
+        jQuery("#fromDateTextBox").val(((isAdd) ? '' : currentDrug.FromDate));
+        jQuery("#thruDateTextBox").val(((isAdd) ? '' : currentDrug.ThruDate));
+        jQuery("#categoryLabel").text(jQuery("#categoryDropDown option:selected").text());
+
+        jQuery("#modalWindow").dialog('open');
+    }
+
+    function loadJcodes(jcode) {
+        jQuery.ajax({
+            type: "POST",
+            url: "/drug/jcodes",
+            dataType: "json",
+            success: function(data) {
+
+                var jcodeDropDown = jQuery("#jcodeDropDown");
+                jcodeDropDown.empty();
+                jcodeDropDown.append(jQuery("<option value=''>Select Jcode</option>"));
+
+                jQuery.each(data, function(i, obj) {
+                    var makeSelected = (jcode == obj.Code);
+                    jcodeDropDown.append(jQuery("<option value='" + obj.Code + "'" + ((makeSelected) ? ' selected' : '') + ">" + obj.Code + "</option>"));
+                });
+
+            }
+        });
+    }
+
+    function renderDrugList(drugList) {
+
+        var headerRow = jQuery("#drugGrid thead");
+        var tbody = jQuery("#drugGrid tbody");
+        jQuery("#drugGrid").empty();
+        jQuery("#drugGrid").show();
+        jQuery("#drugGrid").append(headerRow);
+        jQuery(tbody).empty();
+        jQuery("#drugGrid").append(tbody);
+        
+        var row;
+        jQuery.each(drugList, function(i, drug) {
+        
+			row = jQuery("<tr><td>&nbsp;</td> <td>&nbsp;</td> <td>&nbsp;</td> <td>&nbsp;</td> <td class='action-link'></td></tr>");
+			jQuery(row).find("td:eq(0)").text(drug.Name);
+			jQuery(row).find("td:eq(1)").text(drug.FromDate);
+			jQuery(row).find("td:eq(2)").text(drug.ThruDate);
+			jQuery(row).find("td:eq(3)").text(drug.Jcode);
+			jQuery(row).find("td:eq(4)").append(
+						jQuery("<a href='javascript:void(0)'>Edit</a>")
+							.data("drug", drug)
+							.click(function() { showModal(jQuery(this), 'edit'); }));
+			jQuery(tbody).append(row);
+        });
+
+        jQuery("#drugGrid tr:odd").addClass("odd");
+        jQuery("#drugGrid tr:even").addClass("even");
+
+        jQuery("#drugContent").show();
+    }
+
+</script> 
+
+<h2>{{pageTitle}}</h2>
+
+    <div id="modalWindow">
+        <form id="formMain">
+         <table width="480" cellpadding="5" border="0";>
+            <tr>
+                <td align="left" style="width: 20%; padding-bottom: 10px;">
+                    <b>Category:</b>
+                </td>
+                <td align="left" style="padding-bottom: 10px;">
+                    <label id="categoryLabel" /> 
+                </td>
+            </tr>
+            <tr>
+                <td align="left" style="width: 20%; padding-bottom: 10px;">
+                    <b>Drug:</b>
+                </td>
+                <td align="left" style="padding-bottom: 10px;">
+                    <input type="text" id="drugNameTextBox" name="drugNameTextBox" class="required" title="Enter Drug" />
+                </td>
+            </tr>
+            <tr>
+                <td align="left" style="width: 20%; padding-bottom: 10px;">
+                    <b>From Date:</b>
+                </td>
+                <td align="left" style="padding-bottom: 10px;">
+                    <input type="text" id="fromDateTextBox" name="fromDateTextBox" class="required date" title="Enter valid From Date" />
+                </td>
+            </tr>
+             <tr>
+                <td align="left" style="width: 20%; padding-bottom: 10px;">
+                    <b>Thru Date:</b>
+                </td>
+                <td align="left" style="padding-bottom: 10px;">
+                    <input type="text" id="thruDateTextBox" name="thruDateTextBox" class="required date" title="Enter valid Thru Date" />
+                </td>
+            </tr>
+            <tr>
+                <td align="left" valign="top" style="width: 20%">
+                    <b>Jcodes:</b>
+                </td>
+                <td align="left" style="padding-bottom: 10px;">
+                    <select id="jcodeDropDown" name="jcodeDropDown" class="required" title="Select Jcode"></select> 
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+    
+    <div id="filters">
+        <b>Primary:</b>&nbsp; 
+        <select id="categoryDropDown">           
+            <option value="0">Select Category</option>
+		{% for drugCategory in drugCategoryList.drugCategories %}
+			<option value="{{drugCategory.CategoryId}}">{{drugCategory.Name}}</option>
+		{% endfor %}
+		</select>
+	</div>
+	<br /><br />
+
+    <div id="drugContent" style="display:none;">              
+        <br />
+        <a href="#" id="addDrugLink" class="fg-button ui-state-default ui-corner-all">Add New</a> <br /><br />
+        <table class="datatable" id="drugGrid" style="margin-top: 12px; width: 670px;">
+          <thead>
+			<tr>
+			  <th style="width:300px">Drug</th>
+			  <th style="width:102px">From Date</th>
+			  <th style="width:102px">Thru Date</th>
+			  <th style="width:102px">JCode</th>
+			  <th style="width:68px"></th>
+			</tr>
+		  </thead>
+		  <tbody>
+          <!-- remaining rows are built dynamically -->
+          </tbody>
+        </table>
+        
+    </div>
+
+      <div id="ft"></div>
+    
+    </div>
+    
+</body>
+</html>
+
+

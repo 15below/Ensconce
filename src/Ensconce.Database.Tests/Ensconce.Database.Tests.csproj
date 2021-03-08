@@ -23,11 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Scripts1\**">
+    <None Remove="Scripts1\**" />
+    <None Remove="ensconcedb.bak" />
+    <Content Include="Scripts1\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="ensconcedb.bak">
+    </Content>
+    <Content Include="ensconcedb.bak">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 </Project>
