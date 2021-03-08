@@ -111,7 +111,7 @@ Task("Push")
     var files = GetFiles("./output/binaries/*.nupkg");
     foreach(var file in files)
     {
-        DotNetCoreNuGetPush(file, new DotNetCoreNuGetPushSettings
+        DotNetCoreNuGetPush(file.FullPath, new DotNetCoreNuGetPushSettings
         {
             ApiKey = apiKey,
             Source = $"{url}{endpoint}",
