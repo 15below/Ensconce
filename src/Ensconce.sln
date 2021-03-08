@@ -21,6 +21,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.NDjango.Core.Filte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensconce.NDjango.Tests", "Ensconce.NDjango.Tests\Ensconce.NDjango.Tests.csproj", "{896B8178-7AAC-4334-A905-D4ECFC695840}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{C23AE314-584D-42D6-B80B-72B3048DE197}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\backupHelper.ps1 = Scripts\backupHelper.ps1
+		Scripts\cloudflareHelper.ps1 = Scripts\cloudflareHelper.ps1
+		Scripts\compressionHelper.ps1 = Scripts\compressionHelper.ps1
+		Scripts\createWebSite.ps1 = Scripts\createWebSite.ps1
+		Scripts\deployHelp.ps1 = Scripts\deployHelp.ps1
+		Scripts\dnsHelper.ps1 = Scripts\dnsHelper.ps1
+		Scripts\kubernetesHelper.ps1 = Scripts\kubernetesHelper.ps1
+		Scripts\rabbitHelper.ps1 = Scripts\rabbitHelper.ps1
+		Scripts\scheduledTaskHelper.ps1 = Scripts\scheduledTaskHelper.ps1
+		Scripts\serviceManagement.ps1 = Scripts\serviceManagement.ps1
+		Scripts\userManagement.ps1 = Scripts\userManagement.ps1
+		Scripts\webHelper.ps1 = Scripts\webHelper.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
