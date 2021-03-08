@@ -1,0 +1,92 @@
+﻿<Structure xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <ClientCode>FAA</ClientCode>
+  <Environment>LOC</Environment>
+  <Properties>
+    <Property name="ClientDomain">{{ ClientCode }}.{{ Environment }}.example.com</Property>
+    <Property name="QueueAppServer">ToBeOverriddenAsEnv</Property>
+    <Property name="DbEncoded">Overridden!</Property>
+    <Property name="BlankValue"></Property>
+    <Property name="DbUser">
+      ThisWouldBeAUsername
+    </Property>
+    <Property name="DbPassword">
+      AndThisWouldBeAPassword
+    </Property>
+    <Property name="DbServer">DbServerAddress</Property>
+    <Property name="avalue">value</Property>
+  </Properties>
+  <PropertyGroups>
+    <PropertyGroup identity="myId">
+      <Label>GDS</Label>
+      <Properties>
+        <Property name="IsSys">
+          SYS
+        </Property>
+        <Property name="avalue">idvalue</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup identity="myId2">
+      <Label>GDS</Label>
+      <Properties>
+        <Property name="IsSys">
+          SYS2
+        </Property>
+        <Property name="avalue">idvalue</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup identity="0">
+      <Label>Label1</Label>
+      <Label>Label2</Label>
+      <Properties>
+        <Property name="Value">ABC123</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup identity="1">
+      <Label>Label1</Label>
+      <Properties>
+        <Property name="Value">321CBA</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup identity="0">
+      <Label>Label3</Label>
+      <Property name="Value">999</Property>
+    </PropertyGroup>
+    <PropertyGroup identity="0">
+      <Labels>
+        <Label>LabelGrouped1</Label>
+        <Label>LabelGrouped2</Label>
+      </Labels>
+      <Properties>
+        <Property name="Value">888</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup label="FlatGroup" identity="0">
+      <Property name="Value">FlatGroup-0</Property>
+    </PropertyGroup>
+    <PropertyGroup label="FlatGroup" identity="1">
+      <Property name="Value">FlatGroup-1</Property>
+    </PropertyGroup>
+  </PropertyGroups>
+  <DbLogins>
+    <DbLogin>
+      <Name>config</Name>
+      <DefaultDb>master</DefaultDb>
+      <Password>This isn't a password either</Password>
+    </DbLogin>
+    <DbLogin>
+      <Name>tagClientCode-tagEnvironment-AUDIT</Name>
+      <DefaultDb>tagClientCode-tagEnvironment-AUDIT</DefaultDb>
+      <Password>Some high entrophy random text</Password>
+    </DbLogin>
+    <DbLogin>
+      <Key>LOGIN</Key>
+      <Name>ZZ-ENV-LOGIN</Name>
+      <DefaultDb>ZZ-ENV-LOGIN</DefaultDb>
+      <Password>Some high entrophy random text</Password>
+    </DbLogin>
+    <DbLogin>
+      <Name>ConnectionString</Name>
+      <ConnectionString>Actual ConnectionString</ConnectionString>
+    </DbLogin>
+  </DbLogins>
+</Structure>

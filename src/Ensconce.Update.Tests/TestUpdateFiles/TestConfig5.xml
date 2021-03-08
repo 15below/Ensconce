@@ -1,0 +1,18 @@
+﻿<configuration>
+  <appSettings>
+    <add name="TestDuplicate1" value="NotSet" />
+    <add name="TestDuplicate1" value="NotSet" />
+    <add name="TestDuplicate1" value="NotSet" />
+    <add name="TestDuplicate2" value="NotSet" />
+    <add name="TestDuplicate2" value="NotSet" />
+    <add name="TestDuplicate3" value="NotSet" />
+    <add name="TestDuplicate3" value="NotSet" />
+    <add name="TestDuplicate4" value="NotSet" />
+    <add name="TestDuplicate4" value="NotSet" />
+    <add name="TestDuplicate4" value="NotSet" />
+    <add name="TestDuplicate5" value="NotSet" />
+    <add name="TestDuplicate5" value="NotSet" />
+    <add name="TestDuplicate6" value="NotSet" />
+    <add name="TestDuplicate6" value="NotSet" />
+  </appSettings>
+</configuration>

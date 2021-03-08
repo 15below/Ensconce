@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces>
+    <Namespace Prefix="madeup">http://madeup.com</Namespace>
+  </Namespaces>
+  <Files>
+    <File Filename="TestUpdateFiles\TestConfig2.xml">
+      <Changes>
+        <Change>
+          <XPath>/madeup:root/madeup:value</XPath>
+          <ReplacementContent>newvalue</ReplacementContent>
+        </Change>
+      </Changes>
+    </File>
+    <File Filename="TestUpdateFiles\TestConfig1.xml">
+      <Changes>
+        <Change>
+          <XPath>/root/value</XPath>
+          <ReplacementContent>{{ tagValue }}</ReplacementContent>
+        </Change>
+      </Changes>
+    </File>
+  </Files>
+</Root>

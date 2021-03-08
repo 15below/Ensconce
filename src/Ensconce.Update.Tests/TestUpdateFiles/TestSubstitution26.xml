@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces />
+  <Files>
+    <File Filename="TestUpdateFiles\TestConfig1.xml">
+      <Changes>
+        <Change>
+          <XPath>/root/value</XPath>
+          <AppendAfter>
+            <![CDATA[<testing>{{ tagValue }}</testing>]]>
+          </AppendAfter>
+        </Change>
+      </Changes>
+    </File>
+  </Files>
+</Root>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces />
+  <Files>
+    <File Filename="ApprovalTestFiles\BaseFile.xml">
+      <Changes>
+        <Change type="ChangeAttribute" xPath="/root/node" attributeName="value" value="{{ ClientCode }}-{{ Environment }}" />
+        <Change type="ChangeAttribute" xPath="/root/node" attributeName="prop" value="{{ MyProp }}" />
+        <Change type="ChangeAttribute" xPath="/root/node" attributeName="instanceProp" value="{{ Group.Instance1.MyProp }}" />
+        <Change>
+          <XPath>root</XPath>
+          <AddChildContent><![CDATA[<node2 value1="" value2=""></node2>]]></AddChildContent>
+        </Change>
+        <Change type="ChangeAttribute" xPath="root/node2" attributeName="value1" value="{{ NonExistantProperty|default:Environment }}" />
+        <Change type="ChangeAttribute" xPath="root/node2" attributeName="value2" value="{{ NonExistantProperty|default:'NotSet' }}" />
+      </Changes>
+    </File>
+  </Files>
+</Root>

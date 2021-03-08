@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Substitutions"
+    targetNamespace="http://15below.com/Substitutions.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://15below.com/Substitutions.xsd"
+    xmlns:mstns="http://15below.com/Substitutions.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="Root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Namespaces">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Namespace" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="Prefix" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Files">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="File" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:choice minOccurs="1" maxOccurs="unbounded">
+                    <xs:element name="ReplacementTemplate" type="xs:string" minOccurs="0" />
+                    <xs:element name="Changes" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Change" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="XPath" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="matchAll" type="xs:string" use="optional" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="JsonPath" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="matchAll" type="xs:string" use="optional" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Content" type="xs:string" minOccurs="0" />
+                                <xs:element name="ReplacementContent" type="xs:string" minOccurs="0" />
+                                <xs:element name="AddChildContent" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="ifNotExists" type="xs:string" use="optional" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="AppendAfter" type="xs:string" minOccurs="0" />
+                                <xs:element name="RemoveCurrentAttributes" type="xs:boolean" default="false" minOccurs="0" />
+                                <xs:element name="AddAttribute" minOccurs="0" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="attributeName" type="xs:string" use="required" />
+                                        <xs:attribute name="value" type="xs:string" use="optional" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="ChangeAttribute" minOccurs="0" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="attributeName" type="xs:string" use="required" />
+                                        <xs:attribute name="value" type="xs:string" use="optional" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="ChangeValue" minOccurs="0" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="value" type="xs:string" use="required" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="type" use="optional">
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:string">
+                                    <xs:enumeration value="ReplacementContent" />
+                                    <xs:enumeration value="AddChildContent" />
+                                    <xs:enumeration value="AppendAfter" />
+                                    <xs:enumeration value="RemoveCurrentAttributes" />
+                                    <xs:enumeration value="AddAttribute" />
+                                    <xs:enumeration value="ChangeAttribute" />
+                                    <xs:enumeration value="ChangeValue" />
+                                  </xs:restriction>
+                                </xs:simpleType>
+                              </xs:attribute>
+                              <xs:attribute name="xPath" type="xs:string" use="optional" />
+                              <xs:attribute name="jsonPath" type="xs:string" use="optional" />
+                              <xs:attribute name="matchAll" type="xs:string" use="optional" />
+                              <xs:attribute name="attributeName" type="xs:string" use="optional" />
+                              <xs:attribute name="value" type="xs:string" use="optional" />
+                              <xs:attribute name="ifNotExists" type="xs:string" use="optional" />
+                              <xs:attribute name="if" type="xs:string" use="optional" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:choice>
+                  <xs:attribute name="Filename" type="xs:string" use="required" />
+                  <xs:attribute name="FileType" type="xs:string" use="optional" />
+                  <xs:attribute name="ReplacementTemplate" type="xs:string" use="optional" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
