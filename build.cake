@@ -95,12 +95,32 @@ Task("Pack")
     {
         Configuration = configuration,
         NoBuild = true,
-        OutputDirectory = "./output/",
+        OutputDirectory = "./output/binaries",
+    });
+});
+
+Task("Push")
+    .WithCriteria(BuildSystem.TeamCity.IsRunningOnTeamCity)
+    .IsDependentOn("Pack")
+    .Does(() =>
+{
+    var apiKey = BuildSystem.TeamCity.Environment.Build.GetEnvironmentString("apikey");
+    var url = BuildSystem.TeamCity.Environment.Build.GetEnvironmentString("pushurl");
+    var endpoint = BuildSystem.TeamCity.Environment.Build.GetEnvironmentString("pushendpoint");
+
+    DotNetCoreNuGetPush("./output/binaries/*.nupkg", new DotNetCoreNuGetPushSettings
+    {
+        ApiKey = apiKey,
+        Source = $"{apiKey}{endpoint}",
+        SymbolApiKey = apiKey,
+        SymbolSource = $"{apiKey}{endpoint}",
+        NoServiceEndpoint = true,
+        SkipDuplicate = true,
     });
 });
 
 Task("Default")
-    .IsDependentOn("Pack")
+    .IsDependentOn("Push")
     .Does(() => {});
 
 //////////////////////////////////////////////////////////////////////
