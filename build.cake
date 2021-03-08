@@ -1,3 +1,5 @@
+#module nuget:?package=Cake.BuildSystems.Module&version=3.0.1
+
 using System.Text.RegularExpressions;
 
 var target = Argument("target", "Default");
@@ -49,7 +51,6 @@ Task("Versioning")
     var files = GetFiles("./src/**/*.*proj");
     foreach(var file in files)
     {
-        Information("File: {0}", file);
         XmlPoke(file, "/Project/PropertyGroup/Version", packageVersion);
         XmlPoke(file, "/Project/PropertyGroup/AssemblyVersion", fullVersion);
         XmlPoke(file, "/Project/PropertyGroup/FileVersion", fullVersion);

@@ -1,5 +1,7 @@
 # Custom Stuff
 
+/tools/Modules
+
 paket-files/
 .fake
 .vs

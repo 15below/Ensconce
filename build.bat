@@ -12,6 +12,14 @@ if errorlevel 1 (
 )
 
 ECHO ----------------------------
+ECHO Run Cake Bootstrap
+ECHO ----------------------------
+dotnet cake build.cake --bootstrap
+if errorlevel 1 (
+  GOTO :end
+)
+
+ECHO ----------------------------
 ECHO Run Cake
 ECHO ----------------------------
 dotnet cake build.cake %*
