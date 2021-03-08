@@ -104,9 +104,9 @@ Task("Push")
     .IsDependentOn("Pack")
     .Does(() =>
 {
-    var apiKey = BuildSystem.TeamCity.Environment.Build.GetEnvironmentString("apikey");
-    var url = BuildSystem.TeamCity.Environment.Build.GetEnvironmentString("pushurl");
-    var endpoint = BuildSystem.TeamCity.Environment.Build.GetEnvironmentString("pushendpoint");
+    var apiKey = BuildSystem.TeamCity.Environment.Build.ConfigProperties["nuget.apiKey.binaries"];
+    var url = BuildSystem.TeamCity.Environment.Build.ConfigProperties["nuget.url.binaries"];
+    var endpoint = BuildSystem.TeamCity.Environment.Build.ConfigProperties["nuget.endpoint.binaries"];
 
     DotNetCoreNuGetPush("./output/binaries/*.nupkg", new DotNetCoreNuGetPushSettings
     {
