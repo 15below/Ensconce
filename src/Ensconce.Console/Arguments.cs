@@ -1,4 +1,3 @@
-using Ensconce.ReportingServices;
 using Mono.Options;
 using System;
 using System.Collections.Generic;
@@ -198,7 +197,7 @@ namespace Ensconce.Console
                 },
                 {
                     "rsv|reportVariable=",
-                    DeployHelp.ExampleUsage,
+                    "Deploy either reports (.rdl files) or add a role to a local/domain user.\n\nBoth options requires Reporting Service Variables (--rsv). multiple values can (and must) be specified. \n\nExample Usage:\n\n# Deploy Reports\n\t--dr\n\t--rsv reportingServicesUrl=http://reportingservices.yourserver.com:80/ReportServer_INSTANCE/ReportService2010.asmx\n\t--rsv networkDomain=DOMAIN\n\t--rsv networkLogin=USER\n\t--rsv networkPassword=PASSWORD\n\t\n\t--rsv parentFolder=PARENT_FOLDER \n\t--rsv subFolder=SUB_FOLDER\n\t--rsv dataSourceName=DATA-SOURCE-NAME\n\t--rsv dataSourceConnectionString=Data Source=(local);Initial Catalog=DATABASE01\n\t--rsv dataSourceUserName=DBUSER1\n\t--rsv dataSourcePassword=DBPASSWORD1\n\t--rsv reportSourceFolder=C:\\TEMP\\PATH_TO_REPORTS\\SUB_FOLDER\t\n\t\n# Deploy Reporting Role for User\n\t--drr\n\t--rsv reportingServicesUrl=http://reportingservices.yourserver.com:80/ReportServer_INSTANCE/ReportService2010.asmx\n\t--rsv networkDomain=DOMAIN\n\t--rsv networkLogin=USER\n\t--rsv networkPassword=PASSWORD\n\t\n\t--rsv itemPath=/PARENT_FOLDER \n\t--rsv reportingUserToAddRoleFor=DOMAIN\\USER\n\t--rsv reportingRoleToAdd=\"Content Manager\"",
                     s => {
                         var reportingServiceVariables = s.Split(separator: new [] { '=' }, count: 2);
                         ReportingServiceVariables.Add(reportingServiceVariables[0], reportingServiceVariables[1]);

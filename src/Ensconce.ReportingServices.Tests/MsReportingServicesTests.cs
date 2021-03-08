@@ -138,10 +138,10 @@ namespace Ensconce.ReportingServices.Tests
                 ?.Value;
         }
 
-        private static string ParameterValueOrFieldReferencesToString(IReadOnlyList<ParameterValueOrFieldReference> parameters)
+        private static string ParameterValueOrFieldReferencesToString(ParameterValueOrFieldReference[] parameters)
         {
-            var parameterValues = new ParameterValue[parameters.Count];
-            for (var i = 0; i < parameters.Count; i++)
+            var parameterValues = new ParameterValue[parameters.Length];
+            for (var i = 0; i < parameters.Length; i++)
             {
                 parameterValues[i] = (ParameterValue)parameters[i];
             }
@@ -149,7 +149,7 @@ namespace Ensconce.ReportingServices.Tests
             return ParameterValueToString(parameterValues);
         }
 
-        private static string ParameterValueToString(IEnumerable<ParameterValue> parameterValues)
+        private static string ParameterValueToString(ParameterValue[] parameterValues)
         {
             var results = new StringBuilder();
             foreach (var parameterValue in parameterValues)

@@ -61,8 +61,7 @@ namespace Ensconce
             if (!Directory.Exists(schemaScriptsFolder))
             {
                 throw new DirectoryNotFoundException(
-                    string.Format(
-                        "Database schema scripts folder {0}\r\ndoes not exist", schemaScriptsFolder));
+                    $"Database schema scripts folder {schemaScriptsFolder}\r\ndoes not exist");
             }
 
             var roundhouseMigrate = new Migrate();
@@ -118,12 +117,12 @@ namespace Ensconce
 
         public static SqlConnectionStringBuilder GetLocalConnectionStringFromDatabaseName(string database)
         {
-            return new SqlConnectionStringBuilder(string.Format("Data Source=(local);Initial Catalog={0};Trusted_Connection=Yes", database));
+            return new SqlConnectionStringBuilder($"Data Source=(local);Initial Catalog={database};Trusted_Connection=Yes");
         }
 
         public static SqlConnectionStringBuilder GetLocalConnectionStringFromDatabaseName(string database, string user, string password)
         {
-            return new SqlConnectionStringBuilder(string.Format("Data Source=(local);Initial Catalog={0};User ID={1};Password={2}", database, user, password));
+            return new SqlConnectionStringBuilder($"Data Source=(local);Initial Catalog={database};User ID={user};Password={password}");
         }
     }
 }

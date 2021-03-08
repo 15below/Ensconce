@@ -33,7 +33,7 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
                     jsEscapes.Add(";", "\\x3B");
                     for (int i = 0; i < 32; i++)
                     {
-                        jsEscapes.Add(new string((char)i, 1), string.Format("\\x{0:X2}", i));
+                        jsEscapes.Add(new string((char)i, 1), $"\\x{i:X2}");
                     }
                 }
             }
