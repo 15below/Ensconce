@@ -180,7 +180,10 @@ Task("Push-Deploy")
     var files = GetFiles("./output/deployment/*.zip");
     foreach(var file in files)
     {
-        OctoPush(serverUrl, apiKey, file.FullPath, null);
+        OctoPush(serverUrl, apiKey, file.FullPath, new OctopusPushSettings
+        {
+            ReplaceExisting = false,
+        });
     }
 });
 
