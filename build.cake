@@ -53,6 +53,7 @@ Task("Versioning")
     var files = GetFiles("./src/**/*.*proj");
     foreach(var file in files)
     {
+        Information($"Updating version in {file.FullPath}");
         XmlPoke(file, "/Project/PropertyGroup/Version", packageVersion);
         XmlPoke(file, "/Project/PropertyGroup/AssemblyVersion", fullVersion);
         XmlPoke(file, "/Project/PropertyGroup/FileVersion", fullVersion);
