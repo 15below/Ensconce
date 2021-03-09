@@ -8,7 +8,7 @@ using System.Management;
 using System.ServiceProcess;
 using System.Threading;
 
-namespace Ensconce.Console
+namespace Ensconce.Cli
 {
     internal static class ApplicationInteraction
     {

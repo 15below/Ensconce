@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace Ensconce.Console
+namespace Ensconce.Cli
 {
     /// <summary>
     /// Retry logic applied from this Stack Overflow thread

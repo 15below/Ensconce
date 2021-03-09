@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 
-namespace Ensconce.Console
+namespace Ensconce.Cli
 {
     internal static class DictionaryExport
     {

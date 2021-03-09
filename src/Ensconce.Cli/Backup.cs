@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-namespace Ensconce.Console
+namespace Ensconce.Cli
 {
     internal static class Backup
     {

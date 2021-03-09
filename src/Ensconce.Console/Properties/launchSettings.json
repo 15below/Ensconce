@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Ensconce.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "--help"
+    }
+  }
+}

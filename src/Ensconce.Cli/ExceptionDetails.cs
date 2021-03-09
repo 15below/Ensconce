@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Ensconce.Console
+namespace Ensconce.Cli
 {
     public static class ExceptionDetails
     {

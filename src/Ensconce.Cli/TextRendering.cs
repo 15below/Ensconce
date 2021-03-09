@@ -2,7 +2,7 @@ using Ensconce.Update;
 using System;
 using System.IO;
 
-namespace Ensconce.Console
+namespace Ensconce.Cli
 {
     internal static class TextRendering
     {

@@ -1,9 +1,8 @@
 ﻿using Ensconce.Cli;
 using System;
 using System.Diagnostics;
-using System.Linq;
 
-namespace Ensconce.Console
+namespace Ensconce.DotNetTool
 {
     internal static class Program
     {
