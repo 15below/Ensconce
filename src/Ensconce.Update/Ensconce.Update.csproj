@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ensconce.Logging\Ensconce.Logging.csproj" />
+    <ProjectReference Include="..\Ensconce.Helpers\Ensconce.Helpers.csproj" />
     <ProjectReference Include="..\Ensconce.NDjango.Core.Filters\Ensconce.NDjango.Core.Filters.csproj" />
     <ProjectReference Include="..\Ensconce.NDjango.Core\Ensconce.NDjango.Core.fsproj" />
   </ItemGroup>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using Ensconce.Helpers;
 using System.Linq;
 
 namespace Ensconce.Cli

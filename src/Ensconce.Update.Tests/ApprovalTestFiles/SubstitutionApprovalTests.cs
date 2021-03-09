@@ -26,7 +26,7 @@ namespace Ensconce.Update.Tests.ApprovalTestFiles
         {
             var config = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlFileName, @"ApprovalTestFiles\Config.xml" } });
             var lazyConfig = new Lazy<TagDictionary>(() => config);
-            var result = XDocument.Parse(UpdateFile.Update(@"ApprovalTestFiles\Substitution.xml", @"ApprovalTestFiles\BaseFile.xml", lazyConfig));
+            var result = XDocument.Parse(ProcessSubstitution.Update(@"ApprovalTestFiles\Substitution.xml", @"ApprovalTestFiles\BaseFile.xml", lazyConfig));
             Approvals.VerifyXml(result.ToString());
         }
     }

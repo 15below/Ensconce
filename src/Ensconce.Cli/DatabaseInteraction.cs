@@ -1,3 +1,5 @@
+using Ensconce.Database;
+using Ensconce.Helpers;
 using System.Data.SqlClient;
 
 namespace Ensconce.Cli
@@ -14,12 +16,12 @@ namespace Ensconce.Cli
             }
             else if (!string.IsNullOrEmpty(Arguments.DatabaseName))
             {
-                connStr = Database.GetLocalConnectionStringFromDatabaseName(Arguments.DatabaseName.Render());
+                connStr = Database.Database.GetLocalConnectionStringFromDatabaseName(Arguments.DatabaseName.Render());
             }
 
             Logging.Log("Deploying scripts from {0} using connection string {1}", Arguments.DeployFrom, connStr.ConnectionString);
 
-            var database = new Database(connStr, new LegacyFolderStructure(), Arguments.WarnOnOneTimeScriptChanges)
+            var database = new Database.Database(connStr, new LegacyFolderStructure(), Arguments.WarnOnOneTimeScriptChanges)
             {
                 WithTransaction = Arguments.WithTransaction,
                 OutputPath = Arguments.RoundhouseOutputPath

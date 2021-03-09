@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ensconce.Database\Ensconce.Database.csproj" />
-    <ProjectReference Include="..\Ensconce.Logging\Ensconce.Logging.csproj" />
+    <ProjectReference Include="..\Ensconce.Helpers\Ensconce.Helpers.csproj" />
     <ProjectReference Include="..\Ensconce.ReportingServices\Ensconce.ReportingServices.csproj" />
     <ProjectReference Include="..\Ensconce.Update\Ensconce.Update.csproj" />
   </ItemGroup>

@@ -8,7 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace Ensconce
+namespace Ensconce.Database
 {
     public class Database : IDatabase
     {

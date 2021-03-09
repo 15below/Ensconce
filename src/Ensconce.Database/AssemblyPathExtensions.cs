@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Ensconce
+namespace Ensconce.Database
 {
     public static class AssemblyPathExtensions
     {

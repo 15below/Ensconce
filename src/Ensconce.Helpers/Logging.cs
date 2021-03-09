@@ -1,6 +1,6 @@
 using System;
 
-namespace Ensconce
+namespace Ensconce.Helpers
 {
     public static class Logging
     {

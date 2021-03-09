@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Ensconce.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Ensconce.Update
 {
-    public class UpdateFile
+    public static class ProcessSubstitution
     {
         public class Substitution
         {
@@ -65,7 +66,7 @@ namespace Ensconce.Update
             Json
         }
 
-        public static void UpdateFiles(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext)
+        public static void Update(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext)
         {
             var (subsXml, nsm) = LoadAndValidateSubstitutionDoc(substitutionFile);
 
@@ -521,21 +522,6 @@ namespace Ensconce.Update
             }
 
             return sub;
-        }
-    }
-
-    public static class ElementExtensions
-    {
-        public static string TryXPathValueWithDefault(this XElement element, string xPath, string defaultValue)
-        {
-            var xPathResult = element.XPathSelectElement(xPath);
-            return xPathResult == null ? defaultValue : xPathResult.Value;
-        }
-
-        public static string TryXPathValueWithDefault(this XElement element, string xPath, IXmlNamespaceResolver nsm, string defaultValue)
-        {
-            var xPathResult = element.XPathSelectElement(xPath, nsm);
-            return xPathResult == null ? defaultValue : xPathResult.Value;
         }
     }
 }

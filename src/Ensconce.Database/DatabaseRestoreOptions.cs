@@ -1,7 +1,7 @@
 using roundhouse;
 using System.IO;
 
-namespace Ensconce
+namespace Ensconce.Database
 {
     public class DatabaseRestoreOptions : IDatabaseRestoreOptions
     {
