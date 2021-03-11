@@ -68,7 +68,7 @@ namespace Ensconce.Cake
 
                 var database = new Database.Database(sqlConnectionStringBuilder, new LegacyFolderStructure())
                 {
-                    OutputPath = tempDirectoryPath.FullPath
+                    OutputPath = @"C:\Temp\RoundhousE\"
                 };
 
                 database.Deploy(tempDirectoryPath.FullPath, string.Empty, true);
