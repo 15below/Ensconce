@@ -250,13 +250,13 @@ namespace Ensconce.ReportingServices
 
             if (subFolderExists)
             {
-                Log(@"Deleting sub folder '{0}\{1}'.", parentFolder, subFolder);
+                Log(@"Deleting sub folder '{0}/{1}'.", parentFolder, subFolder);
                 reportingServicesClient.DeleteItem(new DeleteItemRequest { ItemPath = $"/{parentFolder}/{subFolder}" });
-                Log(@"Deleted sub folder '{0}\{1}'.", parentFolder, subFolder);
+                Log(@"Deleted sub folder '{0}/{1}'.", parentFolder, subFolder);
             }
             else
             {
-                Log(@"Sub folder '{0}\{1}' does not exist.", parentFolder, subFolder);
+                Log(@"Sub folder '{0}/{1}' does not exist.", parentFolder, subFolder);
             }
         }
 
@@ -278,9 +278,9 @@ namespace Ensconce.ReportingServices
 
         private void CreateSubFolder(string parentFolder, string subFolder)
         {
-            Log(@"Creating sub folder '{0}\{1}'.", parentFolder, subFolder);
-            reportingServicesClient.CreateFolder(new CreateFolderRequest { Folder = subFolder, Parent = parentFolder });
-            Log(@"Created sub folder '{0}\{1}'.", parentFolder, subFolder);
+            Log(@"Creating sub folder '{0}/{1}'.", parentFolder, subFolder);
+            reportingServicesClient.CreateFolder(new CreateFolderRequest { Folder = "/" + subFolder, Parent = parentFolder });
+            Log(@"Created sub folder '{0}/{1}'.", parentFolder, subFolder);
         }
 
         private void CreateDataSource(string parentFolder, string subFolder, string dataSourceName, string dataSourceConnectionString, string dataSourceUserName, string dataSourcePassWord)
