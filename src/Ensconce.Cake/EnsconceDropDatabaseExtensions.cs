@@ -14,34 +14,50 @@ namespace Ensconce.Cake
         [CakeMethodAlias]
         public static void DropDatabaseByConnectionString(this ICakeContext context, string connectionString)
         {
-            context.DropDatabaseByConnectionString(connectionString, string.Empty);
+            context.DropDatabaseByConnectionString(connectionString, null, null);
         }
 
         [CakeMethodAlias]
-        public static void DropDatabaseByConnectionString(this ICakeContext context, string connectionString, string fixedStructureFile)
+        public static void DropDatabaseByConnectionString(this ICakeContext context, string connectionString, DirectoryPath tempDirectoryPath)
         {
-            var tagDictionary = TagDictionaryBuilder.Build(fixedStructureFile);
+            context.DropDatabaseByConnectionString(connectionString, null, tempDirectoryPath);
+        }
+
+        [CakeMethodAlias]
+        public static void DropDatabaseByConnectionString(this ICakeContext context, string connectionString, FilePath fixedStructureFile, DirectoryPath tempDirectoryPath)
+        {
+            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.Build(string.Empty) : TagDictionaryBuilder.Build(fixedStructureFile.FullPath);
             var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString.RenderTemplate(tagDictionary));
-            context.DropDatabase(connectionStringBuilder);
+            context.DropDatabase(connectionStringBuilder, tempDirectoryPath);
         }
 
         [CakeMethodAlias]
         public static void DropLocalDatabaseByName(this ICakeContext context, string databaseName)
         {
-            context.DropLocalDatabaseByName(databaseName, string.Empty);
+            context.DropLocalDatabaseByName(databaseName, null, null);
         }
 
         [CakeMethodAlias]
-        public static void DropLocalDatabaseByName(this ICakeContext context, string databaseName, string fixedStructureFile)
+        public static void DropLocalDatabaseByName(this ICakeContext context, string databaseName, DirectoryPath tempDirectoryPath)
         {
-            var tagDictionary = TagDictionaryBuilder.Build(fixedStructureFile);
-            var connectionStringBuilder = Database.Database.GetLocalConnectionStringFromDatabaseName(databaseName.RenderTemplate(tagDictionary));
-            context.DropDatabase(connectionStringBuilder);
+            context.DropLocalDatabaseByName(databaseName, null, tempDirectoryPath);
         }
 
-        private static void DropDatabase(this ICakeContext context, SqlConnectionStringBuilder sqlConnectionStringBuilder)
+        [CakeMethodAlias]
+        public static void DropLocalDatabaseByName(this ICakeContext context, string databaseName, FilePath fixedStructureFile, DirectoryPath tempDirectoryPath)
         {
-            var tempDirectoryPath = new DirectoryPath(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.Build(string.Empty) : TagDictionaryBuilder.Build(fixedStructureFile.FullPath);
+            var connectionStringBuilder = Database.Database.GetLocalConnectionStringFromDatabaseName(databaseName.RenderTemplate(tagDictionary));
+            context.DropDatabase(connectionStringBuilder, tempDirectoryPath);
+        }
+
+        private static void DropDatabase(this ICakeContext context, SqlConnectionStringBuilder sqlConnectionStringBuilder, DirectoryPath tempDirectoryPath)
+        {
+            if (tempDirectoryPath == null)
+            {
+                tempDirectoryPath = new DirectoryPath(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+            }
+
             var tempDirectory = context.FileSystem.GetDirectory(tempDirectoryPath);
 
             if (tempDirectory.Exists)
