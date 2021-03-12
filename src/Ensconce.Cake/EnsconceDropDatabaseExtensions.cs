@@ -53,9 +53,17 @@ namespace Ensconce.Cake
 
         private static void DropDatabase(this ICakeContext context, SqlConnectionStringBuilder sqlConnectionStringBuilder, DirectoryPath tempDirectoryPath)
         {
+            var deleteDir = false;
+            DirectoryPath outputPath;
             if (tempDirectoryPath == null)
             {
                 tempDirectoryPath = new DirectoryPath(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+                outputPath = new DirectoryPath(@"C:\Temp\RoundhousE\");
+                deleteDir = true;
+            }
+            else
+            {
+                outputPath = tempDirectoryPath.Combine(new DirectoryPath("Roundhouse"));
             }
 
             var tempDirectory = context.FileSystem.GetDirectory(tempDirectoryPath);
@@ -84,14 +92,17 @@ namespace Ensconce.Cake
 
                 var database = new Database.Database(sqlConnectionStringBuilder, new LegacyFolderStructure())
                 {
-                    OutputPath = @"C:\Temp\RoundhousE\"
+                    OutputPath = outputPath.FullPath
                 };
 
                 database.Deploy(tempDirectoryPath.FullPath, string.Empty, true);
             }
             finally
             {
-                tempDirectory.Delete(true);
+                if (deleteDir)
+                {
+                    tempDirectory.Delete(true);
+                }
             }
         }
     }

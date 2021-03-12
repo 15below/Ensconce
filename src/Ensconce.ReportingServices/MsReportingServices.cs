@@ -230,19 +230,19 @@ namespace Ensconce.ReportingServices
 
             if (parentFolderExists)
             {
-                Log("Folder '{0}' already exists", parentFolder);
+                Log("Folder '/{0}' already exists", parentFolder);
             }
             else
             {
-                Log("Creating folder '{0}'", parentFolder);
-                reportingServicesClient.CreateFolder(new CreateFolderRequest { Parent = parentFolder, Folder = "/" });
-                Log("Created folder '{0}'", parentFolder);
+                Log("Creating folder '/{0}'", parentFolder);
+                reportingServicesClient.CreateFolder(new CreateFolderRequest { Folder = parentFolder, Parent = "/" });
+                Log("Created folder '/{0}'", parentFolder);
             }
         }
 
         private void DeleteSubFolderIfExists(string parentFolder, string subFolder)
         {
-            var listChildrenResponse = reportingServicesClient.ListChildren(new ListChildrenRequest { ItemPath = "/" + parentFolder, Recursive = false });
+            var listChildrenResponse = reportingServicesClient.ListChildren(new ListChildrenRequest { ItemPath = $"/{parentFolder}", Recursive = false });
             var items = listChildrenResponse.CatalogItems;
             var subFolderExists = items.Any(catalogItem =>
                 catalogItem.Name.ToUpperInvariant() == subFolder.ToUpperInvariant() &&
@@ -250,13 +250,13 @@ namespace Ensconce.ReportingServices
 
             if (subFolderExists)
             {
-                Log(@"Deleting sub folder '{0}/{1}'.", parentFolder, subFolder);
+                Log(@"Deleting sub folder '/{0}/{1}'.", parentFolder, subFolder);
                 reportingServicesClient.DeleteItem(new DeleteItemRequest { ItemPath = $"/{parentFolder}/{subFolder}" });
-                Log(@"Deleted sub folder '{0}/{1}'.", parentFolder, subFolder);
+                Log(@"Deleted sub folder '/{0}/{1}'.", parentFolder, subFolder);
             }
             else
             {
-                Log(@"Sub folder '{0}/{1}' does not exist.", parentFolder, subFolder);
+                Log(@"Sub folder '/{0}/{1}' does not exist.", parentFolder, subFolder);
             }
         }
 
@@ -278,9 +278,9 @@ namespace Ensconce.ReportingServices
 
         private void CreateSubFolder(string parentFolder, string subFolder)
         {
-            Log(@"Creating sub folder '{0}/{1}'.", parentFolder, subFolder);
-            reportingServicesClient.CreateFolder(new CreateFolderRequest { Folder = "/" + subFolder, Parent = parentFolder });
-            Log(@"Created sub folder '{0}/{1}'.", parentFolder, subFolder);
+            Log(@"Creating sub folder '/{0}/{1}'.", parentFolder, subFolder);
+            reportingServicesClient.CreateFolder(new CreateFolderRequest { Folder = subFolder, Parent = $"/{parentFolder}" });
+            Log(@"Created sub folder '/{0}/{1}'.", parentFolder, subFolder);
         }
 
         private void CreateDataSource(string parentFolder, string subFolder, string dataSourceName, string dataSourceConnectionString, string dataSourceUserName, string dataSourcePassWord)
@@ -300,7 +300,7 @@ namespace Ensconce.ReportingServices
                 Password = dataSourcePassWord
             };
 
-            Log("Creating data source {0} with value: {1}", dataSourceName, dataSourceConnectionString);
+            Log("Creating data source {0} with value: {1} in /{2}/{3}", dataSourceName, dataSourceConnectionString, parentFolder, subFolder);
             reportingServicesClient.CreateDataSource(new CreateDataSourceRequest { DataSource = dataSourceName, Parent = $"/{parentFolder}/{subFolder}", Overwrite = true, Definition = definition });
             Log("Created data source {0}", dataSourceName);
         }
@@ -315,14 +315,14 @@ namespace Ensconce.ReportingServices
                 var reportName = fileInfo.Name.Replace(".rdl", "");
                 CreateReport(reportName, reportSourceFolder, targetFolder);
                 SetReportDataSource(reportName, dataSourceName, targetFolder);
-                CreateSubscriptions(reportName, targetFolder + "/" + reportName, reportSourceFolder);
+                CreateSubscriptions(reportName, $"{targetFolder}/{reportName}", reportSourceFolder);
             }
         }
 
         private void CreateReport(string reportName, string sourceFolder, string targetFolder)
         {
             var reportDefinition = GetReportDefinition(reportName, sourceFolder);
-            Log("Creating report '{0}'", reportName);
+            Log("Creating report '{0}' in '{1}'", reportName, targetFolder);
             var createCreateCatalogItemResponse = reportingServicesClient.CreateCatalogItem(new CreateCatalogItemRequest { ItemType = "Report", Name = reportName, Parent = targetFolder, Overwrite = true, Definition = reportDefinition });
             var warnings = createCreateCatalogItemResponse.Warnings;
             var catalogItem = createCreateCatalogItemResponse.ItemInfo;
@@ -341,7 +341,7 @@ namespace Ensconce.ReportingServices
         private Byte[] GetReportDefinition(string reportName, string sourceFolder)
         {
             Byte[] definition;
-            var stream = File.OpenRead(sourceFolder + "\\" + reportName + ".rdl");
+            var stream = File.OpenRead($"{sourceFolder}\\{reportName}.rdl");
             definition = new Byte[stream.Length];
             stream.Read(definition, 0, Convert.ToInt32(stream.Length));
             stream.Close();
@@ -370,8 +370,8 @@ namespace Ensconce.ReportingServices
         {
             Log("Setting DataSource For Report: " + reportName);
 
-            var reference = new DataSourceReference { Reference = targetFolder + "/" + dataSourceName };
-            var getItemDataSourcesResponse = reportingServicesClient.GetItemDataSources(new GetItemDataSourcesRequest { ItemPath = targetFolder + "/" + reportName });
+            var reference = new DataSourceReference { Reference = $"{targetFolder}/{dataSourceName}" };
+            var getItemDataSourcesResponse = reportingServicesClient.GetItemDataSources(new GetItemDataSourcesRequest { ItemPath = $"{targetFolder}/{reportName}" });
             var dataSource = getItemDataSourcesResponse.DataSources;
 
             Log("Report '{0}' has {1} data sources", reportName, dataSource.Length);
@@ -386,7 +386,7 @@ namespace Ensconce.ReportingServices
                 Log("Report '{0}' setting data source '{1}' to '{2}'", reportName, ds.Name, dataSourceName);
             }
 
-            reportingServicesClient.SetItemDataSources(new SetItemDataSourcesRequest { ItemPath = targetFolder + "/" + reportName, DataSources = dataSources });
+            reportingServicesClient.SetItemDataSources(new SetItemDataSourcesRequest { ItemPath = $"{targetFolder}/{reportName}", DataSources = dataSources });
         }
 
         private void CreateSubscriptions(string reportName, string reportPath, string sourceFolder)
