@@ -95,7 +95,7 @@ namespace Ensconce.Cake
                     OutputPath = outputPath.FullPath
                 };
 
-                database.Deploy(tempDirectoryPath.FullPath, string.Empty, true);
+                database.Deploy(tempDirectoryPath.FullPath, dropDatabase: true);
             }
             finally
             {

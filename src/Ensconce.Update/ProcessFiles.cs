@@ -21,7 +21,7 @@ namespace Ensconce.Update
             {
                 try
                 {
-                    UpdateSingleFile(file, tagValues);
+                    UpdateFile(file, tagValues);
                 }
                 catch (Exception e)
                 {
@@ -35,7 +35,7 @@ namespace Ensconce.Update
             }
         }
 
-        private static void UpdateSingleFile(FileInfo templateFile, Lazy<TagDictionary> tagValues)
+        public static void UpdateFile(FileInfo templateFile, Lazy<TagDictionary> tagValues)
         {
             Logging.Log($"Updating template file {templateFile.FullName}");
 
