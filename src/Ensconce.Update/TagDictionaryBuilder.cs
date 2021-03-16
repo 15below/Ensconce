@@ -11,32 +11,16 @@ namespace Ensconce.Update
 
         public static Lazy<TagDictionary> Build(string fixedPath)
         {
-            if (fixedPath == null)
-            {
-                fixedPath = string.Empty;
-            }
-
-            return TagDictionaries.GetOrAdd(fixedPath, s => new Lazy<TagDictionary>(() => BuildTagDictionary(fixedPath)));
-        }
-
-        private static TagDictionary BuildTagDictionary(string fixedPath)
-        {
             var tags = TagDictionaries.GetOrAdd(string.Empty, new Lazy<TagDictionary>(BuildTagDictionary));
 
             if (string.IsNullOrWhiteSpace(fixedPath))
             {
-                return tags.Value;
+                return tags;
             }
 
             fixedPath = fixedPath.RenderTemplate(tags);
 
-            if (File.Exists(fixedPath))
-            {
-                return BuildTagDictionary(fixedPath, tags.Value);
-            }
-
-            Logging.Log("WARNING: The fixed structure path was not located at '{0}' so running without it!", fixedPath);
-            return tags.Value;
+            return TagDictionaries.GetOrAdd(fixedPath, s => new Lazy<TagDictionary>(() => BuildTagDictionary(fixedPath, tags.Value)));
         }
 
         private static TagDictionary BuildTagDictionary()
@@ -63,7 +47,7 @@ namespace Ensconce.Update
             }
             else
             {
-                Logging.Log("No structure file found at: {0}", Path.GetFullPath(fixedPath));
+                Logging.Log("WARNING: No structure file found at: {0}", Path.GetFullPath(fixedPath));
                 tags = fallbackDictionary ?? BuildTagDictionary();
             }
 
