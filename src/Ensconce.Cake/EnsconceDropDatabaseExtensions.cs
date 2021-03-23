@@ -3,6 +3,7 @@ using Cake.Core.Annotations;
 using Cake.Core.IO;
 using Ensconce.Database;
 using Ensconce.Update;
+using FifteenBelow.Octopus.Cake;
 using System.Data.SqlClient;
 using System.IO;
 using Path = System.IO.Path;
@@ -63,8 +64,10 @@ namespace Ensconce.Cake
             }
             else
             {
-                outputPath = tempDirectoryPath.Combine(new DirectoryPath("Roundhouse"));
+                outputPath = tempDirectoryPath.Combine(new DirectoryPath("RoundhousE"));
             }
+
+            context.LogDebug($"Using RounhousE output path {outputPath}");
 
             var tempDirectory = context.FileSystem.GetDirectory(tempDirectoryPath);
 
@@ -96,6 +99,7 @@ namespace Ensconce.Cake
                 };
 
                 database.Deploy(tempDirectoryPath.FullPath, dropDatabase: true);
+                context.LogInfo($"Dropped '{sqlConnectionStringBuilder.InitialCatalog}' on server '{sqlConnectionStringBuilder.DataSource}'");
             }
             finally
             {

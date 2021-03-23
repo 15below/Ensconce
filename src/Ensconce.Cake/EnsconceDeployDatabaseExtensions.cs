@@ -3,6 +3,7 @@ using Cake.Core.Annotations;
 using Cake.Core.IO;
 using Ensconce.Database;
 using Ensconce.Update;
+using FifteenBelow.Octopus.Cake;
 using System.Data.SqlClient;
 using System.IO;
 
@@ -53,6 +54,7 @@ namespace Ensconce.Cake
             };
 
             database.Deploy(deployScriptDirectoryPath.FullPath);
+            context.LogInfo($"Deployed '{deployScriptDirectoryPath.FullPath}' to '{sqlConnectionStringBuilder.InitialCatalog}' on server '{sqlConnectionStringBuilder.DataSource}'");
         }
     }
 }
