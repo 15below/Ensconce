@@ -21,11 +21,11 @@ namespace Ensconce.ReportingServices
 
         public static ReportSubscription GetSubscription(string[] subscriptionInfoText, string subscriptionPath, string subscriptionName)
         {
-            if (SubscriptionInfo(subscriptionInfoText, "subscriptionOn").ToLower() == "true")
+            if (GetSubInfoValue(subscriptionInfoText, "subscriptionOn", false, "false").ToLower() == "true")
             {
-                var eventType = SubscriptionInfo(subscriptionInfoText, "eventType");
-                var scheduleXml = SubscriptionInfo(subscriptionInfoText, "scheduleXml");
-                var subscriptionType = SubscriptionInfo(subscriptionInfoText, "subscriptionType");
+                var eventType = GetSubInfoValue(subscriptionInfoText, "eventType", true);
+                var scheduleXml = GetSubInfoValue(subscriptionInfoText, "scheduleXml", true);
+                var subscriptionType = GetSubInfoValue(subscriptionInfoText, "subscriptionType", false);
                 var subscriptionTypeParameters = GetSubscriptionTypeParameters(subscriptionInfoText);
                 var extSettings = new ExtensionSettings
                 {
@@ -34,7 +34,7 @@ namespace Ensconce.ReportingServices
                 };
 
                 ParameterValue[] reportParameterValues = null;
-                var reportParameters = SubscriptionInfo(subscriptionInfoText, "reportParameters");
+                var reportParameters = GetSubInfoValue(subscriptionInfoText, "reportParameters", false);
 
                 if (!string.IsNullOrEmpty(reportParameters))
                 {
@@ -79,100 +79,115 @@ namespace Ensconce.ReportingServices
             };
         }
 
-        private static ParameterValue[] GetSubscriptionTypeParameters(string[] subscriptionInfoText)
+        private static ParameterValueOrFieldReference[] GetSubscriptionTypeParameters(string[] subscriptionInfoText)
         {
-            ParameterValue[] extensionParams;
-            switch (SubscriptionInfo(subscriptionInfoText, "subscriptionType"))
+            ParameterValueOrFieldReference[] extensionParams;
+            var subscriptionType = GetSubInfoValue(subscriptionInfoText, "subscriptionType", false, "EMAIL").ToUpper();
+            switch (subscriptionType)
             {
                 case "FILESHARE":
-                case "fileshare":
                 case "CSV":
-                case "csv":
-                    extensionParams = new ParameterValue[7];
+                    extensionParams = new ParameterValueOrFieldReference[7];
                     extensionParams[0] = new ParameterValue
                     {
                         Name = "PATH",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FilePath")
+                        Value = GetSubInfoValue(subscriptionInfoText, "subscriptionToFile_FilePath", true)
                     };
                     //Set the filename to always have a timestamp
                     extensionParams[1] = new ParameterValue
                     {
                         Name = "FILENAME",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FileName") + "_@timestamp"
+                        Value = GetSubInfoValue(subscriptionInfoText, "subscriptionToFile_FileName", true) + "_@timestamp"
                     };
                     // Add a file extension always
                     extensionParams[2] = new ParameterValue { Name = "FILEEXTN", Value = "True" };
                     extensionParams[3] = new ParameterValue
                     {
                         Name = "USERNAME",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_UserName")
+                        Value = GetSubInfoValue(subscriptionInfoText, "subscriptionToFile_UserName", true)
                     };
                     extensionParams[4] = new ParameterValue
                     {
                         Name = "PASSWORD",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_Password")
+                        Value = GetSubInfoValue(subscriptionInfoText, "subscriptionToFile_Password", true)
                     };
-                    var fileShareSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
                     extensionParams[5] = new ParameterValue
                     {
                         Name = "RENDER_FORMAT",
-                        Value = !string.IsNullOrEmpty(fileShareSubscriptionRenderFormat) ? fileShareSubscriptionRenderFormat.ToUpper() : "CSV"
+                        Value = GetSubInfoValue(subscriptionInfoText, "subscriptionRenderFormat", false, "CSV")
                     };
                     extensionParams[6] = new ParameterValue { Name = "WRITEMODE", Value = "Overwrite" };
-                    return extensionParams;
+                    break;
 
-                default:
-                    extensionParams = new ParameterValue[10];
+                case "EMAIL":
+                    extensionParams = new ParameterValueOrFieldReference[10];
                     extensionParams[0] = new ParameterValue
                     {
                         Name = "TO",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionSendTo")
+                        Value = GetSubInfoValue(subscriptionInfoText, "subscriptionSendTo", true)
                     };
                     extensionParams[1] = new ParameterValue
                     {
                         Name = "CC",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionCCto")
+                        Value = GetSubInfoValue(subscriptionInfoText, "subscriptionCCto", false)
                     };
                     extensionParams[2] = new ParameterValue
                     {
                         Name = "BCC",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionBCCto")
+                        Value = GetSubInfoValue(subscriptionInfoText, "subscriptionBCCto", false)
                     };
                     extensionParams[3] = new ParameterValue { Name = "ReplyTo", Value = "system@15below.com" };
                     extensionParams[4] = new ParameterValue { Name = "IncludeReport", Value = "True" };
-                    var emailSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
                     extensionParams[5] = new ParameterValue
                     {
                         Name = "RenderFormat",
-                        Value = !string.IsNullOrEmpty(emailSubscriptionRenderFormat) ? emailSubscriptionRenderFormat.ToUpper() : "EXCEL"
+                        Value = GetSubInfoValue(subscriptionInfoText, "subscriptionRenderFormat", false, "EXCEL").ToUpper()
                     };
                     extensionParams[6] = new ParameterValue
                     {
                         Name = "Subject",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subjectPrefix") + " - @ReportName executed at @ExecutionTime"
+                        Value = GetSubInfoValue(subscriptionInfoText, "subjectPrefix", true) + " - @ReportName executed at @ExecutionTime"
                     };
                     extensionParams[7] = new ParameterValue
                     {
                         Name = "Comment",
-                        Value = SubscriptionInfo(subscriptionInfoText, "emailBodyText")
+                        Value = GetSubInfoValue(subscriptionInfoText, "emailBodyText", true)
                     };
                     extensionParams[8] = new ParameterValue { Name = "IncludeLink", Value = "False" };
                     extensionParams[9] = new ParameterValue { Name = "Priority", Value = "NORMAL" };
-                    return extensionParams;
+                    break;
+
+                default:
+                    throw new Exception($"Unknown report type '{subscriptionType}', supported values: 'EMAIL','CSV','FILESHARE'");
             }
+
+            return extensionParams;
         }
 
-        private static string SubscriptionInfo(string[] subscriptionInfoText, string key)
+        private static string GetSubInfoValue(string[] subscriptionInfoText, string key, bool required, string defaultValue = "")
         {
+            var value = string.Empty;
             foreach (var subInfoLine in subscriptionInfoText)
             {
                 var subInfoLineParts = subInfoLine.Split(',');
                 if (subInfoLineParts[0] == key)
                 {
-                    return subInfoLineParts[1];
+                    value = subInfoLineParts[1];
+                    break;
                 }
             }
-            return string.Empty;
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                if (required)
+                {
+                    throw new Exception($"Value for '{key}' in subinfo file is empty when it is required");
+                }
+
+                return defaultValue;
+            }
+
+            return value;
         }
 
         private static void Log(string message, params object[] values)
