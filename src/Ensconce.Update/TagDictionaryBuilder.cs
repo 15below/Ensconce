@@ -42,9 +42,9 @@ namespace Ensconce.Update
                 var instanceName = Environment.GetEnvironmentVariable("InstanceName");
                 Logging.Log("Loading xml config from file {0}", path);
                 var configXml = Retry.Do(() => File.ReadAllText(path), TimeSpan.FromSeconds(5));
-                Logging.Log("Re-Building Tag Dictionary (Using config file)");
+                Logging.Log("Re-Building Tag Dictionary (Using config file '{0}')", path);
                 tags = TagDictionary.FromXml(instanceName, configXml);
-                Logging.Log("Re-Built Tag Dictionary (Using config file)");
+                Logging.Log("Re-Built Tag Dictionary (Using config file '{0}')", path);
             }
             else if (fallbackDictionary != null)
             {

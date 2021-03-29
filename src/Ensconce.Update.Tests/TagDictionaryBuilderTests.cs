@@ -41,9 +41,10 @@ namespace Ensconce.Update.Tests
             var dictionary = TagDictionaryBuilder.Build(null);
 
             //Assert
-            Assert.IsNotEmpty(dictionary.Value);
-            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"]);
-            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"]);
+            Assert.IsNotEmpty(dictionary.Value, "TagDictionary was empty");
+            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"], "TagDictionary[\"ClientCode\"] was not correct");
+            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"], "TagDictionary[\"Environment\"] was not correct");
+            Assert.False(dictionary.Value.ContainsKey("ClientDomain"), "TagDictionary ClientDomain was found");
         }
 
         [Test]
@@ -53,9 +54,10 @@ namespace Ensconce.Update.Tests
             var dictionary = TagDictionaryBuilder.Build(string.Empty);
 
             //Assert
-            Assert.IsNotEmpty(dictionary.Value);
-            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"]);
-            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"]);
+            Assert.IsNotEmpty(dictionary.Value, "TagDictionary was empty");
+            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"], "TagDictionary[\"ClientCode\"] was not correct");
+            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"], "TagDictionary[\"Environment\"] was not correct");
+            Assert.False(dictionary.Value.ContainsKey("ClientDomain"), "TagDictionary ClientDomain was found");
         }
 
         [Test]
@@ -65,10 +67,10 @@ namespace Ensconce.Update.Tests
             var dictionary = TagDictionaryBuilder.Build(Path.Combine(testFilePath, "structure.xml"));
 
             //Assert
-            Assert.IsNotEmpty(dictionary.Value);
-            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"]);
-            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"]);
-            Assert.AreEqual("SomeUserName", dictionary.Value["DbUser"]);
+            Assert.IsNotEmpty(dictionary.Value, "TagDictionary was empty");
+            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"], "TagDictionary[\"ClientCode\"] was not correct");
+            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"], "TagDictionary[\"Environment\"] was not correct");
+            Assert.AreEqual($"{EnvClientCode}.{EnvEnvironment}.example.com", dictionary.Value["ClientDomain"], "TagDictionary[\"ClientDomain\"] was not correct");
         }
 
         [Test]
@@ -78,10 +80,10 @@ namespace Ensconce.Update.Tests
             var dictionary = TagDictionaryBuilder.Build(Path.Combine(testFilePath, "incorrectStructure.xml"));
 
             //Assert
-            Assert.IsNotEmpty(dictionary.Value);
-            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"]);
-            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"]);
-            Assert.False(dictionary.Value.ContainsKey("DbUser"));
+            Assert.IsNotEmpty(dictionary.Value, "TagDictionary was empty");
+            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"], "TagDictionary[\"ClientCode\"] was not correct");
+            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"], "TagDictionary[\"Environment\"] was not correct");
+            Assert.False(dictionary.Value.ContainsKey("ClientDomain"), "TagDictionary ClientDomain was found");
         }
 
         [Test]
@@ -91,10 +93,10 @@ namespace Ensconce.Update.Tests
             var dictionary = TagDictionaryBuilder.Build(Path.Combine());
 
             //Assert
-            Assert.IsNotEmpty(dictionary.Value);
-            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"]);
-            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"]);
-            Assert.False(dictionary.Value.ContainsKey("DbUser"));
+            Assert.IsNotEmpty(dictionary.Value, "TagDictionary was empty");
+            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"], "TagDictionary[\"ClientCode\"] was not correct");
+            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"], "TagDictionary[\"Environment\"] was not correct");
+            Assert.False(dictionary.Value.ContainsKey("ClientDomain"), "TagDictionary ClientDomain was found");
         }
 
         [Test]
@@ -104,10 +106,10 @@ namespace Ensconce.Update.Tests
             var dictionary = TagDictionaryBuilder.Build(@"D:\FixedStructure\#{FixedStructureFile}");
 
             //Assert
-            Assert.IsNotEmpty(dictionary.Value);
-            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"]);
-            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"]);
-            Assert.False(dictionary.Value.ContainsKey("DbUser"));
+            Assert.IsNotEmpty(dictionary.Value, "TagDictionary was empty");
+            Assert.AreEqual(EnvClientCode, dictionary.Value["ClientCode"], "TagDictionary[\"ClientCode\"] was not correct");
+            Assert.AreEqual(EnvEnvironment, dictionary.Value["Environment"], "TagDictionary[\"Environment\"] was not correct");
+            Assert.False(dictionary.Value.ContainsKey("ClientDomain"), "TagDictionary ClientDomain was found");
         }
     }
 }
