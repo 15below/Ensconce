@@ -103,7 +103,7 @@ namespace Ensconce.Update.Tests
         public void BuildTagDictionary_InvalidPath()
         {
             //Act
-            var dictionary = TagDictionaryBuilder.Build(@"D:\FixedStructure\#{FixedStructureFile}");
+            var dictionary = TagDictionaryBuilder.Build(@"D:\FixedStructure\D:\FixedStructure\#{FixedStructureFile}");
 
             //Assert
             Assert.IsNotEmpty(dictionary.Value, "TagDictionary was empty");
