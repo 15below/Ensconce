@@ -20,7 +20,7 @@ namespace Ensconce.Update
 
             fixedPath = fixedPath.RenderTemplate(tags);
 
-            return TagDictionaries.GetOrAdd(fixedPath, s => new Lazy<TagDictionary>(() => BuildTagDictionary(fixedPath, tags.Value)));
+            return TagDictionaries.GetOrAdd(fixedPath, s => new Lazy<TagDictionary>(() => BuildTagDictionary(fixedPath, tags)));
         }
 
         private static TagDictionary BuildTagDictionary()
@@ -32,11 +32,11 @@ namespace Ensconce.Update
             return tags;
         }
 
-        private static TagDictionary BuildTagDictionary(string fixedPath, TagDictionary fallbackDictionary)
+        private static TagDictionary BuildTagDictionary(string fixedPath, Lazy<TagDictionary> fallbackDictionary)
         {
             TagDictionary tags;
 
-            var (fileExists, path) = GetFullyQualifiedPathIfExists(fixedPath);
+            var (fileExists, path) = GetFullPathIfExists(fixedPath);
 
             if (fileExists)
             {
@@ -47,32 +47,36 @@ namespace Ensconce.Update
                 tags = TagDictionary.FromXml(instanceName, configXml);
                 Logging.Log("Re-Built Tag Dictionary (Using config file '{0}')", path);
             }
-            else if (fallbackDictionary != null)
-            {
-                Logging.Log("WARNING: No structure file found at: {0}", path);
-                tags = fallbackDictionary;
-            }
             else
             {
-                Logging.Log("WARNING: No structure file found at: {0} & no fallback", path);
-                tags = TagDictionary.Empty();
+                Logging.Log("WARNING: No structure file found at: '{0}' using base dictionary", path);
+                tags = fallbackDictionary.Value;
             }
 
             return tags;
         }
 
-        private static (bool exists, string path) GetFullyQualifiedPathIfExists(string path)
+        private static (bool exists, string path) GetFullPathIfExists(string path)
         {
+            string fullPath;
             try
             {
                 Logging.Log("Getting full path for '{0}'", path);
-                var fullPath = Path.GetFullPath(path);
+                fullPath = Path.GetFullPath(path);
+            }
+            catch (Exception)
+            {
+                return (false, path);
+            }
+
+            try
+            {
                 Logging.Log("Checking if '{0}' exists", fullPath);
                 return (File.Exists(fullPath), fullPath);
             }
             catch (Exception)
             {
-                return (false, string.Empty);
+                return (false, fullPath);
             }
         }
     }
