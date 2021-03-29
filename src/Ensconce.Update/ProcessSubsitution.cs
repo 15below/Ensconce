@@ -68,6 +68,8 @@ namespace Ensconce.Update
 
         public static void Update(string substitutionFile, Lazy<TagDictionary> tagValues, bool outputFailureContext)
         {
+            Logging.Log("Updating config with substitution file {0}", substitutionFile);
+
             var (subsXml, nsm) = LoadAndValidateSubstitutionDoc(substitutionFile);
 
             var files = subsXml.XPathSelectElements("/s:Root/s:Files/s:File", nsm)

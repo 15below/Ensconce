@@ -15,30 +15,45 @@ namespace Ensconce.Update
 
             if (!string.IsNullOrWhiteSpace(instanceName))
             {
-                var tags = TagDictionaries.GetOrAdd(instanceName, new Lazy<TagDictionary>(BuildTagDictionary));
+                var tags = TagDictionaries.GetOrAdd(instanceName, new Lazy<TagDictionary>(() => BuildTagDictionary(instanceName)));
 
-                if (string.IsNullOrWhiteSpace(fixedPath))
+                var expandedPath = ExpandPath(fixedPath, tags);
+
+                if (string.IsNullOrWhiteSpace(expandedPath))
                 {
                     return tags;
                 }
 
-                fixedPath = fixedPath.RenderTemplate(tags);
-
-                return TagDictionaries.GetOrAdd($"{instanceName}_{fixedPath}", s => new Lazy<TagDictionary>(() => BuildTagDictionary(fixedPath, tags)));
+                return TagDictionaries.GetOrAdd($"{instanceName}_{fixedPath}", s => new Lazy<TagDictionary>(() => BuildTagDictionary(instanceName, fixedPath, tags)));
             }
             else
             {
                 var tags = TagDictionaries.GetOrAdd(string.Empty, new Lazy<TagDictionary>(BuildTagDictionary));
 
-                if (string.IsNullOrWhiteSpace(fixedPath))
+                var expandedPath = ExpandPath(fixedPath, tags);
+
+                if (string.IsNullOrWhiteSpace(expandedPath))
                 {
                     return tags;
                 }
 
-                fixedPath = fixedPath.RenderTemplate(tags);
-
                 return TagDictionaries.GetOrAdd(fixedPath, s => new Lazy<TagDictionary>(() => BuildTagDictionary(fixedPath, tags)));
             }
+        }
+
+        private static string ExpandPath(string path, Lazy<TagDictionary> tags)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return string.Empty;
+            }
+
+            if (path.Contains("{{") || path.Contains("{%"))
+            {
+                return path.RenderTemplate(tags);
+            }
+
+            return path;
         }
 
         private static TagDictionary BuildTagDictionary()
@@ -61,19 +76,17 @@ namespace Ensconce.Update
         {
             TagDictionary tags;
 
-            var (fileExists, path) = GetFullPathIfExists(fixedPath);
-
-            if (fileExists)
+            if (FileExists(fixedPath))
             {
-                Logging.Log("Loading xml config from file '{0}'", path);
-                var configXml = Retry.Do(() => File.ReadAllText(path), TimeSpan.FromSeconds(5));
-                Logging.Log("Building tag dictionary (using config file '{0}')", path);
+                Logging.Log("Loading xml config from file '{0}'", fixedPath);
+                var configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(3));
+                Logging.Log("Building tag dictionary (using config file '{0}')", fixedPath);
                 tags = TagDictionary.FromXml(string.Empty, configXml);
-                Logging.Log("Built tag dictionary (using config file '{0}')", path);
+                Logging.Log("Built tag dictionary (using config file '{0}')", fixedPath);
             }
             else
             {
-                Logging.Log("WARNING: No structure file found at: '{0}'", path);
+                Logging.Log("WARNING: No structure file found at: '{0}'", fixedPath);
                 tags = fallbackDictionary.Value;
             }
 
@@ -84,46 +97,33 @@ namespace Ensconce.Update
         {
             TagDictionary tags;
 
-            var (fileExists, path) = GetFullPathIfExists(fixedPath);
-
-            if (fileExists)
+            if (FileExists(fixedPath))
             {
-                Logging.Log("Loading xml config from file '{0}'", path);
-                var configXml = Retry.Do(() => File.ReadAllText(path), TimeSpan.FromSeconds(5));
-                Logging.Log("Building tag dictionary with instance '{0}' (using config file '{1}')", instanceName, path);
+                Logging.Log("Loading xml config from file '{0}'", fixedPath);
+                var configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(3));
+                Logging.Log("Building tag dictionary with instance '{0}' (using config file '{1}')", instanceName, fixedPath);
                 tags = TagDictionary.FromXml(instanceName, configXml);
-                Logging.Log("Built tag dictionary with instance '{0}' (using config file '{1}')", instanceName, path);
+                Logging.Log("Built tag dictionary with instance '{0}' (using config file '{1}')", instanceName, fixedPath);
             }
             else
             {
-                Logging.Log("WARNING: No structure file found at: '{0}'", path);
+                Logging.Log("WARNING: No structure file found at: '{0}'", fixedPath);
                 tags = fallbackDictionary.Value;
             }
 
             return tags;
         }
 
-        private static (bool exists, string path) GetFullPathIfExists(string path)
+        private static bool FileExists(string path)
         {
-            string fullPath;
             try
             {
-                Logging.Log("Getting full path for '{0}'", path);
-                fullPath = Path.GetFullPath(path);
+                Logging.Log("Checking if '{0}' exists", path);
+                return File.Exists(path);
             }
             catch (Exception)
             {
-                return (false, path);
-            }
-
-            try
-            {
-                Logging.Log("Checking if '{0}' exists", fullPath);
-                return (File.Exists(fullPath), fullPath);
-            }
-            catch (Exception)
-            {
-                return (false, fullPath);
+                return false;
             }
         }
     }
