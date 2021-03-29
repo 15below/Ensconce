@@ -35,9 +35,10 @@ namespace Ensconce.Update
         private static TagDictionary BuildTagDictionary(string fixedPath, TagDictionary fallbackDictionary)
         {
             TagDictionary tags;
-            var path = Path.GetFullPath(fixedPath);
 
-            if (FileExists(path))
+            var (fileExists, path) = GetFullyQualifiedPathIfExists(fixedPath);
+
+            if (fileExists)
             {
                 var instanceName = Environment.GetEnvironmentVariable("InstanceName");
                 Logging.Log("Loading xml config from file {0}", path);
@@ -60,16 +61,18 @@ namespace Ensconce.Update
             return tags;
         }
 
-        private static bool FileExists(string path)
+        private static (bool exists, string path) GetFullyQualifiedPathIfExists(string path)
         {
             try
             {
-                Logging.Log("Checking if {0} exists", path);
-                return File.Exists(path);
+                Logging.Log("Getting full path for '{0}'", path);
+                var fullPath = Path.GetFullPath(path);
+                Logging.Log("Checking if '{0}' exists", fullPath);
+                return (File.Exists(fullPath), fullPath);
             }
             catch (Exception)
             {
-                return false;
+                return (false, string.Empty);
             }
         }
     }
