@@ -48,7 +48,7 @@ namespace Ensconce.Cake
                 throw new DirectoryNotFoundException($"Unable to locate {deployScriptDirectoryPath.FullPath}");
             }
 
-            var database = new Database.Database(sqlConnectionStringBuilder, new LegacyFolderStructure())
+            var database = new Database.Database(sqlConnectionStringBuilder)
             {
                 OutputPath = deployScriptDirectoryPath.FullPath
             };

@@ -21,15 +21,15 @@ namespace Ensconce.Database
 
         public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions, Logger logger)
         {
-            DatabaseName = $"BUILD-INT-Ensconce-{Guid.NewGuid().ToString()}";
-            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName), new LegacyFolderStructure(), restoreOptions, logger);
+            DatabaseName = $"BUILD-INT-Ensconce-{Guid.NewGuid()}";
+            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName), restoreOptions, logger);
             masterDatabaseConnectionString = Database.GetLocalConnectionStringFromDatabaseName("master").ConnectionString;
         }
 
         public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions, Logger logger, string userName, string password)
         {
-            DatabaseName = $"BUILD-INT-Ensconce-{Guid.NewGuid().ToString()}";
-            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName, userName, password), new LegacyFolderStructure(), restoreOptions, logger);
+            DatabaseName = $"BUILD-INT-Ensconce-{Guid.NewGuid()}";
+            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName, userName, password), restoreOptions, logger);
             masterDatabaseConnectionString = Database.GetLocalConnectionStringFromDatabaseName("master", userName, password).ConnectionString;
         }
 
