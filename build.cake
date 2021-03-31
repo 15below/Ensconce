@@ -9,6 +9,8 @@ var configuration = Argument("configuration", "Release");
 var baseVersion = "1.7.0";
 var subVersion = "";
 var subVersionNumber = "";
+var isMasterOrDevelop = false;
+var isLocal = BuildSystem.IsLocalBuild;
 
 if (BuildSystem.TeamCity.IsRunningOnTeamCity)
 {
@@ -19,6 +21,13 @@ if (BuildSystem.TeamCity.IsRunningOnTeamCity)
     {
         subVersion = $".{buildNumber}";
         subVersionNumber = $".{buildNumber}";
+        isMasterOrDevelop = true;
+    }
+    else if(branchName == "develop")
+    {
+        subVersion = $"-develop-{buildNumber}";
+        subVersionNumber = $".{buildNumber}";
+        isMasterOrDevelop = true;
     }
     else
     {
@@ -105,8 +114,8 @@ Task("Pack-Binary")
     });
 });
 
-Task("Push-Binary")
-    .WithCriteria(BuildSystem.TeamCity.IsRunningOnTeamCity)
+Task("Push-Binary-Internal")
+    .WithCriteria(!isLocal)
     .IsDependentOn("Pack-Binary")
     .Does(() =>
 {
@@ -124,6 +133,26 @@ Task("Push-Binary")
             SymbolApiKey = apiKey,
             SymbolSource = $"{url}{endpoint}",
             NoServiceEndpoint = true,
+            SkipDuplicate = true,
+        });
+    }
+});
+
+Task("Push-Binary-Public")
+    .WithCriteria(!isLocal)
+    .WithCriteria(isMasterOrDevelop)
+    .IsDependentOn("Pack-Binary")
+    .Does(() =>
+{
+    var apiKey = BuildSystem.TeamCity.Environment.Build.ConfigProperties["nuget.apiKey.nugetorg"];
+
+    var files = GetFiles("./output/binaries/*.nupkg");
+    foreach(var file in files)
+    {
+        DotNetCoreNuGetPush(file.FullPath, new DotNetCoreNuGetPushSettings
+        {
+            ApiKey = apiKey,
+            SymbolApiKey = apiKey,
             SkipDuplicate = true,
         });
     }
@@ -171,7 +200,7 @@ Task("Pack-Deploy")
 });
 
 Task("Push-Deploy")
-    .WithCriteria(BuildSystem.TeamCity.IsRunningOnTeamCity)
+    .WithCriteria(!isLocal)
     .IsDependentOn("Pack-Deploy")
     .Does(() =>
 {
@@ -189,7 +218,8 @@ Task("Push-Deploy")
 });
 
 Task("Default")
-    .IsDependentOn("Push-Binary")
+    .IsDependentOn("Push-Binary-Internal")
+    .IsDependentOn("Push-Binary-Public")
     .IsDependentOn("Push-Deploy")
     .Does(() => {});
 
