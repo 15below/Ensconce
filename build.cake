@@ -151,7 +151,7 @@ Task("Push-Binary-Public")
     {
         DotNetCoreNuGetPush(file.FullPath, new DotNetCoreNuGetPushSettings
         {
-            Source = https://api.nuget.org/v3/index.json,
+            Source = "https://api.nuget.org/v3/index.json",
             ApiKey = apiKey,
             SkipDuplicate = true,
         });
