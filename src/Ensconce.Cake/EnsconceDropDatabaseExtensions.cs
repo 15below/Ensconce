@@ -93,7 +93,7 @@ namespace Ensconce.Cake
                     fileStreamWriter.WriteLine("Drop-DB");
                 }
 
-                var database = new Database.Database(sqlConnectionStringBuilder, new LegacyFolderStructure())
+                var database = new Database.Database(sqlConnectionStringBuilder)
                 {
                     OutputPath = outputPath.FullPath
                 };

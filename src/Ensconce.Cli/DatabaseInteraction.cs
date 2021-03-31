@@ -21,7 +21,7 @@ namespace Ensconce.Cli
 
             Logging.Log("Deploying scripts from {0} using connection string {1}", Arguments.DeployFrom, connStr.ConnectionString);
 
-            var database = new Database.Database(connStr, new LegacyFolderStructure(), Arguments.WarnOnOneTimeScriptChanges)
+            var database = new Database.Database(connStr, Arguments.WarnOnOneTimeScriptChanges)
             {
                 WithTransaction = Arguments.WithTransaction,
                 OutputPath = Arguments.RoundhouseOutputPath

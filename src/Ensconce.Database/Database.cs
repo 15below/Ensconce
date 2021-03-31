@@ -12,7 +12,6 @@ namespace Ensconce.Database
 {
     public class Database : IDatabase
     {
-        protected IDatabaseFolderStructure DatabaseFolderStructure;
         private readonly IDatabaseRestoreOptions databaseRestoreOptions;
         private readonly Logger logger;
 
@@ -20,21 +19,14 @@ namespace Ensconce.Database
         public bool WarnOnOneTimeScriptChanges { get; private set; }
         public bool WithTransaction { get; set; }
         public string OutputPath { get; set; }
-
-        public Database(DbConnectionStringBuilder connectionStringBuilder)
-            : this(connectionStringBuilder, null)
+        public Database(DbConnectionStringBuilder connectionStringBuilder, bool warnOnOneTimeScriptChanges = false)
+            : this(connectionStringBuilder, null, null, warnOnOneTimeScriptChanges)
         {
         }
 
-        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, bool warnOnOneTimeScriptChanges = false)
-            : this(connectionStringBuilder, databaseFolderStructure, null, null, warnOnOneTimeScriptChanges)
-        {
-        }
-
-        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger, bool warnOnOneTimeScriptChanges = false)
+        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger, bool warnOnOneTimeScriptChanges = false)
         {
             ConnectionString = connectionStringBuilder.ToString();
-            DatabaseFolderStructure = databaseFolderStructure;
             this.databaseRestoreOptions = databaseRestoreOptions;
             this.logger = logger ?? new roundhouse.infrastructure.logging.custom.ConsoleLogger();
             WarnOnOneTimeScriptChanges = warnOnOneTimeScriptChanges;
@@ -65,10 +57,7 @@ namespace Ensconce.Database
             }
 
             var roundhouseMigrate = new Migrate();
-            if (DatabaseFolderStructure != null)
-            {
-                DatabaseFolderStructure.SetMigrateFolders(roundhouseMigrate, schemaScriptsFolder);
-            }
+            SetFolderNames(roundhouseMigrate);
 
             if (databaseRestoreOptions != null)
             {
@@ -113,6 +102,18 @@ namespace Ensconce.Database
             {
                 roundhouseMigrate.Run();
             }
+        }
+
+        private void SetFolderNames(Migrate roundhouseMigrate)
+        {
+            roundhouseMigrate
+                .Set(x => x.RunAfterCreateDatabaseFolderName = "RunAfterCreateDatabase")
+                .Set(x => x.RunAfterOtherAnyTimeScriptsFolderName = "RunAfterOtherAnyTimeScripts")
+                .Set(x => x.FunctionsFolderName = "Functions")
+                .Set(x => x.SprocsFolderName = "Sprocs")
+                .Set(x => x.UpFolderName = "Up")
+                .Set(x => x.IndexesFolderName = "Indexes")
+                .Set(x => x.PermissionsFolderName = "Permissions");
         }
 
         public static SqlConnectionStringBuilder GetLocalConnectionStringFromDatabaseName(string database)
