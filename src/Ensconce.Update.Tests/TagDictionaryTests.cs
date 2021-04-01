@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Ensconce.Update.Tests
@@ -613,10 +612,10 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
-        [Explicit] // You can only run this with a specific certificate loaded into your computer
+        [Explicit("You can only run this with a specific certificate loaded into your computer")]
         public void Decrypt_Test()
         {
-            string value = "fQF5wgZ4J9+lm2LbpqoxWeeao6A9x1XoIc3VTDSHBosJ1tM/mLX2XO8+AENaizmalFhCD1YKK4j7YmzEP72FwtfGgm2jazDGNb1WR440ZPL96P/tO/dKvy53KHtlkY76qFiP2KZPxRWjbem+5kpWn5lLczwl/7lQfBAM6ntawghntVAA7l7gwvKDuq2FcVIP3Njdu3DzSWPgP4P83pQxn04KtG7fO0VudUXjllI6Y/LAgpovYuC1SR3lTw33V4KVPXcOvB16bwplw+izKGWBn9Wjc6B0IxyW0tSz87ETzuL0HpiOeTZvEObrzSXlCjz3qbt4mf5gQ9QN4Gk7tLpOAZhrV1fn94IDL+l73KDbQDVo/HsX5sFFK1amFu7669kjlCOtiXxS9nZ35GtMVV2N+TC78xg0tAmYZtCOaJ+AgKoPj+PZTaR+Heu+nddiy7EAsezQ0FePxL1FN6+VcMydA16htdfdhwBzt/Sjql1LLoqSuaduOvXwftkOfhl3ylVRNnGjgHtIlAAEXtxfyitxVQSVVDgPRwfncB0S4LgpXrnuw+Bj7CuslXvCL6x9ZCp5PYqcXTYcwuv/xysFrTKM0k6xS4D6mIShlOwOxaMm0nntg3VBIXwJZULHabd/xMb2UkwQOAjKvgplLmduaSeGdS8axup326eSmEDRXQlHqUM=";
+            string value = "qMMwh9SXoPUnTJeSm1Valokg9jPmekkkVy8VwRNGzpKruLZIgHoBjazLcym4voW8mQT8uadvyvs3TSWUMGo/70PFQZhkR60RVs8v0BcQWJowdF00j2c3KKcoQFutP/Y9UR+7L88cpRiS9/KosIYssZ+1kfkAne0skWENAdL1JUe0c2v7vXy+EXuInkuuX5lQuBngHlb35TtXdgYK46b4XSzuPFtDGwk3yV4MXSXjOOXgy/0dQLHxq6mn7kIDnlQeApgie9tnss3jIQlv1rvGVi3iChT+RADCdubNXw4XU3PDPV3I0ayMNRH5gysG41eJP4opQ2QJ+e68dfLwGGLyyA==";
 
             var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
                                                       <ClientCode>XX</ClientCode>
@@ -632,6 +631,26 @@ namespace Ensconce.Update.Tests
             var expected = "hello";
 
             Assert.AreEqual(expected.ToString().ToLower(), "{{ Data|decrypt:Certificate }}".RenderTemplate(sut.ToLazyTagDictionary()));
+        }
+
+        [Test]
+        [Explicit("You can only run this with a specific certificate loaded into your computer")]
+        public void Encrypt_Test()
+        {
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties>
+                                                        <Property name=""Data"">hello</Property>
+                                                        <Property name=""Certificate"">XX-NON-Certificate</Property>
+                                                      </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
+                                                  </Structure>");
+
+            var data = "{{ Data|encrypt:Certificate }}".RenderTemplate(sut.ToLazyTagDictionary());
+            Assert.IsNotNull(data);
+            Console.WriteLine(data);
         }
 
         [Test]

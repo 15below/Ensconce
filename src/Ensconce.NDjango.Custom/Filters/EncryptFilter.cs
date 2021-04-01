@@ -5,8 +5,8 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Ensconce.NDjango.Custom.Filters
 {
-    [Interfaces.Name("decrypt")]
-    public class DecryptFilter : Interfaces.IFilter
+    [Interfaces.Name("encrypt")]
+    public class EncryptFilter : Interfaces.IFilter
     {
         public object Perform(object value)
         {
@@ -20,7 +20,7 @@ namespace Ensconce.NDjango.Custom.Filters
                 throw new Exception("Value does not exist when calling decrypt");
             }
 
-            return EncryptionHelpers.Decrypt(StoreLocation.LocalMachine, StoreName.My, (string)parameter, (string)value);
+            return EncryptionHelpers.Encrypt(StoreLocation.LocalMachine, StoreName.My, (string)parameter, (string)value);
         }
 
         public object DefaultValue
