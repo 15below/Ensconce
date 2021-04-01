@@ -1,7 +1,7 @@
 ﻿using Ensconce.NDjango.Core;
 using System;
 
-namespace Ensconce.Update.NDjango.Custom.Filters
+namespace Ensconce.NDjango.Custom.Filters
 {
     [Interfaces.Name("endsWith")]
     public class EndsWithFilter : Interfaces.IFilter
@@ -17,7 +17,7 @@ namespace Ensconce.Update.NDjango.Custom.Filters
             {
                 throw new Exception($"endsWith parameter must be a non-empty string");
             }
-            else if (value is NDjangoWrapper.ErrorTemplate)
+            else if (value is ErrorTemplate)
             {
                 throw new Exception($"Value does not exist when calling endsWith");
             }

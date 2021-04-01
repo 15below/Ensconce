@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace Ensconce.Update.NDjango.Custom.Filters
+namespace Ensconce.NDjango.Custom.Filters
 {
     [Interfaces.Name("decrypt")]
     public class DecryptFilter : Interfaces.IFilter
@@ -18,7 +18,7 @@ namespace Ensconce.Update.NDjango.Custom.Filters
 
         public object PerformWithParam(object value, object parameter)
         {
-            if (value is NDjangoWrapper.ErrorTemplate)
+            if (value is ErrorTemplate)
             {
                 throw new Exception("Value does not exist when calling decrypt");
             }

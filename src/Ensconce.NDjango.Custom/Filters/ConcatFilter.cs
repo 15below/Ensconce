@@ -1,6 +1,6 @@
 ﻿using Ensconce.NDjango.Core;
 
-namespace Ensconce.Update.NDjango.Custom.Filters
+namespace Ensconce.NDjango.Custom.Filters
 {
     [Interfaces.Name("concat")]
     public class ConcatFilter : Interfaces.IFilter

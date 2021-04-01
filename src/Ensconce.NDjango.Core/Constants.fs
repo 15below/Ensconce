@@ -101,7 +101,7 @@ module Constants =
 
     /// <summary>
     /// Flag indicating whether the templates should be checked for updates
-    /// before rendering. If set to <b>false<b> all modifications to a template
+    /// before rendering. If set to <b>false</b> all modifications to a template
     /// after the first successful parse will be igonred
     /// </summary>
     let RELOAD_IF_UPDATED = "settings.RELOAD_IF_UPDATED"

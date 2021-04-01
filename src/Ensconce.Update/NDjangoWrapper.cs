@@ -1,4 +1,5 @@
 ﻿using Ensconce.NDjango.Core;
+using Ensconce.NDjango.Custom;
 using System;
 using System.IO;
 
@@ -14,16 +15,20 @@ namespace Ensconce.Update
 
         private static Interfaces.ITemplateManager GetTemplateManager(bool xmlSafe)
         {
-            return new TemplateManagerProvider().WithLoader(new StringLoader())
-                                                .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, Error)
-                                                .WithSetting(Constants.DEFAULT_AUTOESCAPE, xmlSafe)
-                                                .WithSetting(Constants.EXCEPTION_IF_ERROR, true)
-                                                .WithSetting(Constants.RELOAD_IF_UPDATED, false)
-                                                .WithFilters(NDjango.Custom.Filters.Loader.CustomFilters)
-                                                .WithFilters(Ensconce.NDjango.Core.Filters.Loader.StringFilters)
-                                                .WithFilters(Ensconce.NDjango.Core.Filters.Loader.HtmlFilters)
-                                                .WithFilters(Ensconce.NDjango.Core.Filters.Loader.ListFilters)
-                                                .GetNewManager();
+            lock (Locker)
+            {
+                return new TemplateManagerProvider().WithLoader(new StringLoader())
+                                                    .WithSetting(Constants.TEMPLATE_STRING_IF_INVALID, Error)
+                                                    .WithSetting(Constants.DEFAULT_AUTOESCAPE, xmlSafe)
+                                                    .WithSetting(Constants.EXCEPTION_IF_ERROR, true)
+                                                    .WithSetting(Constants.RELOAD_IF_UPDATED, false)
+                                                    .WithFilters(NDjango.Custom.Filters.Loader.CustomFilters)
+                                                    .WithFilters(Ensconce.NDjango.Core.Filters.Loader.StringFilters)
+                                                    .WithFilters(Ensconce.NDjango.Core.Filters.Loader.HtmlFilters)
+                                                    .WithFilters(Ensconce.NDjango.Core.Filters.Loader.ListFilters)
+                                                    .GetNewManager();
+            }
+
         }
 
         public static string RenderTemplate(this string template, Lazy<TagDictionary> values)
@@ -98,29 +103,6 @@ namespace Ensconce.Update
             public bool IsUpdated(string path, DateTime timestamp)
             {
                 return true;
-            }
-        }
-
-        public class ErrorTemplate
-        {
-            public bool Invoked;
-
-            public override string ToString()
-            {
-                Invoked = true;
-                return "{RandomText-668B7536-C32B-4D86-B065-70C143EB4AD9}";
-            }
-
-            public override bool Equals(object obj)
-            {
-                Invoked = true;
-                return false;
-            }
-
-            public override int GetHashCode()
-            {
-                Invoked = true;
-                return -1;
             }
         }
 

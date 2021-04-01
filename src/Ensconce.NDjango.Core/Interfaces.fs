@@ -248,13 +248,6 @@ module public Interfaces =
         ///<summary>
         /// Transforms a {% %} tag into a list of nodes and uncommited token list
         ///</summary>
-        ///<param name="token">token for the tag name</param>
-        ///<param name="context">the parsing context for the token</param>
-        ///<param name="tokens">the remainder of the token list</param>
-        ///<returns>
-        /// a tuple consisting of the INodeImpl object representing the result of node parsing as the first element
-        /// followed by the the remainder of the token list with all the token related to the node removed
-        ///</returns>
         abstract member Perform: Lexer.BlockToken -> IParsingContext -> LazyList<Lexer.Token> -> (INodeImpl * IParsingContext * LazyList<Lexer.Token>)
 
         /// Indicates whether this node must be the first non-text node in the template

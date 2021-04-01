@@ -26,5 +26,6 @@
     <ProjectReference Include="..\Ensconce.Helpers\Ensconce.Helpers.csproj" />
     <ProjectReference Include="..\Ensconce.NDjango.Core.Filters\Ensconce.NDjango.Core.Filters.csproj" />
     <ProjectReference Include="..\Ensconce.NDjango.Core\Ensconce.NDjango.Core.fsproj" />
+    <ProjectReference Include="..\Ensconce.NDjango.Custom\Ensconce.NDjango.Custom.csproj" />
   </ItemGroup>
 </Project>
