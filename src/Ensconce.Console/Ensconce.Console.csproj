@@ -11,9 +11,25 @@
     <AssemblyVersion>0.0.0.0</AssemblyVersion>
     <FileVersion>0.0.0.0</FileVersion>
     <IsPackable>false</IsPackable>
+    <PackageProjectUrl>https://github.com/15below/Ensconce</PackageProjectUrl>
+    <PackageIcon>15below_green.png</PackageIcon>
+    <RepositoryUrl>https://github.com/15below/Ensconce</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageLicenseFile>licence.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Ensconce.Cli\Ensconce.Cli.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\images\15below_green.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\licence.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>

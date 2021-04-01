@@ -2,9 +2,32 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Customisations to NDjango</Description>
+    <Company>15below</Company>
+    <Product>Ensconce</Product>
+    <Authors>15below</Authors>
+    <Version>0.0.0-local-0</Version>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <FileVersion>0.0.0.0</FileVersion>
+    <PackageProjectUrl>https://github.com/15below/Ensconce</PackageProjectUrl>
+    <PackageIcon>15below_green.png</PackageIcon>
+    <RepositoryUrl>https://github.com/15below/Ensconce</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageLicenseFile>licence.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Ensconce.NDjango.Core\Ensconce.NDjango.Core.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\images\15below_green.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\licence.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>
