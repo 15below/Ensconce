@@ -113,7 +113,11 @@ namespace Ensconce.Database
                 .Set(x => x.SprocsFolderName = "Sprocs")
                 .Set(x => x.UpFolderName = "Up")
                 .Set(x => x.IndexesFolderName = "Indexes")
-                .Set(x => x.PermissionsFolderName = "Permissions");
+                .Set(x => x.PermissionsFolderName = "Permissions")
+                .Set(x => x.ViewsFolderName = "Views")
+                .Set(x => x.AlterDatabaseFolderName = "AlterDatabase")
+                .Set(x => x.TriggersFolderName = "Triggers")
+                .Set(x => x.RunFirstAfterUpFolderName = "RunFirstAfterUp");
         }
 
         public static SqlConnectionStringBuilder GetLocalConnectionStringFromDatabaseName(string database)
