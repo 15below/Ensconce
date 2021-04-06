@@ -5,10 +5,10 @@ en·sconce/en'skäns/
 Verb:
 Establish or settle (someone) in a comfortable, safe, or secret place
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/15below/Ensconce)
-![GitHub all releases](https://img.shields.io/github/downloads/15below/Ensconce/total)
-![Nuget](https://img.shields.io/nuget/v/Ensconce.DotNetTool)
-![Nuget](https://img.shields.io/nuget/dt/Ensconce.DotNetTool)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/15below/Ensconce?label=latest%20github%20release)
+![GitHub all releases](https://img.shields.io/github/downloads/15below/Ensconce/total?label=github%20downloads)
+![Nuget](https://img.shields.io/nuget/v/Ensconce.DotNetTool?label=latest%20nuget%20dotnet%20tool%20release)
+![Nuget](https://img.shields.io/nuget/dt/Ensconce.DotNetTool?label=nuget%20dotnet%20tool%20downloads)
 
 
 What is this?
