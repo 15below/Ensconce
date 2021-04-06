@@ -15,9 +15,13 @@ namespace Ensconce.NDjango.Custom.Filters
 
         public object PerformWithParam(object value, object parameter)
         {
-            if (value is ErrorTemplate)
+            if (!(parameter is string s) || String.IsNullOrEmpty(s))
             {
-                throw new Exception("Value does not exist when calling decrypt");
+                throw new Exception($"decrypt parameter must be a non-empty string");
+            }
+            else if (value is ErrorTemplate)
+            {
+                throw new Exception("The value to be decrypted is an ndjango error");
             }
 
             return EncryptionHelpers.Decrypt(StoreLocation.LocalMachine, StoreName.My, (string)parameter, (string)value);

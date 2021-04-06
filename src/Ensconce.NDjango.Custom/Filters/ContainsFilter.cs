@@ -19,7 +19,7 @@ namespace Ensconce.NDjango.Custom.Filters
             }
             else if (value is ErrorTemplate)
             {
-                throw new Exception($"Value does not exist when calling contains");
+                throw new Exception($"The value to be checked by 'contains' is an ndjango error");
             }
             else
             {

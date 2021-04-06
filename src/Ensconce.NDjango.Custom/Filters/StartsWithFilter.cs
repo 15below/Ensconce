@@ -19,7 +19,7 @@ namespace Ensconce.NDjango.Custom.Filters
             }
             else if (value is ErrorTemplate)
             {
-                throw new Exception($"Value does not exist when calling startsWith");
+                throw new Exception($"The value to be checked by 'startsWith' is an ndjango error");
             }
             else
             {
