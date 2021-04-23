@@ -29,8 +29,8 @@ namespace Ensconce.NDjango.Core.Filters.HtmlFilters
             }
 
             string tagsForRegx = string.Join("|", tags);
-            Regex regxStartTag = new Regex(string.Format(@"<({0})(/?>|(\s+[^>]*>))", tagsForRegx), RegexOptions.Compiled);
-            Regex regxEndTag = new Regex(string.Format(@"</({0})>", tagsForRegx), RegexOptions.Compiled);
+            Regex regxStartTag = new Regex($@"<({tagsForRegx})(/?>|(\s+[^>]*>))", RegexOptions.Compiled);
+            Regex regxEndTag = new Regex($@"</({tagsForRegx})>", RegexOptions.Compiled);
             string retValue = regxStartTag.Replace(Convert.ToString(__p1), string.Empty);
             retValue = regxEndTag.Replace(retValue, string.Empty);
             return retValue;

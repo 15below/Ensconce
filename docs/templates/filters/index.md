@@ -12,6 +12,7 @@ description: The home of template filters documentation
 * [Decrypt](decrypt)
 * [Default](default)
 * [Empty](empty)
+* [Encrypt](encrypt)
 * [Ends With](ends-with)
 * [Exists](exists)
 * [First](first)

@@ -1,6 +1,6 @@
 using roundhouse;
 
-namespace Ensconce
+namespace Ensconce.Database
 {
     public interface IDatabaseRestoreOptions
     {

@@ -1,21 +1,25 @@
 ﻿using Ensconce.ReportingServices.SSRS2010;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
+using System.ServiceModel;
 
 namespace Ensconce.ReportingServices
 {
     public class MsReportingServices
     {
-        private readonly ReportingService2010 rs;
+        private readonly ReportingService2010SoapClient reportingServicesClient;
 
         public MsReportingServices(string reportingServicesUrl, string networkDomain, string networkLogin, string networkPassword)
         {
             Log("Creating MsReportingServices instance");
+
             if (!Uri.TryCreate(reportingServicesUrl, UriKind.RelativeOrAbsolute, out Uri reportingServicesUri))
             {
-                throw new UriFormatException(string.Format("reporting services uri of '{0}' is invalid!", reportingServicesUri));
+                throw new UriFormatException($"reporting services uri of '{reportingServicesUri}' is invalid!");
             }
 
             if (string.IsNullOrWhiteSpace(networkPassword))
@@ -33,14 +37,36 @@ namespace Ensconce.ReportingServices
                 throw new NullReferenceException("networkLogin is null or empty!");
             }
 
-            rs = new ReportingService2010
+            var binding = new BasicHttpBinding
             {
-                Url = reportingServicesUri.AbsoluteUri,
-                Credentials = new NetworkCredential(networkLogin, networkPassword, networkDomain)
+                Name = "bindingReportingServices2010",
+                Security = new BasicHttpSecurity
+                {
+                    Transport = new HttpTransportSecurity
+                    {
+                        ClientCredentialType = HttpClientCredentialType.Ntlm
+                    },
+                    Mode = BasicHttpSecurityMode.TransportCredentialOnly
+                },
+                MaxReceivedMessageSize = int.MaxValue,
+                MaxBufferSize = int.MaxValue,
+                MaxBufferPoolSize = int.MaxValue
             };
+
+            var endpoint = new EndpointAddress(reportingServicesUri);
+
+            reportingServicesClient = new ReportingService2010SoapClient(binding, endpoint);
+            reportingServicesClient.ClientCredentials.Windows.AllowedImpersonationLevel = TokenImpersonationLevel.Impersonation;
+            reportingServicesClient.ClientCredentials.Windows.ClientCredential = new NetworkCredential(networkLogin, networkPassword, networkDomain);
         }
 
         #region Public Methods
+
+        public List<(string name, string path)> GetAllReports()
+        {
+            var childrenResponse = reportingServicesClient.ListChildren(new ListChildrenRequest { ItemPath = "/", Recursive = true });
+            return childrenResponse.CatalogItems.Select(x => (x.Name, x.Path)).ToList();
+        }
 
         /// <summary>
         /// Adds a role to Reporting Services for a user to an itemPath
@@ -56,27 +82,27 @@ namespace Ensconce.ReportingServices
 
                 if (string.IsNullOrWhiteSpace(itemPath) || !itemPath.StartsWith("/"))
                 {
-                    throw new ArgumentException(string.Format("itemPath: '{0}' cannot be null or empty and must begin with a '/'", itemPath));
+                    throw new ArgumentException($"itemPath: '{itemPath}' cannot be null or empty and must begin with a '/'");
                 }
                 if (string.IsNullOrWhiteSpace(reportingUserToAddRoleFor))
                 {
-                    throw new ArgumentException(string.Format("reportingUserToAddRoleFor: '{0}' cannot be null or empty", reportingUserToAddRoleFor));
+                    throw new ArgumentException($"reportingUserToAddRoleFor: '{reportingUserToAddRoleFor}' cannot be null or empty");
                 }
 
                 if (string.IsNullOrWhiteSpace(reportingRoleToAdd))
                 {
-                    throw new ArgumentException(string.Format("reportingRoleToAdd: '{0}' cannot be null or empty", reportingRoleToAdd));
+                    throw new ArgumentException($"reportingRoleToAdd: '{reportingRoleToAdd}' cannot be null or empty");
                 }
                 if (!supportedRoles.Contains(reportingRoleToAdd))
                 {
-                    throw new ArgumentOutOfRangeException(string.Format("reportingRoleToAdd: '{0}' is not supported. Only '{1}' are supported.", reportingRoleToAdd, string.Join(", ", supportedRoles)));
+                    throw new ArgumentOutOfRangeException($"reportingRoleToAdd: '{reportingRoleToAdd}' is not supported. Only '{string.Join(", ", supportedRoles)}' are supported.");
                 }
 
                 Log("Attempting to retrieve a list of all existing policies for itemPath: '{0}'", itemPath);
 
                 Policy policy;
-
-                var existingPolicies = rs.GetPolicies(itemPath, out bool inheritParent);
+                var existingPoliciesResponse = reportingServicesClient.GetPolicies(new GetPoliciesRequest { ItemPath = itemPath });
+                var existingPolicies = existingPoliciesResponse.Policies;
 
                 if (reportingUserToAddRoleFor.Contains("\\"))
                 {
@@ -111,9 +137,8 @@ namespace Ensconce.ReportingServices
                 Log("Attempting to select the role of: '{0}' for GroupUserName: '{1}'", reportingRoleToAdd,
                                   reportingUserToAddRoleFor);
                 var existingRoles = policy.Roles;
-                Role role;
 
-                role = existingRoles.FirstOrDefault(r =>
+                var role = existingRoles.FirstOrDefault(r =>
                     r != null &&
                     r.Name.ToUpperInvariant() == reportingRoleToAdd.ToUpperInvariant()
                 );
@@ -133,20 +158,13 @@ namespace Ensconce.ReportingServices
                 }
 
                 Log("Setting policy role of: '{0}' for user: '{1}' for itemPath: '{2}'", reportingRoleToAdd, reportingUserToAddRoleFor, itemPath);
-                rs.SetPolicies(itemPath, existingPolicies);
+                reportingServicesClient.SetPolicies(new SetPoliciesRequest { ItemPath = itemPath, Policies = existingPolicies });
             }
             catch (Exception ex)
             {
                 Log("An error occurred whilst attempting to set roles for user in Reporting Services!");
                 Log("Message: {0}", ex.Message);
                 throw;
-            }
-            finally
-            {
-                if (rs != null)
-                {
-                    rs.Dispose();
-                }
             }
         }
 
@@ -190,13 +208,6 @@ namespace Ensconce.ReportingServices
                 Log("Message: {0}", ex.Message);
                 throw;
             }
-            finally
-            {
-                if (rs != null)
-                {
-                    rs.Dispose();
-                }
-            }
         }
 
         #endregion Public Methods
@@ -211,39 +222,41 @@ namespace Ensconce.ReportingServices
 
         private void CreateParentFolder(string parentFolder)
         {
-            var items = rs.ListChildren("/", false);
+            var listChildrenResponse = reportingServicesClient.ListChildren(new ListChildrenRequest { ItemPath = "/", Recursive = false });
+            var items = listChildrenResponse.CatalogItems;
             var parentFolderExists = items.Any(catalogItem =>
                 catalogItem.Name.ToUpperInvariant() == parentFolder.ToUpperInvariant() &&
                 catalogItem.TypeName.ToUpperInvariant() == "FOLDER");
 
             if (parentFolderExists)
             {
-                Log("Folder '{0}' already exists", parentFolder);
+                Log("Folder '/{0}' already exists", parentFolder);
             }
             else
             {
-                Log("Creating folder '{0}'", parentFolder);
-                rs.CreateFolder(parentFolder, "/", null);
-                Log("Created folder '{0}'", parentFolder);
+                Log("Creating folder '/{0}'", parentFolder);
+                reportingServicesClient.CreateFolder(new CreateFolderRequest { Folder = parentFolder, Parent = "/" });
+                Log("Created folder '/{0}'", parentFolder);
             }
         }
 
         private void DeleteSubFolderIfExists(string parentFolder, string subFolder)
         {
-            var items = rs.ListChildren("/" + parentFolder, false);
+            var listChildrenResponse = reportingServicesClient.ListChildren(new ListChildrenRequest { ItemPath = $"/{parentFolder}", Recursive = false });
+            var items = listChildrenResponse.CatalogItems;
             var subFolderExists = items.Any(catalogItem =>
                 catalogItem.Name.ToUpperInvariant() == subFolder.ToUpperInvariant() &&
                 catalogItem.TypeName.ToUpperInvariant() == "FOLDER");
 
             if (subFolderExists)
             {
-                Log(@"Deleting sub folder '{0}\{1}'.", parentFolder, subFolder);
-                rs.DeleteItem(string.Format("/{0}/{1}", parentFolder, subFolder));
-                Log(@"Deleted sub folder '{0}\{1}'.", parentFolder, subFolder);
+                Log(@"Deleting sub folder '/{0}/{1}'.", parentFolder, subFolder);
+                reportingServicesClient.DeleteItem(new DeleteItemRequest { ItemPath = $"/{parentFolder}/{subFolder}" });
+                Log(@"Deleted sub folder '/{0}/{1}'.", parentFolder, subFolder);
             }
             else
             {
-                Log(@"Sub folder '{0}\{1}' does not exist.", parentFolder, subFolder);
+                Log(@"Sub folder '/{0}/{1}' does not exist.", parentFolder, subFolder);
             }
         }
 
@@ -265,9 +278,9 @@ namespace Ensconce.ReportingServices
 
         private void CreateSubFolder(string parentFolder, string subFolder)
         {
-            Log(@"Creating sub folder '{0}\{1}'.", parentFolder, subFolder);
-            rs.CreateFolder(subFolder, "/" + parentFolder, null);
-            Log(@"Created sub folder '{0}\{1}'.", parentFolder, subFolder);
+            Log(@"Creating sub folder '/{0}/{1}'.", parentFolder, subFolder);
+            reportingServicesClient.CreateFolder(new CreateFolderRequest { Folder = subFolder, Parent = $"/{parentFolder}" });
+            Log(@"Created sub folder '/{0}/{1}'.", parentFolder, subFolder);
         }
 
         private void CreateDataSource(string parentFolder, string subFolder, string dataSourceName, string dataSourceConnectionString, string dataSourceUserName, string dataSourcePassWord)
@@ -287,8 +300,8 @@ namespace Ensconce.ReportingServices
                 Password = dataSourcePassWord
             };
 
-            Log("Creating data source {0} with value: {1}", dataSourceName, dataSourceConnectionString);
-            rs.CreateDataSource(dataSourceName, string.Format("/{0}/{1}", parentFolder, subFolder), true, definition, null);
+            Log("Creating data source {0} with value: {1} in /{2}/{3}", dataSourceName, dataSourceConnectionString, parentFolder, subFolder);
+            reportingServicesClient.CreateDataSource(new CreateDataSourceRequest { DataSource = dataSourceName, Parent = $"/{parentFolder}/{subFolder}", Overwrite = true, Definition = definition });
             Log("Created data source {0}", dataSourceName);
         }
 
@@ -296,21 +309,23 @@ namespace Ensconce.ReportingServices
         {
             var reportsDirectoryInfo = new DirectoryInfo(reportSourceFolder);
             var reportFiles = reportsDirectoryInfo.GetFiles("*.rdl");
-            var targetFolder = string.Format("/{0}/{1}", parentFolder, subFolder);
+            var targetFolder = $"/{parentFolder}/{subFolder}";
             foreach (var fileInfo in reportFiles)
             {
                 var reportName = fileInfo.Name.Replace(".rdl", "");
                 CreateReport(reportName, reportSourceFolder, targetFolder);
                 SetReportDataSource(reportName, dataSourceName, targetFolder);
-                CreateSubscriptions(reportName, targetFolder + "/" + reportName, reportSourceFolder);
+                CreateSubscriptions(reportName, $"{targetFolder}/{reportName}", reportSourceFolder);
             }
         }
 
         private void CreateReport(string reportName, string sourceFolder, string targetFolder)
         {
             var reportDefinition = GetReportDefinition(reportName, sourceFolder);
-            Log("Creating report '{0}'", reportName);
-            var catalogItem = rs.CreateCatalogItem("Report", reportName, targetFolder, true, reportDefinition, null, out Warning[] warnings);
+            Log("Creating report '{0}' in '{1}'", reportName, targetFolder);
+            var createCreateCatalogItemResponse = reportingServicesClient.CreateCatalogItem(new CreateCatalogItemRequest { ItemType = "Report", Name = reportName, Parent = targetFolder, Overwrite = true, Definition = reportDefinition });
+            var warnings = createCreateCatalogItemResponse.Warnings;
+            var catalogItem = createCreateCatalogItemResponse.ItemInfo;
 
             if (catalogItem == null)
             {
@@ -326,7 +341,7 @@ namespace Ensconce.ReportingServices
         private Byte[] GetReportDefinition(string reportName, string sourceFolder)
         {
             Byte[] definition;
-            var stream = File.OpenRead(sourceFolder + "\\" + reportName + ".rdl");
+            var stream = File.OpenRead($"{sourceFolder}\\{reportName}.rdl");
             definition = new Byte[stream.Length];
             stream.Read(definition, 0, Convert.ToInt32(stream.Length));
             stream.Close();
@@ -355,8 +370,9 @@ namespace Ensconce.ReportingServices
         {
             Log("Setting DataSource For Report: " + reportName);
 
-            var reference = new DataSourceReference { Reference = targetFolder + "/" + dataSourceName };
-            var dataSource = rs.GetItemDataSources(targetFolder + "/" + reportName);
+            var reference = new DataSourceReference { Reference = $"{targetFolder}/{dataSourceName}" };
+            var getItemDataSourcesResponse = reportingServicesClient.GetItemDataSources(new GetItemDataSourcesRequest { ItemPath = $"{targetFolder}/{reportName}" });
+            var dataSource = getItemDataSourcesResponse.DataSources;
 
             Log("Report '{0}' has {1} data sources", reportName, dataSource.Length);
 
@@ -370,188 +386,26 @@ namespace Ensconce.ReportingServices
                 Log("Report '{0}' setting data source '{1}' to '{2}'", reportName, ds.Name, dataSourceName);
             }
 
-            rs.SetItemDataSources(targetFolder + "/" + reportName, dataSources);
+            reportingServicesClient.SetItemDataSources(new SetItemDataSourcesRequest { ItemPath = $"{targetFolder}/{reportName}", DataSources = dataSources });
         }
 
         private void CreateSubscriptions(string reportName, string reportPath, string sourceFolder)
         {
-            var reportsDirectoryInfo = new DirectoryInfo(sourceFolder);
-            var subscriptionFileInfos = reportsDirectoryInfo.GetFiles(reportName + "*.subinfo");
+            var subscriptions = SubscriptionInfoFileLoader.GetSubscriptions(reportName, reportPath, sourceFolder).Where(x => x.Enabled).ToList();
 
-            if (subscriptionFileInfos.Length == 0)
+            if (subscriptions.Count == 0)
             {
-                Log("No subscription files found for report '{0}'", reportName);
+                Log("No enabled subscriptions found for report '{0}'", reportName);
             }
             else
             {
-                foreach (var subscriptionFileInfo in subscriptionFileInfos)
+                foreach (var subscription in subscriptions)
                 {
-                    var subscriptionInfoText = File.ReadAllLines(subscriptionFileInfo.FullName);
-                    var subscription = GetSubscription(subscriptionInfoText, reportPath, subscriptionFileInfo.Name);
-                    if (subscription.Enabled)
-                    {
-                        Log("Creating subscription '{0}'", subscription.Name);
-                        rs.CreateSubscription(subscription.Path, subscription.ExtensionSettings, subscription.Description, subscription.EventType, subscription.ScheduleXml, subscription.Parameters);
-                        Log("Created subscription '{0}'", subscription.Name);
-                    }
+                    Log("Creating subscription '{0}'", subscription.Name);
+                    reportingServicesClient.CreateSubscription(new CreateSubscriptionRequest { ItemPath = subscription.Path, ExtensionSettings = subscription.ExtensionSettings, Description = subscription.Description, EventType = subscription.EventType, MatchData = subscription.ScheduleXml, Parameters = subscription.Parameters });
+                    Log("Created subscription '{0}'", subscription.Name);
                 }
             }
-        }
-
-        public ReportSubscription GetSubscription(string[] subscriptionInfoText, string subscriptionPath, string subscriptionName)
-        {
-            if (SubscriptionInfo(subscriptionInfoText, "subscriptionOn").ToLower() == "true")
-            {
-                var eventType = SubscriptionInfo(subscriptionInfoText, "eventType");
-                var scheduleXml = SubscriptionInfo(subscriptionInfoText, "scheduleXml");
-                var subscriptionType = SubscriptionInfo(subscriptionInfoText, "subscriptionType");
-                var subscriptionTypeParameters = GetSubscriptionTypeParameters(subscriptionInfoText);
-                var extSettings = new ExtensionSettings
-                {
-                    ParameterValues = subscriptionTypeParameters,
-                    Extension = string.IsNullOrEmpty(subscriptionType) ? "Report Server Email" : "Report Server FileShare"
-                };
-
-                ParameterValue[] reportParameterValues = null;
-                var reportParameters = SubscriptionInfo(subscriptionInfoText, "reportParameters");
-
-                if (!string.IsNullOrEmpty(reportParameters))
-                {
-                    var reportParameterParts = reportParameters.Split(';');
-                    reportParameterValues = new ParameterValue[reportParameterParts.Length];
-                    Log("Found {0} report parameter values to set", reportParameterParts.Length);
-
-                    for (var i = 0; i <= reportParameterParts.Length - 1; i++)
-                    {
-                        var reportValue = new ParameterValue();
-                        var parameterKeyValues = reportParameterParts[i].Split('=');
-
-                        Log("Setting parameter '{0}', with '{1}'", parameterKeyValues[0], parameterKeyValues[1]);
-
-                        reportValue.Name = parameterKeyValues[0];
-                        reportValue.Value = parameterKeyValues[1];
-                        reportParameterValues[i] = reportValue;
-                    }
-                }
-                else
-                {
-                    Log("Subscription report parameters not found in '{0}'", subscriptionName);
-                }
-
-                return new ReportSubscription
-                {
-                    Enabled = true,
-                    Name = subscriptionName,
-                    Path = subscriptionPath,
-                    ExtensionSettings = extSettings,
-                    Description = $"{subscriptionName} - Subscription",
-                    EventType = eventType,
-                    ScheduleXml = scheduleXml,
-                    Parameters = reportParameterValues
-                };
-            }
-
-            Log("Subscription not set to 'On' for '{0}'", subscriptionName);
-            return new ReportSubscription
-            {
-                Enabled = false
-            };
-        }
-
-        private ParameterValue[] GetSubscriptionTypeParameters(string[] subscriptionInfoText)
-        {
-            ParameterValue[] extensionParams;
-            switch (SubscriptionInfo(subscriptionInfoText, "subscriptionType"))
-            {
-                case "FILESHARE":
-                case "fileshare":
-                case "CSV":
-                case "csv":
-                    extensionParams = new ParameterValue[7];
-                    extensionParams[0] = new ParameterValue
-                    {
-                        Name = "PATH",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FilePath")
-                    };
-                    //Set the filename to always have a timestamp
-                    extensionParams[1] = new ParameterValue
-                    {
-                        Name = "FILENAME",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_FileName") + "_@timestamp"
-                    };
-                    // Add a file extension always
-                    extensionParams[2] = new ParameterValue { Name = "FILEEXTN", Value = "True" };
-                    extensionParams[3] = new ParameterValue
-                    {
-                        Name = "USERNAME",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_UserName")
-                    };
-                    extensionParams[4] = new ParameterValue
-                    {
-                        Name = "PASSWORD",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionToFile_Password")
-                    };
-                    var fileShareSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
-                    extensionParams[5] = new ParameterValue
-                    {
-                        Name = "RENDER_FORMAT",
-                        Value = !string.IsNullOrEmpty(fileShareSubscriptionRenderFormat) ? fileShareSubscriptionRenderFormat.ToUpper() : "CSV"
-                    };
-                    extensionParams[6] = new ParameterValue { Name = "WRITEMODE", Value = "Overwrite" };
-                    return extensionParams;
-
-                default:
-                    extensionParams = new ParameterValue[10];
-                    extensionParams[0] = new ParameterValue
-                    {
-                        Name = "TO",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionSendTo")
-                    };
-                    extensionParams[1] = new ParameterValue
-                    {
-                        Name = "CC",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionCCto")
-                    };
-                    extensionParams[2] = new ParameterValue
-                    {
-                        Name = "BCC",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subscriptionBCCto")
-                    };
-                    extensionParams[3] = new ParameterValue { Name = "ReplyTo", Value = "system@15below.com" };
-                    extensionParams[4] = new ParameterValue { Name = "IncludeReport", Value = "True" };
-                    var emailSubscriptionRenderFormat = SubscriptionInfo(subscriptionInfoText, "subscriptionRenderFormat");
-                    extensionParams[5] = new ParameterValue
-                    {
-                        Name = "RenderFormat",
-                        Value = !string.IsNullOrEmpty(emailSubscriptionRenderFormat) ? emailSubscriptionRenderFormat.ToUpper() : "EXCEL"
-                    };
-                    extensionParams[6] = new ParameterValue
-                    {
-                        Name = "Subject",
-                        Value = SubscriptionInfo(subscriptionInfoText, "subjectPrefix") + " - @ReportName executed at @ExecutionTime"
-                    };
-                    extensionParams[7] = new ParameterValue
-                    {
-                        Name = "Comment",
-                        Value = SubscriptionInfo(subscriptionInfoText, "emailBodyText")
-                    };
-                    extensionParams[8] = new ParameterValue { Name = "IncludeLink", Value = "False" };
-                    extensionParams[9] = new ParameterValue { Name = "Priority", Value = "NORMAL" };
-                    return extensionParams;
-            }
-        }
-
-        private string SubscriptionInfo(string[] subscriptionInfoText, string key)
-        {
-            foreach (var subInfoLine in subscriptionInfoText)
-            {
-                var subInfoLineParts = subInfoLine.Split(',');
-                if (subInfoLineParts[0] == key)
-                {
-                    return subInfoLineParts[1];
-                }
-            }
-            return string.Empty;
         }
 
         #endregion Private Helper Methods

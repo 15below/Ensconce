@@ -21,7 +21,15 @@ function ScheduledTask-CheckExists([string] $taskName, [string] $taskPath)
     }
     catch
     {
-        Write-Host "Checking if task '\$taskPath\$taskName' exist errored - $_"
+        if($_ -eq "ERROR: The system cannot find the file specified.")
+        {
+            Write-Host "Task '\$taskPath\$taskName' does NOT exist"
+        }
+        else
+        {
+            Write-Host "Checking if task '\$taskPath\$taskName' exist errored (Assumed not exist) - $_"
+        }
+        
         $false
     }
     finally
@@ -62,6 +70,10 @@ function ScheduledTask-Delete([string] $taskName, [string] $taskPath)
             #Reset last exit code, because otherwise deploys fail - the error is handled in this function
             $global:LASTEXITCODE = $null
         }
+    }
+    else
+    {
+        $true
     }
 }
 

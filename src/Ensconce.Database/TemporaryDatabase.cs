@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
-namespace Ensconce
+namespace Ensconce.Database
 {
     public class TemporaryDatabase : IDatabase, IDisposable
     {
@@ -21,15 +21,15 @@ namespace Ensconce
 
         public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions, Logger logger)
         {
-            DatabaseName = string.Format("BUILD-INT-Ensconce-{0}", Guid.NewGuid().ToString());
-            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName), new LegacyFolderStructure(), restoreOptions, logger);
+            DatabaseName = $"BUILD-INT-Ensconce-{Guid.NewGuid()}";
+            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName), restoreOptions, logger);
             masterDatabaseConnectionString = Database.GetLocalConnectionStringFromDatabaseName("master").ConnectionString;
         }
 
         public TemporaryDatabase(IDatabaseRestoreOptions restoreOptions, Logger logger, string userName, string password)
         {
-            DatabaseName = string.Format("BUILD-INT-Ensconce-{0}", Guid.NewGuid().ToString());
-            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName, userName, password), new LegacyFolderStructure(), restoreOptions, logger);
+            DatabaseName = $"BUILD-INT-Ensconce-{Guid.NewGuid()}";
+            database = new Database(Database.GetLocalConnectionStringFromDatabaseName(DatabaseName, userName, password), restoreOptions, logger);
             masterDatabaseConnectionString = Database.GetLocalConnectionStringFromDatabaseName("master", userName, password).ConnectionString;
         }
 
@@ -65,7 +65,7 @@ namespace Ensconce
         {
             using (var cnn = new SqlConnection(masterDatabaseConnectionString))
             {
-                var sql = string.Format("SELECT name FROM master.dbo.sysdatabases WHERE ([name] = N'{0}')", DatabaseName);
+                var sql = $"SELECT name FROM master.dbo.sysdatabases WHERE ([name] = N'{DatabaseName}')";
                 cnn.Open();
                 using (var cmd = new SqlCommand(sql, cnn))
                 {

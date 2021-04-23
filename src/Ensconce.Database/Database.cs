@@ -8,11 +8,10 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace Ensconce
+namespace Ensconce.Database
 {
     public class Database : IDatabase
     {
-        protected IDatabaseFolderStructure DatabaseFolderStructure;
         private readonly IDatabaseRestoreOptions databaseRestoreOptions;
         private readonly Logger logger;
 
@@ -20,21 +19,14 @@ namespace Ensconce
         public bool WarnOnOneTimeScriptChanges { get; private set; }
         public bool WithTransaction { get; set; }
         public string OutputPath { get; set; }
-
-        public Database(DbConnectionStringBuilder connectionStringBuilder)
-            : this(connectionStringBuilder, null)
+        public Database(DbConnectionStringBuilder connectionStringBuilder, bool warnOnOneTimeScriptChanges = false)
+            : this(connectionStringBuilder, null, null, warnOnOneTimeScriptChanges)
         {
         }
 
-        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, bool warnOnOneTimeScriptChanges = false)
-            : this(connectionStringBuilder, databaseFolderStructure, null, null, warnOnOneTimeScriptChanges)
-        {
-        }
-
-        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseFolderStructure databaseFolderStructure, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger, bool warnOnOneTimeScriptChanges = false)
+        public Database(DbConnectionStringBuilder connectionStringBuilder, IDatabaseRestoreOptions databaseRestoreOptions, Logger logger, bool warnOnOneTimeScriptChanges = false)
         {
             ConnectionString = connectionStringBuilder.ToString();
-            DatabaseFolderStructure = databaseFolderStructure;
             this.databaseRestoreOptions = databaseRestoreOptions;
             this.logger = logger ?? new roundhouse.infrastructure.logging.custom.ConsoleLogger();
             WarnOnOneTimeScriptChanges = warnOnOneTimeScriptChanges;
@@ -61,15 +53,11 @@ namespace Ensconce
             if (!Directory.Exists(schemaScriptsFolder))
             {
                 throw new DirectoryNotFoundException(
-                    string.Format(
-                        "Database schema scripts folder {0}\r\ndoes not exist", schemaScriptsFolder));
+                    $"Database schema scripts folder {schemaScriptsFolder}\r\ndoes not exist");
             }
 
             var roundhouseMigrate = new Migrate();
-            if (DatabaseFolderStructure != null)
-            {
-                DatabaseFolderStructure.SetMigrateFolders(roundhouseMigrate, schemaScriptsFolder);
-            }
+            SetFolderNames(roundhouseMigrate);
 
             if (databaseRestoreOptions != null)
             {
@@ -116,14 +104,30 @@ namespace Ensconce
             }
         }
 
+        private void SetFolderNames(Migrate roundhouseMigrate)
+        {
+            roundhouseMigrate
+                .Set(x => x.RunAfterCreateDatabaseFolderName = "RunAfterCreateDatabase")
+                .Set(x => x.RunAfterOtherAnyTimeScriptsFolderName = "RunAfterOtherAnyTimeScripts")
+                .Set(x => x.FunctionsFolderName = "Functions")
+                .Set(x => x.SprocsFolderName = "Sprocs")
+                .Set(x => x.UpFolderName = "Up")
+                .Set(x => x.IndexesFolderName = "Indexes")
+                .Set(x => x.PermissionsFolderName = "Permissions")
+                .Set(x => x.ViewsFolderName = "Views")
+                .Set(x => x.AlterDatabaseFolderName = "AlterDatabase")
+                .Set(x => x.TriggersFolderName = "Triggers")
+                .Set(x => x.RunFirstAfterUpFolderName = "RunFirstAfterUp");
+        }
+
         public static SqlConnectionStringBuilder GetLocalConnectionStringFromDatabaseName(string database)
         {
-            return new SqlConnectionStringBuilder(string.Format("Data Source=(local);Initial Catalog={0};Trusted_Connection=Yes", database));
+            return new SqlConnectionStringBuilder($"Data Source=(local);Initial Catalog={database};Trusted_Connection=Yes");
         }
 
         public static SqlConnectionStringBuilder GetLocalConnectionStringFromDatabaseName(string database, string user, string password)
         {
-            return new SqlConnectionStringBuilder(string.Format("Data Source=(local);Initial Catalog={0};User ID={1};Password={2}", database, user, password));
+            return new SqlConnectionStringBuilder($"Data Source=(local);Initial Catalog={database};User ID={user};Password={password}");
         }
     }
 }

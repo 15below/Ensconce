@@ -1,111 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A59B1375-DC78-47D2-8930-746CD88863AF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ensconce.Update</RootNamespace>
-    <AssemblyName>Ensconce.Update</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Ensconce Tag Dictionary And Wrapper For NDjango</Description>
+    <Company>15below</Company>
+    <Product>Ensconce</Product>
+    <Authors>15below</Authors>
+    <Version>0.0.0-local-0</Version>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <FileVersion>0.0.0.0</FileVersion>
+    <PackageProjectUrl>https://15below.github.io/Ensconce/</PackageProjectUrl>
+    <PackageIcon>15below_green.png</PackageIcon>
+    <RepositoryUrl>https://github.com/15below/Ensconce</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageLicenseFile>licence.txt</PackageLicenseFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Content Include="app.config" />
+    <None Remove="FixedStructure.xsd" />
+    <None Remove="Substitutions.xsd" />
+    <EmbeddedResource Include="FixedStructure.xsd" />
+    <EmbeddedResource Include="Substitutions.xsd" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="DictionaryExtensions.cs" />
-    <Compile Include="NDjango.Custom.Filters\DecryptFilter.cs" />
-    <Compile Include="NDjango.Custom.Filters\ContainsFilter.cs" />
-    <Compile Include="NDjango.Custom.Filters\EndsWithFilter.cs" />
-    <Compile Include="NDjango.Custom.Filters\Loader.cs" />
-    <Compile Include="NDjango.Custom.Filters\StartsWithFilter.cs" />
-    <Compile Include="SubTagDictionary.cs" />
-    <Compile Include="NDjango.Custom.Filters\ConcatFilter.cs" />
-    <Compile Include="NDjango.Custom.Filters\EmptyFilter.cs" />
-    <Compile Include="NDjango.Custom.Filters\ExistsFilter.cs" />
-    <Compile Include="NDjango.Custom.Filters\DefaultFilter.cs" />
-    <Compile Include="NDjangoWrapper.cs" />
-    <Compile Include="TagDictionary.cs" />
-    <Compile Include="TagSource.cs" />
-    <Compile Include="UpdateFile.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="Substitutions.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <ProjectReference Include="..\Ensconce.Helpers\Ensconce.Helpers.csproj" />
+    <ProjectReference Include="..\Ensconce.NDjango.Core.Filters\Ensconce.NDjango.Core.Filters.csproj" />
+    <ProjectReference Include="..\Ensconce.NDjango.Core\Ensconce.NDjango.Core.fsproj" />
+    <ProjectReference Include="..\Ensconce.NDjango.Custom\Ensconce.NDjango.Custom.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="FixedStructure.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <None Include="..\..\docs\images\15below_green.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\licence.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ensconce.Logging\Ensconce.Logging.csproj">
-      <Project>{93361700-1eac-461e-a5cd-42365cbc82aa}</Project>
-      <Name>Ensconce.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ensconce.NDjango.Core.Filters\Ensconce.NDjango.Core.Filters.csproj">
-      <Project>{89dc9575-c706-4d0d-944a-79e5865ffe88}</Project>
-      <Name>Ensconce.NDjango.Core.Filters</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ensconce.NDjango.Core\Ensconce.NDjango.Core.fsproj">
-      <Project>{771c5998-6e25-4dc2-9ecf-d40da78c4c78}</Project>
-      <Name>Ensconce.NDjango.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="paket.references" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.7.1'">
-      <ItemGroup>
-        <Reference Include="Newtonsoft.Json">
-          <HintPath>..\..\packages\Newtonsoft.Json\lib\net45\Newtonsoft.Json.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
 </Project>

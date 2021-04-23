@@ -67,7 +67,7 @@ namespace Ensconce.NDjango.Core.Filters.StringFilters
             }
 
             int exp = Math.Abs(p);
-            return Decimal.Round(d, exp, MidpointRounding.AwayFromZero).ToString(string.Format("F{0}", exp));
+            return Decimal.Round(d, exp, MidpointRounding.AwayFromZero).ToString($"F{exp}");
         }
 
         #endregion IFilter Members

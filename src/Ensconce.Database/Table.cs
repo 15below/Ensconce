@@ -1,4 +1,4 @@
-namespace Ensconce
+namespace Ensconce.Database
 {
     public class Table
     {
