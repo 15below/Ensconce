@@ -64,7 +64,7 @@ function DoEnsconceTest([string]$InputValue, [string]$ExpectedValue)
 }
 
 DoEnsconceTest -InputValue "{{ ClientCode }}" -ExpectedValue "ENSCONCE"
-DoEnsconceTest -InputValue "{{ Environment }}" -ExpectedValue "TEST"
+DoEnsconceTest -InputValue "{{ Environment }}" -ExpectedValue $OctopusEnvironmentName
 DoEnsconceTest -InputValue "{{ SingleConfigItem }}" -ExpectedValue "ConfigItemValue"
 DoEnsconceTest -InputValue "{{ SingleConfigItem|lower }}" -ExpectedValue "configitemvalue"
 DoEnsconceTest -InputValue "{{ NonExistantValue|exists }}" -ExpectedValue "False"
