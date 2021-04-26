@@ -42,3 +42,35 @@ Get-ChildItem -Path $scriptDir\Content\Tools | ForEach-Object {
 
 Write-Host "Create releaseVersion.txt"
 New-Item -Path $DeployPath -Name "releaseVersion.txt" -ItemType "file" -Value $VersionNumber | Out-Null
+
+Write-Host "Testing Ensconce Works For Text"
+
+. $DeployPath\deployHelp.ps1
+
+$env:FixedPath = "F:\GIT\Ensconce\src\Deploy\Test-Config.xml"
+
+function DoEnsconceTest([string]$InputValue, [string]$ExpectedValue)
+{
+    $test = "$InputValue" | ensconce -i
+
+    if($test -ne $ExpectedValue)
+    {
+        throw "'$InputValue' does not equate to '$ExpectedValue' but '$test'"
+    }
+    else
+    {
+        Write-Host "Checked '$InputValue' returned '$ExpectedValue' as expected"
+    }
+}
+
+DoEnsconceTest -InputValue "{{ ClientCode }}" -ExpectedValue "ENSCONCE"
+DoEnsconceTest -InputValue "{{ Environment }}" -ExpectedValue "TEST"
+DoEnsconceTest -InputValue "{{ SingleConfigItem }}" -ExpectedValue "ConfigItemValue"
+DoEnsconceTest -InputValue "{{ SingleConfigItem|lower }}" -ExpectedValue "configitemvalue"
+DoEnsconceTest -InputValue "{{ NonExistantValue|exists }}" -ExpectedValue "False"
+DoEnsconceTest -InputValue "{{ NonExistantValue|empty }}" -ExpectedValue "True"
+DoEnsconceTest -InputValue "{{ NonExistantValue|default:'default' }}" -ExpectedValue "default"
+DoEnsconceTest -InputValue "{{ PropGroup.First.GroupItem }}" -ExpectedValue "Group1"
+DoEnsconceTest -InputValue "{{ PropGroup.Second.GroupItem }}" -ExpectedValue "Group2"
+DoEnsconceTest -InputValue "{% for instance in PropGroup %}{{ instance.identity }}+{{ instance.GroupItem }};{% endfor %}" -ExpectedValue "First+Group1;Second+Group2;"
+DoEnsconceTest -InputValue "{{ DbLogins.DBKey.ConnectionString }}" -ExpectedValue "Data Source=Require-DB-Server; Initial Catalog=DB; User ID=DBName; Password=random-string-that-is-password;"

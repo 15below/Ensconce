@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Structure>
+  <Environment>TEST</Environment>
+  <ClientCode>ENSCONCE</ClientCode>
+  <Properties>
+    <Property name="SingleConfigItem">ConfigItemValue</Property>
+    <Property name="DbServer">Require-DB-Server</Property>
+  </Properties>
+  <PropertyGroups>
+    <PropertyGroup identity="First">
+      <Label>PropGroup</Label>
+      <Properties>
+        <Property name="GroupItem">Group1</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup identity="Second">
+      <Label>PropGroup</Label>
+      <Properties>
+        <Property name="GroupItem">Group2</Property>
+      </Properties>
+    </PropertyGroup>
+  </PropertyGroups>
+  <DbLogins>
+    <DbLogin>
+      <Key>DBKey</Key>
+      <Name>DBName</Name>
+      <DefaultDb>DB</DefaultDb>
+      <Password>random-string-that-is-password</Password>
+    </DbLogin>
+  </DbLogins>
+</Structure>

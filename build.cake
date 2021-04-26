@@ -173,6 +173,7 @@ Task("Publish")
     CopyFiles("./src/ExternalDeployTools/KubeCtl/*", "./output/publish/Content/Tools/KubeCtl");
     CopyFiles("./src/Scripts/*.ps1", "./output/publish/Content");
     CopyFiles("./src/Deploy/*.ps1", "./output/publish");
+    CopyFiles("./src/Deploy/*.xml", "./output/publish");
 
 
     DotNetCorePublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetCorePublishSettings
