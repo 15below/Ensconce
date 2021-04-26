@@ -47,7 +47,7 @@ Write-Host "Testing Ensconce Works For Text"
 
 . $DeployPath\deployHelp.ps1
 
-$env:FixedPath = "F:\GIT\Ensconce\src\Deploy\Test-Config.xml"
+$env:FixedPath = "$scriptDir\Test-Config.xml"
 
 function DoEnsconceTest([string]$InputValue, [string]$ExpectedValue)
 {
