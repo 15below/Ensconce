@@ -19,7 +19,7 @@ namespace Ensconce.Cli
                 connStr = Database.Database.GetLocalConnectionStringFromDatabaseName(Arguments.DatabaseName.Render());
             }
 
-            Logging.Log("Deploying scripts from {0} using connection string {1}", Arguments.DeployFrom, connStr.ConnectionString);
+            Logging.Log("Deploying scripts from {0} using connection string {1}", Arguments.DeployFrom, RedactPassword(connStr));
 
             var database = new Database.Database(connStr, Arguments.WarnOnOneTimeScriptChanges)
             {
@@ -28,6 +28,16 @@ namespace Ensconce.Cli
             };
 
             database.Deploy(Arguments.DeployFrom, Arguments.DatabaseRepository.Render(), Arguments.DropDatabase, Arguments.DatabaseCommandTimeout);
+        }
+
+        private static SqlConnectionStringBuilder RedactPassword(SqlConnectionStringBuilder connStr)
+        {
+            return string.IsNullOrEmpty(connStr.Password) ?
+                   connStr :
+                   new SqlConnectionStringBuilder(connStr.ConnectionString)
+                   {
+                       Password = new string('*', connStr.Password.Length)
+                   };
         }
     }
 }
