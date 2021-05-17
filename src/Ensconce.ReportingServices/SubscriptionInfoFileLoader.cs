@@ -151,7 +151,7 @@ namespace Ensconce.ReportingServices
                     extensionParams[7] = new ParameterValue
                     {
                         Name = "Comment",
-                        Value = GetSubInfoValue(subscriptionInfoText, "emailBodyText", true)
+                        Value = GetSubInfoValue(subscriptionInfoText, "emailBodyText", false)
                     };
                     extensionParams[8] = new ParameterValue { Name = "IncludeLink", Value = "False" };
                     extensionParams[9] = new ParameterValue { Name = "Priority", Value = "NORMAL" };
