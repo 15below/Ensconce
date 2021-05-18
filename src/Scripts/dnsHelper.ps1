@@ -45,7 +45,7 @@ function GetAllSubValues ([string]$dnsServer, [string]$domain, [string]$lookupNa
 function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 {
     $dnsRecords = GetDnsRecords $dnsServer $domain $lookupName
-    $checkResult = ($dnsRecords | Where-Object {$_.Record -eq $lookupName.ToLower()} | measure).Count -eq 1
+    $checkResult = ($dnsRecords | Where-Object {$_.Record -eq $lookupName.ToLower()} | measure).Count -ge 1
 
     if($checkResult -eq $false)
     {
@@ -59,7 +59,7 @@ function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 function CheckCNameValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 {
     $dnsRecords = GetDnsRecords $dnsServer $domain $name
-    $checkResult = ($dnsRecords | Where-Object {$_.Record -eq $name.ToLower() -and $_.Type -eq "CNAME" -and $_.Value -eq $server.ToLower()} | measure).Count -eq 1
+    $checkResult = ($dnsRecords | Where-Object {$_.Record -eq $name.ToLower() -and $_.Type -eq "CNAME" -and $_.Value -eq $server.ToLower()} | measure).Count -ge 1
 
     if($checkResult -eq $false)
     {
@@ -177,7 +177,7 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
 function CheckARecordValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
 {
     $dnsRecords = GetDnsRecords $dnsServer $domain $name
-    $checkResult = ($dnsRecords | Where-Object {$_.Record -eq $name.ToLower() -and $_.Type -eq "A" -and $_.Value -eq $ipAddress} | measure).Count -eq 1
+    $checkResult = ($dnsRecords | Where-Object {$_.Record -eq $name.ToLower() -and $_.Type -eq "A" -and $_.Value -eq $ipAddress} | measure).Count -ge 1
 
     if($checkResult -eq $false)
     {
