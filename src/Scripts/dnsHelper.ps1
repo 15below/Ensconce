@@ -114,14 +114,15 @@ function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 
 function UpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 {
-    $currentRecord = (GetDnsRecords $dnsServer $domain $name | Where-Object {$_.Record -eq $name.ToLower()})
-    $currentTtl = ($currentRecord | Select-Object -ExpandProperty Ttl -First 1)
-    $currentType = ($currentRecord | Select-Object -ExpandProperty Type -First 1)
-    if($currentType -eq "CNAME")
+    $currentRecords = (GetDnsRecords $dnsServer $domain $name | Where-Object {$_.Record -eq $name.ToLower()})
+    $currentTtl = ($currentRecords | Select-Object -ExpandProperty Ttl -First 1)
+    $currentHasA =  ($dnsRecords | Where-Object {$_.Type -eq "A"} | measure).Count -ge 1
+    $currentHasCNAME =  ($dnsRecords | Where-Object {$_.Type -eq "CNAME"} | measure).Count -ge 1
+    if($currentHasCNAME -eq $true)
     {
         DeleteCName $dnsServer $domain $name
     }
-    if($currentType -eq "A")
+    if($currentHasA -eq $true)
     {
         DeleteARecord $dnsServer $domain $name
     }
@@ -232,14 +233,15 @@ function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [str
 
 function UpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
 {
-    $currentRecord = (GetDnsRecords $dnsServer $domain $name | Where-Object {$_.Record -eq $name.ToLower()})
-    $currentTtl = ($currentRecord | Select-Object -ExpandProperty Ttl -First 1)
-    $currentType = ($currentRecord | Select-Object -ExpandProperty Type -First 1)
-    if($currentType -eq "CNAME")
+    $currentRecords = (GetDnsRecords $dnsServer $domain $name | Where-Object {$_.Record -eq $name.ToLower()})
+    $currentTtl = ($currentRecords | Select-Object -ExpandProperty Ttl -First 1)
+    $currentHasA =  ($dnsRecords | Where-Object {$_.Type -eq "A"} | measure).Count -ge 1
+    $currentHasCNAME =  ($dnsRecords | Where-Object {$_.Type -eq "CNAME"} | measure).Count -ge 1
+    if($currentHasCNAME -eq $true)
     {
         DeleteCName $dnsServer $domain $name
     }
-    if($currentType -eq "A")
+    if($currentHasA -eq $true)
     {
         DeleteARecord $dnsServer $domain $name
     }
