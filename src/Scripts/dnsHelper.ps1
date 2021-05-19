@@ -116,8 +116,8 @@ function UpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 {
     $currentRecords = (GetDnsRecords $dnsServer $domain $name | Where-Object {$_.Record -eq $name.ToLower()})
     $currentTtl = ($currentRecords | Select-Object -ExpandProperty Ttl -First 1)
-    $currentHasA =  ($dnsRecords | Where-Object {$_.Type -eq "A"} | measure).Count -ge 1
-    $currentHasCNAME =  ($dnsRecords | Where-Object {$_.Type -eq "CNAME"} | measure).Count -ge 1
+    $currentHasA =  ($currentRecords | Where-Object {$_.Type -eq "A"} | measure).Count -ge 1
+    $currentHasCNAME =  ($currentRecords | Where-Object {$_.Type -eq "CNAME"} | measure).Count -ge 1
     if($currentHasCNAME -eq $true)
     {
         DeleteCName $dnsServer $domain $name
@@ -213,7 +213,7 @@ function DeleteARecord ([string]$dnsServer, [string]$domain, [string]$name)
 function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress, [string]$ttl="3600")
 {
     write-host "Creating DNS A record for $name.$domain pointing at $ipAddress with TTL $ttl"
-    $result = dnscmd $dnsServer /recordAdd $domain $name A $ipAddress
+    $result = dnscmd $dnsServer /recordAdd $domain $name $ttl A $ipAddress
     $outcome = $false
     foreach ($item in $result)
     {
@@ -235,8 +235,8 @@ function UpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [str
 {
     $currentRecords = (GetDnsRecords $dnsServer $domain $name | Where-Object {$_.Record -eq $name.ToLower()})
     $currentTtl = ($currentRecords | Select-Object -ExpandProperty Ttl -First 1)
-    $currentHasA =  ($dnsRecords | Where-Object {$_.Type -eq "A"} | measure).Count -ge 1
-    $currentHasCNAME =  ($dnsRecords | Where-Object {$_.Type -eq "CNAME"} | measure).Count -ge 1
+    $currentHasA =  ($currentRecords | Where-Object {$_.Type -eq "A"} | measure).Count -ge 1
+    $currentHasCNAME =  ($currentRecords | Where-Object {$_.Type -eq "CNAME"} | measure).Count -ge 1
     if($currentHasCNAME -eq $true)
     {
         DeleteCName $dnsServer $domain $name
