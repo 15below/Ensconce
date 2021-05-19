@@ -1,73 +1,77 @@
 Write-Host "Ensconce - dnsHelper Loading"
 
-function GetAllSubValues ([string]$dnsServer, [string]$domain, [string]$lookupName)
+function GetDnsRecords ([string]$dnsServer, [string]$domain, [string]$lookupName)
 {
     $result = dnscmd $dnsServer /EnumRecords $domain $lookupName
 
-    $keys = New-Object Collections.Generic.List[string]
+    $keys = New-Object Collections.Generic.List[pscustomobject]
     foreach ($item in $result)
     {
-        if ($item.Contains("3600 CNAME") -or ($item.Contains("3600 A")))
+        $match = [regex]::Match($item, "^(?<key>\S*)\s+(?<ttl>\d+)\s+(?<type>\S+)\s+(?<value>.+)$")
+        if($match.Success)
         {
-            $key = $item -replace "\s*3600.*", ""
+            $key = $match.Groups["key"].Value
+            $ttl = $match.Groups["ttl"].Value
+            $type = $match.Groups["type"].Value.ToUpper()
+            $value = $match.Groups["value"].Value.ToLower()
+
             if($key -eq "@")
             {
-                $keys.Add("$lookupName".ToLower())
+                $record = "$lookupName".ToLower()
             }
             else
             {
-                $keys.Add("$key.$lookupName".ToLower())
+                $record = "$key.$lookupName".ToLower()
             }
+
+            if($value.EndsWith("."))
+            {
+                $value = $value.Substring(0,$value.Length-1)
+            }
+
+            $keys.Add([pscustomobject]@{Record=$record;Ttl=$ttl;Type=$type;Value=$value})
         }
     }
 
     $keys
 }
 
+function GetAllSubValues ([string]$dnsServer, [string]$domain, [string]$lookupName)
+{
+    GetDnsRecords $dnsServer $domain $lookupName | Select -ExpandProperty Record
+}
+
 function CheckName ([string]$dnsServer, [string]$domain, [string]$lookupName)
 {
-    $result = dnscmd $dnsServer /EnumRecords $domain $lookupName /node
-    $outcome = $False
-    foreach ($item in $result)
+    $dnsRecords = GetDnsRecords $dnsServer $domain $lookupName
+    $checkResult = ($dnsRecords | Where-Object {$_.Record -eq $lookupName.ToLower()} | measure).Count -ge 1
+
+    if($checkResult -eq $false)
     {
-        if ($item.Contains("3600 CNAME") -or ($item.Contains("3600 A")))
-        {
-            $outcome = $True
-        }
+        Write-Host "$dnsServer : CheckName for $lookupName.$domain is false records found:"
+        $dnsRecords  | Format-Table | Out-String |% { Write-Host $_.Trim() }
     }
 
-    if($outcome -eq $false)
-    {
-        write-host "dnscmd: $result"
-    }
-
-    $outcome
+    $checkResult
 }
 
 function CheckCNameValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 {
-    $result = dnscmd $dnsServer /EnumRecords $domain $name /node
+    $dnsRecords = GetDnsRecords $dnsServer $domain $name
+    $checkResult = ($dnsRecords | Where-Object {$_.Record -eq $name.ToLower() -and $_.Type -eq "CNAME" -and $_.Value -eq $server.ToLower()} | measure).Count -ge 1
 
-    $outcome = $False
-    foreach ($item in $result)
+    if($checkResult -eq $false)
     {
-        if ($item.Contains("3600 CNAME") -and ($item.ToLower().Contains($server.ToLower())))
-        {
-            $outcome = $True
-        }
+        Write-Host "$dnsServer : CheckCNameValue for $lookupName.$domain value $server is false records found:"
+        $dnsRecords  | Format-Table | Out-String |% { Write-Host $_.Trim() }
     }
 
-    if($outcome -eq $false)
-    {
-        write-host "dnscmd: $result"
-    }
-
-    $outcome
+    $checkResult
 }
 
 function DeleteCName ([string]$dnsServer, [string]$domain, [string]$name)
 {
-    write-host "Deleting DNS CNAME records for $name.$domain"
+    write-host "$dnsServer : Deleting DNS CNAME records for $name.$domain"
     $result = dnscmd $dnsServer /recordDelete $domain $name CNAME /f
     $outcome = $false
     foreach ($item in $result)
@@ -80,16 +84,16 @@ function DeleteCName ([string]$dnsServer, [string]$domain, [string]$name)
 
     if($outcome -eq $false)
     {
-        write-host "dnscmd: $result"
+        write-host "$dnsServer : $result"
     }
 
     $outcome
 }
 
-function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
+function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server, [string]$ttl="3600")
 {
-    write-host "Creating DNS CNAME record for $name.$domain pointing at $server"
-    $result = dnscmd $dnsServer /recordAdd $domain $name CNAME $server
+    write-host "$dnsServer : Creating DNS CNAME record for $name.$domain pointing at $server with TTL $ttl"
+    $result = dnscmd $dnsServer /recordAdd $domain $name $ttl CNAME $server
     $outcome = $false
     foreach ($item in $result)
     {
@@ -101,7 +105,7 @@ function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 
     if($outcome -eq $false)
     {
-        write-host "dnscmd: $result"
+        write-host "$dnsServer : $result"
     }
 
     $outcome
@@ -109,9 +113,19 @@ function CreateCName ([string]$dnsServer, [string]$domain, [string]$name, [strin
 
 function UpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server)
 {
-    DeleteCName $dnsServer $domain $name
-    DeleteARecord $dnsServer $domain $name
-    CreateCName $dnsServer $domain $name $server
+    $currentRecords = (GetDnsRecords $dnsServer $domain $name | Where-Object {$_.Record -eq $name.ToLower()})
+    $currentTtl = ($currentRecords | Select-Object -ExpandProperty Ttl -First 1)
+    $currentHasA =  ($currentRecords | Where-Object {$_.Type -eq "A"} | measure).Count -ge 1
+    $currentHasCNAME =  ($currentRecords | Where-Object {$_.Type -eq "CNAME"} | measure).Count -ge 1
+    if($currentHasCNAME -eq $true)
+    {
+        DeleteCName $dnsServer $domain $name
+    }
+    if($currentHasA -eq $true)
+    {
+        DeleteARecord $dnsServer $domain $name
+    }
+    CreateCName $dnsServer $domain $name $server $currentTtl
 }
 
 function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name, [string]$server, [bool]$warnOnUpdate = $false)
@@ -121,7 +135,7 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
     {
         if(CheckCNameValue $dnsServer $domain $name $server)
         {
-            write-host "DNS CNAME record for $name.$domain already pointing at $server"
+            write-host "$dnsServer : DNS CNAME record for $name.$domain already pointing at $server"
             $outcome = $true
         }
         else
@@ -131,16 +145,16 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
                 $outcome = $true
                 if($warnOnUpdate)
                 {
-                    write-warning "DNS CNAME record for $name.$domain updated to point at $server"
+                    write-warning "$dnsServer : DNS CNAME record for $name.$domain updated to point at $server"
                 }
                 else
                 {
-                    write-host "DNS CNAME record for $name.$domain updated to point at $server"
+                    write-host "$dnsServer : DNS CNAME record for $name.$domain updated to point at $server"
                 }
             }
             else
             {
-                write-error "Failed to update DNS CNAME record for $name.$domain"
+                write-error "$dnsServer : Failed to update DNS CNAME record for $name.$domain"
             }
         }
     }
@@ -149,11 +163,11 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
         if(CreateCName $dnsServer $domain $name $server)
         {
             $outcome = $true
-            write-host "DNS CNAME record for $name.$domain created pointing at $server"
+            write-host "$dnsServer : DNS CNAME record for $name.$domain created pointing at $server"
         }
         else
         {
-            write-error "Failed to create DNS CNAME record for $name.$domain"
+            write-error "$dnsServer : Failed to create DNS CNAME record for $name.$domain"
         }
     }
 
@@ -162,27 +176,21 @@ function CreateOrUpdateCName ([string]$dnsServer, [string]$domain, [string]$name
 
 function CheckARecordValue ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
 {
-    $result = dnscmd $dnsServer /EnumRecords $domain $name /node
-    $outcome = $False
-    foreach ($item in $result)
+    $dnsRecords = GetDnsRecords $dnsServer $domain $name
+    $checkResult = ($dnsRecords | Where-Object {$_.Record -eq $name.ToLower() -and $_.Type -eq "A" -and $_.Value -eq $ipAddress} | measure).Count -ge 1
+
+    if($checkResult -eq $false)
     {
-        if ($item.Contains("3600 A") -and ($item.Contains($ipAddress)))
-        {
-            $outcome = $True
-        }
+        Write-Host "$dnsServer : CheckARecordValue for $lookupName.$domain value $ipAddress is false records found:"
+        $dnsRecords  | Format-Table | Out-String |% { Write-Host $_.Trim() }
     }
 
-    if($outcome -eq $false)
-    {
-        write-host "dnscmd: $result"
-    }
-
-    $outcome
+    $checkResult
 }
 
 function DeleteARecord ([string]$dnsServer, [string]$domain, [string]$name)
 {
-    write-host "Deleting DNS A records for $name.$domain"
+    write-host "$dnsServer : Deleting DNS A records for $name.$domain"
     $result = dnscmd $dnsServer /recordDelete $domain $name A /f
     $outcome = $false
     foreach ($item in $result)
@@ -195,16 +203,16 @@ function DeleteARecord ([string]$dnsServer, [string]$domain, [string]$name)
 
     if($outcome -eq $false)
     {
-        write-host "dnscmd: $result"
+        write-host "$dnsServer : $result"
     }
 
     $outcome
 }
 
-function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
+function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress, [string]$ttl="3600")
 {
-    write-host "Creating DNS A record for $name.$domain pointing at $ipAddress"
-    $result = dnscmd $dnsServer /recordAdd $domain $name A $ipAddress
+    write-host "$dnsServer : Creating DNS A record for $name.$domain pointing at $ipAddress with TTL $ttl"
+    $result = dnscmd $dnsServer /recordAdd $domain $name $ttl A $ipAddress
     $outcome = $false
     foreach ($item in $result)
     {
@@ -216,7 +224,7 @@ function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [str
 
     if($outcome -eq $false)
     {
-        write-host "dnscmd: $result"
+        write-host "$dnsServer : $result"
     }
 
     $outcome
@@ -224,9 +232,19 @@ function CreateARecord ([string]$dnsServer, [string]$domain, [string]$name, [str
 
 function UpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress)
 {
-    DeleteCName $dnsServer $domain $name
-    DeleteARecord $dnsServer $domain $name
-    CreateARecord $dnsServer $domain $name $ipAddress
+    $currentRecords = (GetDnsRecords $dnsServer $domain $name | Where-Object {$_.Record -eq $name.ToLower()})
+    $currentTtl = ($currentRecords | Select-Object -ExpandProperty Ttl -First 1)
+    $currentHasA =  ($currentRecords | Where-Object {$_.Type -eq "A"} | measure).Count -ge 1
+    $currentHasCNAME =  ($currentRecords | Where-Object {$_.Type -eq "CNAME"} | measure).Count -ge 1
+    if($currentHasCNAME -eq $true)
+    {
+        DeleteCName $dnsServer $domain $name
+    }
+    if($currentHasA -eq $true)
+    {
+        DeleteARecord $dnsServer $domain $name
+    }
+    CreateARecord $dnsServer $domain $name $ipAddress $currentTtl
 }
 
 function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$name, [string]$ipAddress, [bool]$warnOnUpdate = $false)
@@ -236,7 +254,7 @@ function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$na
     {
         if(CheckARecordValue $dnsServer $domain $name $ipAddress)
         {
-            write-host "DNS A record for $name.$domain already pointing at $ipAddress"
+            write-host "$dnsServer : DNS A record for $name.$domain already pointing at $ipAddress"
             $outcome = $true
         }
         else
@@ -246,16 +264,16 @@ function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$na
                 $outcome = $true
                 if($warnOnUpdate)
                 {
-                    write-warning "DNS A record for $name.$domain updated to point at $ipAddress"
+                    write-warning "$dnsServer : DNS A record for $name.$domain updated to point at $ipAddress"
                 }
                 else
                 {
-                    write-host "DNS A record for $name.$domain updated to point at $ipAddress"
+                    write-host "$dnsServer : DNS A record for $name.$domain updated to point at $ipAddress"
                 }
             }
             else
             {
-                write-error "Failed to update DNS A record for $name.$domain"
+                write-error "$dnsServer : Failed to update DNS A record for $name.$domain"
             }
         }
     }
@@ -264,11 +282,11 @@ function CreateOrUpdateARecord ([string]$dnsServer, [string]$domain, [string]$na
         if(CreateARecord $dnsServer $domain $name $ipAddress)
         {
             $outcome = $true
-            write-host "DNS A record for $name.$domain created pointing at $ipAddress"
+            write-host "$dnsServer : DNS A record for $name.$domain created pointing at $ipAddress"
         }
         else
         {
-            write-error "Failed to create DNS A record for $name.$domain"
+            write-error "$dnsServer : Failed to create DNS A record for $name.$domain"
         }
     }
     $outcome
@@ -299,16 +317,16 @@ function DeleteDns([string]$dnsServer, [string]$domain, [string]$name, [bool]$wa
             $outcome = $true
             if($warnOnUpdate)
             {
-                write-warning "DNS A record for $name.$domain has been removed"
+                write-warning "$dnsServer : DNS A record for $name.$domain has been removed"
             }
             else
             {
-                write-host "DNS A record for $name.$domain has been removed"
+                write-host "$dnsServer : DNS A record for $name.$domain has been removed"
             }
         }
         else
         {
-            write-error "Failed to remove DNS A record for $name.$domain"
+            write-error "$dnsServer : Failed to remove DNS A record for $name.$domain"
         }
     }
     $outcome
