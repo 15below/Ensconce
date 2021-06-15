@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Xml;
+using System.Xml.Schema;
 
 namespace Ensconce.Update.Tests
 {
@@ -115,17 +117,31 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
-        public void LoadEnvironmentOnlyWithInvalidXML()
+        public void FailWithInvalidXML()
         {
-            var sut = TagDictionary.FromXml("ident", "ThisIsNotXML");
-            Assert.AreEqual(EnvClientCode, sut["ClientCode"]);
+            var exception = Assert.Throws<XmlException>(() => TagDictionary.FromXml("ident", "ThisIsNotXML"));
+
+            Assert.NotNull(exception);
+            Assert.AreEqual("Unable to parse XML data", exception.Message);
         }
 
         [Test]
-        public void LoadEnvironmentOnlyWithInvalidXMLFile()
+        public void FailWithInvalidXMLFile()
         {
-            var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlFileName, "incorrectStructure.xml" } });
-            Assert.AreEqual(EnvClientCode, sut["ClientCode"]);
+            var exception = Assert.Throws<XmlException>(() => TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlFileName, "invalidStructure.xml" } }));
+
+            Assert.NotNull(exception);
+            Assert.AreEqual("Unable to parse XML data", exception.Message);
+        }
+
+        [Test]
+        public void FailWithIncorrectXMLFile()
+        {
+            var exception = Assert.Throws<XmlSchemaValidationException>(() => TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" }, { TagSource.XmlFileName, "incorrectStructure.xml" } }));
+
+            Assert.NotNull(exception);
+            //NOTE: The entire message isn't used as the exception has different order of elements & that is framework controlled
+            Assert.That(exception.Message.StartsWith("The element 'Structure' has incomplete content. List of possible elements expected:"));
         }
 
         [TestCase(QueAppServer, QueAppServer)]

@@ -20,7 +20,7 @@ namespace Ensconce.Cake
         [CakeMethodAlias]
         public static void DeployDatabaseByConnectionString(this ICakeContext context, string connectionString, FilePath fixedStructureFile, DirectoryPath deployScriptDirectoryPath)
         {
-            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.Build(string.Empty) : TagDictionaryBuilder.Build(fixedStructureFile.FullPath);
+            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.BuildLazy(string.Empty) : TagDictionaryBuilder.BuildLazy(fixedStructureFile.FullPath);
             var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString.RenderTemplate(tagDictionary));
             context.DeployDatabase(connectionStringBuilder, deployScriptDirectoryPath);
         }
@@ -34,7 +34,7 @@ namespace Ensconce.Cake
         [CakeMethodAlias]
         public static void DeployLocalDatabaseByName(this ICakeContext context, string databaseName, FilePath fixedStructureFile, DirectoryPath deployScriptDirectoryPath)
         {
-            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.Build(string.Empty) : TagDictionaryBuilder.Build(fixedStructureFile.FullPath);
+            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.BuildLazy(string.Empty) : TagDictionaryBuilder.BuildLazy(fixedStructureFile.FullPath);
             var connectionStringBuilder = Database.Database.GetLocalConnectionStringFromDatabaseName(databaseName.RenderTemplate(tagDictionary));
             context.DeployDatabase(connectionStringBuilder, deployScriptDirectoryPath);
         }

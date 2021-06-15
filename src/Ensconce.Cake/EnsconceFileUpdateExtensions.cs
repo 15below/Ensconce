@@ -23,7 +23,7 @@ namespace Ensconce.Cake
 
         public static void TextSubstitute(this FilePath file, FilePath fixedStructureFile)
         {
-            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.Build(string.Empty) : TagDictionaryBuilder.Build(fixedStructureFile.FullPath);
+            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.BuildLazy(string.Empty) : TagDictionaryBuilder.BuildLazy(fixedStructureFile.FullPath);
             Update.ProcessFiles.UpdateFile(new FileInfo(file.FullPath), tagDictionary);
         }
 
@@ -34,7 +34,7 @@ namespace Ensconce.Cake
 
         public static void TextSubstitute(this DirectoryPath directory, string filter, FilePath fixedStructureFile)
         {
-            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.Build(string.Empty) : TagDictionaryBuilder.Build(fixedStructureFile.FullPath);
+            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.BuildLazy(string.Empty) : TagDictionaryBuilder.BuildLazy(fixedStructureFile.FullPath);
             Update.ProcessFiles.UpdateFiles(directory.FullPath, filter, tagDictionary);
         }
     }

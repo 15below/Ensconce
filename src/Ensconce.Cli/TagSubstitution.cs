@@ -7,13 +7,13 @@ namespace Ensconce.Cli
     {
         internal static void DefaultUpdate()
         {
-            var tagDictionary = TagDictionaryBuilder.Build(Arguments.FixedPath);
+            var tagDictionary = TagDictionaryBuilder.BuildLazy(Arguments.FixedPath);
             ProcessSubstitution.Update(Arguments.SubstitutionPath, tagDictionary, Arguments.OutputFailureContext);
         }
 
         internal static void UpdateFiles()
         {
-            var tagDictionary = TagDictionaryBuilder.Build(Arguments.FixedPath);
+            var tagDictionary = TagDictionaryBuilder.BuildLazy(Arguments.FixedPath);
             ProcessFiles.UpdateFiles(Arguments.DeployFrom, Arguments.TemplateFilters, tagDictionary);
         }
     }
