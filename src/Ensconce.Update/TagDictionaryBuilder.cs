@@ -9,7 +9,12 @@ namespace Ensconce.Update
     {
         private static readonly ConcurrentDictionary<string, Lazy<TagDictionary>> TagDictionaries = new ConcurrentDictionary<string, Lazy<TagDictionary>>();
 
-        public static Lazy<TagDictionary> Build(string fixedPath)
+        public static TagDictionary Build(string fixedPath)
+        {
+            return BuildLazy(fixedPath).Value;
+        }
+
+        public static Lazy<TagDictionary> BuildLazy(string fixedPath)
         {
             var instanceName = Environment.GetEnvironmentVariable("InstanceName");
 
@@ -74,56 +79,49 @@ namespace Ensconce.Update
 
         private static TagDictionary BuildTagDictionary(string fixedPath, Lazy<TagDictionary> fallbackDictionary)
         {
-            TagDictionary tags;
+            ThrowIfFixedStructureFileMissing(fixedPath);
 
-            if (FileExists(fixedPath))
-            {
-                Logging.Log("Loading xml config from file '{0}'", fixedPath);
-                var configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(3));
-                Logging.Log("Building tag dictionary (using config file '{0}')", fixedPath);
-                tags = TagDictionary.FromXml(string.Empty, configXml);
-                Logging.Log("Built tag dictionary (using config file '{0}')", fixedPath);
-            }
-            else
-            {
-                Logging.Log("WARNING: No structure file found at: '{0}'", fixedPath);
-                tags = fallbackDictionary.Value;
-            }
+            Logging.Log("Loading xml config from file '{0}'", fixedPath);
+            var configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(3));
+            Logging.Log("Building tag dictionary (using config file '{0}')", fixedPath);
+            var tags = TagDictionary.FromXml(string.Empty, configXml);
+            Logging.Log("Built tag dictionary (using config file '{0}')", fixedPath);
 
             return tags;
         }
 
         private static TagDictionary BuildTagDictionary(string instanceName, string fixedPath, Lazy<TagDictionary> fallbackDictionary)
         {
-            TagDictionary tags;
+            ThrowIfFixedStructureFileMissing(fixedPath);
 
-            if (FileExists(fixedPath))
-            {
-                Logging.Log("Loading xml config from file '{0}'", fixedPath);
-                var configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(3));
-                Logging.Log("Building tag dictionary with instance '{0}' (using config file '{1}')", instanceName, fixedPath);
-                tags = TagDictionary.FromXml(instanceName, configXml);
-                Logging.Log("Built tag dictionary with instance '{0}' (using config file '{1}')", instanceName, fixedPath);
-            }
-            else
-            {
-                Logging.Log("WARNING: No structure file found at: '{0}'", fixedPath);
-                tags = fallbackDictionary.Value;
-            }
-
+            Logging.Log("Loading xml config from file '{0}'", fixedPath);
+            var configXml = Retry.Do(() => File.ReadAllText(fixedPath), TimeSpan.FromSeconds(3));
+            Logging.Log("Building tag dictionary with instance '{0}' (using config file '{1}')", instanceName, fixedPath);
+            var tags = TagDictionary.FromXml(instanceName, configXml);
+            Logging.Log("Built tag dictionary with instance '{0}' (using config file '{1}')", instanceName, fixedPath);
             return tags;
         }
 
-        private static bool FileExists(string path)
+        private static void ThrowIfFixedStructureFileMissing(string path)
         {
-            try
+            var fileExists = true;
+
+            if (!string.IsNullOrWhiteSpace(path))
             {
-                Logging.Log("Checking if '{0}' exists", path);
-                return File.Exists(path);
+                try
+                {
+                    Logging.Log("Checking if '{0}' exists", path);
+                    fileExists = File.Exists(path);
+                }
+                catch (Exception)
+                {
+                    fileExists = false;
+                }
             }
-            catch (Exception)
+
+            if (!fileExists)
             {
-                return false;
+                throw new FileNotFoundException($"No structure file found at {path}");
             }
         }
     }

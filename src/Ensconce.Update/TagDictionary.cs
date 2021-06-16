@@ -126,14 +126,19 @@ namespace Ensconce.Update
 
         private void PropertiesFromXml(string identifier, string xmlData)
         {
+            if (string.IsNullOrWhiteSpace(xmlData))
+            {
+                return;
+            }
+
             XDocument doc;
             try
             {
                 doc = XDocument.Parse(xmlData);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return;
+                throw new XmlException("Unable to parse XML data", ex);
             }
 
             ValidateStructureFile(doc);
@@ -151,7 +156,7 @@ namespace Ensconce.Update
 
             schemas.Add(null, XmlReader.Create(assembly.GetManifestResourceStream("Ensconce.Update.FixedStructure.xsd")));
 
-            doc.Validate(schemas, (sender, args) => { throw args.Exception; });
+            doc.Validate(schemas, (sender, args) => throw args.Exception);
         }
 
         private void BasePropertiesFromXml(XDocument doc)

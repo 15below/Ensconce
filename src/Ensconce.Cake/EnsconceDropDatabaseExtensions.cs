@@ -27,7 +27,7 @@ namespace Ensconce.Cake
         [CakeMethodAlias]
         public static void DropDatabaseByConnectionString(this ICakeContext context, string connectionString, FilePath fixedStructureFile, DirectoryPath tempDirectoryPath)
         {
-            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.Build(string.Empty) : TagDictionaryBuilder.Build(fixedStructureFile.FullPath);
+            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.BuildLazy(string.Empty) : TagDictionaryBuilder.BuildLazy(fixedStructureFile.FullPath);
             var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString.RenderTemplate(tagDictionary));
             context.DropDatabase(connectionStringBuilder, tempDirectoryPath);
         }
@@ -47,7 +47,7 @@ namespace Ensconce.Cake
         [CakeMethodAlias]
         public static void DropLocalDatabaseByName(this ICakeContext context, string databaseName, FilePath fixedStructureFile, DirectoryPath tempDirectoryPath)
         {
-            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.Build(string.Empty) : TagDictionaryBuilder.Build(fixedStructureFile.FullPath);
+            var tagDictionary = fixedStructureFile == null ? TagDictionaryBuilder.BuildLazy(string.Empty) : TagDictionaryBuilder.BuildLazy(fixedStructureFile.FullPath);
             var connectionStringBuilder = Database.Database.GetLocalConnectionStringFromDatabaseName(databaseName.RenderTemplate(tagDictionary));
             context.DropDatabase(connectionStringBuilder, tempDirectoryPath);
         }
