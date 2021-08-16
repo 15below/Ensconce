@@ -11,6 +11,11 @@ Write-Host "Ensconce - Ensconce Version: $ensconceVersion"
 $psVersion = (Get-Host).Version
 Write-Host "Ensconce - Powershell Version: $psVersion"
 
+if ($psVersion.Version.Major -le 4)
+{
+    . $currentDirectory\powershell4Polyfill.ps1
+}
+
 Write-Host "Ensconce - Setting SecurityProtocol to TLS 1.1 or TLS 1.2"
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls11 -bor [System.Net.SecurityProtocolType]::Tls12;
 
