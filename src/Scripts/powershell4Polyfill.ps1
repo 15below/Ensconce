@@ -2,6 +2,8 @@ Write-Host "Ensconce - Powershell4Polyfill Loading"
 
 function Clear-DnsClientCache()
 {
+	Write-Host "Calling IPConfig /flushdns to simulate Powershell 5 function"
+
 	$ProcessInfo = New-Object System.Diagnostics.ProcessStartInfo
 	$ProcessInfo.FileName = "ipconfig.exe"
 	$ProcessInfo.RedirectStandardError = $true
