@@ -60,10 +60,10 @@
         <Property name="Value">888</Property>
       </Properties>
     </PropertyGroup>
-    <PropertyGroup label="FlatGroup" identity="0">
+    <PropertyGroup label="FlatGroup" identity="FG0">
       <Property name="Value">FlatGroup-0</Property>
     </PropertyGroup>
-    <PropertyGroup label="FlatGroup" identity="1">
+    <PropertyGroup label="FlatGroup" identity="FG1">
       <Property name="Value">FlatGroup-1</Property>
     </PropertyGroup>
   </PropertyGroups>

@@ -1,4 +1,4 @@
-#module nuget:?package=Cake.BuildSystems.Module&version=3.0.1
+﻿#module nuget:?package=Cake.BuildSystems.Module&version=3.0.1
 #tool "nuget:?package=OctopusTools&version=7.4.3127"
 
 using System.Text.RegularExpressions;
@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var baseVersion = "1.7.6";
+var baseVersion = "1.7.7";
 var subVersion = "";
 var subVersionNumber = "";
 var isMasterOrDevelop = false;

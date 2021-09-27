@@ -68,6 +68,20 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
+        public void IdentifiedPropertiesTakePrecedence_ForFlatGroups()
+        {
+            var loader = TagDictionary.FromSources("FG1", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("FlatGroup-1", loader["Value"]);
+        }
+
+        [Test]
+        public void IdentifiedPropertiesTakePrecedence_WhenLabelIncluded()
+        {
+            var loader = TagDictionary.FromSources("Label1.1", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
+            Assert.AreEqual("321CBA", loader["Value"]);
+        }
+
+        [Test]
         public void LoadFromEnvironment()
         {
             var loader = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.Environment, "" } });
@@ -710,8 +724,8 @@ namespace Ensconce.Update.Tests
         public void FlatLabelGroupsHaveValues()
         {
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
-            Assert.AreEqual("FlatGroup-0", "{{ FlatGroup.0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
-            Assert.AreEqual("FlatGroup-1", "{{ FlatGroup.1.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.AreEqual("FlatGroup-0", "{{ FlatGroup.FG0.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
+            Assert.AreEqual("FlatGroup-1", "{{ FlatGroup.FG1.Value }}".RenderTemplate(sut.ToLazyTagDictionary()));
         }
 
         [Test]
