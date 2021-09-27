@@ -176,10 +176,38 @@ namespace Ensconce.Update
 
         private void IdentityPropertyGroupsFromXml(string identifier, XDocument doc)
         {
+            bool IsCorrectGroup(XElement propertyGroup)
+            {
+                if (propertyGroup.Name != "PropertyGroup")
+                {
+                    return false;
+                }
+
+                var identity = propertyGroup.Attribute("identity")?.Value;
+
+                var labels = new List<string>();
+                if (propertyGroup.Attribute("label") != null)
+                {
+                    labels.Add(propertyGroup.Attribute("label")?.Value);
+                }
+                else if (propertyGroup.XPathSelectElements(".//Label").Any())
+                {
+                    labels.AddRange(propertyGroup.XPathSelectElements(".//Label").Select(x => x.Value));
+                }
+
+                if (identifier.Contains("."))
+                {
+                    var parts = identifier.Split('.');
+                    return labels.Contains(parts[0]) && identity == parts[1];
+                }
+
+                return identity == identifier;
+            }
+
             var matchingGroupProperties = doc.XPathSelectElements("/Structure/PropertyGroups/PropertyGroup")
-                .Where(p => p.Name == "PropertyGroup")
-                .Where(p => p.Attribute("identity").Value == identifier)
-                .SelectMany(pg => pg.XPathSelectElements("Properties/Property"));
+                                             .Where(IsCorrectGroup)
+                                             .SelectMany(pg => pg.XPathSelectElements(".//Property"))
+                                             .ToList();
 
             foreach (var prop in matchingGroupProperties)
             {
