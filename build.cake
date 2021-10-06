@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var baseVersion = "1.7.7";
+var baseVersion = "1.8.0";
 var subVersion = "";
 var subVersionNumber = "";
 var isMasterOrDevelop = false;
