@@ -34,6 +34,14 @@ Function AddUser([string]$name, [string]$password)
     $newuser.CommitChanges()
 }
 
+Function SetUserPassword([string]$name, [string]$password)
+{
+    $user = [ADSI]"WinNT://$env:computername/$name,user"
+    $user.SetPassword($password)
+    $user.UserFlags = $ADS_UF_DONT_EXPIRE_PASSWD
+    $user.CommitChanges()
+}
+
 Function AddUserToGroup([string]$name, [string]$group)
 {
     "AddUserToGroup: $name, $group" | Write-Host
@@ -68,7 +76,7 @@ Function AddUserToGroup([string]$name, [string]$group)
                 if ($class -eq "User" -and $username -eq $name)
                 {
                     $blnFound = $True
-                    "User already added to group: $name, $group" | Write-Host
+                    "User '$name' already in group '$group'" | Write-Host
                 }
             }
 
@@ -96,8 +104,11 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 
     if ($blnFound -eq $False) {
         AddUser $name $password
-        AddUserToGroup $name "administrators"
+    } else {
+    	SetUserPassword $name $password
     }
+
+    AddUserToGroup $name "administrators"
 
     $exe = "$EnsconceDir\Tools\Grant\Grant.exe"
     $osInfo = Get-WmiObject -Class Win32_OperatingSystem
@@ -124,9 +135,11 @@ Function CheckAndCreateUserAccount([string]$name, [string]$password)
 
     if ($blnFound -eq $False) {
         AddUser $name $password
-
-        net localgroup Users $name /add
+    } else {
+    	SetUserPassword $name $password
     }
+
+    AddUserToGroup $name "Users"
 }
 
 Function SetServiceAccount([string]$serviceName, [string]$account, [string]$password)
