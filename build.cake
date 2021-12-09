@@ -134,6 +134,7 @@ Task("Push-Binary-Internal")
             SymbolSource = $"{url}{endpoint}",
             NoServiceEndpoint = true,
             SkipDuplicate = true,
+            Timeout = 600
         });
     }
 });
@@ -154,6 +155,7 @@ Task("Push-Binary-Public")
             Source = "https://api.nuget.org/v3/index.json",
             ApiKey = apiKey,
             SkipDuplicate = true,
+            Timeout = 600
         });
     }
 });
