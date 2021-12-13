@@ -11,13 +11,13 @@ The `serviceManagement.ps1` script has functionality to interact and setup Windo
 
 ## Functions
 
-* InstallDotNetCoreService([string]$serviceName, [string]$dllPath, [string]$startupType, [string]$serviceDisplayName, [string]$serviceDescription)
+* StopService([string]$serviceName)
+* StartService([string]$serviceName)
+* SetServiceRunAs([string]$serviceName, [string]$serviceUser, [string]$servicePassword)
+* SetServiceRestarts([string]$serviceName)
+* SetServiceRestartAlways([string]$serviceName)
+* RemoveService([string]$serviceName)
 * InstallService([string]$serviceName, [string]$exePath, [string]$startupType, [string]$serviceDisplayName, [string]$serviceDescription)
+* InstallDotNetCoreService([string]$serviceName, [string]$dllPath, [string]$startupType, [string]$serviceDisplayName, [string]$serviceDescription)
 * InstallTopshelfService([string]$serviceName, [string]$exePath)
 * InstallTopshelfServiceWithInstance([string]$serviceName, [string]$exePath, [string]$instance)
-* RemoveService([string]$serviceName)
-* SetServiceRestartAlways([string]$serviceName)
-* SetServiceRestarts([string]$serviceName)
-* SetServiceRunAs([string]$serviceName, [string]$serviceUser, [string]$servicePassword)
-* StartService([string]$serviceName)
-* StopService([string]$serviceName)

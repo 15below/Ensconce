@@ -16,3 +16,4 @@ The `webHelper.ps1` script has functionality to upload and download from web end
 * UploadValuesAndGetStringResponse([string]$url, [System.Collections.Specialized.NameValueCollection]$values)
 * DownloadFile([string]$url, [string]$destinationPath)
 * DownloadString([string]$url)
+* DownloadStringUntilOK([string]$url, [int] $maxChecks, [int] $sleepSeconds, [String[]] $okText, [String[]] $failText)

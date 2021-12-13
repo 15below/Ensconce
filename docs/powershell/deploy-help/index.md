@@ -18,3 +18,4 @@ These are based functions that are useful for all deployment tasks.
 * [ensconce](ensconce)
 * [EnsurePath](ensure-path)
 * Retry-Command
+* ensconceWithArgs($passedArgs)
