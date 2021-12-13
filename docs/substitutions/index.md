@@ -15,7 +15,7 @@ This means you do not need to worry about changing application configuration wit
 
 ## Basic Structure
 
-The structure is defined in a [XSD](substitution-xsd).  An example structure can be seen below.
+The structure is defined in a [XSD](https://github.com/15below/Ensconce/blob/master/src/Ensconce.Update/Substitutions.xsd).  An example structure can be seen below.
 
 ```XML
 {% raw %}
