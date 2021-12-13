@@ -17,5 +17,4 @@ These are based functions that are useful for all deployment tasks.
 * [CreateDesktopShortcut](create-desktop-shortcut)
 * [ensconce](ensconce)
 * [EnsurePath](ensure-path)
-* Retry-Command
-* ensconceWithArgs($passedArgs)
+* [Retry-Command](retry-command)

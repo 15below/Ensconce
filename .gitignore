@@ -9,6 +9,7 @@ paket-files/
 /Timers.txt
 /docs/vendor/cache/*
 /docs/_site/*
+/docs/.jekyll-metadata
 
 
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
@@ -79,7 +80,7 @@ _ReSharper*
 .*crunch*.local.xml
 _NCrunch_*
 
-# Installshield output folder 
+# Installshield output folder
 [Ee]xpress
 
 # DocProject is a documentation generator add-in
