@@ -13,7 +13,7 @@ These can be included as part of your deployment powershell to make deployment s
 
 ## Available Files
 
-* [backupHelper.ps1](ps-backups-helper)
+* [backupHelper.ps1](ps-backup-helper)
 * [cloudflareHelper.ps1](cloudflare-helper)
 * [compressionHelper.ps1](compression-helper)
 * [createWebSite.ps1](create-website)
