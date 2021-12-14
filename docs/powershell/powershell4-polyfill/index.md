@@ -15,7 +15,3 @@ Used as a polyfill to support missing functionality
 ## Functions
 
 {% include childPages.html %}
-
-{% comment %}
-Clear-DnsClientCache()
-{% endcomment %}
