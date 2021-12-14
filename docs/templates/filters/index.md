@@ -6,4 +6,3 @@ description: The home of template filters documentation
 # Filters
 
 {% include childPages.html %}
-

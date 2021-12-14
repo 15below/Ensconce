@@ -18,4 +18,3 @@ To verify support, this section will detail the known working template syntax el
 These are broken down into 3 sections
 
 {% include childPages.html %}
-

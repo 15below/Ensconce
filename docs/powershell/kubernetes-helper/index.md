@@ -24,4 +24,3 @@ GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selector)
 DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$pruneSelector)
 DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string]$kubernetesConfigFile, [string]$pruneSelector)
 {% endcomment %}
-

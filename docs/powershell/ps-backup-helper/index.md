@@ -19,4 +19,3 @@ CleanBackups([string]$backupDir, [int]$daysToKeep)
 CreateDatedBackup([string]$destFolder, [string]$baseName, [string[]]$sources)
 Create7DayRollingDatedBackup([string]$destFolder, [string]$baseName, [string[]]$sources)
 {% endcomment %}
-

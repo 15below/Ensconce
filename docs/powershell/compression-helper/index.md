@@ -21,4 +21,3 @@ Get7zip()
 Create7z([string]$sourcePath, [string]$destinationFile)
 Extract7z([string]$sourceFile, [string]$destinationFolder)
 {% endcomment %}
-

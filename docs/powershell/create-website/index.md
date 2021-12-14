@@ -50,4 +50,3 @@ RequireClientCertificate([string] $websiteName)
 SetManagedRuntimeVersion([string] $appPoolName, [string] $runtimeVersion)
 SetManagedRuntimeToNoManagedCode([string] $appPoolName, [string] $runtimeVersion)
 {% endcomment %}
-

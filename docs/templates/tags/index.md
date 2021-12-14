@@ -6,4 +6,3 @@ description: The home of template tags documentation
 # Tags
 
 {% include childPages.html %}
-

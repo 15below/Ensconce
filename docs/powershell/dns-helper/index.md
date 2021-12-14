@@ -33,4 +33,3 @@ DeleteDns([string]$dnsServer, [string]$domain, [string]$name, [bool]$warnOnUpdat
 CheckHostsEntry ([string]$Address, [string]$FullyQualifiedName)
 AddHostsEntry ([string]$Address, [string]$FullyQualifiedName)
 {% endcomment %}
-
