@@ -17,6 +17,5 @@ To verify support, this section will detail the known working template syntax el
 
 These are broken down into 3 sections
 
-* [Filters](filters)
-* [Operators](operators)
-* [Tags](tags)
+{% include childPages.html %}
+

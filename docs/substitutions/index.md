@@ -38,20 +38,3 @@ The structure is defined in a [XSD](https://github.com/15below/Ensconce/blob/mas
 </Root>
 {% endraw %}
 ```
-
-The structure of change and files nodes can vary.
-
-Each type of structure can be found on dedicated pages
-
-## Types Of Substitution
-
-* [JSON](json)
-* [XML (Legacy format)](legacy-xml)
-* [XML](xml)
-
-## Other Important Sections
-
-* [Change Filters](filters)
-* [Change Paths](change-paths)
-* [File Node](file-node)
-* [Namespaces](namespaces)

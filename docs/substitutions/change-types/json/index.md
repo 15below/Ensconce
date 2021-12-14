@@ -10,4 +10,4 @@ Placeholder - This page has not been written yet!
 
 ## Types Of Change
 
-* [Change Value](change-value)
+{% include childPages.html %}

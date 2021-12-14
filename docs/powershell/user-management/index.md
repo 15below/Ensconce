@@ -12,9 +12,13 @@ The `userManagement.ps1` script has functionality to setup and manage user accou
 
 ## Functions
 
-* AddUser([string]$name, [string]$password)
-* SetUserPassword([string]$name, [string]$password)
-* AddUserToGroup([string]$name, [string]$group)
-* CheckAndCreateServiceAccount([string]$name, [string]$password)
-* CheckAndCreateUserAccount([string]$name, [string]$password)
-* SetServiceAccount([string]$serviceName, [string]$account, [string]$password)
+{% include childPages.html %}
+
+{% comment %}
+AddUser([string]$name, [string]$password)
+SetUserPassword([string]$name, [string]$password)
+AddUserToGroup([string]$name, [string]$group)
+CheckAndCreateServiceAccount([string]$name, [string]$password)
+CheckAndCreateUserAccount([string]$name, [string]$password)
+SetServiceAccount([string]$serviceName, [string]$account, [string]$password)
+{% endcomment %}

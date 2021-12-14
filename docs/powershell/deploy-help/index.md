@@ -14,8 +14,4 @@ These are based functions that are useful for all deployment tasks.
 
 ## Functions
 
-* [is64Bit](64bit)
-* [CreateDesktopShortcut](create-desktop-shortcut)
-* [ensconce](ensconce)
-* [EnsurePath](ensure-path)
-* [Retry-Command](retry-command)
+{% include childPages.html %}

@@ -12,8 +12,13 @@ The `compressionHelper.ps1` script has functionality to work with zip & 7zip fil
 
 ## Functions
 
-* CreateZip([string]$sourcePath, [string]$destinationFile)
-* ExtractZip([string]$sourceFile, [string]$destinationFolder)
-* Get7zip()
-* Create7z([string]$sourcePath, [string]$destinationFile)
-* Extract7z([string]$sourceFile, [string]$destinationFolder)
+{% include childPages.html %}
+
+{% comment %}
+CreateZip([string]$sourcePath, [string]$destinationFile)
+ExtractZip([string]$sourceFile, [string]$destinationFolder)
+Get7zip()
+Create7z([string]$sourcePath, [string]$destinationFile)
+Extract7z([string]$sourceFile, [string]$destinationFolder)
+{% endcomment %}
+
