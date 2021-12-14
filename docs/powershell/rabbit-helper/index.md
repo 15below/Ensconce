@@ -13,11 +13,3 @@ The `rabbitHelper.ps1` script has functionality to interact with a RabbitMQ serv
 ## Functions
 
 {% include childPages.html %}
-
-{% comment %}
-CreateRabbitVHost([string]$deployUser, [string]$deployPassword, [string]$rabbitApiUrl, [string]$vHost)
-CreateRabbitUser([string]$deployUser, [string]$deployPassword, [string]$rabbitApiUrl, [string]$user, [string]$password)
-AddUserToVHost([string]$deployUser, [string]$deployPassword, [string]$rabbitApiUrl, [string]$user, [string]$vHost)
-ValidateUserAccess([string]$rabbitApiUrl, [string]$user, [string]$password, [string]$vHost)
-CreateRabbitUserAndVHost([string]$deployUser, [string]$deployPassword, [string]$rabbitApiUrl, [string]$user, [string]$password, [string]$vHost)
-{% endcomment %}
