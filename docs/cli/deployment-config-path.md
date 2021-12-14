@@ -1,6 +1,7 @@
 ---
 title: Deployment Config Path
 description: How to specify the deployment config file path
+linkText: Deployment Config Path
 ---
 
 # Deployment Config Path

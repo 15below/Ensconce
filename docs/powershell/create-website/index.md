@@ -1,6 +1,7 @@
 ---
 title: createWebsite.ps1
 description: Details about the createWebsite.ps1 helper script
+linkText: createWebsite.ps1
 ---
 
 # createWebsite.ps1

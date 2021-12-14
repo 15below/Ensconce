@@ -1,6 +1,7 @@
 ---
 title: kubernetesHelper.ps1
 description: Details about the kubernetesHelper.ps1 helper script
+linkText: kubernetesHelper.ps1
 ---
 
 # kubernetesHelper.ps1

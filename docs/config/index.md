@@ -1,6 +1,7 @@
 ---
 title: Deployment Configuration
 description: The home of deployment configuration documentation
+linkText: Deployment Configuration
 ---
 
 # Deployment Configuration

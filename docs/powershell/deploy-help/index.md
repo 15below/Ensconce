@@ -1,6 +1,7 @@
 ---
 title: deployHelp.ps1
 description: Details about the deployHelp.ps1 helper script
+linkText: deployHelp.ps1
 ---
 
 # deployHelp.ps1

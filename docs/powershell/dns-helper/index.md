@@ -1,6 +1,7 @@
 ---
 title: dnsHelper.ps1
 description: Details about the dnsHelper.ps1 script
+linkText: dnsHelper.ps1
 ---
 
 # dnsHelper.ps1

@@ -1,6 +1,7 @@
 ---
 title: Template Syntax
 description: The home of template syntax documentation
+linkText: Template Syntax
 ---
 # Template Syntax
 

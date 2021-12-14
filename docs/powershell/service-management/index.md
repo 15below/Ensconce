@@ -1,6 +1,7 @@
 ---
 title: serviceManagement.ps1
 description: Details about the serviceManagement.ps1 helper script
+linkText: serviceManagement.ps1
 ---
 
 # serviceManagement.ps1

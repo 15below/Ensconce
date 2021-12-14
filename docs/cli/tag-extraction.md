@@ -1,6 +1,7 @@
 ---
 title: Tag Dictionary Extraction
 description: How to extract the entire Ensconce tag dictionary
+linkText: Tag Dictionary Extraction
 ---
 
 # Tag Dictionary Extraction

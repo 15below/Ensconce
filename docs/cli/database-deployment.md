@@ -1,6 +1,7 @@
 ---
 title: Database Deployment
 description: How to deploy a database
+linkText: Database Deployment
 ---
 
 # Database Deployment

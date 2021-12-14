@@ -1,6 +1,7 @@
 ---
 title: Deploying Applications
 description: How to deploy applications with a configuration update
+linkText: Deploying Applications
 ---
 
 # Deploying Applications

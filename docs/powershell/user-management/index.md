@@ -1,6 +1,7 @@
 ---
 title: userManagement.ps1
 description: Details about the userManagement.ps1 helper script
+linkText: userManagement.ps1
 ---
 
 # userManagement.ps1

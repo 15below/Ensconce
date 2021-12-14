@@ -1,6 +1,7 @@
 ---
 title: Database Drop
 description: How to drop a database
+linkText: Database Drop
 ---
 
 # Database Drop

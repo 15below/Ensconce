@@ -1,6 +1,7 @@
 ---
 title: backupHelper.ps1
 description: Details about the backupHelper.ps1 script
+linkText: backupHelper.ps1
 ---
 
 # backupHelper.ps1

@@ -1,6 +1,7 @@
 ---
 title: Client & Environment
 description: Specifying a client and environment in deployment configuration
+linkText: Client & Environment
 ---
 
 # Client & Environment

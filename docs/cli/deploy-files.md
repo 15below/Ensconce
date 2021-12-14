@@ -1,6 +1,7 @@
 ---
 title: Deploying Files
 description: How to deploy files
+linkText: Deploying Files
 ---
 
 # Deploying Files

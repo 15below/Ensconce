@@ -1,6 +1,7 @@
 ---
 title: Substitution Files
 description: The home of substitution files documentation
+linkText: Substitution Files
 ---
 
 # Substitution Files

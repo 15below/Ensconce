@@ -1,6 +1,7 @@
 ---
 title: Reports Deployment
 description: How to deploy reports
+linkText: Reports Deployment
 ---
 
 # Reports Role

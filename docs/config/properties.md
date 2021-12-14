@@ -1,6 +1,7 @@
 ---
 title: Properties
 description: Adding key/value properties into the deployment configuration
+linkText: Properties
 ---
 
 # Properties

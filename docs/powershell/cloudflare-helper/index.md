@@ -1,6 +1,7 @@
 ---
 title: cloudflareHelper.ps1
 description: Details about the cloudflareHelper.ps1 script
+linkText: cloudflareHelper.ps1
 ---
 
 # cloudflareHelper.ps1

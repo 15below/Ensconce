@@ -1,6 +1,7 @@
 ---
 title: rabbitHelper.ps1
 description: Details about the rabbitHelper.ps1 helper script
+linkText: rabbitHelper.ps1
 ---
 
 # rabbitHelper.ps1

@@ -1,6 +1,7 @@
 ---
 title: Creating Backups
 description: How to create a backup zip file
+linkText: Creating Backups
 ---
 
 # Creating Backups

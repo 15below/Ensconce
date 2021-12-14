@@ -1,6 +1,7 @@
 ---
 title: Home
 description: The home of the 15below Ensconce documentation
+linkText: Home
 ---
 
 # Overview

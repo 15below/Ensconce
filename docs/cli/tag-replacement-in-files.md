@@ -1,6 +1,7 @@
 ---
 title: Tag Replacement In Files
 description: How to update files which have Ensconce template tags
+linkText: Tag Replacement In Files
 ---
 
 # Tag Replacement In Files

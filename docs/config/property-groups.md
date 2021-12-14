@@ -1,6 +1,7 @@
 ---
 title: Property Groups
 description: Adding sets of grouped properties 
+linkText: Property Groups
 ---
 
 # Property Groups

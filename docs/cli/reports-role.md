@@ -1,6 +1,7 @@
 ---
 title: Reports Role
 description: How to deploy reporting role for a user
+linkText: Reports Role
 ---
 
 # Reports Role

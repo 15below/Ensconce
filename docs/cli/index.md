@@ -1,6 +1,7 @@
 ---
 title: Command Line Tasks
 description: The home of command line task documentation
+linkText: Command Line Tasks
 ---
 
 # Command Line Tasks

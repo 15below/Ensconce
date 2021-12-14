@@ -1,6 +1,7 @@
 ---
 title: webHelper.ps1
 description: Details about the webHelper.ps1 helper script
+linkText: webHelper.ps1
 ---
 
 # webHelper.ps1

@@ -1,6 +1,7 @@
 ---
 title: Database Logins
 description: Specifying database logins as part of your deployment configuration
+linkText: Database Logins
 ---
 
 # Database Logins
