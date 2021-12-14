@@ -42,18 +42,20 @@ pre code {
 }
 
 .list-group.list-group-root>.list-group-item {
-    padding-left: 10px;
+    padding-left: 20px;
 }
 
 .list-group.list-group-root>.list-group>.list-group-item {
-    padding-left: 30px;
+    padding-left: 50px;
 }
 
 .list-group.list-group-root>.list-group>.list-group>.list-group-item {
-    padding-left: 50px;
+    padding-left: 80px;
 
-}.list-group.list-group-root>.list-group>.list-group>.list-group>.list-group-item {
-    padding-left: 70px;
+}
+
+.list-group.list-group-root>.list-group>.list-group>.list-group>.list-group-item {
+    padding-left: 110px;
 }
 
 @media (min-width: 992px) {

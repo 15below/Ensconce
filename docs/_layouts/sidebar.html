@@ -45,41 +45,14 @@ layout: default
                 {% endif %}
                 {% endfor %}
                 {% endfor %}
-
-                <a href="{{ page.url | relative_url }}"
-                    class="list-group-item list-group-item-action active">{% if page.linkText %}{{ page.linkText }}{% else %}{{ page.title }}{% endif %}</a>
+                <a href="{{ page.url | relative_url }}" class="list-group-item list-group-item-action active">{% if page.linkText %}{{ page.linkText }}{% else %}{{ page.title }}{% endif %}</a>
                 <div class="list-group list-group-l1">
                     {% for node in sortedPages %}
                     {% if node.url contains page.url and node.url != page.url %}
                     {% assign node_url_parts = node.url | split: '/' | where_exp: "item", "item != ''" %}
                     {% assign node_url_parts_size = node_url_parts | size | minus: 1 %}
                     {% if url_parts_size == node_url_parts_size %}
-                    <a href="{{ node.url | relative_url }}"
-                        class="list-group-item list-group-item-action">{% if node.linkText %}{{ node.linkText }}{% else %}{{ node.title }}{% endif %}</a>
-                    <div class="list-group list-group-l2">
-                        {% for node2 in sortedPages %}
-                        {% if node2.url contains node.url and node2.url != node.url %}
-                        {% assign node2_url_parts = node2.url | split: '/' | where_exp: "item", "item != ''" %}
-                        {% assign node2_url_parts_size = node2_url_parts | size | minus: 2 %}
-                        {% if node_url_parts_size == node2_url_parts_size %}
-                        <a href="{{ node2.url | relative_url }}"
-                            class="list-group-item list-group-item-action">{% if node2.linkText %}{{ node2.linkText }}{% else %}{{ node2.title }}{% endif %}</a>
-                        <div class="list-group list-group-l3">
-                            {% for node3 in sortedPages %}
-                            {% if node3.url contains node2.url and node3.url != node2.url %}
-                            {% assign node3_url_parts = node3.url | split: '/' | where_exp: "item", "item != ''" %}
-                            {% assign node3_url_parts_size = node3_url_parts | size | minus: 3 %}
-                            {% if node2_url_parts_size == node3_url_parts_size %}
-                            <a href="{{ node3.url | relative_url }}"
-                                class="list-group-item list-group-item-action">{% if node3.linkText %}{{ node3.linkText }}{% else %}{{ node3.title }}{% endif %}</a>
-                            {% endif %}
-                            {% endif %}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        {% endif %}
-                        {% endfor %}
-                    </div>
+                    <a href="{{ node.url | relative_url }}" class="list-group-item list-group-item-action">{% if node.linkText %}{{ node.linkText }}{% else %}{{ node.title }}{% endif %}</a>
                     {% endif %}
                     {% endif %}
                     {% endfor %}
