@@ -13,7 +13,7 @@ CreateOrUpdateCloudflareARecord
     [-domain] <String>
     [-record] <String>
     [-ipaddr] <String>
-    [-warnOnUpdate] <bool> = false
+    [-warnOnUpdate] <Boolean> = false
 {% endraw %}
 ```
 

@@ -12,7 +12,7 @@ RemoveCloudflareDnsRecord
     [-token] <String>
     [-domain] <String>
     [-record] <String>
-    [-warnOnDelete] <bool> = false
+    [-warnOnDelete] <Boolean> = false
 {% endraw %}
 ```
 

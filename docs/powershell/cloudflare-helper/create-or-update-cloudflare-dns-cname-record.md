@@ -13,7 +13,7 @@ CreateOrUpdateCloudflareCNAMERecord
     [-domain] <String>
     [-record] <String>
     [-cnameValue] <String>
-    [-warnOnUpdate] <bool> = false
+    [-warnOnUpdate] <Boolean> = false
 {% endraw %}
 ```
 
