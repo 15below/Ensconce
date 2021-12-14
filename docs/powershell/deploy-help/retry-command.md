@@ -1,20 +1,23 @@
 ---
-title: deployHelp.ps1 - retry-command
-linkText: retry-command
-description: Details about the retry-command function in deployHelp.ps1 helper script
+title: deployHelp.ps1 - Retry-Command
+linkText: Retry-Command
+description: Details about the Retry-Command function in deployHelp.ps1 helper script
 ---
 
-# retry-command
+# Retry-Command
 
 ```PowerShell
 {% raw %}
-Retry-Command([scriptblock]$ScriptBlock, [int]$Maximum = 5, [int]$Delay = 100)
+Retry-Command
+    [-ScriptBlock] <ScriptBlock>
+    [-Maximum] <int> = 5
+    [-Delay] <int> = 100
 {% endraw %}
 ```
 
 ## Description
 
-The `retry-command` function is a helper to run the contents of the script block a number of times if there is an error with a delay between.
+The `Retry-Command` function is a helper to run the contents of the script block a number of times if there is an error with a delay between.
 
 By default, it will retry 5 times, with a delay of 100ms.
 
@@ -22,6 +25,6 @@ By default, it will retry 5 times, with a delay of 100ms.
 
 ```PowerShell
 {% raw %}
-retry-command { Write-Host "Test" } 5 500
+Retry-Command -ScriptBlock { Write-Host "Test" } -Maximum 5 -Delay 500
 {% endraw %}
 ```
