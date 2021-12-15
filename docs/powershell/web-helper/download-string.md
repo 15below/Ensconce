@@ -15,12 +15,12 @@ DownloadString
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Download string output from a url
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+$output = DownloadString -url "https://example.com/status"
 {% endraw %}
 ```

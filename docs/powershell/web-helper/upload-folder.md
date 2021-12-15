@@ -16,12 +16,12 @@ UploadFolderAsZipAndGetStringResponse
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Uploads a folder as a zip file to a URL
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+UploadFolderAsZipAndGetStringResponse -url "https://example.com/upload" -file "C:\Temp\Files"
 {% endraw %}
 ```

@@ -19,12 +19,18 @@ DownloadStringUntilOK
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Polls a url which prints a string and keeps checking (for a configurable number of checks).
+
+It will poll with a configurable sleep between checks.
+
+If the web response is one of the provided `OkText` the process will end.
+
+If the web response is one of the `failText` an exception will be thrown
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+DownloadStringUntilOK -url "https://example.com/status" -maxChecks 50 -sleepSeconds 1 -okText @("Passed") -failText @("Failed","Errored")
 {% endraw %}
 ```

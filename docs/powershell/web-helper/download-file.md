@@ -16,12 +16,12 @@ DownloadFile
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Downloads a file from a URL and saves to disk
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+DownloadFile -url "https://example.com/myFile.txt" -destination "C:\Temp\myFile.txt"
 {% endraw %}
 ```

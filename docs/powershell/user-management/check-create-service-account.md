@@ -16,12 +16,14 @@ CheckAndCreateServiceAccount
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Checks if service account already exists and if not creates it.
+
+If the service account does exist, the password will be updated
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CheckAndCreateServiceAccount -name "MyUser" -password "Secure_User_Password"
 {% endraw %}
 ```

@@ -16,12 +16,14 @@ CheckAndCreateUserAccount
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Checks if user account already exists and if not creates it.
+
+If the user account does exist, the password will be updated
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CheckAndCreateUserAccount -name "MyUser" -password "Secure_User_Password"
 {% endraw %}
 ```

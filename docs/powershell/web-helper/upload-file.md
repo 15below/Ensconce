@@ -16,12 +16,12 @@ UploadFileAndGetStringResponse
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Uploads a file to a URL
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+UploadFileAndGetStringResponse -url "https://example.com/upload" -file "C:\Temp\File.txt"
 {% endraw %}
 ```
