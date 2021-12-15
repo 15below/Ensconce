@@ -19,12 +19,12 @@ CreateWebApplication
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Creates webapp into existing website
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CreateWebApplication -webSite "MySite" -appName "SubApp" -appPool "MyAppPool" -InstallDir "C:\Site\SubApp"
 {% endraw %}
 ```

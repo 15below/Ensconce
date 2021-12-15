@@ -15,12 +15,12 @@ EnableWebDav
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Enable WebDav functionality on a website.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+EnableWebDav -websiteName "MyWebDavStore"
 {% endraw %}
 ```

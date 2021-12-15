@@ -22,12 +22,12 @@ CreateWebSite
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Creates a website.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CreateWebSite -name "MySite" -localPath "C:\Site" -appPool "MyAppPool" -applicationName "MySite" -hostName "site.example.com" -logLocation "C:\logs"
 {% endraw %}
 ```

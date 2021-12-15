@@ -15,12 +15,12 @@ StopAppPool
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Stops an application pool
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+StopAppPool -name "MyAppPool"
 {% endraw %}
 ```

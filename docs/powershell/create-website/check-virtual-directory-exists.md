@@ -16,12 +16,15 @@ CheckIfVirtualDirectoryExists
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Checks if a virtual directory exists under a website.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+if(CheckIfVirtualDirectoryExists -webSite "MySite" -virtualDir "SubDir")
+{
+    Write-Host "Virtual directory exists"
+}
 {% endraw %}
 ```

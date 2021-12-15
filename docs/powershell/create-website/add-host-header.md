@@ -19,12 +19,12 @@ AddHostHeader
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Adds a host header value to an existing website.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+AddHostHeader -siteName "MySite" -hostHeader "site.example.com" -port 80 -protocol "http"
 {% endraw %}
 ```

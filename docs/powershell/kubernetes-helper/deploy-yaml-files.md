@@ -17,12 +17,14 @@ DeployYamlFilesToK8sCluster
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Deploys a set of yaml files to a Kubernetes instance using a specific config file.
+
+For prune to work correctly it needs to be provided with a selector
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+DeployYamlFilesToK8sCluster -yamlDirectory "/Path/To/YAML" -kubernetesConfigFile "/.kube/instance1.yaml" -pruneSelector "app=myapp"
 {% endraw %}
 ```

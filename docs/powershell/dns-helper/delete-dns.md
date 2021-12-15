@@ -18,12 +18,14 @@ DeleteDns
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Delete an existing DNS entry
+
+Can optionally log a warning if a delete occurs
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+DeleteDns -dnsServer "192.168.0.100" -domain "myDomain.local" -name "server01"
 {% endraw %}
 ```

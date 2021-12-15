@@ -17,12 +17,12 @@ AddAuthoringRule
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Add authoring rules for a user on a WebDav store.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+AddAuthoringRule -websiteName "MyWebDavStore" -user "WebDavUser" -access "Read"s
 {% endraw %}
 ```

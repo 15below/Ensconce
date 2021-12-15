@@ -15,12 +15,12 @@ EnableBasicAuthentication
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Enabled basic authentication on a website
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+EnableBasicAuthentication -websiteName "MySite"
 {% endraw %}
 ```

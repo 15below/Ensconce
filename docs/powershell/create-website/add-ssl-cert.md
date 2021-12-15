@@ -18,12 +18,12 @@ AddSslCertificate
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Adds a `https` binding to an existing website using a certificate located by friendly name.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+AddSslCertificate -websiteName "MySite" -friendlyName "MyCert" -hostHeader "site.example.com"
 {% endraw %}
 ```

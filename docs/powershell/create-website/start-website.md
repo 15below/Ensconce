@@ -15,12 +15,12 @@ StartWebSite
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Starts a website
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+StartWebsite -name "MySite"
 {% endraw %}
 ```

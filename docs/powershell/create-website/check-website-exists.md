@@ -15,12 +15,15 @@ CheckIfWebSiteExists
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Checks if website exists
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+if(CheckIfWebSiteExists -webSite "MySite")
+{
+    Write-Host "Website exists"
+}
 {% endraw %}
 ```

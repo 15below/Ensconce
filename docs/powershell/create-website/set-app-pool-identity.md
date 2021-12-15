@@ -17,12 +17,12 @@ SetAppPoolIdentity
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Set Application Pool to run as a specific user
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+SetAppPoolIdentity -name "MyAppPool" -user "MyUser" -password "ThisIsASecurePassword!"
 {% endraw %}
 ```

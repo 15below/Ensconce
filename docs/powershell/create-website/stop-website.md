@@ -15,12 +15,12 @@ StopWebSite
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Stops a website
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+StopWebSite -name "MySite"
 {% endraw %}
 ```

@@ -16,12 +16,15 @@ CheckIfWebApplicationExists
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Checks if a web application exists under a website.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+if(CheckIfWebApplicationExists -webSite "MySite" -appName "SubApp")
+{
+    Write-Host "WebApp exists"
+}
 {% endraw %}
 ```

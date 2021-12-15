@@ -15,12 +15,12 @@ EnableParentPaths
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Enables the parent paths setting on a website
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+EnableParentPaths -websiteName "MySite"
 {% endraw %}
 ```

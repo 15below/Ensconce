@@ -15,12 +15,12 @@ CreateAppPool
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Creates an app pool
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CreateAppPool -name "MyAppPool"
 {% endraw %}
 ```

@@ -15,12 +15,12 @@ StartAppPool
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Starts an application pool
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+StartAppPool -name "MyAppPool"
 {% endraw %}
 ```

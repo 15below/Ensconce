@@ -16,12 +16,12 @@ AddHostsEntry
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Adds a value into the machine HOSTS file
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+AddHostsEntry -Address "127.0.0.1" -FullyQualifiedName "site.example.com"
 {% endraw %}
 ```

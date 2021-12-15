@@ -15,12 +15,15 @@ CheckIfAppPoolExists
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Checks for the presence of an application pool matching the name.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+if(CheckIfAppPoolExists -name "MyAppPool")
+{
+    Write-Host "AppPool exists"
+}
 {% endraw %}
 ```

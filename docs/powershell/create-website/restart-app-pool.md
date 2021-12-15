@@ -15,12 +15,12 @@ RestartAppPool
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Restarts an existing application pool
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+RestartAppPool -name "MyAppPool"
 {% endraw %}
 ```

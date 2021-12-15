@@ -17,12 +17,12 @@ CreateVirtualDirectory
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Create new virtual directory under an existing website
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CreateVirtualDirectory -webSite "MySite" -virtualDir "SubDir" -physicalPath "C:\Site\SubDir"
 {% endraw %}
 ```

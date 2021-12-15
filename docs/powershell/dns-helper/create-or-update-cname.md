@@ -19,12 +19,14 @@ CreateOrUpdateCName
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Adds or updates an `CNAME` record on a DNS sever.
+
+Can optionally log a warning if an update occurs
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CreateOrUpdateCName -dnsServer "192.168.0.100" -domain "myDomain.local" -name "server01" -server "server01.servers.local"
 {% endraw %}
 ```

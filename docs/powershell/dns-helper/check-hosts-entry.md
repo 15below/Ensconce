@@ -16,12 +16,12 @@ CheckHostsEntry
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Checks if the HOSTS file contains an entry with value
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CheckHostsEntry -Address "127.0.0.1" -FullyQualifiedName "site.example.com"
 {% endraw %}
 ```

@@ -17,12 +17,26 @@ UpdateAppPoolRecycling
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Update the settings for how frequently an application pool should restart.
+
+The supported triggers for restart are time (default to 2 hours) and memory size (default to 1048576KB/1024MB/1GB)
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+UpdateAppPoolRecycling -name "MyAppPool" -periodicRestart "00:30:00"
+{% endraw %}
+```
+
+```PowerShell
+{% raw %}
+UpdateAppPoolRecycling -name "MyAppPool" -privateMemory 524288
+{% endraw %}
+```
+
+```PowerShell
+{% raw %}
+UpdateAppPoolRecycling -name "MyAppPool" -periodicRestart "00:30:00" -privateMemory 524288
 {% endraw %}
 ```

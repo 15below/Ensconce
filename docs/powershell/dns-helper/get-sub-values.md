@@ -17,12 +17,12 @@ GetAllSubValues
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Gets a collection of all DNS entries based within a section of your DNS server
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+GetAllSubValues -dnsServer "192.168.0.100" -domain "myDomain.local" -lookupName "servers"
 {% endraw %}
 ```

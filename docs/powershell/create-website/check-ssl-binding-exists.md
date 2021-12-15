@@ -17,12 +17,15 @@ CheckIfSslBindingExists
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Checks if there is a binding with `https` protocol with the provided host header and optional IP Address on a website.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+if(CheckIfSslBindingExists -webSite "MySite" -hostHeader "site.example.com")
+{
+    Write-Host "SSL binding exists"
+}
 {% endraw %}
 ```

@@ -15,12 +15,12 @@ Enable32BitApps
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Sets application pool to enable 32bit apps to run on 64bit version of Windows
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+Enable32BitApps -appPoolName "MyAppPool"
 {% endraw %}
 ```

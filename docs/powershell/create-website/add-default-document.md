@@ -16,12 +16,12 @@ AddDefaultDocument
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Adds a default document to existing website.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+AddDefaultDocument -websiteName "MySite" -defaultDocumentName "welcome.htm"
 {% endraw %}
 ```
