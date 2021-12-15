@@ -12,6 +12,8 @@ Ensconce can configure reports being deployed to SQL Server Reporting Services (
 
 Ensconce can setup a specific domain user to have SSRS security permissons on a item or folder of items.
 
-## Syntax
+## Example
 
-`--drr --rsv reportingServicesUrl=[urlToReportingServices] --rsv networkDomain=[authenticationDomain] --rsv networkLogin=[authenticationUser] --rsv networkPassword=[authenticationPassword] --rsv itemPath=[pathToAddRoleTo] --rsv reportingUserToAddRoleFor=[userToAdd] --rsv reportingRoleToAdd=[roleToAdd]`
+```cmd
+ensconce --drr --rsv reportingServicesUrl=[urlToReportingServices] --rsv networkDomain=[authenticationDomain] --rsv networkLogin=[authenticationUser] --rsv networkPassword=[authenticationPassword] --rsv itemPath=[pathToAddRoleTo] --rsv reportingUserToAddRoleFor=[userToAdd] --rsv reportingRoleToAdd=[roleToAdd]
+```

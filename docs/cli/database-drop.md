@@ -10,6 +10,8 @@ linkText: Database Drop
 
 In situations where you require your database to be dropped prior to deployment (in the case of a testing system) Ensconce has the ability to do this.
 
-## Syntax
+## Example
 
-`--connectionString=[sqlConnectionString] --dropDatabase --dropDatabaseConfirm`
+```cmd
+ensconce --connectionString=[sqlConnectionString] --dropDatabase --dropDatabaseConfirm
+```

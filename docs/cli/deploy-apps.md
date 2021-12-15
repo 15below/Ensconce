@@ -12,17 +12,21 @@ Whilst [deploying files]({{ '/' | relative_url }}cli/deploy-files){:.link-second
 
 In order to trigger the application configuration update we add an extra parameter.
 
-## Syntax
+## Example
 
 ### Copy Files & Update Configuration
 
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo --updateConfig`
+```cmd
+ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo --updateConfig
+```
 
 This will assume there is a file alongside your calling location called `substitutions.xml`.
 
 ### Replace Files & Update Configuration
 
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig`
+```cmd
+ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig
+```
 
 This will assume there is a file alongside your calling location called `substitutions.xml`.
 
@@ -30,10 +34,14 @@ This will assume there is a file alongside your calling location called `substit
 
 This can be used with a `--copyTo` or a `--replace`.
 
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig --substitutionPath=[substitutionFilePath]`
+```cmd
+ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig --substitutionPath=[substitutionFilePath]
+```
 
 ### Output Partially Applied Output On Failure
 
 This can be used with a `--copyTo` or a `--replace`.
 
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig --outputFailureContext`
+```cmd
+ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig --outputFailureContext
+```

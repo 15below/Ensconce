@@ -14,8 +14,10 @@ By default, Ensconce will use the environment variable `FixedPath` which should 
 
 It's possible to override environment variable, or use a path rather than the environment variable.
 
-## Syntax
+## Example
 
 This example is a file copy, with the additional parameter
 
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo --fixedPath=[deployConfigurationPath]`
+```cmd
+ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo --fixedPath=[deployConfigurationPath]
+```

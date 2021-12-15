@@ -12,12 +12,16 @@ Ensconce has the ability to deploy files either performing a copy function to ad
 
 If the files you are deploying are applications, you should see the [Deploying Applications]({{ '/' | relative_url }}cli/deploy-apps){:.link-secondary} page.
 
-## Syntax
+## Example
 
 ### Copy Files
 
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo`
+```cmd
+ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo
+```
 
 ### Replace Files
 
-`--deployFrom=[sourcePath] --deployTo=[destinationPath] --replace`
+```cmd
+ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --replace
+```

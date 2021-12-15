@@ -14,9 +14,11 @@ As part of the deployment subscriptions can be added using a Ensconce defined `S
 
 Whilst deploying the reports, any connection information for the report database will be updated to ensure reports run against the correct database.
 
-## Syntax
+## Example
 
-`--dr --rsv reportingServicesUrl=[urlToReportingServices] --rsv networkDomain=[authenticationDomain] --rsv networkLogin=[authenticationUser] --rsv networkPassword=[authenticationPassword] --rsv parentFolder=[reportRootFolder] --rsv subFolder=[reportSubFolder] --rsv dataSourceName=[reportDataSource] --rsv  ataSourceConnectionString=[reportDataSourceConnectionString] --rsv dataSourceUserName=[reportDataSourceUserName] --rsv dataSourcePassword= [reportDataSourcePassword] --rsv reportSourceFolder=[pathToReports]`
+```cmd
+ensconce --dr --rsv reportingServicesUrl=[urlToReportingServices] --rsv networkDomain=[authenticationDomain] --rsv networkLogin=[authenticationUser] --rsv networkPassword=[authenticationPassword] --rsv parentFolder=[reportRootFolder] --rsv subFolder=[reportSubFolder] --rsv dataSourceName=[reportDataSource] --rsv  ataSourceConnectionString=[reportDataSourceConnectionString] --rsv dataSourceUserName=[reportDataSourceUserName] --rsv dataSourcePassword= [reportDataSourcePassword] --rsv reportSourceFolder=[pathToReports]
+```
 
 ## SubInfo Files
 

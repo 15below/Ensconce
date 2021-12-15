@@ -12,12 +12,16 @@ There may be cases when you want to save the entire tag dictionary Ensconce has 
 
 ___Warning___ The data being saved or exported will not be encrypted
 
-## Syntax
+## Example
 
 ### Save To Path
 
-`--dictionarySavePath=[pathToJsonFile]`
+```cmd
+ensconce --dictionarySavePath=[pathToJsonFile]
+```
 
 ### Post To REST Endpoint
 
-`--dictionaryPostUrl=[urlToPostJsonTo]`
+```cmd
+ensconce --dictionaryPostUrl=[urlToPostJsonTo]
+```

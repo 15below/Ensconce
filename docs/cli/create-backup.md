@@ -10,16 +10,22 @@ linkText: Creating Backups
 
 In order to facilitate a rollback, Ensconce gives the ability to create an automated zip backup of your application prior to a deployment.
 
-## Syntax
+## Example
 
 ## Single Source
 
-`--backupSource=[pathToBackup] --backupDestination=[pathToBackupZipFile]`
+```cmd
+ensconce --backupSource=[pathToBackup] --backupDestination=[pathToBackupZipFile]
+```
 
 ## Multiple Sources
 
-`--backupSource=[pathToBacker] --backupSource=[anotherPathToBackup] --backupDestination=[pathToBackupZipFile]`
+```cmd
+ensconce --backupSource=[pathToBacker] --backupSource=[anotherPathToBackup] --backupDestination=[pathToBackupZipFile]
+```
 
 ## Overwrite Existing Backups
 
-`--backupSource=[pathToBackup] --backupDestination=[pathToBackupZipFile] --backupOverwrite`
+```cmd
+ensconce --backupSource=[pathToBackup] --backupDestination=[pathToBackupZipFile] --backupOverwrite
+```

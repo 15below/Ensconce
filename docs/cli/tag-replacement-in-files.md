@@ -12,6 +12,8 @@ With Ensconce you can perform [template tag]({{ '/' | relative_url }}templates){
 
 Providing a wildcard pattern for searching files, Ensconce will parse each of those files & update the contents.
 
-## Syntax
+## Example
 
-`--deployFrom=[sourcePath] --treatAsTemplateFilter=[searchPattern]`
+```cmd
+ensconce --deployFrom=[sourcePath] --treatAsTemplateFilter=[searchPattern]
+```
