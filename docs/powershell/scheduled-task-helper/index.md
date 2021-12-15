@@ -13,11 +13,3 @@ The `scheduledTaskHelper.ps1` script has functionality to check, create, delete 
 ## Functions
 
 {% include childPages.html %}
-
-{% comment %}
-ScheduledTask-CheckExists([string] $taskName, [string] $taskPath)
-ScheduledTask-Delete([string] $taskName, [string] $taskPath)
-ScheduledTask-CreateFromXml([string] $taskName, [string] $taskPath, [string] $taskXmlPath)
-ScheduledTask-CreateOrUpdateFromXml([string] $taskName, [string] $taskPath, [string] $taskXmlPath)
-ScheduledTask-Run([string] $taskName, [string] $taskPath)
-{% endcomment %}
