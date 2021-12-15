@@ -21,7 +21,7 @@ AddHostHeader
 
 Adds a host header value to an existing website.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

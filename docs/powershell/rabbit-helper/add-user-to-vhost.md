@@ -21,7 +21,7 @@ AddUserToVHost
 
 Adds an existing user to an existing virtual host.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

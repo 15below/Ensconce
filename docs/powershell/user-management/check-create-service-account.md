@@ -20,7 +20,7 @@ Checks if service account already exists and if not creates it.
 
 If the service account does exist, the password will be updated
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

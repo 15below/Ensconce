@@ -17,7 +17,7 @@ SetServiceRestarts
 
 Set service to restart on failure (2 restart attempts)
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

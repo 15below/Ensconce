@@ -27,7 +27,7 @@ If the web response is one of the provided `OkText` the process will end.
 
 If the web response is one of the `failText` an exception will be thrown
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

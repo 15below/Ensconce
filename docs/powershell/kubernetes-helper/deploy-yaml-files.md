@@ -21,7 +21,7 @@ Deploys a set of yaml files to a Kubernetes instance using a specific config fil
 
 For prune to work correctly it needs to be provided with a selector
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

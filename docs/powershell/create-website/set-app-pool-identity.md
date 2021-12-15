@@ -19,7 +19,7 @@ SetAppPoolIdentity
 
 Set Application Pool to run as a specific user
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

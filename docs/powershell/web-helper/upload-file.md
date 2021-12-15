@@ -18,7 +18,7 @@ UploadFileAndGetStringResponse
 
 Uploads a file to a URL
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

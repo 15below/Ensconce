@@ -19,7 +19,7 @@ GetAllSubValues
 
 Gets a collection of all DNS entries based within a section of your DNS server
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

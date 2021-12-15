@@ -21,7 +21,7 @@ CreateWebApplication
 
 Creates webapp into existing website
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

@@ -18,7 +18,7 @@ ExtractZip
 
 Extracts a zip file to a provided location
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

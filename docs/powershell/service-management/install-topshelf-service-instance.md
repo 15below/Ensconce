@@ -19,7 +19,7 @@ InstallTopshelfServiceWithInstance
 
 Install a Topshelf service with a specific instance identifier
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

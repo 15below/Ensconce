@@ -20,7 +20,7 @@ CreateDesktopShortcut
 
 The `CreateDesktopShortcut` function creates a shortcut to an exe on the desktop.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

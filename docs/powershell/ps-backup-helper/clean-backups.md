@@ -18,7 +18,7 @@ CleanBackups
 
 Removes any backup from directory which is older than the number of days to keep.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

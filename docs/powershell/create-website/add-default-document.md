@@ -18,7 +18,7 @@ AddDefaultDocument
 
 Adds a default document to existing website.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

@@ -17,7 +17,7 @@ RestartAppPool
 
 Restarts an existing application pool
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

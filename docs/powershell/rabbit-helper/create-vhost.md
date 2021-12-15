@@ -20,7 +20,7 @@ CreateRabbitVHost
 
 Creates a new rabbit vhost
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

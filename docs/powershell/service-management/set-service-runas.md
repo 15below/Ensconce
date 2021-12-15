@@ -19,7 +19,7 @@ SetServiceRunAs
 
 Set the startup user for a service
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

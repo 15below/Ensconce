@@ -17,7 +17,7 @@ DownloadString
 
 Download string output from a url
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

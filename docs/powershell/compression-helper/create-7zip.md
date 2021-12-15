@@ -18,7 +18,7 @@ Create7z
 
 Creates a 7zip file with the contents of the source path
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

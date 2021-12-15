@@ -17,7 +17,7 @@ StartAppPool
 
 Starts an application pool
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

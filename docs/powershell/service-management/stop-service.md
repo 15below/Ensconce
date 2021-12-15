@@ -17,7 +17,7 @@ StopService
 
 Stops a service
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

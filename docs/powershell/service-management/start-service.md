@@ -17,7 +17,7 @@ StartService
 
 Starts a service
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

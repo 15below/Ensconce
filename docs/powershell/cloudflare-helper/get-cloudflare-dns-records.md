@@ -19,7 +19,7 @@ GetCloudflareDnsRecords
 
 Returns a collection of strings representing all the entries that exist.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

@@ -17,7 +17,7 @@ CheckIfAppPoolExists
 
 Checks for the presence of an application pool matching the name.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

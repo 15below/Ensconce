@@ -16,7 +16,7 @@ Clear-DnsClientCache
 
 Runs `ipconfig /flushdns` to replicate the function added in later versions of powershell - https://docs.microsoft.com/en-us/powershell/module/dnsclient/clear-dnsclientcache
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

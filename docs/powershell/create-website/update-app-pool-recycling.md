@@ -21,7 +21,7 @@ Update the settings for how frequently an application pool should restart.
 
 The supported triggers for restart are time (default to 2 hours) and memory size (default to 1048576KB/1024MB/1GB)
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

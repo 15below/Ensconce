@@ -17,7 +17,7 @@ RemoveService
 
 Remove an installed service
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

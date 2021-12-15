@@ -18,7 +18,7 @@ AddHostsEntry
 
 Adds a value into the machine HOSTS file
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

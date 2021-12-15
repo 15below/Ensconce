@@ -18,7 +18,7 @@ UploadValuesAndGetStringResponse
 
 Uploads a key value pairing of parameters to a url
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

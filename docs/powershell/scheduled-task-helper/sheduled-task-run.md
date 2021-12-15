@@ -18,7 +18,7 @@ ScheduledTask-Run
 
 Runs a scheduled task.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

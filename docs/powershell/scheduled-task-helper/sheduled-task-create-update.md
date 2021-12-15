@@ -19,7 +19,7 @@ ScheduledTask-CreateOrUpdateFromXml
 
 Creates or updates a scheduled task based on a task definition XML file
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

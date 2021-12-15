@@ -17,7 +17,7 @@ CheckIfWebSiteExists
 
 Checks if website exists
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

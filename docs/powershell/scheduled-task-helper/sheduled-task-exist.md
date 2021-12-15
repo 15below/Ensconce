@@ -18,7 +18,7 @@ ScheduledTask-CheckExists
 
 Checks if a task already exists
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

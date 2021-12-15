@@ -17,7 +17,7 @@ StopAppPool
 
 Stops an application pool
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

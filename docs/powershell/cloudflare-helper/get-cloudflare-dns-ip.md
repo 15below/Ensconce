@@ -19,7 +19,7 @@ GetCloudflareDnsIp
 
 Returns the IP address of the requested record
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

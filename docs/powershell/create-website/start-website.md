@@ -17,7 +17,7 @@ StartWebSite
 
 Starts a website
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

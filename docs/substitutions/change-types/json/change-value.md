@@ -1,9 +1,49 @@
 ---
-title: XML Change Value
+title: JSON Change Value
 linkText: Change Value
-description: Change value XML format
+description: Change value JSON format
 ---
 
-# XML Change Value
+# JSON Change Value
 
-Placeholder - This page has not been written yet!
+## Description
+
+Updates the value of a JSON path
+
+## Example
+
+### Base File
+
+```json
+{% raw %}
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Trace"
+    }
+  }
+}
+{% endraw %}
+```
+
+### Substitution
+
+```XML
+{% raw %}
+<Change type="ChangeValue" jsonPath="$.Logging.LogLevel.Default" value="Debug" />
+{% endraw %}
+```
+
+### Output
+
+```json
+{% raw %}
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug"
+    }
+  }
+}
+{% endraw %}
+```

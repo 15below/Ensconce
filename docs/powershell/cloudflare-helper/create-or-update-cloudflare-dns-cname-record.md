@@ -25,7 +25,7 @@ If the DNS entry already exists, it's value will be updated. - This can optional
 
 If the DNS entry does not exist, it will be created.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

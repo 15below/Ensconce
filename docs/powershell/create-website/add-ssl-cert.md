@@ -20,7 +20,7 @@ AddSslCertificate
 
 Adds a `https` binding to an existing website using a certificate located by friendly name.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

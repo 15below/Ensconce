@@ -22,7 +22,7 @@ Removes DNS entry.
 
 If an entry is removed, can log a warning when this happens
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

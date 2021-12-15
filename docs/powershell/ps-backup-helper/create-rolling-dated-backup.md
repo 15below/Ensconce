@@ -21,7 +21,7 @@ Creates a dated zip file in the destination folder with all the files provided a
 
 Will automatically clean any backups in the destination which are older than 7 days.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

@@ -18,7 +18,7 @@ ScheduledTask-Delete
 
 Will delete an existing scheduled task
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

@@ -21,7 +21,7 @@ InstallDotNetCoreService
 
 Install a dotnet service (application which has a .dll file being passed to the dotnet runtime).
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

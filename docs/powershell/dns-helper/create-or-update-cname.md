@@ -23,7 +23,7 @@ Adds or updates an `CNAME` record on a DNS sever.
 
 Can optionally log a warning if an update occurs
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

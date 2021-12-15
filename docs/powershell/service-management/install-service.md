@@ -21,7 +21,7 @@ InstallService
 
 Install a service which will run an exe.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

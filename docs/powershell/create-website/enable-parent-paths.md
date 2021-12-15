@@ -17,7 +17,7 @@ EnableParentPaths
 
 Enables the parent paths setting on a website
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

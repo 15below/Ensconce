@@ -17,7 +17,7 @@ StopWebSite
 
 Stops a website
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

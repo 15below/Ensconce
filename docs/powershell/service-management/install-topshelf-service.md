@@ -18,7 +18,7 @@ InstallTopshelfService
 
 Install a Topshelf service
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

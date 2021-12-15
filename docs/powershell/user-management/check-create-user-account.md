@@ -20,7 +20,7 @@ Checks if user account already exists and if not creates it.
 
 If the user account does exist, the password will be updated
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

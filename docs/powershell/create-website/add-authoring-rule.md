@@ -19,7 +19,7 @@ AddAuthoringRule
 
 Add authoring rules for a user on a WebDav store.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

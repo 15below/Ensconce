@@ -18,7 +18,7 @@ DownloadFile
 
 Downloads a file from a URL and saves to disk
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

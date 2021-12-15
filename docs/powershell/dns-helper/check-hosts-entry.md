@@ -18,7 +18,7 @@ CheckHostsEntry
 
 Checks if the HOSTS file contains an entry with value
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

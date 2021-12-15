@@ -17,7 +17,7 @@ Enable32BitApps
 
 Sets application pool to enable 32bit apps to run on 64bit version of Windows
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

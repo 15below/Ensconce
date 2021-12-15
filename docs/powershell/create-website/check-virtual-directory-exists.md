@@ -18,7 +18,7 @@ CheckIfVirtualDirectoryExists
 
 Checks if a virtual directory exists under a website.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

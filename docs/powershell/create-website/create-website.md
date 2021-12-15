@@ -24,7 +24,7 @@ CreateWebSite
 
 Creates a website.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

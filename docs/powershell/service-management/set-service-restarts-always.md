@@ -17,7 +17,7 @@ SetServiceRestartAlways
 
 Set service to restart on failure indefinitely
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

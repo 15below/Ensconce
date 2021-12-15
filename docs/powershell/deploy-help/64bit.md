@@ -16,7 +16,7 @@ is64Bit
 
 The `is64Bit` function will check the current machine is a 64bit installation
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

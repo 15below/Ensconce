@@ -19,7 +19,7 @@ CheckIfSslBindingExists
 
 Checks if there is a binding with `https` protocol with the provided host header and optional IP Address on a website.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

@@ -19,7 +19,7 @@ CreateVirtualDirectory
 
 Create new virtual directory under an existing website
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

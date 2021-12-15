@@ -19,7 +19,7 @@ CreateDatedBackup
 
 Creates a dated zip file in the destination folder with all the files provided as sources.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

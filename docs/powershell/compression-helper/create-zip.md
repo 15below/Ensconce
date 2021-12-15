@@ -18,7 +18,7 @@ CreateZip
 
 Creates a zip file with the contents of the source path
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

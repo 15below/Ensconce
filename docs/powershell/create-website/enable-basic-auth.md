@@ -17,7 +17,7 @@ EnableBasicAuthentication
 
 Enabled basic authentication on a website
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

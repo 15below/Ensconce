@@ -17,7 +17,7 @@ EnsurePath
 
 The `EnsurePath` function with check if a directory exists and if it does not exist will create it
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

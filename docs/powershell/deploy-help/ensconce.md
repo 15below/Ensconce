@@ -18,7 +18,7 @@ The `ensconce` function is a helper to call into the Ensconce executable without
 
 This is the recommended way to call Ensconce so as to avoid issues should the internal name or file structure change.
 
-## Examples
+## Example
 
 **Example 1: Pipe text into ensconce**
 

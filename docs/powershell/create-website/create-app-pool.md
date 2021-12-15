@@ -17,7 +17,7 @@ CreateAppPool
 
 Creates an app pool
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

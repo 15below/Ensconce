@@ -18,7 +18,7 @@ UploadFolderAsZipAndGetStringResponse
 
 Uploads a folder as a zip file to a URL
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

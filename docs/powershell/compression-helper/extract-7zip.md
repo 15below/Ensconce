@@ -18,7 +18,7 @@ Extract7z
 
 Extracts a 7zip file to a provided location
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

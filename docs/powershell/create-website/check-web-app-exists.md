@@ -18,7 +18,7 @@ CheckIfWebApplicationExists
 
 Checks if a web application exists under a website.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

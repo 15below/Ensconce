@@ -21,7 +21,7 @@ The `Retry-Command` function is a helper to run the contents of the script block
 
 By default, it will retry 5 times, with a delay of 100ms.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

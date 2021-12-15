@@ -22,7 +22,7 @@ CreateRabbitUserAndVHost
 
 Creates a new rabbit user and vhost
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

@@ -21,7 +21,7 @@ CreateRabbitUser
 
 Creates a new rabbit user
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

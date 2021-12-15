@@ -17,7 +17,7 @@ EnableWebDav
 
 Enable WebDav functionality on a website.
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}

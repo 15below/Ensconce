@@ -22,7 +22,7 @@ Delete an existing DNS entry
 
 Can optionally log a warning if a delete occurs
 
-## Examples
+## Example
 
 ```PowerShell
 {% raw %}
