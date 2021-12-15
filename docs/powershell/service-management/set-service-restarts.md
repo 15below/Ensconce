@@ -15,12 +15,12 @@ SetServiceRestarts
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Set service to restart on failure (2 restart attempts)
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+SetServiceRestartAlways -serviceName "MySvc"
 {% endraw %}
 ```

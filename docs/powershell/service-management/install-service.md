@@ -19,12 +19,12 @@ InstallService
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Install a service which will run an exe.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+InstallService -serviceName "MySvc" -exePath "/Path/To/exe.exe" -startupType "Automatic" -serviceDisplayName "My Service" -serviceDescription "Service that does stuff"
 {% endraw %}
 ```

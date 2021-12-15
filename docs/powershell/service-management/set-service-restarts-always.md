@@ -15,12 +15,12 @@ SetServiceRestartAlways
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Set service to restart on failure indefinitely
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+SetServiceRestartAlways -serviceName "MySvc"
 {% endraw %}
 ```

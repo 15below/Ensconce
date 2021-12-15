@@ -16,12 +16,15 @@ ScheduledTask-CheckExists
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Checks if a task already exists
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+if(ScheduledTask-CheckExists -taskName "MyTask" -taskPath "Tasks")
+{
+    Write-Host "Task Exists"
+}
 {% endraw %}
 ```

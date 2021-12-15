@@ -15,12 +15,12 @@ RemoveService
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Remove an installed service
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+RemoveService -serviceName "MySvc"
 {% endraw %}
 ```

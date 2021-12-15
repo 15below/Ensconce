@@ -17,12 +17,12 @@ ScheduledTask-CreateOrUpdateFromXml
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Creates or updates a scheduled task based on a task definition XML file
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+ScheduledTask-CreateOrUpdateFromXml -taskName "MyTask" -taskPath "Tasks" -taskXmlPath "/Path/To/Xml.xml"
 {% endraw %}
 ```

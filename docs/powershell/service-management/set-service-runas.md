@@ -17,12 +17,12 @@ SetServiceRunAs
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Set the startup user for a service
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+SetServiceRunAs -serviceName "MySvc" -serviceUser "MyUser" -servicePassword "Secure_User_Password"
 {% endraw %}
 ```

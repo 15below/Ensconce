@@ -19,12 +19,12 @@ InstallDotNetCoreService
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Install a dotnet service (application which has a .dll file being passed to the dotnet runtime).
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+InstallDotNetCoreService -serviceName "MySvc" -dllPath "/Path/To/Dll.dll" -startupType "Automatic" -serviceDisplayName "My Service" -serviceDescription "Service that does stuff"
 {% endraw %}
 ```

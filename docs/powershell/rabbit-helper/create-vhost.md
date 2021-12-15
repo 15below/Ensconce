@@ -18,12 +18,12 @@ CreateRabbitVHost
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Creates a new rabbit vhost
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CreateRabbitVHost -deployUser "rabbit-deploy" -deployPassword "Secure_Deploy_Password" -rabbitApiUrl "http://myrabbitserver:15672/api" -vHost "MyRabbitVHost"
 {% endraw %}
 ```

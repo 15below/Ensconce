@@ -17,12 +17,12 @@ InstallTopshelfServiceWithInstance
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Install a Topshelf service with a specific instance identifier
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+InstallTopshelfServiceWithInstance -serviceName "MySvc" -exePath "/Path/To/exe.exe" -instance "1"
 {% endraw %}
 ```

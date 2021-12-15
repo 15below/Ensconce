@@ -20,12 +20,12 @@ CreateRabbitUserAndVHost
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Creates a new rabbit user and vhost
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+CreateRabbitUserAndVHost -deployUser "rabbit-deploy" -deployPassword "Secure_Deploy_Password" -rabbitApiUrl "http://myrabbitserver:15672/api" -user "MyRabbitUser" -password "Secure_User_Password" -vHost "MyRabbitVHost"
 {% endraw %}
 ```

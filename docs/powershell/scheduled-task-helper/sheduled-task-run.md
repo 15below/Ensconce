@@ -16,12 +16,12 @@ ScheduledTask-Run
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Runs a scheduled task.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+ScheduledTask-Run -taskName "MyTask" -taskPath "Tasks"
 {% endraw %}
 ```

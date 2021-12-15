@@ -15,12 +15,12 @@ StopService
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Stops a service
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+StopService -serviceName "MySvc"
 {% endraw %}
 ```

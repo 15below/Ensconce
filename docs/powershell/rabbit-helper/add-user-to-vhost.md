@@ -19,12 +19,12 @@ AddUserToVHost
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Adds an existing user to an existing virtual host.
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+AddUserToVHost -deployUser "rabbit-deploy" -deployPassword "Secure_Deploy_Password" -rabbitApiUrl "http://myrabbitserver:15672/api" -user "MyRabbitUser" -vHost "MyRabbitVHost"
 {% endraw %}
 ```

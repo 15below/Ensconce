@@ -16,12 +16,12 @@ InstallTopshelfService
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Install a Topshelf service
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+InstallTopshelfService -serviceName "MySvc" -exePath "/Path/To/exe.exe"
 {% endraw %}
 ```

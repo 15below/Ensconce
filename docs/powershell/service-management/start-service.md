@@ -15,12 +15,12 @@ StartService
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Starts a service
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+StartService -serviceName "MySvc"
 {% endraw %}
 ```

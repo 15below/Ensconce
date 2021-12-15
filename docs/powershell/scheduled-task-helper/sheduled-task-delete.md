@@ -16,12 +16,12 @@ ScheduledTask-Delete
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Will delete an existing scheduled task
 
 ## Examples
 
 ```PowerShell
 {% raw %}
-TODO
+ScheduledTask-Delete -taskName "MyTask" -taskPath "Tasks"
 {% endraw %}
 ```
