@@ -7,7 +7,7 @@
 {% assign node_url_parts = node.url | split: '/' | where_exp: "item", "item != ''" %}
 {% assign node_url_parts_size = node_url_parts | size | minus: 1 %}
 {% if url_parts_size == node_url_parts_size %}
-<li><a href="{{ node.url | relative_url }}">{% if node.linkText %}{{ node.linkText }}{% else %}?Missing-LinkText?{% endif %}</a></li>
+<li><a class="link-secondary" href="{{ node.url | relative_url }}">{% if node.linkText %}{{ node.linkText }}{% else %}?Missing-LinkText?{% endif %}</a></li>
 {% endif %}
 {% endif %}
 {% endfor %}

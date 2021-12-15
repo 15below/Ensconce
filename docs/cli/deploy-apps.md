@@ -8,7 +8,7 @@ linkText: Deploying Applications
 
 ## Overview
 
-Whilst [deploying files]({{ '/' | relative_url }}cli/deploy-files) Ensconce has the ability to update the deployed application configuration using a  [deployment substitution]({{ '/' | relative_url }}substitutions).
+Whilst [deploying files]({{ '/' | relative_url }}cli/deploy-files){:.link-secondary} Ensconce has the ability to update the deployed application configuration using a  [deployment substitution]({{ '/' | relative_url }}substitutions){:.link-secondary}.
 
 In order to trigger the application configuration update we add an extra parameter.
 

@@ -1,12 +1,11 @@
 @media (min-width: 992px) {
     html, body {
         height: 100%;
-        overflow:auto; 
+        overflow: auto;
     }
-    
     .full-height {
         height: 100%;
-        overflow:auto; 
+        overflow: auto;
     }
 }
 
@@ -21,7 +20,7 @@ pre code {
     display: block;
     padding-left: 20px;
     padding-right: 10px;
-  }
+}
 
 .list-group.list-group-root {
     padding: 0;
@@ -51,7 +50,6 @@ pre code {
 
 .list-group.list-group-root>.list-group>.list-group>.list-group-item {
     padding-left: 80px;
-
 }
 
 .list-group.list-group-root>.list-group>.list-group>.list-group>.list-group-item {
@@ -70,4 +68,15 @@ pre code {
         border-top: 1px solid #dee2e6 !important;
         height: 100%;
     }
+}
+
+pre>code {
+    overflow-x: auto !important;
+}
+
+.breadcrumb {
+    background-color: #e9ecef;
+    border: 1px solid #999;
+    border-radius: 0.25rem;
+    padding: 10px 10px 10px 20px !important;
 }

@@ -12,14 +12,14 @@ Ensconce will load configuration from your environment variables as well as an o
 
 This section of the documentation will explain all about the deployment configuration file.  A deployment configuration file has 4 sections, these are:
 
-* [Client/Environment](client-environment)
-* [Properties](properties)
-* [Property Groups](property-groups)
-* [DBLogins](database-logins)
+* [Client/Environment](client-environment){:.link-secondary}
+* [Properties](properties){:.link-secondary}
+* [Property Groups](property-groups){:.link-secondary}
+* [DBLogins](database-logins){:.link-secondary}
 
 ## Basic Structure
 
-The structure is defined in a [XSD](deploy-config-xsd).  An example structure can be seen below.
+The structure is defined in a [XSD](deploy-config-xsd){:.link-secondary}.  An example structure can be seen below.
 
 ```XML
 {% raw %}

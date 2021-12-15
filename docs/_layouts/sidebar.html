@@ -15,7 +15,7 @@ layout: default
                 {% if rm == part %}
                 {% if page.url contains node.url %}
                 {% if node.url != page.url %}
-                <li class="breadcrumb-item"><a href="{{ node.url | relative_url }}">{% if node.linkText %}{{ node.linkText }}{% else %}?Missing-LinkText?{% endif %}</a></li>
+                <li class="breadcrumb-item"><a class="link-secondary" href="{{ node.url | relative_url }}">{% if node.linkText %}{{ node.linkText }}{% else %}?Missing-LinkText?{% endif %}</a></li>
                 {% else %}
                 <li class="breadcrumb-item active">{% if node.linkText %}{{ node.linkText }}{% else %}?Missing-LinkText?{% endif %}</li>
                 {% endif %}
@@ -45,7 +45,7 @@ layout: default
                 {% endif %}
                 {% endfor %}
                 {% endfor %}
-                <a href="{{ page.url | relative_url }}" class="list-group-item list-group-item-action active">{% if page.linkText %}{{ page.linkText }}{% else %}?Missing-LinkText?{% endif %}</a>
+                <a href="{{ page.url | relative_url }}" class="list-group-item list-group-item-action list-group-item-secondary">{% if page.linkText %}{{ page.linkText }}{% else %}?Missing-LinkText?{% endif %}</a>
                 <div class="list-group list-group-l1">
                     {% for node in sortedPages %}
                     {% if node.url contains page.url and node.url != page.url %}

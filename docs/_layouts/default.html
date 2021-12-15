@@ -8,59 +8,74 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ '/' | relative_url }}favicon.ico">
     <link href="{{ '/' | relative_url }}feed.xml" rel="alternate" title="{{site.title}}" type="application/atom+xml">
     <link href="{{ '/' | relative_url }}css/styles.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha256-YLGeXaapI0/5IgZopewRJcFXomhRMlYYjugPLSyNjTY= sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T sha512-tDXPcamuZsWWd6OsKFyH6nAqh/MjZ/5Yk88T5o+aMfygqNFPan1pLyPFAndRzmOWHKT+jSDzWpJv8krj6x1LMA==" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha256-YvdLHPgkqJ8DVUxjjnGVlMMJtNimJ6dYkowFFvp4kKs= sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3 sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w=="
+        crossorigin="anonymous">
     {% seo %}
 </head>
+
 <body>
     <div class="container-fluid full-height">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-            <a class="navbar-brand" href="{{ '/' | relative_url }}">
-                <img src="{{ '/' | relative_url }}images/15below_green.png" width="30" height="30"
-                    class="d-inline-block align-top" alt="">
-                Ensconce</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ '/' | relative_url }}">
+                    <img src="{{ '/' | relative_url }}images/15below_green.png" width="30" height="30"
+                        class="d-inline-block align-top" alt="">
+                    Ensconce</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    {% assign sortedPages = site.pages | sort_natural: "url" %}
-                    {% for node in sortedPages %}
-                    {% assign node_url_parts = node.url | split: '/' %}
-                    {% assign node_url_parts_size = node_url_parts | size%}
-                    {% if node_url_parts_size == 2 and node.hideNav != true and node.title %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ node.url | relative_url }}">{{ node.title }}</a>
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        {% assign sortedPages = site.pages | sort_natural: "url" %}
+                        {% for node in sortedPages %}
+                        {% assign node_url_parts = node.url | split: '/' %}
+                        {% assign node_url_parts_size = node_url_parts | size%}
+                        {% if node_url_parts_size == 2 and node.hideNav != true and node.title %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ node.url | relative_url }}">{{ node.title }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </nav>
         <div class="content full-height">
             {{ content }}
         </div>
         <nav class="navbar navbar-expand navbar-dark bg-dark fixed-bottom">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/15below/Ensconce/edit/master/docs/{{ page.path }}"
-                        target="_blank">Edit Page</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/15below/Ensconce" target="_blank">View On GitHub</a>
-                </li>
-            </ul>
-            <span class="navbar-text ml-auto">
-                &copy; 15below
-            </span>
+            <div class="container-fluid">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/15below/Ensconce/edit/master/docs/{{ page.path }}"
+                            target="_blank">Edit Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/15below/Ensconce" target="_blank">View On
+                            GitHub</a>
+                    </li>
+                </ul>
+                <span class="navbar-text ms-auto">
+                    &copy; 15below
+                </span>
+            </div>
         </nav>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E= sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo sha512-M+qMI1PHRcYcOpJzeJlaWbVVx2JJyPIwZas8or7dc97LZOokjvbpfRxymhVtlJLyjiF3wGyr0FJOA4DLONLVLw==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha256-ZvOgfh+ptkpoa2Y4HkRY28ir89u/+VRyDE7sB7hEEcI= sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1 sha512-5WvZa4N7Jq3TVNCp4rjcBMlc6pT3lZ7gVxjtI6IkKW+uItSa+rFgtFljvZnCxQGj8SUX5DHraKE6Mn/4smK1Cg==" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha256-CjSoeELFOcH0/uxWu6mC/Vlrc1AARqbm/jiiImDGV3s= sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM sha512-Ah5hWYPzDsVHf9i2EejFBFrG2ZAPmpu4ZJtW4MfSgpZacn+M9QHDt+Hd/wL1tEkk1UgbzqepJr6KnhZjFKB+0A==" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js" integrity="sha256-0WMZ9PF4b2hTF66Eglv/9H5Vwk6lnOG4AbmCJxo96WQ= sha384-8c+SAe9EbzjHP89OYYgzF5zzufhrFNfRz/QwUiqogzwkslwhC1JCADKi9bcWW0qt sha512-zPB79j2C+3sFS9zcA3vg/z6bVKzJVEyu9pY5w89akQRys76zpAT2t6S3wZKla3QQ14O5l/Yt0RUQ/DHXx82Y5g==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha256-9SEPo+fwJFpMUet/KACSwO+Z/dKMReF9q4zFhU/fT9M= sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p sha512-pax4MlgXjHEPfCwcJLQhigY7+N8rt6bVvWLFyUMuxShv170X53TRzGPmPkZmGBhk+jikR8WBM4yl7A9WMHHqvg=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"
+        integrity="sha256-0WMZ9PF4b2hTF66Eglv/9H5Vwk6lnOG4AbmCJxo96WQ= sha384-8c+SAe9EbzjHP89OYYgzF5zzufhrFNfRz/QwUiqogzwkslwhC1JCADKi9bcWW0qt sha512-zPB79j2C+3sFS9zcA3vg/z6bVKzJVEyu9pY5w89akQRys76zpAT2t6S3wZKla3QQ14O5l/Yt0RUQ/DHXx82Y5g=="
+        crossorigin="anonymous"></script>
     <script>
+        anchors.options = {
+            class: 'link-secondary',
+            visible: 'touch'
+        };
         anchors.add();
     </script>
 </body>

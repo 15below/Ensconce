@@ -8,6 +8,10 @@
 		"markdownlint.config": {
 			"MD025": false,
 			"MD036": false
+		},
+		"files.exclude": {
+			"**/_site": true,
+			"**/node_modules": true
 		}
 	}
 }

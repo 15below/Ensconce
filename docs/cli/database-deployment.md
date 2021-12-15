@@ -8,7 +8,7 @@ linkText: Database Deployment
 
 ## Overview
 
-Ensconce has the [roundhousE](https://github.com/chucknorris/roundhouse) project embedded within it's codebase.
+Ensconce has the [roundhousE](https://github.com/chucknorris/roundhouse){:.link-secondary} project embedded within it's codebase.
 
 This means that you can deploy databases using the roundhousE database deployment tool with the Ensconce framework.
 

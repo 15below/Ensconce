@@ -10,7 +10,7 @@ linkText: Client & Environment
 
 The deployment configuration file has a `ClientCode` and `Environment` node.
 
-At 15below we use [Octopus Deploy](https://octopus.com) which means the `Environment` is populated by the deployment environment rather than the deployment configuration file.
+At 15below we use [Octopus Deploy](https://octopus.com){:.link-secondary} which means the `Environment` is populated by the deployment environment rather than the deployment configuration file.
 
 We also set a `ClientCode` value as part of the Octopus project and name the files `[ClientCode]-[Environment]-Config.xml`.
 

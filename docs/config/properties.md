@@ -12,7 +12,7 @@ The properties is a simple key/value store of values which can then be used as p
 
 If a property has already been defined either as an environment variable or a duplicate value in your deployment configuration file the 1st value found will be used.
 
-Properties can contain dynamic content using the [template tag syntax]({{ '/' | relative_url }}templates).
+Properties can contain dynamic content using the [template tag syntax]({{ '/' | relative_url }}templates){:.link-secondary}.
 
 ## Example
 
