@@ -13,6 +13,3 @@ At 15below, we use Ensconce alongside [Octopus Deploy](https://octopus.com){:.li
 Ensconce can be called by placing the `Ensconce.Console.exe` app on the machine you're deploying to and invoking commands on it, or by using the dotnet tool which can be installed by running `dotnet tool install --global Ensconce.DotNetTool`.
 
 On windows, or machines with powershell core the powershell helpers can also be used.  The `deployHelp.ps1` is the entry point for calling Ensconce and various other powershell helpers exist for different functions.
-
----
-*Please note* - This site is currently under construction, for previous documentation please see the [GitHub wiki](https://github.com/15below/Ensconce/wiki){:.link-secondary}
