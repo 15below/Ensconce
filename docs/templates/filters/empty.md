@@ -6,4 +6,12 @@ description: Empty Template Filter
 
 # Empty Template Filter
 
-Placeholder - This page has not been written yet!
+Determine if a value exists and is not a whitespace character
+
+## Example
+
+```text
+{% raw %}
+{% if TestValue|empty %}Empty Value{% else %}Populated Value{% endif %}
+{% endraw %}
+```

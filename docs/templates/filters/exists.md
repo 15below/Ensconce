@@ -6,4 +6,12 @@ description: Exists Template Filter
 
 # Exists Template Filter
 
-Placeholder - This page has not been written yet!
+Determine if a value exists
+
+## Example
+
+```text
+{% raw %}
+{% if TestValue|exists %}Value Exists{% else %}Value Does Not Exist{% endif %}
+{% endraw %}
+```

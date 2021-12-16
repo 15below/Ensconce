@@ -6,4 +6,12 @@ description: Contains Template Filter
 
 # Contains Template Filter
 
-Placeholder - This page has not been written yet!
+Returns a boolean condition based on if the input value contains the value passed to the filter
+
+## Example
+
+```text
+{% raw %}
+{% if TestValue|contains:'test' %}Contains Test{% else %}Does NOT Contain Test{% endif %}
+{% endraw %}
+```

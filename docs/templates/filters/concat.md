@@ -6,4 +6,12 @@ description: Concat Template Filter
 
 # Concat Template Filter
 
-Placeholder - This page has not been written yet!
+Takes a value and appends another value onto the end
+
+## Example
+
+```text
+{% raw %}
+{{ TestValue|concat:Environment }}
+{% endraw %}
+```

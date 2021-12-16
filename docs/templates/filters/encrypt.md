@@ -6,4 +6,12 @@ description: Encrypt Template Filter
 
 # Encrypt Template Filter
 
-Placeholder - This page has not been written yet!
+Will encrypt the input value using the provided certificate
+
+## Example
+
+```text
+{% raw %}
+{{ TestValue|encrypt:'MyCertificate' }}
+{% endraw %}
+```

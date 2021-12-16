@@ -6,4 +6,12 @@ description: Default Template Filter
 
 # Default Template Filter
 
-Placeholder - This page has not been written yet!
+Will use a default value if the input doesn't exist within the tag dictionary.
+
+## Example
+
+```text
+{% raw %}
+{{ TestValue|default:'test' }}
+{% endraw %}
+```

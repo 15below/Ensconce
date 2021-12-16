@@ -30,8 +30,20 @@ Supported symbols is `>=`
 {% endraw %}
 ```
 
-## Important Note
+## Important Notes
+
+### Non String Inputs
 
 If the input value is not an integer, this will NOT error, but will evaluate as `false`
 
 So, given the above examples, if the value is `Not-A-Number` then then `else` condition will output/execute
+
+### Integer Inputs
+
+If the value being checked is an integer (for example if you have used the length filter) then the conditional value should also be an integer.
+
+```text
+{% raw %}
+{% if PropertyGroup|length > 1 %}More Than 1 Instances Of Group{% else %}1 Or Less Instances Of Group{% endif %}
+{% endraw %}
+```
