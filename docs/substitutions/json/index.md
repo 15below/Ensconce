@@ -1,6 +1,6 @@
 ---
 title: JSON Substitution Files
-linkText: JSON
+linkText: JSON Substitution
 description: The JSON file substitutions
 ---
 

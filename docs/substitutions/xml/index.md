@@ -1,6 +1,6 @@
 ---
 title: XML Substitution Files
-linkText: XML
+linkText: XML Substitution
 description: The XML file substitutions
 ---
 
