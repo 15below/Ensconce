@@ -13,7 +13,9 @@ Supported symbols is `<`
 ## Less Than Example
 
 ```text
+{% raw %}
 {% if TestValue < '5' %}Is Less Than 5{% else %}Is Greater Than Or Equal To 5{% endif %}
+{% endraw %}
 ```
 
 ## Less Than Or Equal To
@@ -23,7 +25,9 @@ Supported symbols is `<=`
 ## Less Than Or Equal To Example
 
 ```text
+{% raw %}
 {% if TestValue <= '5' %}Is Less Than Or Equal To 5{% else %}Is Greater Than 5{% endif %}
+{% endraw %}
 ```
 
 ## Important Note
