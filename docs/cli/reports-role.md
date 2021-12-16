@@ -14,6 +14,6 @@ Ensconce can setup a specific domain user to have SSRS security permissons on a 
 
 ## Example
 
-```cmd
+```powershell
 ensconce --drr --rsv reportingServicesUrl=[urlToReportingServices] --rsv networkDomain=[authenticationDomain] --rsv networkLogin=[authenticationUser] --rsv networkPassword=[authenticationPassword] --rsv itemPath=[pathToAddRoleTo] --rsv reportingUserToAddRoleFor=[userToAdd] --rsv reportingRoleToAdd=[roleToAdd]
 ```

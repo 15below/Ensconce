@@ -16,7 +16,7 @@ This means that you can deploy databases using the roundhousE database deploymen
 
 ### Standard Deployment
 
-```cmd
+```powershell
 ensconce --deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString]
 ```
 
@@ -24,7 +24,7 @@ ensconce --deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString]
 
 By default, Ensconce will error if you change a one time script, you can override this behavior
 
-```cmd
+```powershell
 ensconce --deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString] --warnOnOneTimeScriptChanges=True
 ```
 
@@ -33,7 +33,7 @@ ensconce --deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString] 
 By default, Ensconce will run all scripts within a transaction which rolls back upon a failure.
 Not all database change scripts can run within a transaction, so it's possible to disable this functionality
 
-```cmd
+```powershell
 ensconce --deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString] --withTransaction=False
 ```
 
@@ -43,7 +43,7 @@ Ensconce tries to prevent the default roundhousE output, however roundhousE will
 
 The path for this by default is `E:\RH`.  This can be overridden.
 
-```cmd
+```powershell
 ensconce --deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString] --roundhouseOutputPath=[pathToOutput]
 ```
 
@@ -51,6 +51,6 @@ ensconce --deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString] 
 
 This is the timeout for SQL queries run by roundhousE, there is a default of 30 seconds.
 
-```cmd
+```powershell
 ensconce --deployFrom=[pathToSQLFiles] --connectionString=[sqlConnectionString] --databaseCommandTimeout=[CustomTimeoutValue]
 ```

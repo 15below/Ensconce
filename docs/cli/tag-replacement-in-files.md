@@ -14,6 +14,6 @@ Providing a wildcard pattern for searching files, Ensconce will parse each of th
 
 ## Example
 
-```cmd
+```powershell
 ensconce --deployFrom=[sourcePath] --treatAsTemplateFilter=[searchPattern]
 ```

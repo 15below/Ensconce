@@ -16,12 +16,12 @@ ___Warning___ The data being saved or exported will not be encrypted
 
 ### Save To Path
 
-```cmd
+```powershell
 ensconce --dictionarySavePath=[pathToJsonFile]
 ```
 
 ### Post To REST Endpoint
 
-```cmd
+```powershell
 ensconce --dictionaryPostUrl=[urlToPostJsonTo]
 ```

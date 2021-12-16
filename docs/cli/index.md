@@ -14,7 +14,7 @@ This section will detail each type of use case and explain what command line arg
 
 ## Raw Command Line Help
 
-```cmd
+```powershell
   -i, --stdin                Read template string from StdIn
   -h, --help                 Show this message and exit
       --fixedPath=VALUE      Override path to structure.xml relative to

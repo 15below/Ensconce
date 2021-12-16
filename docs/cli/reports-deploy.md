@@ -16,7 +16,7 @@ Whilst deploying the reports, any connection information for the report database
 
 ## Example
 
-```cmd
+```powershell
 ensconce --dr --rsv reportingServicesUrl=[urlToReportingServices] --rsv networkDomain=[authenticationDomain] --rsv networkLogin=[authenticationUser] --rsv networkPassword=[authenticationPassword] --rsv parentFolder=[reportRootFolder] --rsv subFolder=[reportSubFolder] --rsv dataSourceName=[reportDataSource] --rsv  ataSourceConnectionString=[reportDataSourceConnectionString] --rsv dataSourceUserName=[reportDataSourceUserName] --rsv dataSourcePassword= [reportDataSourcePassword] --rsv reportSourceFolder=[pathToReports]
 ```
 

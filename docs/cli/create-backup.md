@@ -14,18 +14,18 @@ In order to facilitate a rollback, Ensconce gives the ability to create an autom
 
 ## Single Source
 
-```cmd
+```powershell
 ensconce --backupSource=[pathToBackup] --backupDestination=[pathToBackupZipFile]
 ```
 
 ## Multiple Sources
 
-```cmd
+```powershell
 ensconce --backupSource=[pathToBacker] --backupSource=[anotherPathToBackup] --backupDestination=[pathToBackupZipFile]
 ```
 
 ## Overwrite Existing Backups
 
-```cmd
+```powershell
 ensconce --backupSource=[pathToBackup] --backupDestination=[pathToBackupZipFile] --backupOverwrite
 ```

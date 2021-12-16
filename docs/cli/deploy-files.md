@@ -16,12 +16,12 @@ If the files you are deploying are applications, you should see the [Deploying A
 
 ### Copy Files
 
-```cmd
+```powershell
 ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo
 ```
 
 ### Replace Files
 
-```cmd
+```powershell
 ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --replace
 ```

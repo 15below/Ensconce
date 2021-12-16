@@ -12,6 +12,6 @@ In situations where you require your database to be dropped prior to deployment 
 
 ## Example
 
-```cmd
+```powershell
 ensconce --connectionString=[sqlConnectionString] --dropDatabase --dropDatabaseConfirm
 ```

@@ -18,6 +18,6 @@ It's possible to override environment variable, or use a path rather than the en
 
 This example is a file copy, with the additional parameter
 
-```cmd
+```powershell
 ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo --fixedPath=[deployConfigurationPath]
 ```

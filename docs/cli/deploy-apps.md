@@ -16,7 +16,7 @@ In order to trigger the application configuration update we add an extra paramet
 
 ### Copy Files & Update Configuration
 
-```cmd
+```powershell
 ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --copyTo --updateConfig
 ```
 
@@ -24,7 +24,7 @@ This will assume there is a file alongside your calling location called `substit
 
 ### Replace Files & Update Configuration
 
-```cmd
+```powershell
 ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig
 ```
 
@@ -34,7 +34,7 @@ This will assume there is a file alongside your calling location called `substit
 
 This can be used with a `--copyTo` or a `--replace`.
 
-```cmd
+```powershell
 ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig --substitutionPath=[substitutionFilePath]
 ```
 
@@ -42,6 +42,6 @@ ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --upda
 
 This can be used with a `--copyTo` or a `--replace`.
 
-```cmd
+```powershell
 ensconce --deployFrom=[sourcePath] --deployTo=[destinationPath] --replace --updateConfig --outputFailureContext
 ```
