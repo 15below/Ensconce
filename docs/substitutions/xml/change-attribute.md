@@ -8,7 +8,7 @@ description: Change attribute XML format
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Changes the value of a specified attribute
 
 ## Example
 
@@ -16,7 +16,9 @@ Placeholder - This page has not been written yet!
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <node attrVal="true">value</node>
+</root>
 {% endraw %}
 ```
 
@@ -24,7 +26,7 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<Change type="ChangeAttribute" xPath="/root/node" attributeName="attrVal" value="false" />
 {% endraw %}
 ```
 
@@ -32,6 +34,8 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <node attrVal="false">value</node>
+</root>
 {% endraw %}
 ```

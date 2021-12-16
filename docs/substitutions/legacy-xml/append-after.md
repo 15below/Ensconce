@@ -8,7 +8,7 @@ description: Append After legacy XML format
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Will add the content as the sibling of the node in xPath
 
 ## Example
 
@@ -16,7 +16,9 @@ Placeholder - This page has not been written yet!
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <node>value</node>
+</root>
 {% endraw %}
 ```
 
@@ -24,7 +26,12 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<Change>
+    <XPath>/root/node</XPath>
+    <AppendAfter>
+        <![CDATA[<node2>value2</node2>]]>
+    </AppendAfter>
+</Change>
 {% endraw %}
 ```
 
@@ -32,6 +39,9 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <node>value</node>
+    <node2>value2</node2>
+</root>
 {% endraw %}
 ```

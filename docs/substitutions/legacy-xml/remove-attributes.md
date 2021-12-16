@@ -8,7 +8,7 @@ description: Remove Attributes legacy XML format
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Will remove all attributes from a node
 
 ## Example
 
@@ -16,7 +16,9 @@ Placeholder - This page has not been written yet!
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <node attrVal="true">value</node>
+</root>
 {% endraw %}
 ```
 
@@ -24,7 +26,10 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<Change>
+    <XPath>/root/node</XPath>
+    <RemoveCurrentAttributes />
+</Change>
 {% endraw %}
 ```
 
@@ -32,6 +37,8 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <node>value</node>
+</root>
 {% endraw %}
 ```

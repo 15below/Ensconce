@@ -8,7 +8,7 @@ description: Replacement Content XML format
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Replaces content of a node with a new set of content
 
 ## Example
 
@@ -16,7 +16,9 @@ Placeholder - This page has not been written yet!
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <node>value</node>
+</root>
 {% endraw %}
 ```
 
@@ -24,7 +26,17 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<Change type="ReplacementContent" xPath="/root">
+    <Content>
+        <![CDATA[
+        <nodes>
+            <node1>value</node1>
+            <node2>value2</node2>
+            <node3>value3</node3>
+        </nodes>
+        ]]>
+    </Content>
+</Change>
 {% endraw %}
 ```
 
@@ -32,6 +44,12 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <nodes>
+        <node1>value2</node1>
+        <node2>value2</node2>
+        <node3>value2</node3>
+    </nodes>    
+</root>
 {% endraw %}
 ```

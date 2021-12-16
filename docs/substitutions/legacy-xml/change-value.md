@@ -1,10 +1,10 @@
 ---
-title: XML Change Attribute (Legacy Format)
-linkText: Change Attribute
-description: Change attribute legacy XML format
+title: XML Change Value (Legacy Format)
+linkText: Change Value
+description: Change value legacy XML format
 ---
 
-# XML Change Attribute (Legacy Format)
+# XML Change Value (Legacy Format)
 
 ## Description
 
@@ -17,7 +17,7 @@ Changes the value of a specified attribute
 ```XML
 {% raw %}
 <root>
-    <node attrVal="true">value</node>
+    <node>value</node>
 </root>
 {% endraw %}
 ```
@@ -28,7 +28,7 @@ Changes the value of a specified attribute
 {% raw %}
 <Change>
     <XPath>/root/node</XPath>
-    <ChangeAttribute attributeName="attrVal">false</AddAttribute>
+    <ChangeValue>new-value</AddAttribute>
 </Change>
 {% endraw %}
 ```
@@ -39,7 +39,7 @@ Alternative version
 {% raw %}
 <Change>
     <XPath>/root/node</XPath>
-    <AddAttribute attributeName="attrVal" value="false" />
+    <ChangeValue value="new-value" />
 </Change>
 {% endraw %}
 ```
@@ -49,7 +49,7 @@ Alternative version
 ```XML
 {% raw %}
 <root>
-    <node attrVal="false">value</node>
+    <node>value</node>
 </root>
 {% endraw %}
 ```

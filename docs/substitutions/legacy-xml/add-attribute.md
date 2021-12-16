@@ -8,7 +8,7 @@ description: Add attribute legacy XML format
 
 ## Description
 
-Placeholder - This page has not been written yet!
+Will add an attribute to an already existing node in the XML
 
 ## Example
 
@@ -16,7 +16,9 @@ Placeholder - This page has not been written yet!
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <node>value</node>
+</root>
 {% endraw %}
 ```
 
@@ -24,7 +26,21 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<Change>
+    <XPath>/root/node</XPath>
+    <AddAttribute attributeName="attrVal">true</AddAttribute>
+</Change>
+{% endraw %}
+```
+
+Alternative version
+
+```XML
+{% raw %}
+<Change>
+    <XPath>/root/node</XPath>
+    <AddAttribute attributeName="attrVal" value="true" />
+</Change>
 {% endraw %}
 ```
 
@@ -32,6 +48,8 @@ TODO
 
 ```XML
 {% raw %}
-TODO
+<root>
+    <node attrVal="true">value</node>
+</root>
 {% endraw %}
 ```
