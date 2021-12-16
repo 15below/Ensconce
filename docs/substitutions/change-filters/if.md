@@ -8,16 +8,18 @@ description: Details of `if` condition that can be applied to changes
 
 ## Compatible With
 
-* TODO
+The `if` condition can be applied to all change types.
 
 ## Description
 
-Placeholder - This page has not been written yet!
+The `if` attribute can be added to a change with a template string as it's value.
+
+Only if that condition returns a true will the substitution execute.
 
 ## Example
 
 ```XML
 {% raw %}
-TODO
+<Change type="ChangeValue" jsonPath="$.Logging.LogLevel.Default" value="Information" if="Environment = 'PRD'" />
 {% endraw %}
 ```

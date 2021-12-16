@@ -8,16 +8,18 @@ description: Details of `matchAll` condition that can be applied to changes
 
 ## Compatible With
 
-* TODO
+The `matchAll` condition can be applied to all change types.
 
 ## Description
 
-Placeholder - This page has not been written yet!
+When performing changes if the XPath of jsonPath matches multiple elements the substitution will fail.
+
+However, if you legitimately wanted to update all instances that match you can provide a `matchAll` value of `true` which signifies that you do want all matching elements to be updated
 
 ## Example
 
 ```XML
 {% raw %}
-TODO
+<Change type="ChangeValue" xPath="/root/nodes/node" value="NewValue" matchAll="true" />
 {% endraw %}
 ```
