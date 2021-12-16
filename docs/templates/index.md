@@ -18,3 +18,19 @@ To verify support, this section will detail the known working template syntax el
 These are broken down into 3 sections
 
 {% include childPages.html %}
+
+## General Principals
+
+### Content Tags
+
+A tag starts with `{% raw %}{{{% endraw %}` and ends with `{% raw %}}}{% endraw %}`.  For example `{% raw %}{{ MyValue }}{% endraw %}`
+
+Tags can be tiers to include property groups whereby they syntax is `{% raw %}{{ Label.Identity.Property }}{% endraw %}`
+
+### Content Tags With Filters
+
+Filters are applied using a `|` and a `:` for any inputs to the filter.  For example `{% raw %}{{ MyValue|default:'DefaultValue' }}{% endraw %}`
+
+### Other Tags
+
+Other tags such as `if` statements and `for` loops start with `{% raw %}{%{% endraw %}` and end with `{% raw %}%}{% endraw %}`. for example `{% raw %}{% if MyValue = 'test' %}True{% else %}False{% endif %}{% endraw %}`.
