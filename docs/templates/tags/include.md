@@ -6,4 +6,12 @@ description: Include Tag
 
 # Include Tag
 
-Placeholder - This page has not been written yet!
+Used to pull content from a different file into the output
+
+## Example
+
+```text
+{% raw %}
+{% include 'anotherFile.txt' %}
+{% endraw %}
+```

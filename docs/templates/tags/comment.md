@@ -6,4 +6,12 @@ description: Comment Tag
 
 # Comment Tag
 
-Placeholder - This page has not been written yet!
+The template rendering will ignore any content between the comment tags
+
+## Example
+
+```text
+{% raw %}
+{% comment %}DO NOT PRINT THIS{% endcomment %}
+{% endraw %}
+```

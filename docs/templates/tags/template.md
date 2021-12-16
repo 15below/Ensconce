@@ -6,4 +6,24 @@ description: Template Tag
 
 # Template Tag
 
-Placeholder - This page has not been written yet!
+The template tag allows for printing of characters which are part of the Ensconce template syntax.
+
+Available tags:
+| Argument        | Output |
+----------------------------
+| `openblock`     | `{%`     |
+| `closeblock`    | `%}`     |
+| `openvariable`  | `{{`     |
+| `closevariable` | `}}`     |
+| `openbrace`     | `{`      |
+| `closebrace`    | `}`      |
+| `opencomment`   | `{#`     |
+| `closecomment`  | `#}`     |
+
+## Example
+
+```text
+{% raw %}
+{% templatetag openvariable %} Content In Double Braces {% templatetag closevariable  %}
+{% endraw %}
+```

@@ -6,4 +6,12 @@ description: IfNotEqual Tag
 
 # IfNotEqual Tag
 
-Placeholder - This page has not been written yet!
+A shortcut for a `if` with not equals operator
+
+## Example
+
+```text
+{% raw %}
+{% ifnotequal TestValue 'testing' %}Value Is NOT Testing{% else %}Value Is Testing{% endifnotequal %}
+{% endraw %}
+```
