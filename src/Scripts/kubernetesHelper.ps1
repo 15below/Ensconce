@@ -45,7 +45,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
     $kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
 
     Write-Host "Validating yaml file $yamlFile (local)"
-    & $KubeCtlExe apply --dry-run -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
+    & $KubeCtlExe apply --dry-run=client -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
 
     if ($LASTEXITCODE -ne 0)
     {
@@ -54,7 +54,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
     }
 
     Write-Host "Validating yaml file $yamlFile (server-side)"
-    & $KubeCtlExe apply --server-dry-run  -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
+    & $KubeCtlExe apply --dry-run=server  -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
 
     if ($LASTEXITCODE -ne 0)
     {
