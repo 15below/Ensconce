@@ -504,6 +504,19 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
+        public void XmlIfNotExists_WithNamespace()
+        {
+            var newConfig = XDocument.Parse(ProcessSubstitution.Update(
+                @"TestUpdateFiles\TestSubstitution38.xml", @"TestUpdateFiles\TestConfig2.xml"
+            ));
+
+            var nsm = new XmlNamespaceManager(new NameTable());
+            nsm.AddNamespace("x", "http://madeup.com");
+
+            Assert.AreEqual(2, newConfig.XPathSelectElement("/x:root/x:value", nsm)?.Nodes().Count());
+        }
+
+        [Test]
         public void SubstituteIf_True()
         {
             var newConfig = XDocument.Parse(ProcessSubstitution.Update(

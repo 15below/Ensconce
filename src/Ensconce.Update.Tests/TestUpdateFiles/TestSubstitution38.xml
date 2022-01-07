@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces>
+    <Namespace Prefix="madeup">http://madeup.com</Namespace>
+  </Namespaces>
+  <Files>
+    <File Filename="TestUpdateFiles\TestConfig2.xml">
+      <Changes>
+        <Change>
+          <XPath>/madeup:root/madeup:value</XPath>
+          <ReplacementContent></ReplacementContent>
+        </Change>
+        <Change type="AddChildContent" xPath="/madeup:root/madeup:value" ifNotExists="/madeup:root/madeup:value/madeup:child1">
+          <Content>
+            <![CDATA[<child1 />]]>
+          </Content>
+        </Change>
+        <Change type="AddChildContent" xPath="/madeup:root/madeup:value" ifNotExists="/madeup:root/madeup:value/madeup:child2">
+          <Content>
+            <![CDATA[<child2 />]]>
+          </Content>
+        </Change>
+      </Changes>
+    </File>
+  </Files>
+</Root>
