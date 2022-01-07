@@ -250,7 +250,7 @@ namespace Ensconce.Update
                 {
                     if (sub.HasAddChildContent)
                     {
-                        AddChildContentToActive(tagValues, activeNode, sub);
+                        AddChildContentToActive(tagValues, activeNode, sub, baseNsm);
                     }
 
                     if (sub.HasReplacementContent)
@@ -308,9 +308,9 @@ namespace Ensconce.Update
             activeNode.AddAfterSelf(fakeRoot.Elements());
         }
 
-        private static void AddChildContentToActive(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub)
+        private static void AddChildContentToActive(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub, XmlNamespaceManager nsm)
         {
-            if (sub.AddChildContentIfNotExists == null || activeNode.Document?.XPathSelectElement(sub.AddChildContentIfNotExists.RenderTemplate(tagValues)) == null)
+            if (sub.AddChildContentIfNotExists == null || activeNode.Document?.XPathSelectElement(sub.AddChildContentIfNotExists.RenderTemplate(tagValues), nsm) == null)
             {
                 var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
                 activeNode.Add(fakeRoot.Elements());
