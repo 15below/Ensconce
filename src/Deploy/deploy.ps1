@@ -10,21 +10,6 @@ if(Test-Path $DeployPath)
 Write-Host "Creating Deploy Tools Directory at $DeployPath"
 New-Item -Path $DeployPath -Type container -Force | Out-Null
 
-if($IncludeK8s -eq "True")
-{
-	Write-Host "Ensconce deployed in Kubernetes mode as 'IncludeK8s' set to 'True'"
-	Remove-Item "$scriptDir\Content\backupHelper.ps1" -Force
-	Remove-Item "$scriptDir\Content\createWebSite.ps1" -Force
-	Remove-Item "$scriptDir\Content\dnsHelper.ps1" -Force
-	Remove-Item "$scriptDir\Content\serviceManagement.ps1" -Force
-}
-else
-{
-	Write-Host "Ensconce deployed in application deployment mode as 'IncludeK8s' NOT set to 'True'"
-	Remove-Item "$scriptDir\Content\Tools\KubeCtl" -Force -Recurse
-	Remove-Item "$scriptDir\Content\kubernetesHelper.ps1" -Force
-}
-
 Get-ChildItem -Path $scriptDir\Content\*.ps1 | ForEach-Object {
 	$scriptName = $_.Name
 	$scriptFullName = $_.FullName

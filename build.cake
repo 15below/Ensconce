@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var baseVersion = "1.10.2";
+var baseVersion = "1.11.0";
 var subVersion = "";
 var subVersionNumber = "";
 var isMasterOrDevelop = false;
@@ -168,11 +168,9 @@ Task("Publish")
     CreateDirectory("./output/publish/Content");
     CreateDirectory("./output/publish/Content/Tools");
     CreateDirectory("./output/publish/Content/Tools/Grant");
-    CreateDirectory("./output/publish/Content/Tools/KubeCtl");
     CreateDirectory("./output/publish/Content/Tools/Ensconce");
 
     CopyFiles("./src/ExternalDeployTools/Grant/*", "./output/publish/Content/Tools/Grant");
-    CopyFiles("./src/ExternalDeployTools/KubeCtl/*", "./output/publish/Content/Tools/KubeCtl");
     CopyFiles("./src/Scripts/*.ps1", "./output/publish/Content");
     CopyFiles("./src/Deploy/*.ps1", "./output/publish");
     CopyFiles("./src/Deploy/*.xml", "./output/publish");
