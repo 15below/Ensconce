@@ -6,8 +6,27 @@ if($deployHelpLoaded -eq $null)
 }
 
 Write-Host "Ensconce - KubernetesHelper Loading"
-$KubeCtlExe = "$currentDirectory\Tools\KubeCtl\kubectl.exe"
+if([string]::IsNullOrWhiteSpace($KubeCtlExe))
+{
+	$KubeCtlExe = "C:\KubeCtl\kubectl.exe"
+}
 $rootConfigPath = "$Home\.kube"
+
+if (Test-Path $KubeCtlExe)
+{
+    (& $KubeCtlExe version --client 2>&1) | ForEach-Object {
+        if($_ -match "^Client Version.*")
+        {
+            $data = ConvertFrom-Json ($_ -replace "Client Version: version.Info", "")
+            $clientVersion = $data.GitVersion
+            Write-Host "KubeCtl Version: $clientVersion"
+        }
+    }
+}
+else
+{
+    throw "'$KubeCtlExe' doesn't exist"
+}
 
 function PreProcessYaml([string]$yamlDirectory)
 {
