@@ -1,7 +1,7 @@
 if($deployHelpLoaded -eq $null)
 {
-    $currentPath = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
-    . $currentPath\deployHelp.ps1
+    $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+    . $DeployToolsDir\deployHelp.ps1
 }
 
 Write-Host "Ensconce - BackupHelper Loading"

@@ -1,13 +1,12 @@
-﻿$currentDirectory = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
-
-if($deployHelpLoaded -eq $null)
+﻿if($deployHelpLoaded -eq $null)
 {
-    . $currentDirectory\deployHelp.ps1
+	$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+    . $DeployToolsDir\deployHelp.ps1
 }
 
 if($compressionHelperLoaded -eq $null)
 {
-    . $currentDirectory\compressionHelper.ps1
+    . $DeployToolsDir\compressionHelper.ps1
 }
 
 Write-Host "Ensconce - AzureHelper Loading"

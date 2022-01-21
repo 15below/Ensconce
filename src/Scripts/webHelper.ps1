@@ -1,7 +1,12 @@
+if($deployHelpLoaded -eq $null)
+{
+	$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+    . $DeployToolsDir\deployHelp.ps1
+}
+
 if($compressionHelperLoaded -eq $null)
 {
-    $currentPath = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
-    . $currentPath\compressionHelper.ps1
+    . $DeployToolsDir\compressionHelper.ps1
 }
 
 Write-Host "Ensconce - WebHelper Loading"

@@ -1,5 +1,4 @@
 Write-Host "Ensconce - CreateWebsite Loading"
-$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
 # Resource For Looking Up IIS Powershell Snap In Commands/Functions
 # http://learn.iis.net/page.aspx/447/managing-iis-with-the-iis-powershell-snap-in/
