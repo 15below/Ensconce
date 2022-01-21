@@ -9,6 +9,7 @@ description: Details about the Azure-DeployZipToWebApp function in azureHelper.p
 ```PowerShell
 {% raw %}
 Azure-DeployZipToWebApp
+	[-currentDirectory] <String>
     [-username] <String>
     [-password] <String>
     [-tenant] <String>
@@ -26,6 +27,6 @@ Will deploy the contents of the folder provided into a named Azure WebApp within
 
 ```PowerShell
 {% raw %}
-Azure-DeployZipToWebApp -username "[service-guid]" -password "PASSWORD-HERE" -tenant "[tenant-guid]" -resourceGroup "MyWebAppResource" -name "MyWebApp" -contentFolder "Path\To\Folder"
+Azure-DeployZipToWebApp -currentDirectory "Script\Exection\Dir" -username "[service-guid]" -password "PASSWORD-HERE" -tenant "[tenant-guid]" -resourceGroup "MyWebAppResource" -name "MyWebApp" -contentFolder "Path\To\Folder"
 {% endraw %}
 ```

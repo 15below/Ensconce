@@ -23,11 +23,11 @@ else
     throw "azure CLI not installed"
 }
 
-function Azure-Logout()
+function Azure-Logout([string]$currentDirectory)
 {
-    Write-Host "Checking if logged into account already"
-    & az account show 2>&1 | Out-Null
-    if($LASTEXITCODE -eq 0)
+    $azureProfilePath = [IO.Path]::Combine($currentDirectory, ".azure-profile")
+
+    if($azureProfilePath -ne "")
     {
         Write-Host "Logging out"
         & az logout
@@ -37,6 +37,10 @@ function Azure-Logout()
             Write-Error "Error logging out"
             exit $LASTEXITCODE
         }
+
+        Remove-Item -Recurse -Force $azureProfilePath
+        $azureProfilePath = $null
+        $env:AZURE_CONFIG_DIR = $null
     }
     else
     {
@@ -44,9 +48,23 @@ function Azure-Logout()
     }
 }
 
-function Azure-LoginServicePrincipal([string]$username, [string]$password, [string]$tenant)
+function Azure-LoginServicePrincipal([string]$currentDirectory, [string]$username, [string]$password, [string]$tenant)
 {
-    Azure-Logout
+    if($azureProfilePath -ne "")
+    {
+        Azure-Logout $currentDirectory
+    }
+
+    $azureProfilePath = [IO.Path]::Combine($currentDirectory, ".azure-profile")
+    $env:AZURE_CONFIG_DIR = $azureProfilePath
+    Write-Host "Storing profile $env:AZURE_CONFIG_DIR"
+
+    if($env:AZURE_CONFIG_DIR -eq $null -or $env:AZURE_CONFIG_DIR -eq "")
+    {
+        Write-Error "AZURE_CONFIG_DIR environment variable is empty, will not login"
+        exit -1
+    }
+
     Write-Host "Logging in as $username with tenant $tenant"
     & az login --service-principal --username $username --password $password --tenant $tenant
 
@@ -62,20 +80,20 @@ function Azure-DeployWebApp([string]$resourceGroup, [string]$name, [string]$zipP
     & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath
 }
 
-function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
+function Azure-DeployZipToWebApp([string]$currentDirectory, [string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
 {
-    Azure-LoginServicePrincipal $username $password $tenant
+    Azure-LoginServicePrincipal $currentDirectory $username $password $tenant
 
     if(Test-Path "$contentFolder.zip")
     {
         Remove-Item "$contentFolder.zip" -Force
     }
-
+    
     CreateZip $contentFolder "$contentFolder.zip"
-
+    
     Azure-DeployWebApp $resourceGroup $name "$content.zip"
 
-    Azure-Logout
+    Azure-Logout $currentDirectory
 }
 
 
