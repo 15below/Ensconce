@@ -23,55 +23,43 @@ else
     throw "azure CLI not installed"
 }
 
-function Azure-Logout([string]$currentDirectory)
+$rootProfilePath = "$Home\.azure-ensconce-profiles"
+
+function Azure-EnsureProfileActive([string]$username, [string]$tenant)
 {
-    $azureProfilePath = [IO.Path]::Combine($currentDirectory, ".azure-profile")
-
-    if($azureProfilePath -ne "")
+    $azureProfileId = "$username`_$tenant"
+    $azureProfilePath = [IO.Path]::Combine($rootProfilePath, $azureProfileId)
+    if($env:AZURE_CONFIG_DIR -ne $azureProfilePath)
     {
-        Write-Host "Logging out"
-        & az logout
-
-        if ($LASTEXITCODE -ne 0)
-        {
-            Write-Error "Error logging out"
-            exit $LASTEXITCODE
-        }
-
-        Remove-Item -Recurse -Force $azureProfilePath
-        $azureProfilePath = $null
-        $env:AZURE_CONFIG_DIR = $null
-    }
-    else
-    {
-        Write-Host "Not logged in"
+        $env:AZURE_CONFIG_DIR = $azureProfilePath
+        Write-Host "Profile config set to $env:AZURE_CONFIG_DIR"
     }
 }
 
-function Azure-LoginServicePrincipal([string]$currentDirectory, [string]$username, [string]$password, [string]$tenant)
+function Azure-LoginServicePrincipal([string]$username, [string]$password, [string]$tenant)
 {
-    if($azureProfilePath -ne "")
-    {
-        Azure-Logout $currentDirectory
-    }
-
-    $azureProfilePath = [IO.Path]::Combine($currentDirectory, ".azure-profile")
-    $env:AZURE_CONFIG_DIR = $azureProfilePath
-    Write-Host "Storing profile $env:AZURE_CONFIG_DIR"
-
+    Azure-EnsureProfileActive $username $tenant
     if($env:AZURE_CONFIG_DIR -eq $null -or $env:AZURE_CONFIG_DIR -eq "")
     {
         Write-Error "AZURE_CONFIG_DIR environment variable is empty, will not login"
         exit -1
     }
 
-    Write-Host "Logging in as $username with tenant $tenant"
-    & az login --service-principal --username $username --password $password --tenant $tenant
-
-    if ($LASTEXITCODE -ne 0)
+    & az account show 2>&1 | Out-Null
+    if($LASTEXITCODE -ne 0)
     {
-        Write-Error "Error logging in as $username"
-        exit $LASTEXITCODE
+        Write-Host "Logging in as $username with tenant $tenant"
+        & az login --service-principal --username $username --password $password --tenant $tenant
+
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Error "Error logging in as $username"
+            exit $LASTEXITCODE
+        }
+    }
+    else
+    {
+        Write-Host "Already Logged In"
     }
 }
 
@@ -80,9 +68,11 @@ function Azure-DeployWebApp([string]$resourceGroup, [string]$name, [string]$zipP
     & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath
 }
 
-function Azure-DeployZipToWebApp([string]$currentDirectory, [string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
+function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
 {
-    Azure-LoginServicePrincipal $currentDirectory $username $password $tenant
+    Azure-EnsureProfileActive $username $tenant
+
+    Azure-LoginServicePrincipal $username $password $tenant
 
     if(Test-Path "$contentFolder.zip")
     {
@@ -92,8 +82,6 @@ function Azure-DeployZipToWebApp([string]$currentDirectory, [string]$username, [
     CreateZip $contentFolder "$contentFolder.zip"
     
     Azure-DeployWebApp $resourceGroup $name "$content.zip"
-
-    Azure-Logout $currentDirectory
 }
 
 
