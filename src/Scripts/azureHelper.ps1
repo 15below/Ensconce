@@ -35,6 +35,18 @@ function Azure-EnsureProfileActive([string]$username, [string]$tenant)
     }
 }
 
+function Azure-CheckLoggedIn
+{
+    $originalErrorPref = $ErrorActionPreference
+    $ErrorActionPreference = 'SilentlyContinue'
+
+    & az account show 2>&1 | Out-Null
+
+    $ErrorActionPreference = $originalErrorPref
+
+    return $LASTEXITCODE -eq 0    
+}
+
 function Azure-LoginServicePrincipal([string]$username, [string]$password, [string]$tenant)
 {
     Azure-EnsureProfileActive $username $tenant
@@ -44,9 +56,13 @@ function Azure-LoginServicePrincipal([string]$username, [string]$password, [stri
         exit -1
     }
 
-    & az account show 2>&1 | Out-Null
+    $loggedIn = Azure-CheckLoggedIn
 
-    if ($LASTEXITCODE -ne 0)
+    if ($loggedIn)
+    {
+        Write-Host "Already Logged In"
+    }
+    else
     {
         Write-Host "Logging in as $username with tenant $tenant"
         & az login --service-principal --username $username --password $password --tenant $tenant
@@ -56,10 +72,6 @@ function Azure-LoginServicePrincipal([string]$username, [string]$password, [stri
             Write-Error "Error logging in as $username"
             exit $LASTEXITCODE
         }
-    }
-    else
-    {
-        Write-Host "Already Logged In"
     }
 }
 
