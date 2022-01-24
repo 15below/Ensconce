@@ -51,7 +51,7 @@ Function AddUserToGroup([string]$name, [string]$group)
     $colUsers = $objComputer.psbase.children |
         Where-Object {$_.psBase.schemaClassName -eq "User" -and $_.psBase.Name -eq $name}
 
-    if($colUsers -eq $null)
+    if ($colUsers -eq $null)
     {
         "Could not locate user: $user" | Write-Host
     }
@@ -61,7 +61,7 @@ Function AddUserToGroup([string]$name, [string]$group)
             Where {$_.psbase.schemaClassName -eq "group" -and $_.psbase.Name -eq $group} |
             Select-Object -First 1)
 
-        if($searchgroup -eq $null)
+        if ($searchgroup -eq $null)
         {
             "Could not locate group: $group" | Write-Host
         }
@@ -112,7 +112,7 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 
     $exe = "$EnsconceDir\Tools\Grant\Grant.exe"
     $osInfo = Get-WmiObject -Class Win32_OperatingSystem
-    if($osInfo.ProductType -eq 2)
+    if ($osInfo.ProductType -eq 2)
     {
         $userName = "$env:UserDomain\$name"
     }

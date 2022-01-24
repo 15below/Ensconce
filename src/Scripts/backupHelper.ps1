@@ -8,7 +8,7 @@ Write-Host "Ensconce - BackupHelper Loading"
 
 Function CleanBackups([string]$backupDir, [int]$daysToKeep)
 {
-    if($daysToKeep > 0)
+    if ($daysToKeep > 0)
     {
         $backupPurgedate = (get-date).AddDays($daysToKeep * -1)
     }

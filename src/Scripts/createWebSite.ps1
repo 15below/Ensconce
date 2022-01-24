@@ -160,7 +160,7 @@ function StartWebSite([string]$name)
         $siteProtocol = "http"
 
         (Get-WebBinding -Name $name) | ForEach-Object{
-            if($_.Protocol -eq "ftp")
+            if ($_.Protocol -eq "ftp")
             {
                 $siteProtocol = "ftp"
             }
@@ -244,7 +244,7 @@ function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
     # SpecificUser = 3
     # ApplicationPoolIdentity = 4
     $identityType = 3
-    if($user -And $user.ToLower() -eq "networkservice")
+    if ($user -And $user.ToLower() -eq "networkservice")
     {
         $identityType = 2
     }
@@ -260,13 +260,13 @@ function SetAppPoolIdentity([string]$name, [string]$user, [string]$password)
 function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName, [string] $applicationName, [string] $hostName, [string] $logLocation, [int32] $port=80, [string] $ipAddress="*")
 {
     # accounts for possible empty strings
-    if(!$ipAddress)
+    if (!$ipAddress)
     {
         $ipAddress = "*"
     }
 
     $site = Get-WebSite | where { $_.Name -eq $name }
-    if($site -eq $null)
+    if ($site -eq $null)
     {
         EnsurePath $localPath
         if ($port -eq 443) {
@@ -281,29 +281,29 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
 
 function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [string] $protocol, [string] $ipAddress="*")
 {
-    if($protocol -eq "" ) {
+    if ($protocol -eq "" ) {
         $protocol = "http"
     }
 
     # accounts for possible empty strings
-    if(!$ipAddress)
+    if (!$ipAddress)
     {
         $ipAddress = "*"
     }
 
     $site = Get-WebSite | where { $_.Name -eq $siteName }
-    if($site -ne $null)
+    if ($site -ne $null)
     {
         $webBinding = Get-WebBinding -Name $siteName -IPAddress $ipAddress -Port $port -HostHeader $hostHeader -Protocol $protocol
-        if($webBinding -eq $null) {
-            if( $hostHeader -eq "" ) {
+        if ($webBinding -eq $null) {
+            if ( $hostHeader -eq "" ) {
                 "Host-header is empty, cannot add" | Write-Host
             }
             else {
                 $supportedProtocols = "http", "https", "net.tcp", "net.pipe", "net.msmq", "msmq.formatname"
-                if($supportedProtocols -contains $protocol) {
+                if ($supportedProtocols -contains $protocol) {
                     "Adding additional host-header binding of: $hostHeader, port: $port, protocol: $protocol" | Write-Host
-                    if($iisVersion -gt 8 -and $protocol -eq "https")
+                    if ($iisVersion -gt 8 -and $protocol -eq "https")
                     {
                         New-WebBinding -Name $siteName -IPAddress $ipAddress -Port $port -HostHeader $hostHeader -Protocol $protocol -SslFlags 1
                     }
@@ -345,14 +345,14 @@ function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$
 function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [string] $hostHeader, [string] $ipAddress)
 {
     # accounts for possible empty strings
-    if(!$ipAddress)
+    if (!$ipAddress)
     {
         $ipAddress = "*"
     }
 
     $checkBinding = CheckIfSslBindingExists $instanceName $hostHeader
     if ( $checkBinding -eq $False) {
-        if($iisVersion -gt 8)
+        if ($iisVersion -gt 8)
         {
             New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader -SslFlags 1
         }
@@ -376,9 +376,9 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 
     Set-Location IIS:\sslbindings
 
-    if($iisVersion -gt 8)
+    if ($iisVersion -gt 8)
     {
-        if($ipAddress -eq "*")
+        if ($ipAddress -eq "*")
         {
             if (($bindings | where-object {$_.port -eq "443" -and $_.Host -eq $hostHeader}) -eq $Null)
             {
@@ -397,7 +397,7 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
     }
     else
     {
-        if($ipAddress -eq "*")
+        if ($ipAddress -eq "*")
         {
             $ipAddress = "0.0.0.0"
         }
