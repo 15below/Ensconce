@@ -1,14 +1,14 @@
 ---
-title: azureHelper.ps1 - Azure-DeployZipToWebApp
-linkText: Azure-DeployZipToWebApp
-description: Details about the Azure-DeployZipToWebApp function in azureHelper.ps1 helper script
+title: azureHelper.ps1 - Azure-DeployWebApp
+linkText: Azure-DeployWebApp
+description: Details about the Azure-DeployWebApp function in azureHelper.ps1 helper script
 ---
 
-# Azure-DeployZipToWebApp
+# Azure-DeployWebApp
 
 ```PowerShell
 {% raw %}
-Azure-DeployZipToWebApp
+Azure-DeployWebApp
     [-username] <String>
     [-password] <String>
     [-tenant] <String>
@@ -26,6 +26,6 @@ Will deploy the contents of the folder provided into a named Azure WebApp within
 
 ```PowerShell
 {% raw %}
-Azure-DeployZipToWebApp -username "[service-guid]" -password "PASSWORD-HERE" -tenant "[tenant-guid]" -resourceGroup "MyWebAppResource" -name "MyWebApp" -contentFolder "Path\To\Folder"
+Azure-DeployWebApp -username "[service-guid]" -password "PASSWORD-HERE" -tenant "[tenant-guid]" -resourceGroup "MyWebAppResource" -name "MyWebApp" -contentFolder "Path\To\Folder"
 {% endraw %}
 ```

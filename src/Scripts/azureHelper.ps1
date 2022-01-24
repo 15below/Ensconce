@@ -63,12 +63,12 @@ function Azure-LoginServicePrincipal([string]$username, [string]$password, [stri
     }
 }
 
-function Azure-DeployWebApp([string]$resourceGroup, [string]$name, [string]$zipPath)
+function Azure-DeployZipToWebApp([string]$resourceGroup, [string]$name, [string]$zipPath)
 {
     & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath
 }
 
-function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
+function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
 {
     Azure-EnsureProfileActive $username $tenant
 
