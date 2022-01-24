@@ -79,7 +79,7 @@ function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenan
     
     CreateZip $contentFolder "$contentFolder.zip"
     
-    Azure-DeployWebApp $username $password $tenant $resourceGroup $name "$contentFolder.zip"
+    Azure-DeployZipToWebApp $username $password $tenant $resourceGroup $name "$contentFolder.zip"
 }
 
 Write-Host "Ensconce - AzureHelper Loaded"
