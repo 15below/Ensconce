@@ -78,8 +78,10 @@ function Azure-LoginServicePrincipal([string]$username, [string]$password, [stri
 function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$zipPath)
 {
     Azure-LoginServicePrincipal $username $password $tenant
+    
+    Write-Host "Deploying $name in resource group $resourceGroup"
 
-    & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath
+    & az webapp deploy --resource-group $resourceGroup --name $name --src-path $zipPath --type zip --async false
 }
 
 function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
