@@ -63,15 +63,15 @@ function Azure-LoginServicePrincipal([string]$username, [string]$password, [stri
     }
 }
 
-function Azure-DeployZipToWebApp([string]$resourceGroup, [string]$name, [string]$zipPath)
+function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$zipPath)
 {
+    Azure-LoginServicePrincipal $username $password $tenant
+
     & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath
 }
 
 function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
 {
-    Azure-LoginServicePrincipal $username $password $tenant
-
     if (Test-Path "$contentFolder.zip")
     {
         Remove-Item "$contentFolder.zip" -Force
@@ -79,7 +79,7 @@ function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenan
     
     CreateZip $contentFolder "$contentFolder.zip"
     
-    Azure-DeployWebApp $resourceGroup $name "$content.zip"
+    Azure-DeployWebApp $username $password $tenant $resourceGroup $name "$content.zip"
 }
 
 Write-Host "Ensconce - AzureHelper Loaded"
