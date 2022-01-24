@@ -10,7 +10,7 @@ function CallCloudflare([string]$token, [string]$urlPart, [Microsoft.PowerShell.
 
     $url = "$baseurl/$urlPart"
 
-    if($body -eq $null -or $body -eq "")
+    if ($body -eq $null -or $body -eq "")
     {
         Write-Verbose "Calling ($method) $url"
         Invoke-RestMethod -Uri $url -Method $method -Headers $headers
@@ -26,7 +26,7 @@ function GetCloudflareDnsZone([string]$token, [string]$domain)
 {
     $zone = CallCloudflare $token "zones/?name=$domain" Get
 
-    if($zone.result.Count -gt 0){
+    if ($zone.result.Count -gt 0){
         $zone.result
     }
     else
@@ -39,7 +39,7 @@ function GetCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain
 {
     $dnsRecord = CallCloudflare $token "zones/$zoneid/dns_records/?name=$record.$domain" Get
 
-    if($dnsRecord.result.Count -gt 0)
+    if ($dnsRecord.result.Count -gt 0)
     {
         $dnsRecord.result
     }
@@ -53,7 +53,7 @@ function CheckCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$doma
 {
     $dnsRecord = CallCloudflare $token "zones/$zoneid/dns_records/?name=$record.$domain" Get
 
-    if($dnsRecord.result.Count -gt 0)
+    if ($dnsRecord.result.Count -gt 0)
     {
         $true
     }
@@ -100,7 +100,7 @@ function GetCloudflareDnsRecords([string]$token, [string]$domain, [string]$filte
 
     $dnsRecords = [Collections.Generic.List[string]](ExportDnsRecords $token $zoneid $domain)
 
-    if($filter -ne "")
+    if ($filter -ne "")
     {
         $dnsRecords = $dnsRecords | Where-Object { $_ -like $filter }
     }
@@ -123,7 +123,7 @@ function CreateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$dom
 
     $result = CallCloudflare $token "zones/$zoneid/dns_records" Post $body
 
-    if($result.success)
+    if ($result.success)
     {
         Write-Host "New record $name (type: $($result.result.type), content: $($result.result.content)) has been created with the ID $($result.result.id)"
         $true
@@ -146,9 +146,9 @@ function UpdateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$rec
 
     $result = CallCloudflare $token "zones/$zoneid/dns_records/$recordid/" Put $body
 
-    if($result.success)
+    if ($result.success)
     {
-        if($warnOnUpdate)
+        if ($warnOnUpdate)
         {
             Write-Warning "Record $name has been updated to type: $($result.result.type), content: $($result.result.content)"
         }
@@ -172,13 +172,13 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
 
     $recordExists = CheckCloudflareDnsRecord $token $zoneid $domain $record
 
-    if($recordExists -eq $true)
+    if ($recordExists -eq $true)
     {
         $dnsRecords = GetCloudflareDnsRecord $token $zoneid $domain $record
         Foreach($dnsRecord in $dnsRecords)
         {
             $recordid = $dnsRecord.id
-            if($dnsRecord.content -eq $ipaddr -and $dnsRecord.type -eq "A")
+            if ($dnsRecord.content -eq $ipaddr -and $dnsRecord.type -eq "A")
             {
                 Write-Host "Record '$record.$domain' already has an 'A' record with the value '$ipaddr'"
                 $true
@@ -202,13 +202,13 @@ function CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [s
 
     $recordExists = CheckCloudflareDnsRecord $token $zoneid $domain $record
 
-    if($recordExists -eq $true)
+    if ($recordExists -eq $true)
     {
         $dnsRecords = GetCloudflareDnsRecord $token $zoneid $domain $record
         Foreach($dnsRecord in $dnsRecords)
         {
             $recordid = $dnsRecord.id
-            if($dnsRecord.content -eq $cnameValue -and $dnsRecord.type -eq "CNAME")
+            if ($dnsRecord.content -eq $cnameValue -and $dnsRecord.type -eq "CNAME")
             {
                 Write-Host "Record '$record.$domain' already has an 'CNAME' record with the value '$cnameValue'"
                 $true
@@ -233,7 +233,7 @@ function RemoveCloudflareDnsRecord([string]$token, [string]$domain, [string]$rec
     $name = "$record.$domain"
     $recordExists = CheckCloudflareDnsRecord $token $zoneid $domain $record
 
-    if($recordExists -eq $true)
+    if ($recordExists -eq $true)
     {
         $dnsRecords = GetCloudflareDnsRecord $token $zoneid $domain $record
         Foreach($dnsRecord in $dnsRecords)
@@ -244,9 +244,9 @@ function RemoveCloudflareDnsRecord([string]$token, [string]$domain, [string]$rec
 
             $result = CallCloudflare $token "zones/$zoneid/dns_records/$recordid" Delete
 
-            if($result.success)
+            if ($result.success)
             {
-                if($warnOnDelete)
+                if ($warnOnDelete)
                 {
                     Write-Warning "Record $name has been deleted"
                 }

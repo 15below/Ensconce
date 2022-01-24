@@ -1,12 +1,12 @@
 ﻿$currentDirectory = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
-if($deployHelpLoaded -eq $null)
+if ($deployHelpLoaded -eq $null)
 {
     . $currentDirectory\deployHelp.ps1
 }
 
 Write-Host "Ensconce - KubernetesHelper Loading"
-if([string]::IsNullOrWhiteSpace($KubeCtlExe))
+if ([string]::IsNullOrWhiteSpace($KubeCtlExe))
 {
 	$KubeCtlExe = "C:\KubeCtl\kubectl.exe"
 }
@@ -15,7 +15,7 @@ $rootConfigPath = "$Home\.kube"
 if (Test-Path $KubeCtlExe)
 {
     (& $KubeCtlExe version --client 2>&1) | ForEach-Object {
-        if($_ -match "^Client Version.*")
+        if ($_ -match "^Client Version.*")
         {
             $data = ConvertFrom-Json ($_ -replace "Client Version: version.Info", "")
             $clientVersion = $data.GitVersion
@@ -30,12 +30,12 @@ else
 
 function PreProcessYaml([string]$yamlDirectory)
 {
-    if((Test-Path -Path "$yamlDirectory\kustomization.yaml") -eq $false)
+    if ((Test-Path -Path "$yamlDirectory\kustomization.yaml") -eq $false)
     {
         Write-Host "Creating kustomization.yaml"
         Add-Content -Path "$yamlDirectory\kustomization.yaml" -Value "resources:"
         Get-ChildItem "$yamlDirectory" -Filter *.yaml | Foreach-Object {
-            if($_.Name -ne "kustomization.yaml")
+            if ($_.Name -ne "kustomization.yaml")
             {
                 Add-Content -Path "$yamlDirectory\kustomization.yaml" -Value $_.Name
             }
@@ -96,7 +96,7 @@ function SetK8sContext([string]$kubernetesConfigFile)
         exit $LASTEXITCODE
     }
 
-    if($currentContext -ne $targetContext)
+    if ($currentContext -ne $targetContext)
     {
         Write-Host "Switching from '$currentContext' context to '$targetContext' context"
         & $KubeCtlExe config use-context "$targetContext" --kubeconfig=$kubernetesConfigFilePath
@@ -129,12 +129,12 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
 
     foreach($resource in $rawResources)
     {
-        if($resource.Contains("."))
+        if ($resource.Contains("."))
         {
             $resource = $resource.Substring(0, $resource.IndexOf("."))
         }
 
-        if($resources -notcontains $resource)
+        if ($resources -notcontains $resource)
         {
             Write-Host "  Checking $resource is accessible"
             $cani = & $KubeCtlExe auth can-i list $resource --kubeconfig=$kubernetesConfigFilePath
@@ -146,7 +146,7 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
         }
     }
 
-    if($resources.Count -gt 0)
+    if ($resources.Count -gt 0)
     {
         Write-Host "Accessible Server Resources: $resources"
         Write-Host "Getting Resources Used On Selector: $selector"
@@ -165,21 +165,21 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
             foreach($item in $output.items)
             {
                 $groupVersion = $item.apiVersion
-                if(-not($groupVersion.Contains("/")))
+                if (-not($groupVersion.Contains("/")))
                 {
                     $groupVersion = "core/${groupVersion}"
                 }
                 $kind = $item.kind
                 $GroupVersionKind = "${groupVersion}/${kind}"
 
-                if($resourceVersions -notcontains $GroupVersionKind)
+                if ($resourceVersions -notcontains $GroupVersionKind)
                 {
                     $resourceVersions += $GroupVersionKind
                 }
             }
         }
 
-        if($resourceVersions.Count -gt 0)
+        if ($resourceVersions.Count -gt 0)
         {
             Write-Host "Used API Versions: $resourceVersions"
         }
@@ -205,7 +205,7 @@ function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$
     $deploymentName = ""
     Write-Host "Deploying yaml file $yamlFile"
     #Run using Invoke-Expression because of dynamic parameters
-    if($prunableList.Count -gt 0)
+    if ($prunableList.Count -gt 0)
     {
         $pruneWhiteList = $prunableList -join " --prune-whitelist="
         $command = "$KubeCtlExe apply -f $yamlFile --prune -l $pruneSelector --prune-whitelist=$pruneWhiteList --kubeconfig=$kubernetesConfigFilePath"
@@ -217,10 +217,10 @@ function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$
 
     Invoke-Expression $command | foreach-object {
         Write-Host $_
-        if($_.StartsWith("deployment.apps/"))
+        if ($_.StartsWith("deployment.apps/"))
         {
             $deploymentLineName = $_.Substring(0, $_.IndexOf(' '))
-            if($deploymentName -eq "")
+            if ($deploymentName -eq "")
             {
                 $deploymentName = $deploymentLineName
             }

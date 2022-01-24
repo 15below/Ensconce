@@ -1,14 +1,14 @@
-if($deployHelpLoaded -eq $null)
+if ($deployHelpLoaded -eq $null)
 {
-    $currentPath = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
-    . $currentPath\deployHelp.ps1
+    $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+    . $DeployToolsDir\deployHelp.ps1
 }
 
 Write-Host "Ensconce - BackupHelper Loading"
 
 Function CleanBackups([string]$backupDir, [int]$daysToKeep)
 {
-    if($daysToKeep > 0)
+    if ($daysToKeep > 0)
     {
         $backupPurgedate = (get-date).AddDays($daysToKeep * -1)
     }
