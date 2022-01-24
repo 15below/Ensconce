@@ -10,7 +10,7 @@ linkText: kubernetesHelper.ps1
 
 The `kubernetesHelper.ps1` script has functionality to interact with a Kubernetes environment
 
-*NOTE: This will only be available if `includeK8s` variable is set to `True` on deploy*
+*NOTE: The path to kubectl should be `C:\KubeCtl\kubectl.exe` but can be changed with an Octopus variable `KubeCtlExe`*
 
 ## Functions
 

@@ -2,7 +2,7 @@
 $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
 $ensconceVersion = "Unknown"
-if((Test-Path $DeployToolsDir\releaseVersion.txt) -eq $true)
+if ((Test-Path $DeployToolsDir\releaseVersion.txt) -eq $true)
 {
     $ensconceVersion = Get-Content -Path $DeployToolsDir\releaseVersion.txt -TotalCount 1
 }
@@ -30,7 +30,7 @@ if (Test-Path variable:\OctopusParameters)
     }
 }
 
-if(!(Test-Path "env:\ConfigOnly"))
+if (!(Test-Path "env:\ConfigOnly"))
 {
     Set-Content "env:\ConfigOnly" $false
 }
@@ -63,7 +63,7 @@ function ensconceWithArgs($passedArgs)
                 $line = $_
                 $message = "$message`r`n$line"
             }
-            elseif($_.Exception -ne $null)
+            elseif ($_.Exception -ne $null)
             {
                 $line = $_.Exception.Message
                 $message = "$message`r`n$line"
@@ -112,7 +112,7 @@ function CreateDesktopShortcut([string]$exePath, [string]$shortcutName, [string]
     $Shortcut = $WshShell.CreateShortcut((Join-Path $wshShell.SpecialFolders.Item("AllUsersDesktop") "$shortcutName.lnk"))
     $Shortcut.TargetPath = $exePath
 
-    if($iconPath -ne "")
+    if ($iconPath -ne "")
     {
         $Shortcut.IconLocation = $iconPath
     }
@@ -121,7 +121,7 @@ function CreateDesktopShortcut([string]$exePath, [string]$shortcutName, [string]
         $Shortcut.IconLocation = $exePath
     }
 
-    if($arguments -ne "")
+    if ($arguments -ne "")
     {
         $Shortcut.Arguments = $arguments
     }

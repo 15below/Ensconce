@@ -8,7 +8,7 @@ function ScheduledTask-CheckExists([string] $taskName, [string] $taskPath)
 
         $response = & "schtasks" "/query" "/TN" "\$taskPath\$taskName" 2>&1
 
-        if($LASTEXITCODE -eq 0 -and $response -match ".*$taskName.*")
+        if ($LASTEXITCODE -eq 0 -and $response -match ".*$taskName.*")
         {
             Write-Host "Task '\$taskPath\$taskName' does exist"
             $true
@@ -21,7 +21,7 @@ function ScheduledTask-CheckExists([string] $taskName, [string] $taskPath)
     }
     catch
     {
-        if($_ -eq "ERROR: The system cannot find the file specified.")
+        if ($_ -eq "ERROR: The system cannot find the file specified.")
         {
             Write-Host "Task '\$taskPath\$taskName' does NOT exist"
         }
@@ -41,7 +41,7 @@ function ScheduledTask-CheckExists([string] $taskName, [string] $taskPath)
 
 function ScheduledTask-Delete([string] $taskName, [string] $taskPath)
 {
-    if((ScheduledTask-CheckExists $taskName $taskPath) -eq $true)
+    if ((ScheduledTask-CheckExists $taskName $taskPath) -eq $true)
     {
         try
         {
@@ -49,7 +49,7 @@ function ScheduledTask-Delete([string] $taskName, [string] $taskPath)
 
             $response = & "schtasks" "/delete" "/TN" "\$taskPath\$taskName" "/f" 2>&1
 
-            if($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
+            if ($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
             {
                 Write-Host "Scheduled task '\$taskPath\$taskName' deleted"
                 $true
@@ -84,7 +84,7 @@ function ScheduledTask-CreateFromXml([string] $taskName, [string] $taskPath, [st
         Write-Host "Creating scheduled task '\$taskPath\$taskName'"
         $response = & "schtasks" "/create" "/XML" $taskXmlPath "/TN" "\$taskPath\$taskName" "/F" 2>&1
 
-        if($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
+        if ($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
         {
             Write-Host "Scheduled task '\$taskPath\$taskName' created"
             $true
@@ -109,7 +109,7 @@ function ScheduledTask-CreateFromXml([string] $taskName, [string] $taskPath, [st
 
 function ScheduledTask-CreateOrUpdateFromXml([string] $taskName, [string] $taskPath, [string] $taskXmlPath)
 {
-    if((ScheduledTask-Delete $taskName $taskPath) -eq $true)
+    if ((ScheduledTask-Delete $taskName $taskPath) -eq $true)
     {
         ScheduledTask-CreateFromXml $taskName $taskPath $taskXmlPath
     }
@@ -121,7 +121,7 @@ function ScheduledTask-CreateOrUpdateFromXml([string] $taskName, [string] $taskP
 
 function ScheduledTask-Run([string] $taskName, [string] $taskPath)
 {
-    if((ScheduledTask-CheckExists $taskName $taskPath) -eq $true)
+    if ((ScheduledTask-CheckExists $taskName $taskPath) -eq $true)
     {
         try
         {
@@ -129,7 +129,7 @@ function ScheduledTask-Run([string] $taskName, [string] $taskPath)
 
             $response = & "schtasks" "/run" "/TN" "\$taskPath\$taskName" 2>&1
 
-            if($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
+            if ($LASTEXITCODE -eq 0 -and $response -match ".*SUCCESS.*")
             {
                 Write-Host "Scheduled task '\$taskPath\$taskName' ran"
                 $true
