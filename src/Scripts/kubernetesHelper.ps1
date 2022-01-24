@@ -1,12 +1,12 @@
 ﻿$currentDirectory = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
-if($deployHelpLoaded -eq $null)
+if ($deployHelpLoaded -eq $null)
 {
     . $currentDirectory\deployHelp.ps1
 }
 
 Write-Host "Ensconce - KubernetesHelper Loading"
-if([string]::IsNullOrWhiteSpace($KubeCtlExe))
+if ([string]::IsNullOrWhiteSpace($KubeCtlExe))
 {
 	$KubeCtlExe = "C:\KubeCtl\kubectl.exe"
 }

@@ -4,7 +4,7 @@
     . $DeployToolsDir\deployHelp.ps1
 }
 
-if($compressionHelperLoaded -eq $null)
+if ($compressionHelperLoaded -eq $null)
 {
     . $DeployToolsDir\compressionHelper.ps1
 }
@@ -16,7 +16,6 @@ if (Get-Command "az" -ErrorAction SilentlyContinue)
     $data = ConvertFrom-Json $raw
     $cliVersion = $data.'azure-cli'
     write-host "Azure CLI Version: $cliVersion"
-
 }
 else
 {
@@ -29,7 +28,7 @@ function Azure-EnsureProfileActive([string]$username, [string]$tenant)
 {
     $azureProfileId = "$username`_$tenant"
     $azureProfilePath = [IO.Path]::Combine($rootProfilePath, $azureProfileId)
-    if($env:AZURE_CONFIG_DIR -ne $azureProfilePath)
+    if ($env:AZURE_CONFIG_DIR -ne $azureProfilePath)
     {
         $env:AZURE_CONFIG_DIR = $azureProfilePath
         Write-Host "Profile config set to $env:AZURE_CONFIG_DIR"
@@ -39,14 +38,15 @@ function Azure-EnsureProfileActive([string]$username, [string]$tenant)
 function Azure-LoginServicePrincipal([string]$username, [string]$password, [string]$tenant)
 {
     Azure-EnsureProfileActive $username $tenant
-    if($env:AZURE_CONFIG_DIR -eq $null -or $env:AZURE_CONFIG_DIR -eq "")
+    if ($env:AZURE_CONFIG_DIR -eq $null -or $env:AZURE_CONFIG_DIR -eq "")
     {
         Write-Error "AZURE_CONFIG_DIR environment variable is empty, will not login"
         exit -1
     }
 
     & az account show 2>&1 | Out-Null
-    if($LASTEXITCODE -ne 0)
+
+    if ($LASTEXITCODE -ne 0)
     {
         Write-Host "Logging in as $username with tenant $tenant"
         & az login --service-principal --username $username --password $password --tenant $tenant
@@ -70,11 +70,9 @@ function Azure-DeployZipToWebApp([string]$resourceGroup, [string]$name, [string]
 
 function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
 {
-    Azure-EnsureProfileActive $username $tenant
-
     Azure-LoginServicePrincipal $username $password $tenant
 
-    if(Test-Path "$contentFolder.zip")
+    if (Test-Path "$contentFolder.zip")
     {
         Remove-Item "$contentFolder.zip" -Force
     }
@@ -83,6 +81,5 @@ function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenan
     
     Azure-DeployWebApp $resourceGroup $name "$content.zip"
 }
-
 
 Write-Host "Ensconce - AzureHelper Loaded"

@@ -1,10 +1,10 @@
-if($deployHelpLoaded -eq $null)
+if ($deployHelpLoaded -eq $null)
 {
 	$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
     . $DeployToolsDir\deployHelp.ps1
 }
 
-if($compressionHelperLoaded -eq $null)
+if ($compressionHelperLoaded -eq $null)
 {
     . $DeployToolsDir\compressionHelper.ps1
 }
@@ -80,11 +80,11 @@ Function DownloadStringUntilOK([string]$url, [int] $maxChecks, [int] $sleepSecon
         Write-Host "Downloading $url on attempt $checkedTimes"
         $responseText = $webClient.DownloadString($url)
 
-        if($failText.Contains($responseText))
+        if ($failText.Contains($responseText))
         {
             throw "Got '$responseText' from API on attempt $checkedTimes, this indicates a failure"
         }
-        elseif($okText.Contains($responseText))
+        elseif ($okText.Contains($responseText))
         {
             Write-Host "Got '$responseText' from API on attempt $checkedTimes, this indicates a success"
             break
@@ -96,7 +96,7 @@ Function DownloadStringUntilOK([string]$url, [int] $maxChecks, [int] $sleepSecon
         }
     }
 
-    if($checkedTimes -ge $maxChecks)
+    if ($checkedTimes -ge $maxChecks)
     {
         throw "API text checking timed out after the maxiumum $maxChecks checks"
     }

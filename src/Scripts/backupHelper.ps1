@@ -1,4 +1,4 @@
-if($deployHelpLoaded -eq $null)
+if ($deployHelpLoaded -eq $null)
 {
     $DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
     . $DeployToolsDir\deployHelp.ps1
