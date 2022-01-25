@@ -75,16 +75,46 @@ function Azure-LoginServicePrincipal([string]$username, [string]$password, [stri
     }
 }
 
-function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$zipPath)
+function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$slot, [string]$zipPath)
 {
     Azure-LoginServicePrincipal $username $password $tenant
     
-    Write-Host "Deploying $name in resource group $resourceGroup"
+    if ($slot -eq $null -or $slot -eq "")
+    {
+        Write-Host "Deploying $name in resource group $resourceGroup into production slot"
 
-    & az webapp deploy --resource-group $resourceGroup --name $name --src-path $zipPath --type zip --async false
+        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath
+    }
+    else
+    {
+        Write-Host "Deploying $name in resource group $resourceGroup into slot $slot"
+
+        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath --slot $slot
+    }    
+
+    if ($LASTEXITCODE -ne 0)
+    {
+        Write-Error "Error deploying in as $username"
+        exit $LASTEXITCODE
+    }
 }
 
-function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$contentFolder)
+function Azure-WebAppSlotSwapStagingToProduction([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name)
+{
+    Azure-LoginServicePrincipal $username $password $tenant
+    
+    Write-Host "Swapping slot staging to production for $name in resource group $resourceGroup"
+    
+    & az webapp deployment slot swap --resource-group $resourceGroup --name $name --slot "staging" --target-slot "production"
+    
+    if ($LASTEXITCODE -ne 0)
+    {
+        Write-Error "Error swapping slot $stagingSlot to $productionSlot"
+        exit $LASTEXITCODE
+    }
+}
+
+function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [bool]$useStagingSlot, [string]$contentFolder)
 {
     if (Test-Path "$contentFolder.zip")
     {
@@ -92,8 +122,17 @@ function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenan
     }
     
     CreateZip $contentFolder "$contentFolder.zip"
-    
-    Azure-DeployZipToWebApp $username $password $tenant $resourceGroup $name "$contentFolder.zip"
+
+    if ($useStagingSlot -eq $true)
+    {
+        Azure-DeployZipToWebApp $username $password $tenant $resourceGroup $name "staging" "$contentFolder.zip"
+
+        Azure-WebAppSlotSwapStagingToProduction $username $password $tenant $resourceGroup $name
+    }
+    else
+    {
+        Azure-DeployZipToWebApp $username $password $tenant $resourceGroup $name $null "$contentFolder.zip"
+    }
 }
 
 Write-Host "Ensconce - AzureHelper Loaded"
