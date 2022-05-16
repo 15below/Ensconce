@@ -163,8 +163,7 @@ namespace Ensconce.ReportingServices
             }
             catch (Exception ex)
             {
-                Logging.Log("An error occurred whilst attempting to set roles for user in Reporting Services!");
-                Logging.Log("Message: {0}", ex.Message);
+                Logging.LogError("An error occurred whilst attempting to set roles for user in Reporting Services! Message: {0}", ex.Message);
                 throw;
             }
         }
@@ -205,8 +204,7 @@ namespace Ensconce.ReportingServices
             }
             catch (Exception ex)
             {
-                Logging.Log("An error occurred whilst attempting to publish reports to Reporting Services!");
-                Logging.Log("Message: {0}", ex.Message);
+                Logging.LogError("An error occurred whilst attempting to publish reports to Reporting Services! Message: {0}", ex.Message);
                 throw;
             }
         }
@@ -351,8 +349,8 @@ namespace Ensconce.ReportingServices
                 var count = 0;
                 foreach (var warning in warnings)
                 {
-                    count = count + 1;
-                    Logging.Log("{0}) {1}", count, warning.Message);
+                    count += 1;
+                    Logging.LogWarn("{0}) {1}", count, warning.Message);
                 }
             }
             else
