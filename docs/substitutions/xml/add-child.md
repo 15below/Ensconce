@@ -10,6 +10,12 @@ description: Add Child Content XML format
 
 Will add the content as the child of the node in xPath
 
+## Notes
+
+It's recommended to use the `ifNotExists` attribute on the `Change` node to only add the child if it does not exist.
+
+The `ifNotExists` attribute requires a xPath for checking existence.
+
 ## Example
 
 ### Base File
