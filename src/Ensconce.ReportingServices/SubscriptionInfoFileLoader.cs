@@ -1,4 +1,5 @@
-﻿using Ensconce.ReportingServices.SSRS2010;
+﻿using Ensconce.Helpers;
+using Ensconce.ReportingServices.SSRS2010;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,14 +41,14 @@ namespace Ensconce.ReportingServices
                 {
                     var reportParameterParts = reportParameters.Split(';');
                     reportParameterValues = new ParameterValue[reportParameterParts.Length];
-                    Log("Found {0} report parameter values to set", reportParameterParts.Length);
+                    Logging.Log("Found {0} report parameter values to set", reportParameterParts.Length);
 
                     for (var i = 0; i <= reportParameterParts.Length - 1; i++)
                     {
                         var reportValue = new ParameterValue();
                         var parameterKeyValues = reportParameterParts[i].Split('=');
 
-                        Log("Setting parameter '{0}', with '{1}'", parameterKeyValues[0], parameterKeyValues[1]);
+                        Logging.Log("Setting parameter '{0}', with '{1}'", parameterKeyValues[0], parameterKeyValues[1]);
 
                         reportValue.Name = parameterKeyValues[0];
                         reportValue.Value = parameterKeyValues[1];
@@ -56,7 +57,7 @@ namespace Ensconce.ReportingServices
                 }
                 else
                 {
-                    Log("Subscription report parameters not found in '{0}'", subscriptionName);
+                    Logging.Log("Subscription report parameters not found in '{0}'", subscriptionName);
                 }
 
                 return new ReportSubscription
@@ -72,7 +73,7 @@ namespace Ensconce.ReportingServices
                 };
             }
 
-            Log("Subscription not set to 'On' for '{0}'", subscriptionName);
+            Logging.Log("Subscription not set to 'On' for '{0}'", subscriptionName);
             return new ReportSubscription
             {
                 Enabled = false
@@ -188,12 +189,6 @@ namespace Ensconce.ReportingServices
             }
 
             return value;
-        }
-
-        private static void Log(string message, params object[] values)
-        {
-            Console.WriteLine(message, values);
-            Console.Out.Flush();
         }
     }
 }

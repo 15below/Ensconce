@@ -1,4 +1,5 @@
-﻿using Ensconce.ReportingServices.SSRS2010;
+﻿using Ensconce.Helpers;
+using Ensconce.ReportingServices.SSRS2010;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,7 @@ namespace Ensconce.ReportingServices
 
         public MsReportingServices(string reportingServicesUrl, string networkDomain, string networkLogin, string networkPassword)
         {
-            Log("Creating MsReportingServices instance");
+            Logging.Log("Creating MsReportingServices instance");
 
             if (!Uri.TryCreate(reportingServicesUrl, UriKind.RelativeOrAbsolute, out Uri reportingServicesUri))
             {
@@ -98,7 +99,7 @@ namespace Ensconce.ReportingServices
                     throw new ArgumentOutOfRangeException($"reportingRoleToAdd: '{reportingRoleToAdd}' is not supported. Only '{string.Join(", ", supportedRoles)}' are supported.");
                 }
 
-                Log("Attempting to retrieve a list of all existing policies for itemPath: '{0}'", itemPath);
+                Logging.Log("Attempting to retrieve a list of all existing policies for itemPath: '{0}'", itemPath);
 
                 Policy policy;
                 var existingPoliciesResponse = reportingServicesClient.GetPolicies(new GetPoliciesRequest { ItemPath = itemPath });
@@ -119,7 +120,7 @@ namespace Ensconce.ReportingServices
 
                 if (policy == null)
                 {
-                    Log("Adding new policy for User: '{0}' to existing policy list", reportingUserToAddRoleFor);
+                    Logging.Log("Adding new policy for User: '{0}' to existing policy list", reportingUserToAddRoleFor);
 
                     policy = new Policy()
                     {
@@ -131,10 +132,10 @@ namespace Ensconce.ReportingServices
                 }
                 else
                 {
-                    Log("User: '{0}' already has a policy list, so using this", reportingUserToAddRoleFor);
+                    Logging.Log("User: '{0}' already has a policy list, so using this", reportingUserToAddRoleFor);
                 }
 
-                Log("Attempting to select the role of: '{0}' for GroupUserName: '{1}'", reportingRoleToAdd,
+                Logging.Log("Attempting to select the role of: '{0}' for GroupUserName: '{1}'", reportingRoleToAdd,
                                   reportingUserToAddRoleFor);
                 var existingRoles = policy.Roles;
 
@@ -145,7 +146,7 @@ namespace Ensconce.ReportingServices
 
                 if (role == null)
                 {
-                    Log("Adding new role of: '{0}' for User: '{1}'.", reportingRoleToAdd, reportingUserToAddRoleFor);
+                    Logging.Log("Adding new role of: '{0}' for User: '{1}'.", reportingRoleToAdd, reportingUserToAddRoleFor);
                     role = new Role()
                     {
                         Name = reportingRoleToAdd
@@ -154,16 +155,15 @@ namespace Ensconce.ReportingServices
                 }
                 else
                 {
-                    Log("User: '{0}' already has a role of type: '{1}', nothing to add.", reportingUserToAddRoleFor, reportingRoleToAdd);
+                    Logging.Log("User: '{0}' already has a role of type: '{1}', nothing to add.", reportingUserToAddRoleFor, reportingRoleToAdd);
                 }
 
-                Log("Setting policy role of: '{0}' for user: '{1}' for itemPath: '{2}'", reportingRoleToAdd, reportingUserToAddRoleFor, itemPath);
+                Logging.Log("Setting policy role of: '{0}' for user: '{1}' for itemPath: '{2}'", reportingRoleToAdd, reportingUserToAddRoleFor, itemPath);
                 reportingServicesClient.SetPolicies(new SetPoliciesRequest { ItemPath = itemPath, Policies = existingPolicies });
             }
             catch (Exception ex)
             {
-                Log("An error occurred whilst attempting to set roles for user in Reporting Services!");
-                Log("Message: {0}", ex.Message);
+                Logging.LogError("An error occurred whilst attempting to set roles for user in Reporting Services! Message: {0}", ex.Message);
                 throw;
             }
         }
@@ -204,8 +204,7 @@ namespace Ensconce.ReportingServices
             }
             catch (Exception ex)
             {
-                Log("An error occurred whilst attempting to publish reports to Reporting Services!");
-                Log("Message: {0}", ex.Message);
+                Logging.LogError("An error occurred whilst attempting to publish reports to Reporting Services! Message: {0}", ex.Message);
                 throw;
             }
         }
@@ -213,12 +212,6 @@ namespace Ensconce.ReportingServices
         #endregion Public Methods
 
         #region Private Helper Methods
-
-        private void Log(string message, params object[] values)
-        {
-            Console.WriteLine(message, values);
-            Console.Out.Flush();
-        }
 
         private void CreateParentFolder(string parentFolder)
         {
@@ -230,13 +223,13 @@ namespace Ensconce.ReportingServices
 
             if (parentFolderExists)
             {
-                Log("Folder '/{0}' already exists", parentFolder);
+                Logging.Log("Folder '/{0}' already exists", parentFolder);
             }
             else
             {
-                Log("Creating folder '/{0}'", parentFolder);
+                Logging.Log("Creating folder '/{0}'", parentFolder);
                 reportingServicesClient.CreateFolder(new CreateFolderRequest { Folder = parentFolder, Parent = "/" });
-                Log("Created folder '/{0}'", parentFolder);
+                Logging.Log("Created folder '/{0}'", parentFolder);
             }
         }
 
@@ -250,13 +243,13 @@ namespace Ensconce.ReportingServices
 
             if (subFolderExists)
             {
-                Log(@"Deleting sub folder '/{0}/{1}'.", parentFolder, subFolder);
+                Logging.Log(@"Deleting sub folder '/{0}/{1}'.", parentFolder, subFolder);
                 reportingServicesClient.DeleteItem(new DeleteItemRequest { ItemPath = $"/{parentFolder}/{subFolder}" });
-                Log(@"Deleted sub folder '/{0}/{1}'.", parentFolder, subFolder);
+                Logging.Log(@"Deleted sub folder '/{0}/{1}'.", parentFolder, subFolder);
             }
             else
             {
-                Log(@"Sub folder '/{0}/{1}' does not exist.", parentFolder, subFolder);
+                Logging.Log(@"Sub folder '/{0}/{1}' does not exist.", parentFolder, subFolder);
             }
         }
 
@@ -278,9 +271,9 @@ namespace Ensconce.ReportingServices
 
         private void CreateSubFolder(string parentFolder, string subFolder)
         {
-            Log(@"Creating sub folder '/{0}/{1}'.", parentFolder, subFolder);
+            Logging.Log(@"Creating sub folder '/{0}/{1}'.", parentFolder, subFolder);
             reportingServicesClient.CreateFolder(new CreateFolderRequest { Folder = subFolder, Parent = $"/{parentFolder}" });
-            Log(@"Created sub folder '/{0}/{1}'.", parentFolder, subFolder);
+            Logging.Log(@"Created sub folder '/{0}/{1}'.", parentFolder, subFolder);
         }
 
         private void CreateDataSource(string parentFolder, string subFolder, string dataSourceName, string dataSourceConnectionString, string dataSourceUserName, string dataSourcePassWord)
@@ -300,9 +293,9 @@ namespace Ensconce.ReportingServices
                 Password = dataSourcePassWord
             };
 
-            Log("Creating data source {0} with value: {1} in /{2}/{3}", dataSourceName, dataSourceConnectionString, parentFolder, subFolder);
+            Logging.Log("Creating data source {0} with value: {1} in /{2}/{3}", dataSourceName, dataSourceConnectionString, parentFolder, subFolder);
             reportingServicesClient.CreateDataSource(new CreateDataSourceRequest { DataSource = dataSourceName, Parent = $"/{parentFolder}/{subFolder}", Overwrite = true, Definition = definition });
-            Log("Created data source {0}", dataSourceName);
+            Logging.Log("Created data source {0}", dataSourceName);
         }
 
         private void CreateReportsAndSubscriptions(string parentFolder, string subFolder, string reportSourceFolder, string dataSourceName)
@@ -322,18 +315,18 @@ namespace Ensconce.ReportingServices
         private void CreateReport(string reportName, string sourceFolder, string targetFolder)
         {
             var reportDefinition = GetReportDefinition(reportName, sourceFolder);
-            Log("Creating report '{0}' in '{1}'", reportName, targetFolder);
+            Logging.Log("Creating report '{0}' in '{1}'", reportName, targetFolder);
             var createCreateCatalogItemResponse = reportingServicesClient.CreateCatalogItem(new CreateCatalogItemRequest { ItemType = "Report", Name = reportName, Parent = targetFolder, Overwrite = true, Definition = reportDefinition });
             var warnings = createCreateCatalogItemResponse.Warnings;
             var catalogItem = createCreateCatalogItemResponse.ItemInfo;
 
             if (catalogItem == null)
             {
-                Log("Report '{0}' not created ", reportName);
+                Logging.Log("Report '{0}' not created ", reportName);
             }
             else
             {
-                Log("Created report '{0}'", reportName);
+                Logging.Log("Created report '{0}'", reportName);
             }
             PrintWarnings(warnings);
         }
@@ -352,29 +345,29 @@ namespace Ensconce.ReportingServices
         {
             if (warnings != null)
             {
-                Log("There were {0} warnings", warnings.Length);
+                Logging.Log("There were {0} warnings", warnings.Length);
                 var count = 0;
                 foreach (var warning in warnings)
                 {
-                    count = count + 1;
-                    Log("{0}) {1}", count, warning.Message);
+                    count += 1;
+                    Logging.LogWarn("{0}) {1}", count, warning.Message);
                 }
             }
             else
             {
-                Log("There were no warnings.");
+                Logging.Log("There were no warnings.");
             }
         }
 
         private void SetReportDataSource(string reportName, string dataSourceName, string targetFolder)
         {
-            Log("Setting DataSource For Report: " + reportName);
+            Logging.Log("Setting DataSource For Report: " + reportName);
 
             var reference = new DataSourceReference { Reference = $"{targetFolder}/{dataSourceName}" };
             var getItemDataSourcesResponse = reportingServicesClient.GetItemDataSources(new GetItemDataSourcesRequest { ItemPath = $"{targetFolder}/{reportName}" });
             var dataSource = getItemDataSourcesResponse.DataSources;
 
-            Log("Report '{0}' has {1} data sources", reportName, dataSource.Length);
+            Logging.Log("Report '{0}' has {1} data sources", reportName, dataSource.Length);
 
             var dataSources = new DataSource[dataSource.Length];
             int i;
@@ -383,7 +376,7 @@ namespace Ensconce.ReportingServices
             {
                 var ds = new DataSource { Item = reference, Name = dataSource[i].Name };
                 dataSources[i] = ds;
-                Log("Report '{0}' setting data source '{1}' to '{2}'", reportName, ds.Name, dataSourceName);
+                Logging.Log("Report '{0}' setting data source '{1}' to '{2}'", reportName, ds.Name, dataSourceName);
             }
 
             reportingServicesClient.SetItemDataSources(new SetItemDataSourcesRequest { ItemPath = $"{targetFolder}/{reportName}", DataSources = dataSources });
@@ -395,15 +388,15 @@ namespace Ensconce.ReportingServices
 
             if (subscriptions.Count == 0)
             {
-                Log("No enabled subscriptions found for report '{0}'", reportName);
+                Logging.Log("No enabled subscriptions found for report '{0}'", reportName);
             }
             else
             {
                 foreach (var subscription in subscriptions)
                 {
-                    Log("Creating subscription '{0}'", subscription.Name);
+                    Logging.Log("Creating subscription '{0}'", subscription.Name);
                     reportingServicesClient.CreateSubscription(new CreateSubscriptionRequest { ItemPath = subscription.Path, ExtensionSettings = subscription.ExtensionSettings, Description = subscription.Description, EventType = subscription.EventType, MatchData = subscription.ScheduleXml, Parameters = subscription.Parameters });
-                    Log("Created subscription '{0}'", subscription.Name);
+                    Logging.Log("Created subscription '{0}'", subscription.Name);
                 }
             }
         }

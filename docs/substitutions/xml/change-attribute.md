@@ -10,6 +10,10 @@ description: Change attribute XML format
 
 Changes the value of a specified attribute
 
+## Notes
+
+This has been deprecated in favour of [SetAttribute](set-attribute)
+
 ## Example
 
 ### Base File

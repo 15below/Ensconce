@@ -88,6 +88,16 @@
                                     </xs:simpleContent>
                                   </xs:complexType>
                                 </xs:element>
+                                <xs:element name="SetAttribute" minOccurs="0" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="attributeName" type="xs:string" use="required" />
+                                        <xs:attribute name="value" type="xs:string" use="optional" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
                                 <xs:element name="ChangeValue" minOccurs="0" maxOccurs="unbounded">
                                   <xs:complexType>
                                     <xs:simpleContent>
@@ -107,6 +117,7 @@
                                     <xs:enumeration value="RemoveCurrentAttributes" />
                                     <xs:enumeration value="AddAttribute" />
                                     <xs:enumeration value="ChangeAttribute" />
+                                    <xs:enumeration value="SetAttribute" />
                                     <xs:enumeration value="ChangeValue" />
                                   </xs:restriction>
                                 </xs:simpleType>

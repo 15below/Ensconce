@@ -244,7 +244,7 @@ namespace Ensconce.Cli
 
             if (showHelp || !operationRequested)
             {
-                System.Console.WriteLine("Configuration update console wrapper. See https://github.com/15below/Ensconce for details.");
+                Logging.Log("Configuration update console wrapper. See https://github.com/15below/Ensconce for details.");
                 p.WriteOptionDescriptions(System.Console.Out);
                 if (!showHelp)
                 {

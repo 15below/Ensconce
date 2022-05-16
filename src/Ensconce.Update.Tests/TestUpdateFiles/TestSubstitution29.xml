@@ -23,6 +23,7 @@
         </Change>
         <Change type="ChangeAttribute" xPath="/root/testing/test[2]" attributeName="myAttr" value="new-after" />
         <Change type="ChangeValue" xPath="/root/myValue" value="nodeValue" />
+        <Change type="SetAttribute" xPath="/root/testing/test" attributeName="myAttr3" value="after2" />
       </Changes>
     </File>
   </Files>

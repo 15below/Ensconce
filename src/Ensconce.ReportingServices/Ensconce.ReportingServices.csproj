@@ -38,4 +38,8 @@
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ensconce.Helpers\Ensconce.Helpers.csproj" />
+  </ItemGroup>
 </Project>

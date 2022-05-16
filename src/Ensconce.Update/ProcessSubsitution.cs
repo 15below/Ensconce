@@ -26,6 +26,7 @@ namespace Ensconce.Update
             public bool RemoveCurrentAttributes;
             public List<(string attributeName, string newValue)> AddAttributes;
             public List<(string attributeName, string newValue)> ChangeAttributes;
+            public List<(string attributeName, string newValue)> SetAttributes;
             public string ChangeValue;
             public bool HasChangeValue;
             public string AppendAfter;
@@ -43,6 +44,7 @@ namespace Ensconce.Update
                 RemoveCurrentAttributes = false;
                 AddAttributes = new List<(string attributeName, string newValue)>();
                 ChangeAttributes = new List<(string attributeName, string newValue)>();
+                SetAttributes = new List<(string attributeName, string newValue)>();
                 ChangeValue = "";
                 HasChangeValue = false;
                 AppendAfter = "";
@@ -265,41 +267,82 @@ namespace Ensconce.Update
 
                     if (sub.RemoveCurrentAttributes)
                     {
-                        activeNode.RemoveAttributes();
+                        RemoveAllAttributes(activeNode);
                     }
 
                     if (sub.HasChangeValue)
                     {
-                        activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
+                        ChangeNodeValue(tagValues, activeNode, sub);
                     }
 
-                    foreach (var (attribute, value) in sub.AddAttributes)
+                    if (sub.AddAttributes.Any())
                     {
-                        if (activeNode.Attribute(attribute) == null)
-                        {
-                            activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
-                        }
-                        else
-                        {
-                            throw new ApplicationException($"XPath of {sub.Path} with attribute {attribute} already exists, cannot add");
-                        }
+                        Logging.LogWarn("The `AddAttribute` substitution is deprecated, please migrate to `SetAttribute` substitution");
+                        AddAttributes(tagValues, activeNode, sub);
                     }
 
-                    foreach (var (attribute, value) in sub.ChangeAttributes)
+                    if (sub.ChangeAttributes.Any())
                     {
-                        if (activeNode.Attribute(attribute) != null)
-                        {
-                            activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
-                        }
-                        else
-                        {
-                            throw new ApplicationException($"XPath of {sub.Path} with attribute {attribute} does not exist, cannot change");
-                        }
+                        Logging.LogWarn("The `ChangeAttribute` substitution is deprecated, please migrate to `SetAttribute` substitution");
+                        ChangeAttributes(tagValues, activeNode, sub);
+                    }
+
+                    if (sub.SetAttributes.Any())
+                    {
+                        SetAttributes(tagValues, activeNode, sub);
                     }
                 }
             }
 
             return baseXml.ToString();
+        }
+
+        private static void ChangeNodeValue(Lazy<TagDictionary> tagValues, XElement activeNode, Substitution sub)
+        {
+            activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
+        }
+
+        private static void RemoveAllAttributes(XElement activeNode)
+        {
+            activeNode.RemoveAttributes();
+        }
+
+        private static void SetAttributes(Lazy<TagDictionary> tagValues, XElement activeNode, Substitution sub)
+        {
+            foreach (var (attribute, value) in sub.SetAttributes)
+            {
+                activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+            }
+        }
+
+        private static void ChangeAttributes(Lazy<TagDictionary> tagValues, XElement activeNode, Substitution sub)
+        {
+            foreach (var (attribute, value) in sub.ChangeAttributes)
+            {
+                if (activeNode.Attribute(attribute) != null)
+                {
+                    activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                }
+                else
+                {
+                    throw new ApplicationException($"XPath of {sub.Path} with attribute {attribute} does not exist, cannot change");
+                }
+            }
+        }
+
+        private static void AddAttributes(Lazy<TagDictionary> tagValues, XElement activeNode, Substitution sub)
+        {
+            foreach (var (attribute, value) in sub.AddAttributes)
+            {
+                if (activeNode.Attribute(attribute) == null)
+                {
+                    activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                }
+                else
+                {
+                    throw new ApplicationException($"XPath of {sub.Path} with attribute {attribute} already exists, cannot add");
+                }
+            }
         }
 
         private static void AppendAfterActive(Lazy<TagDictionary> tagValues, XNode activeNode, Substitution sub)
@@ -310,7 +353,7 @@ namespace Ensconce.Update
 
         private static void AddChildContentToActive(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub, XmlNamespaceManager nsm)
         {
-            if (sub.AddChildContentIfNotExists == null || activeNode.Document?.XPathSelectElement(sub.AddChildContentIfNotExists.RenderTemplate(tagValues), nsm) == null)
+            if (!activeNode.Document.XPathExists(sub.AddChildContentIfNotExists, tagValues, nsm))
             {
                 var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
                 activeNode.Add(fakeRoot.Elements());
@@ -446,6 +489,11 @@ namespace Ensconce.Update
                         sub.ChangeAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
                     }
 
+                    foreach (var ca in change.XPathSelectElements("s:SetAttribute", nsm))
+                    {
+                        sub.SetAttributes.Add((ca.Attribute("attributeName")?.Value, ca.Attribute("value")?.Value ?? ca.Value));
+                    }
+
                     sub.ReplacementContent = change.XPathSelectElement("s:ReplacementContent", nsm)?.Value;
                     sub.HasReplacementContent = sub.ReplacementContent != null;
                 }
@@ -506,6 +554,10 @@ namespace Ensconce.Update
 
                     case "changeattribute" when fileType == FileType.Xml:
                         sub.ChangeAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
+                        break;
+
+                    case "setattribute" when fileType == FileType.Xml:
+                        sub.SetAttributes.Add((change.Attribute("attributeName")?.Value, change.Attribute("value")?.Value));
                         break;
 
                     case "changevalue":
