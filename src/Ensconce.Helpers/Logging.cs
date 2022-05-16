@@ -15,7 +15,18 @@ namespace Ensconce.Helpers
                 return;
             }
 
-            Console.Write("+{0:mm\\:ss\\.fff} - ", DateTime.Now - Started);
+            Console.Write("[INFO] +{0:mm\\:ss\\.fff} - ", DateTime.Now - Started);
+            Console.WriteLine(message, values);
+        }
+
+        public static void LogWarn(string message, params object[] values)
+        {
+            if (Quiet || ReadFromStdIn)
+            {
+                return;
+            }
+
+            Console.Write("[WARN] +{0:mm\\:ss\\.fff} - ", DateTime.Now - Started);
             Console.WriteLine(message, values);
         }
 
@@ -26,7 +37,7 @@ namespace Ensconce.Helpers
                 return;
             }
 
-            Console.Error.Write("+{0:mm\\:ss\\.fff} - ", DateTime.Now - Started);
+            Console.Error.Write("[ERROR] +{0:mm\\:ss\\.fff} - ", DateTime.Now - Started);
             Console.Error.WriteLine(message, values);
         }
     }

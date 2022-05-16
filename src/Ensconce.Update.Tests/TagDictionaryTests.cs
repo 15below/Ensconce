@@ -680,7 +680,6 @@ namespace Ensconce.Update.Tests
 
             var data = "{{ Data|encrypt:Certificate }}".RenderTemplate(sut.ToLazyTagDictionary());
             Assert.IsNotNull(data);
-            Console.WriteLine(data);
         }
 
         [Test]
