@@ -230,7 +230,7 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
-        public void AddChildContenWorksWithAmpersandInTag()
+        public void AddChildContentWorksWithAmpersandInTag()
         {
             ProcessSubstitution.Update(@"TestUpdateFiles\TestSubstitution25.xml", new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary(), false);
 
@@ -308,6 +308,16 @@ namespace Ensconce.Update.Tests
         public void AddAttributeWhenAlreadyExists_ThrowsApplicationException()
         {
             Assert.Throws<ApplicationException>(() => ProcessSubstitution.Update(@"TestUpdateFiles\TestSubstitution34.xml", new Lazy<TagDictionary>(), false));
+        }
+
+        [Test]
+        public void SetAttribute_CreatesAndUpdatesValue()
+        {
+            ProcessSubstitution.Update(@"TestUpdateFiles\TestSubstitution39.xml", new Lazy<TagDictionary>(), false);
+
+            var document = XDocument.Load(@"TestUpdateFiles\TestConfig1.xml");
+            Assert.AreEqual("Attr1", document.XPathSelectElement("/root/value").Attribute("newAttribute1").Value);
+            Assert.AreEqual("Attr2-Updated", document.XPathSelectElement("/root/value").Attribute("newAttribute2").Value);
         }
 
         [Test]
@@ -470,6 +480,7 @@ namespace Ensconce.Update.Tests
             Assert.NotNull(newConfig.XPathSelectElement("/root/testing"));
             Assert.Null(newConfig.XPathSelectElement("/root/testing/test[1]").Attribute("myAttr"));
             Assert.AreEqual("after", newConfig.XPathSelectElement("/root/testing/test[1]").Attribute("myAttr2").Value);
+            Assert.AreEqual("after2", newConfig.XPathSelectElement("/root/testing/test[1]").Attribute("myAttr3").Value);
             Assert.AreEqual("value", newConfig.XPathSelectElement("/root/testing/test[1]").Value);
             Assert.AreEqual("new-after", newConfig.XPathSelectElement("/root/testing/test[2]").Attribute("myAttr").Value);
             Assert.AreEqual("new-value", newConfig.XPathSelectElement("/root/testing/test[2]").Value);
