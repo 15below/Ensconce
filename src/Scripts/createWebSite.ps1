@@ -432,8 +432,13 @@ function EnableWebDav ([string] $websiteName)
 
 function AddAuthoringRule ([string] $websiteName, [string] $userName, [string] $access)
 {
-    $exists = Get-WebConfiguration -filter "system.WebServer/webdav/authoringRules/add[@users='$userName' and @path='*']" -PSPath "IIS:\Sites\$websiteName"
-    if ($exists -eq $null)
+    $lowerCaseUserName = $userName.ToLower();
+    $upperCaseUserName = $userName.ToUpper();
+
+    $existsOriginalUserName = Get-WebConfiguration -filter "system.WebServer/webdav/authoringRules/add[@users='$userName' and @path='*']" -PSPath "IIS:\Sites\$websiteName"
+    $existsUserNameLowerCase = Get-WebConfiguration -filter "system.WebServer/webdav/authoringRules/add[@users='$lowerCaseUserName' and @path='*']" -PSPath "IIS:\Sites\$websiteName"
+    $existsUserNameUpperCase = Get-WebConfiguration -filter "system.WebServer/webdav/authoringRules/add[@users='$upperCaseUserName' and @path='*']" -PSPath "IIS:\Sites\$websiteName"
+    if (($null -eq $existsOriginalUserName) -and ($null -eq $existsUserNameLowerCase) -and ($null -eq $existsUserNameUpperCase))
     {
         "Giving $userName $access access for WebDav on $websiteName" | Write-Host
         Add-WebConfiguration -filter "/system.WebServer/webdav/authoringRules" -Value @{users=$userName;path="*";access=$access} -PSPath "IIS:\" -location $websiteName
