@@ -12,7 +12,7 @@ Will add an attribute to an already existing node in the XML
 
 ## Notes
 
-This has been deprecated in favour of [SetAttribute](set-attribute)
+This has been deprecated in favour of [SetAttribute](../set-attribute)
 
 ## Example
 

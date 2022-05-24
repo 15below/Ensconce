@@ -12,7 +12,7 @@ Changes the value of a specified attribute
 
 ## Notes
 
-This has been deprecated in favour of [SetAttribute](set-attribute)
+This has been deprecated in favour of [SetAttribute](../set-attribute)
 
 ## Example
 
