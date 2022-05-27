@@ -80,11 +80,25 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         & $DatreeExe config set token $DatreeToken
         if($DatreeRecord -eq $true)
         {
-            & $DatreeExe test $yamlFile
+            if([string]::IsNullOrWhiteSpace($DatreePolicy))
+            {
+                & $DatreeExe test $yamlFile
+            }
+            else
+            {
+                & $DatreeExe test $yamlFile --policy $DatreePolicy
+            }            
         }
         else 
         {
-            & $DatreeExe test $yamlFile --no-record
+            if([string]::IsNullOrWhiteSpace($DatreePolicy))
+            {
+                & $DatreeExe test $yamlFile --no-record
+            }
+            else
+            {
+                & $DatreeExe test $yamlFile --no-record --policy $DatreePolicy
+            }    
         }
         
         if ($LASTEXITCODE -ne 0)
@@ -120,7 +134,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
     }
 
     Write-Host "Validating yaml file $yamlFile (server-side)"
-    & $KubeCtlExe apply --dry-run=server  -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
+    & $KubeCtlExe apply --dry-run=server -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
 
     if ($LASTEXITCODE -ne 0)
     {
@@ -319,7 +333,7 @@ function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string]$kubernetes
 
     SetK8sContext $kubernetesConfigFile
 
-    ValidateK8sYaml    $yamlFile $kubernetesConfigFile
+    ValidateK8sYaml $yamlFile $kubernetesConfigFile
 
     DeployToK8s $yamlFile $kubernetesConfigFile $pruneSelector
 }
