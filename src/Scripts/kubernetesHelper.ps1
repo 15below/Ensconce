@@ -82,22 +82,22 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         {
             if([string]::IsNullOrWhiteSpace($DatreePolicy))
             {
-                & $DatreeExe test $yamlFile
+                & $DatreeExe test $yamlFile --output simple
             }
             else
             {
-                & $DatreeExe test $yamlFile --policy $DatreePolicy
+                & $DatreeExe test $yamlFile --output simple --policy $DatreePolicy
             }            
         }
         else 
         {
             if([string]::IsNullOrWhiteSpace($DatreePolicy))
             {
-                & $DatreeExe test $yamlFile --no-record
+                & $DatreeExe test $yamlFile --output simple --no-record
             }
             else
             {
-                & $DatreeExe test $yamlFile --no-record --policy $DatreePolicy
+                & $DatreeExe test $yamlFile --output simple --no-record --policy $DatreePolicy
             }    
         }
         
