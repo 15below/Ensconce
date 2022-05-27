@@ -89,8 +89,15 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         
         if ($LASTEXITCODE -ne 0)
         {
-            Write-Error "Datree errors for yaml file $yamlFile"
-            exit $LASTEXITCODE
+            if($DatreeFailOnError -eq $false)
+            {
+                Write-Warning "Datree errors for yaml file $yamlFile"
+            }
+            else
+            {
+                Write-Error "Datree errors for yaml file $yamlFile"
+                exit $LASTEXITCODE
+            }    
         }
     }
 
@@ -101,8 +108,15 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 
     if ($LASTEXITCODE -ne 0)
     {
-        Write-Error "Invalid yaml file $yamlFile"
-        exit $LASTEXITCODE
+        if($KubeCtlFailOnDryRun -eq $false)
+        {
+            Write-Warning "Invalid yaml file $yamlFile"
+        }
+        else
+        {
+            Write-Error "Invalid yaml file $yamlFile"
+            exit $LASTEXITCODE
+        }        
     }
 
     Write-Host "Validating yaml file $yamlFile (server-side)"
@@ -110,8 +124,15 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 
     if ($LASTEXITCODE -ne 0)
     {
-        Write-Error "Invalid yaml file $yamlFile"
-        exit $LASTEXITCODE
+        if($KubeCtlFailOnDryRun -eq $false)
+        {
+            Write-Warning "Invalid yaml file $yamlFile"
+        }
+        else
+        {
+            Write-Error "Invalid yaml file $yamlFile"
+            exit $LASTEXITCODE
+        }    
     }
 }
 
