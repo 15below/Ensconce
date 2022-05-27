@@ -10,6 +10,10 @@ if ([string]::IsNullOrWhiteSpace($KubeCtlExe))
 {
 	$KubeCtlExe = "C:\KubeCtl\kubectl.exe"
 }
+if ([string]::IsNullOrWhiteSpace($DatreeExe))
+{
+	$DatreeExe = "C:\Datree\datree.exe"
+}
 $rootConfigPath = "$Home\.kube"
 
 if (Test-Path $KubeCtlExe)
@@ -26,6 +30,16 @@ if (Test-Path $KubeCtlExe)
 else
 {
     throw "'$KubeCtlExe' doesn't exist"
+}
+
+if (Test-Path $DatreeExe)
+{
+    $DatreeExeFound = $true
+}
+else 
+{
+    Write-Warning "Datree exe not found at $DatreeExe"
+    $DatreeExeFound = $false
 }
 
 function PreProcessYaml([string]$yamlDirectory)
@@ -61,6 +75,25 @@ function PreProcessYaml([string]$yamlDirectory)
 
 function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 {
+    if([string]::IsNullOrWhiteSpace($DatreeToken) -eq $false -and $DatreeExeFound)
+    {
+        & $DatreeExe config set token $DatreeToken
+        if($DatreeRecord -eq $true)
+        {
+            & $DatreeExe test $yamlFile
+        }
+        else 
+        {
+            & $DatreeExe test $yamlFile --no-record
+        }
+        
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Error "Datree errors for yaml file $yamlFile"
+            exit $LASTEXITCODE
+        }
+    }
+
     $kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
 
     Write-Host "Validating yaml file $yamlFile (local)"
