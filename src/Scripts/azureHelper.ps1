@@ -40,7 +40,7 @@ function Azure-CheckLoggedIn
     $originalErrorPref = $ErrorActionPreference
     $ErrorActionPreference = 'SilentlyContinue'
 
-    & az account show 2>&1 | Out-Null
+    & az account show --only-show-errors 2>&1 | Out-Null
 
     $ErrorActionPreference = $originalErrorPref
 
@@ -65,7 +65,7 @@ function Azure-LoginServicePrincipal([string]$username, [string]$password, [stri
     else
     {
         Write-Host "Logging in as $username with tenant $tenant"
-        & az login --service-principal --username $username --password $password --tenant $tenant
+        & az login --service-principal --username $username --password $password --tenant $tenant --only-show-errors
 
         if ($LASTEXITCODE -ne 0)
         {
@@ -83,13 +83,13 @@ function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$
     {
         Write-Host "Deploying $name in resource group $resourceGroup into production slot"
 
-        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath
+        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath --only-show-errors
     }
     else
     {
         Write-Host "Deploying $name in resource group $resourceGroup into slot $slot"
 
-        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath --slot $slot
+        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath --slot $slot --only-show-errors
     }    
 
     if ($LASTEXITCODE -ne 0)
@@ -105,7 +105,7 @@ function Azure-WebAppSlotSwapStagingToProduction([string]$username, [string]$pas
     
     Write-Host "Swapping slot staging to production for $name in resource group $resourceGroup"
     
-    & az webapp deployment slot swap --resource-group $resourceGroup --name $name --slot "staging" --target-slot "production"
+    & az webapp deployment slot swap --resource-group $resourceGroup --name $name --slot "staging" --target-slot "production" --only-show-errors
     
     if ($LASTEXITCODE -ne 0)
     {
