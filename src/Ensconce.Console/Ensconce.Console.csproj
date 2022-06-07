@@ -12,7 +12,7 @@
     <FileVersion>0.0.0.0</FileVersion>
     <IsPackable>false</IsPackable>
     <PackageProjectUrl>https://15below.github.io/Ensconce/</PackageProjectUrl>
-    <PackageIcon>15below_green.png</PackageIcon>
+    <PackageIcon>15below.png</PackageIcon>
     <RepositoryUrl>https://github.com/15below/Ensconce</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseFile>licence.txt</PackageLicenseFile>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\docs\images\15below_green.png">
+    <None Include="..\..\docs\images\15below.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

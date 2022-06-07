@@ -17,42 +17,42 @@ defaults:
       type: "pages"
     values:
       layout: "default"
-      image: /images/15below_green.png
+      image: /images/15below.png
   -
     scope:
       path: "cli"
       type: "pages"
     values:
       layout: "sidebar"
-      image: /images/15below_green.png
+      image: /images/15below.png
   -
     scope:
       path: "powershell"
       type: "pages"
     values:
       layout: "sidebar"
-      image: /images/15below_green.png
+      image: /images/15below.png
   -
     scope:
       path: "config"
       type: "pages"
     values:
       layout: "sidebar"
-      image: /images/15below_green.png
+      image: /images/15below.png
   -
     scope:
       path: "substitutions"
       type: "pages"
     values:
       layout: "sidebar"
-      image: /images/15below_green.png
+      image: /images/15below.png
   -
     scope:
       path: "templates"
       type: "pages"
     values:
       layout: "sidebar"
-      image: /images/15below_green.png
+      image: /images/15below.png
 
 #Plugins
 plugins:
