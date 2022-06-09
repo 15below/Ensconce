@@ -34,6 +34,9 @@ else
 
 if (Test-Path $DatreeExe)
 {
+	(& $DatreeExe version 2>&1) | Select-Object -First 1 {
+    	Write-Host "Datree Version: $_"
+	}
     $DatreeExeFound = $true
 }
 else 
