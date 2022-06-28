@@ -2,6 +2,18 @@
 
 $scriptDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
+### Check Current Installed Version ###
+if(Test-Path "$DeployPath\releaseVersion.txt")
+{
+	$currentVersion = Get-Content -Path "$DeployPath\releaseVersion.txt"
+
+	if($currentVersion -eq $VersionNumber)
+	{
+		Write-Host "Version already installed on this machine"
+		Exit
+	}
+}
+
 ### Download External Tools ###
 if ([string]::IsNullOrWhiteSpace($ExternalToolDownloadUrl))
 {
@@ -28,12 +40,12 @@ else
 			$DownloadPath = "$scriptDir\Content\Tools\$Tool\$ExeName"
 			Write-Host "Downloading $DownloadUrl to $DownloadPath"
 			New-Item -Path "$scriptDir\Content\Tools" -Name $Tool -Type container -Force | Out-Null
-			Invoke-WebRequest -Uri $DownloadUrl -OutFile $DownloadPath -PassThru | Write-Host
+			Invoke-WebRequest -Uri $DownloadUrl -OutFile $DownloadPath | Write-Host
 
 			if($_.RunExe)
 			{
 				Write-Host "Running $DownloadPath"
-				Start-Process -FilePath "$scriptDir\Content\Tools\$Tool\$ExeName" -ArgumentList $_.RunArgs -Wait -PassThru
+				Start-Process -FilePath "$scriptDir\Content\Tools\$Tool\$ExeName" -ArgumentList $_.RunArgs -Wait
 				Remove-Item "$scriptDir\Content\Tools\$Tool" -Force -Recurse
 			}
 		}
