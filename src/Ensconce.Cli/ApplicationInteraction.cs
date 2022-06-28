@@ -179,6 +179,7 @@ namespace Ensconce.Cli
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.FileName = handleExe;
             p.StartInfo.Arguments = $"{searchFolder} /nobanner";
+            p.StartInfo.Verb = "runas";
             p.Start();
             var output = p.StandardOutput.ReadToEnd();
             p.WaitForExit();
@@ -194,6 +195,7 @@ namespace Ensconce.Cli
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.FileName = handleExe;
             p.StartInfo.Arguments = $"-c {handleHash} -y -p {pid} /nobanner";
+            p.StartInfo.Verb = "runas";
             p.Start();
             p.WaitForExit();
             if (p.ExitCode != 0)
