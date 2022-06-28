@@ -23,6 +23,11 @@ $ADS_UF_DONT_REQUIRE_PREAUTH                   = 4194304  # 0x400000
 $ADS_UF_PASSWORD_EXPIRED                       = 8388608  # 0x800000
 $ADS_UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION = 16777216 # 0x1000000
 
+if ([string]::IsNullOrWhiteSpace($GrantExe))
+{
+	$GrantExe = "$EnsconceDir\Tools\Grant\Grant.exe"
+}
+
 Function AddUser([string]$name, [string]$password)
 {
     $computer = [ADSI]"WinNT://$env:computername,computer"
@@ -110,8 +115,7 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
 
     AddUserToGroup $name "administrators"
 
-    $exe = "$EnsconceDir\Tools\Grant\Grant.exe"
-    $osInfo = Get-WmiObject -Class Win32_OperatingSystem
+	$osInfo = Get-WmiObject -Class Win32_OperatingSystem
     if ($osInfo.ProductType -eq 2)
     {
         $userName = "$env:UserDomain\$name"
@@ -120,7 +124,7 @@ Function CheckAndCreateServiceAccount([string]$name, [string]$password)
     {
         $userName = "$env:computername\$name"
     }
-    &$exe ADD SeServiceLogonRight $userName
+    &$GrantExe ADD SeServiceLogonRight $userName
 }
 
 Function CheckAndCreateUserAccount([string]$name, [string]$password)

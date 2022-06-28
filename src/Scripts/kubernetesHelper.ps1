@@ -8,11 +8,11 @@ if ($deployHelpLoaded -eq $null)
 Write-Host "Ensconce - KubernetesHelper Loading"
 if ([string]::IsNullOrWhiteSpace($KubeCtlExe))
 {
-	$KubeCtlExe = "C:\KubeCtl\kubectl.exe"
+	$KubeCtlExe = "$EnsconceDir\Tools\KubeCtl\kubectl.exe"
 }
 if ([string]::IsNullOrWhiteSpace($DatreeExe))
 {
-	$DatreeExe = "C:\Datree\datree.exe"
+	$DatreeExe = "$EnsconceDir\Tools\Datree\datree.exe"
 }
 $rootConfigPath = "$Home\.kube"
 
@@ -39,7 +39,7 @@ if (Test-Path $DatreeExe)
 	}
     $DatreeExeFound = $true
 }
-else 
+else
 {
     Write-Warning "Datree exe not found at $DatreeExe"
     $DatreeExeFound = $false
@@ -90,7 +90,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         	& $DatreeExe publish $PolicyYamlFile
         	Remove-Item $PolicyYamlFile -force
         }
-        
+
         if($DatreeRecord -eq $true)
         {
             if([string]::IsNullOrWhiteSpace($DatreePolicy))
@@ -100,9 +100,9 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
             else
             {
                 & $DatreeExe test $yamlFile --output simple --policy $DatreePolicy
-            }            
+            }
         }
-        else 
+        else
         {
             if([string]::IsNullOrWhiteSpace($DatreePolicy))
             {
@@ -111,9 +111,9 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
             else
             {
                 & $DatreeExe test $yamlFile --output simple --no-record --policy $DatreePolicy
-            }    
+            }
         }
-        
+
         if ($LASTEXITCODE -ne 0)
         {
             if($DatreeFailOnError -eq $false)
@@ -124,7 +124,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
             {
                 Write-Error "Datree errors for yaml file $yamlFile"
                 exit $LASTEXITCODE
-            }    
+            }
         }
     }
 
@@ -143,7 +143,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         {
             Write-Error "Invalid yaml file $yamlFile"
             exit $LASTEXITCODE
-        }        
+        }
     }
 
     Write-Host "Validating yaml file $yamlFile (server-side)"
@@ -159,7 +159,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         {
             Write-Error "Invalid yaml file $yamlFile"
             exit $LASTEXITCODE
-        }    
+        }
     }
 }
 
