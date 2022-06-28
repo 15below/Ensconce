@@ -2,37 +2,7 @@
 
 $scriptDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
-### Clean Previous Deployment ###
-
-if(Test-Path $DeployPath)
-{
-    Write-Host "Removing Deploy Tools Directory Found at $DeployPath"
-    Remove-Item $DeployPath -Force -Recurse | Out-Null
-    Start-Sleep -s 2
-}
-
-Write-Host "Creating Deploy Tools Directory at $DeployPath"
-New-Item -Path $DeployPath -Type container -Force | Out-Null
-
-### Deploy Scripts ###
-
-Get-ChildItem -Path $scriptDir\Content\Scripts\*.ps1 | ForEach-Object {
-	$scriptName = $_.Name
-	$scriptFullName = $_.FullName
-	Write-Host "Deploying script $scriptName to $DeployPath"
-	Copy-Item -Path $scriptFullName -Destination $DeployPath -Force
-}
-
-$DeployToolsPath = "$DeployPath\Tools"
-
-### Deploy Ensconce Tool ###
-
-Write-Host "Deploying Ensconce to $DeployToolsPath\Ensconce"
-New-Item -Path $DeployToolsPath -Name "Ensconce" -Type container -Force | Out-Null
-Copy-Item -Path $scriptDir\Content\Ensconce -Destination $DeployToolsPath -Force -Recurse
-
-
-### Deploy External Tools ###
+### Download External Tools ###
 if ([string]::IsNullOrWhiteSpace($ExternalToolDownloadUrl))
 {
 	Write-Warning "No External Tools Downloaded!`nYou Should Download`n* AZ CLI (and install it)`n* Datree`n* Grant`n* Handle`n* KubeCtl"
@@ -55,18 +25,44 @@ else
 			$ExeName = $_.ExeName
 			$Version = $_.Version
 			$DownloadUrl = "$ExternalToolDownloadUrl/$Tool/$Version/$ExeName"
-			$DownloadPath = "$DeployToolsPath\$Tool\$ExeName"
+			$DownloadPath = "$scriptDir\Content\Tools\$Tool\$ExeName"
 			Write-Host "Downloading $DownloadUrl to $DownloadPath"
-			New-Item -Path $DeployToolsPath -Name $Tool -Type container -Force | Out-Null
-			Invoke-WebRequest -Uri $DownloadUrl -OutFile $DownloadPath
+			New-Item -Path "$scriptDir\Content\Tools" -Name $Tool -Type container -Force | Out-Null
+			Invoke-WebRequest -Uri $DownloadUrl -OutFile $DownloadPath -PassThru | Write-Host
 
 			if($_.RunExe)
 			{
 				Write-Host "Running $DownloadPath"
-				Start-Process -FilePath "$DeployToolsPath\$Tool\$ExeName" -ArgumentList $_.RunArgs -Wait
+				Start-Process -FilePath "$scriptDir\Content\Tools\$Tool\$ExeName" -ArgumentList $_.RunArgs -Wait -PassThru
+				Remove-Item "$scriptDir\Content\Tools\$Tool" -Force -Recurse
 			}
 		}
 	}
+}
+
+if(Test-Path $DeployPath)
+{
+    Write-Host "Removing Deploy Tools Directory Found at $DeployPath"
+    Remove-Item $DeployPath -Force -Recurse | Out-Null
+    Start-Sleep -s 2
+}
+
+Write-Host "Creating Deploy Tools Directory at $DeployPath"
+New-Item -Path $DeployPath -Type container -Force | Out-Null
+
+Get-ChildItem -Path $scriptDir\Content\*.ps1 | ForEach-Object {
+	$scriptName = $_.Name
+	$scriptFullName = $_.FullName
+	Write-Host "Deploying script $scriptName to $DeployPath"
+	Copy-Item -Path $scriptFullName -Destination $DeployPath -Force
+}
+
+Get-ChildItem -Path $scriptDir\Content\Tools | ForEach-Object {
+	$toolName = $_.Name
+	$toolFullName = $_.FullName
+	Write-Host "Deploying tool $toolName to $DeployPath\Tools"
+	New-Item -Path $DeployPath\Tools -Name $toolName -Type container -Force | Out-Null
+	Copy-Item -Path $toolFullName -Destination $DeployPath\Tools -Force -Recurse
 }
 
 Write-Host "Create releaseVersion.txt"

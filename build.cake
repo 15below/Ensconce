@@ -165,19 +165,20 @@ Task("Publish")
     .Does(() =>
 {
     CreateDirectory("./output/publish");
+    CreateDirectory("./output/publish/Content");
+    CreateDirectory("./output/publish/Content/Tools");
+    CreateDirectory("./output/publish/Content/Tools/Ensconce");
 
+    CopyFiles("./src/Scripts/*.ps1", "./output/publish/Content");
     CopyFiles("./src/Deploy/*.ps1", "./output/publish");
     CopyFiles("./src/Deploy/*.xml", "./output/publish");
 
-    CreateDirectory("./output/publish/Content/Scripts");
-    CopyFiles("./src/Scripts/*.ps1", "./output/publish/Content/Scripts");
 
-    CreateDirectory("./output/publish/Content/Ensconce");
-    DotNetPublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetPublishSettings
+    DotNetCorePublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetCorePublishSettings
     {
         Configuration = configuration,
         NoBuild = true,
-        OutputDirectory = "./output/publish/Content/Ensconce",
+        OutputDirectory = "./output/publish/Content/Tools/Ensconce",
     });
 });
 
