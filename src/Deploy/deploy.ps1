@@ -21,7 +21,7 @@ Get-ChildItem -Path $scriptDir\Content\Scripts\*.ps1 | ForEach-Object {
 	Copy-Item -Path $scriptFullName -Destination $DeployPath -Force
 }
 
-$DeployToolsPath = $DeployPath\Tools
+$DeployToolsPath = "$DeployPath\Tools"
 
 ### Deploy Ensconce Tool ###
 
