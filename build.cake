@@ -1,12 +1,12 @@
-﻿#module nuget:?package=Cake.BuildSystems.Module&version=3.0.1
-#tool "nuget:?package=OctopusTools&version=7.4.3127"
+﻿#module nuget:?package=Cake.BuildSystems.Module&version=4.1.0
+#tool "nuget:?package=OctopusTools&version=9.1.1"
 
 using System.Text.RegularExpressions;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var baseVersion = "1.13.2";
+var baseVersion = "1.14.0";
 var subVersion = "";
 var subVersionNumber = "";
 var isMasterOrDevelop = false;
@@ -74,7 +74,7 @@ Task("Clean")
 {
     CleanDirectory("./output");
 
-    DotNetCoreClean("./src/Ensconce.sln", new DotNetCoreCleanSettings
+    DotNetClean("./src/Ensconce.sln", new DotNetCleanSettings
     {
         Configuration = configuration,
     });
@@ -85,7 +85,7 @@ Task("Build")
     .IsDependentOn("Clean")
     .Does(() =>
 {
-    DotNetCoreBuild("./src/Ensconce.sln", new DotNetCoreBuildSettings
+    DotNetBuild("./src/Ensconce.sln", new DotNetBuildSettings
     {
         Configuration = configuration,
     });
@@ -95,7 +95,7 @@ Task("Test")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    DotNetCoreTest("./src/Ensconce.sln", new DotNetCoreTestSettings
+    DotNetTest("./src/Ensconce.sln", new DotNetTestSettings
     {
         Configuration = configuration,
         NoBuild = true,
@@ -106,7 +106,7 @@ Task("Pack-Binary")
     .IsDependentOn("Test")
     .Does(() =>
 {
-    DotNetCorePack("./src/Ensconce.sln", new DotNetCorePackSettings
+    DotNetPack("./src/Ensconce.sln", new DotNetPackSettings
     {
         Configuration = configuration,
         NoBuild = true,
@@ -126,7 +126,7 @@ Task("Push-Binary-Internal")
     var files = GetFiles("./output/binaries/*.nupkg");
     foreach(var file in files)
     {
-        DotNetCoreNuGetPush(file.FullPath, new DotNetCoreNuGetPushSettings
+        DotNetNuGetPush(file.FullPath, new DotNetNuGetPushSettings
         {
             ApiKey = apiKey,
             Source = $"{url}{endpoint}",
@@ -150,7 +150,7 @@ Task("Push-Binary-Public")
     var files = GetFiles("./output/binaries/*.nupkg");
     foreach(var file in files)
     {
-        DotNetCoreNuGetPush(file.FullPath, new DotNetCoreNuGetPushSettings
+        DotNetNuGetPush(file.FullPath, new DotNetNuGetPushSettings
         {
             Source = "https://api.nuget.org/v3/index.json",
             ApiKey = apiKey,
@@ -165,18 +165,18 @@ Task("Publish")
     .Does(() =>
 {
     CreateDirectory("./output/publish");
-    CreateDirectory("./output/publish/Content");
-    CreateDirectory("./output/publish/Content/Tools");
-    CreateDirectory("./output/publish/Content/Tools/Grant");
-    CreateDirectory("./output/publish/Content/Tools/Ensconce");
 
-    CopyFiles("./src/ExternalDeployTools/Grant/*", "./output/publish/Content/Tools/Grant");
-    CopyFiles("./src/Scripts/*.ps1", "./output/publish/Content");
     CopyFiles("./src/Deploy/*.ps1", "./output/publish");
     CopyFiles("./src/Deploy/*.xml", "./output/publish");
 
+    CreateDirectory("./output/publish/Content");
+    CopyFiles("./src/Scripts/*.ps1", "./output/publish/Content");
 
-    DotNetCorePublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetCorePublishSettings
+    CreateDirectory("./output/publish/Content/Tools");
+    CopyDirectory("./src/ExternalDeployTools", "./output/publish/Content/Tools");
+
+    CreateDirectory("./output/publish/Content/Tools/Ensconce");
+    DotNetPublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetPublishSettings
     {
         Configuration = configuration,
         NoBuild = true,
