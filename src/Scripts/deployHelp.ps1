@@ -7,6 +7,7 @@ if ((Test-Path $DeployToolsDir\releaseVersion.txt) -eq $true)
     $ensconceVersion = Get-Content -Path $DeployToolsDir\releaseVersion.txt -TotalCount 1
 }
 Write-Host "Ensconce - Ensconce Version: $ensconceVersion"
+Set-Content "env:\DeployToolsPath" "$DeployToolsDir\Tools"
 
 $psVersion = (Get-Host).Version
 Write-Host "Ensconce - Powershell Version: $psVersion"

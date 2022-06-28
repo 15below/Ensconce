@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.ServiceProcess;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace Ensconce.Cli
@@ -54,6 +55,7 @@ namespace Ensconce.Cli
                                 Process = p,
                                 Path = (string)mo["ExecutablePath"]
                             };
+
                 foreach (var item in query)
                 {
                     if (!string.IsNullOrEmpty(item.Path) && Path.GetFullPath(item.Path).Contains(new DirectoryInfo(directory).FullName))
@@ -61,6 +63,7 @@ namespace Ensconce.Cli
                         const int Win32ErrorCodeAccessDenied = 5;
                         try
                         {
+                            Logging.Log("Attempting to kill {0}", item.Path);
                             item.Process.Kill();
                         }
                         catch (Win32Exception ex) when (ex.NativeErrorCode == Win32ErrorCodeAccessDenied)
@@ -72,6 +75,29 @@ namespace Ensconce.Cli
                             // Process has already terminated.
                         }
                         item.Process.WaitForExit();
+                    }
+                }
+            }
+        }
+
+        internal static void KillHandlesInDirectory(string directory)
+        {
+            var handleExe = Path.Combine(Arguments.DeployToolsDir, "Tools", "Handle", "handle.exe");
+
+            var handleRegEx = new Regex(@"^(?<exe>.*?)\s*pid:\s*(?<pid>[0-9]+)\s*type:\s*(?<type>\w*)\s*?(?<hash>[A-Z0-9]+)\s*:\s*(?<path>.*)$", RegexOptions.Compiled);
+            var handles = RunHandleAndGetOutput(handleExe, directory);
+            foreach (var handle in handles.Split('\n'))
+            {
+                var matches = handleRegEx.Match(handle);
+                if (matches.Success)
+                {
+                    try
+                    {
+                        KillHandle(handleExe, matches.Groups["hash"].Value, matches.Groups["exe"].Value, matches.Groups["pid"].Value);
+                    }
+                    catch (Exception)
+                    {
+                        Logging.LogWarn("Unable to stop hash {0} on process {1} (PID: {2})", matches.Groups["hash"].Value, matches.Groups["exe"].Value, matches.Groups["pid"].Value);
                     }
                 }
             }
@@ -142,6 +168,38 @@ namespace Ensconce.Cli
                     DisplayName = svc.GetPropertyValue("DisplayName").ToString(),
                     ServiceName = svc.GetPropertyValue("Name").ToString()
                 });
+        }
+
+        private static string RunHandleAndGetOutput(string handleExe, string searchFolder)
+        {
+            Logging.Log("Finding handles in {0}", searchFolder);
+            var p = new Process();
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.FileName = handleExe;
+            p.StartInfo.Arguments = $"{searchFolder} /nobanner";
+            p.Start();
+            var output = p.StandardOutput.ReadToEnd();
+            p.WaitForExit();
+            return output;
+        }
+
+        private static void KillHandle(string handleExe, string handleHash, string process, string pid)
+        {
+            Logging.Log("Attempting to kill hash {0} on process {1} (PID {2})", handleHash, process, pid);
+            var p = new Process();
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.FileName = handleExe;
+            p.StartInfo.Arguments = $"-c {handleHash} -y -p {pid} /nobanner";
+            p.Start();
+            p.WaitForExit();
+            if (p.ExitCode != 0)
+            {
+                throw new Exception("non-zero exit code from Handle");
+            }
         }
 
         private class ServiceDetails

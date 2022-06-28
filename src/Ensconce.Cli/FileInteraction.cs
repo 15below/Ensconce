@@ -20,6 +20,9 @@ namespace Ensconce.Cli
             // Try and kill processes we know about in the dir
             ApplicationInteraction.StopProcessesInDirectory(directory);
 
+            // Try and kill handles in the dir
+            ApplicationInteraction.KillHandlesInDirectory(directory);
+
             Logging.Log("Deleting from {0}", directory);
             PerformDelete(new DirectoryInfo(directory));
 
