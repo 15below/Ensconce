@@ -169,18 +169,15 @@ Task("Publish")
     CopyFiles("./src/Deploy/*.ps1", "./output/publish");
     CopyFiles("./src/Deploy/*.xml", "./output/publish");
 
-    CreateDirectory("./output/publish/Content");
-    CopyFiles("./src/Scripts/*.ps1", "./output/publish/Content");
+    CreateDirectory("./output/publish/Content/Scripts");
+    CopyFiles("./src/Scripts/*.ps1", "./output/publish/Content/Scripts");
 
-    CreateDirectory("./output/publish/Content/Tools");
-    CopyDirectory("./src/ExternalDeployTools", "./output/publish/Content/Tools");
-
-    CreateDirectory("./output/publish/Content/Tools/Ensconce");
+    CreateDirectory("./output/publish/Content/Ensconce");
     DotNetPublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetPublishSettings
     {
         Configuration = configuration,
         NoBuild = true,
-        OutputDirectory = "./output/publish/Content/Tools/Ensconce",
+        OutputDirectory = "./output/publish/Content/Ensconce",
     });
 });
 
