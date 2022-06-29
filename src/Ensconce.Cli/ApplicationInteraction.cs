@@ -16,90 +16,99 @@ namespace Ensconce.Cli
     {
         internal static void StopAndDeleteServicesInDirectory(string directory)
         {
-            foreach (var serviceDetails in GetServicesInstalledInDirectory(directory))
+            Logging.Log("Finding services to stop and delete in {0}", directory);
+            var services = GetServicesInstalledInDirectory(directory).ToList();
+            if (services.Any())
             {
-                var service = ServiceController.GetServices().First(svc => svc.DisplayName == serviceDetails.DisplayName);
-                if (service.Status != ServiceControllerStatus.Stopped)
+                Logging.Log("{0} services found in {1}", services.Count, directory);
+                foreach (var serviceDetails in services)
                 {
-                    Logging.Log("Stopping service {0}", serviceDetails.DisplayName);
-                    service.Stop();
+                    var service = ServiceController.GetServices().First(svc => svc.DisplayName == serviceDetails.DisplayName);
+                    if (service.Status != ServiceControllerStatus.Stopped)
+                    {
+                        Logging.Log("Stopping service {0}", serviceDetails.DisplayName);
+                        service.Stop();
+                    }
+
+                    VerifyServiceStopped(serviceDetails.DisplayName, 30);
+
+                    Logging.Log("Uninstalling service {0}", serviceDetails.DisplayName);
+                    Process.Start("sc", $"delete \"{serviceDetails.ServiceName}\"")?.WaitForExit();
+
+                    VerifyServiceUninstall(serviceDetails.DisplayName, 30);
                 }
-
-                VerifyServiceStopped(serviceDetails.DisplayName, 30);
-
-                Logging.Log("Uninstalling service {0}", serviceDetails.DisplayName);
-                Process.Start("sc", string.Format("delete \"{0}\"", serviceDetails.ServiceName)).WaitForExit();
-
-                VerifyServiceUninstall(serviceDetails.DisplayName, 30);
+            }
+            else
+            {
+                Logging.Log("No services found in {0}", directory);
             }
         }
 
         internal static void StopProcessesInDirectory(string directory)
         {
+            Logging.Log("Stopping processes in directory: {0}", directory);
+
+            var processes = GetProcessesRunningInDirectory(directory);
             if (!directory.EndsWith(@"\"))
             {
-                directory = directory + @"\";
+                directory += @"\";
             }
 
-            Logging.Log("Stopping processes in directory: {0}", directory);
-            var wmiQueryString = "SELECT ProcessId, ExecutablePath, CommandLine FROM Win32_Process";
-
-            using (var searcher = new ManagementObjectSearcher(wmiQueryString))
-            using (var results = searcher.Get())
+            if (processes.Any())
             {
-                var query = from p in Process.GetProcesses()
-                            join mo in results.Cast<ManagementObject>()
-                            on p.Id equals (int)(uint)mo["ProcessId"]
-                            select new
-                            {
-                                Process = p,
-                                Path = (string)mo["ExecutablePath"]
-                            };
+                Logging.Log("{0} processes found in {1}", processes.Count, directory);
 
-                foreach (var item in query)
+                foreach (var process in processes)
                 {
-                    if (!string.IsNullOrEmpty(item.Path) && Path.GetFullPath(item.Path).Contains(new DirectoryInfo(directory).FullName))
+                    try
                     {
-                        const int Win32ErrorCodeAccessDenied = 5;
-                        try
-                        {
-                            Logging.Log("Attempting to kill {0}", item.Path);
-                            item.Process.Kill();
-                        }
-                        catch (Win32Exception ex) when (ex.NativeErrorCode == Win32ErrorCodeAccessDenied)
-                        {
-                            // Process is already terminating.
-                        }
-                        catch (InvalidOperationException)
-                        {
-                            // Process has already terminated.
-                        }
-                        item.Process.WaitForExit();
+                        Logging.Log("Attempting to kill {0}", process.Path);
+                        process.Process.Kill();
                     }
+                    catch (Win32Exception ex) when (ex.NativeErrorCode == 5) //Access Denied
+                    {
+                        // Process is already terminating.
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // Process has already terminated.
+                    }
+
+                    process.Process.WaitForExit();
                 }
+            }
+            else
+            {
+                Logging.Log("No processes found in {0}", directory);
             }
         }
 
-        internal static void KillHandlesInDirectory(string directory)
+        internal static void ReleaseHandlesInDirectory(string directory)
         {
             var handleExe = Path.Combine(Arguments.DeployToolsDir, "Tools", "Handle", "handle.exe");
 
             var handleRegEx = new Regex(@"^(?<exe>.*?)\s*pid:\s*(?<pid>[0-9]+)\s*type:\s*(?<type>\w*)\s*?(?<hash>[A-Z0-9]+)\s*:\s*(?<path>.*)$", RegexOptions.Compiled);
-            var handles = RunHandleAndGetOutput(handleExe, directory);
-            foreach (var handle in handles.Split('\n'))
+            Logging.Log("Finding handles in {0}", directory);
+            var handles = RunHandleAndGetOutput(handleExe, directory).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(x => handleRegEx.Match(x)).Where(x => x.Success).ToList();
+            if (handles.Any())
             {
-                var matches = handleRegEx.Match(handle);
-                if (matches.Success)
+                Logging.Log("{0} handles found in {1}", handles.Count, directory);
+                foreach (var handle in handles)
                 {
                     try
                     {
-                        KillHandle(handleExe, matches.Groups["hash"].Value, matches.Groups["exe"].Value, matches.Groups["pid"].Value);
+                        Logging.Log("Attempting to release handle hash {0} on process {1} (PID {2})", handle.Groups["hash"].Value, handle.Groups["exe"].Value, handle.Groups["pid"].Value);
+                        ReleaseHandle(handleExe, handle.Groups["hash"].Value, handle.Groups["pid"].Value);
                     }
                     catch (Exception)
                     {
-                        Logging.LogWarn("Unable to stop hash {0} on process {1} (PID: {2})", matches.Groups["hash"].Value, matches.Groups["exe"].Value, matches.Groups["pid"].Value);
+                        Logging.LogWarn("Unable to stop handle hash {0} on process {1} (PID: {2})", handle.Groups["hash"].Value, handle.Groups["exe"].Value, handle.Groups["pid"].Value);
                     }
                 }
+            }
+            else
+            {
+                Logging.Log("No handles found in {0}", directory);
             }
         }
 
@@ -147,7 +156,7 @@ namespace Ensconce.Cli
             }
         }
 
-        private static IEnumerable<ServiceDetails> GetServicesInstalledInDirectory(string directory)
+        private static List<ServiceDetails> GetServicesInstalledInDirectory(string directory)
         {
             if (!directory.EndsWith(@"\"))
             {
@@ -167,12 +176,35 @@ namespace Ensconce.Cli
                     PathName = svc.GetPropertyValue("PathName").ToString(),
                     DisplayName = svc.GetPropertyValue("DisplayName").ToString(),
                     ServiceName = svc.GetPropertyValue("Name").ToString()
-                });
+                })
+                .ToList();
+        }
+
+        private static List<ProcessDetails> GetProcessesRunningInDirectory(string directory)
+        {
+            if (!directory.EndsWith(@"\"))
+            {
+                directory += @"\";
+            }
+
+            var wmiQueryString = "SELECT ProcessId, ExecutablePath, CommandLine FROM Win32_Process";
+
+            using (var searcher = new ManagementObjectSearcher(wmiQueryString))
+            using (var results = searcher.Get())
+            {
+                var query = (from p in Process.GetProcesses()
+                             join mo in results.Cast<ManagementObject>()
+                                 on p.Id equals (int)(uint)mo["ProcessId"]
+                             select new ProcessDetails { Process = p, Path = (string)mo["ExecutablePath"] })
+                             .Where(item => !string.IsNullOrEmpty(item.Path) && Path.GetFullPath(item.Path).Contains(new DirectoryInfo(directory).FullName))
+                             .ToList();
+
+                return query;
+            }
         }
 
         private static string RunHandleAndGetOutput(string handleExe, string searchFolder)
         {
-            Logging.Log("Finding handles in {0}", searchFolder);
             var p = new Process();
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardOutput = true;
@@ -186,9 +218,8 @@ namespace Ensconce.Cli
             return output;
         }
 
-        private static void KillHandle(string handleExe, string handleHash, string process, string pid)
+        private static void ReleaseHandle(string handleExe, string handleHash, string pid)
         {
-            Logging.Log("Attempting to kill hash {0} on process {1} (PID {2})", handleHash, process, pid);
             var p = new Process();
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardOutput = true;
@@ -209,6 +240,12 @@ namespace Ensconce.Cli
             public string DisplayName { get; set; }
             public string ServiceName { get; set; }
             public string PathName { get; set; }
+        }
+
+        private class ProcessDetails
+        {
+            public Process Process { get; set; }
+            public string Path { get; set; }
         }
     }
 }
