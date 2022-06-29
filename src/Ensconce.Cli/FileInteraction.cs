@@ -14,42 +14,51 @@ namespace Ensconce.Cli
                 return;
             }
 
-            // Check for and uninstall services installed in directory
-            ApplicationInteraction.StopAndDeleteServicesInDirectory(directory);
-
-            // Try and kill processes we know about in the dir
-            ApplicationInteraction.StopProcessesInDirectory(directory);
-
-            Logging.Log("Deleting from {0}", directory);
-            PerformDelete(new DirectoryInfo(directory));
-
-            Logging.Log("Ensure Directory {0} has been deleted", directory);
             Retry.Do(() =>
             {
-                if (Directory.Exists(directory))
-                {
-                    throw new Exception("Directory still exists");
-                }
+                // Check for and uninstall services installed in directory
+                ApplicationInteraction.StopAndDeleteServicesInDirectory(directory);
+
+                // Try and kill processes we know about in the dir
+                ApplicationInteraction.StopProcessesInDirectory(directory);
             }, TimeSpan.FromMilliseconds(1000));
-        }
 
-        private static void PerformDelete(DirectoryInfo directory)
-        {
+            Logging.Log("Deleting from {0}", directory);
+            var directoryInfo = new DirectoryInfo(directory);
+
             // Disable any read-only flags
-            directory.Attributes = FileAttributes.Normal;
+            directoryInfo.Attributes = FileAttributes.Normal;
 
-            foreach (var dir in directory.EnumerateDirectories("*", SearchOption.AllDirectories))
+            foreach (var dir in directoryInfo.EnumerateDirectories("*", SearchOption.AllDirectories))
             {
                 dir.Attributes = FileAttributes.Normal;
             }
 
-            foreach (var file in directory.EnumerateFiles("*", SearchOption.AllDirectories))
+            foreach (var file in directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories))
             {
                 file.Attributes = FileAttributes.Normal;
             }
 
             // Delete directory tree
-            Retry.Do(() => directory.Delete(true), TimeSpan.FromMilliseconds(1000));
+            Retry.Do(retry =>
+            {
+                if (retry > 0)
+                {
+                    // Try and kill handles in the dir
+                    ApplicationInteraction.ReleaseHandlesInDirectory(directory);
+                }
+
+                directoryInfo.Delete(true);
+            }, TimeSpan.FromMilliseconds(1000));
+
+            Logging.Log("Ensure Directory {0} has been deleted", directory);
+            Retry.Do(() =>
+            {
+                if (directoryInfo.Exists)
+                {
+                    throw new Exception("Directory still exists");
+                }
+            }, TimeSpan.FromMilliseconds(1000));
         }
 
         internal static void CopyDirectory(string from, string to)

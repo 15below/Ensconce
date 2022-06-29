@@ -15,9 +15,14 @@ namespace Ensconce.Helpers
 
         public static void Do(Action action, TimeSpan retryInterval, Type[] doNotRetryTheseExceptions = null)
         {
-            Do<object>(() =>
+            Do(_ => action(), retryInterval, doNotRetryTheseExceptions);
+        }
+
+        public static void Do(Action<int> action, TimeSpan retryInterval, Type[] doNotRetryTheseExceptions = null)
+        {
+            Do<object>(retry =>
                 {
-                    action();
+                    action(retry);
                     return null;
                 },
                 retryInterval,
@@ -26,13 +31,18 @@ namespace Ensconce.Helpers
 
         public static T Do<T>(Func<T> action, TimeSpan retryInterval, Type[] doNotRetryTheseExceptions = null)
         {
+            return Do(_ => action(), retryInterval, doNotRetryTheseExceptions);
+        }
+
+        public static T Do<T>(Func<int, T> action, TimeSpan retryInterval, Type[] doNotRetryTheseExceptions = null)
+        {
             var exceptions = new List<Exception>();
 
             for (var retry = 0; retry < retryCount; retry++)
             {
                 try
                 {
-                    return action();
+                    return action(retry);
                 }
                 catch (Exception ex) when (doNotRetryTheseExceptions?.Any(t => ex.GetType() == t) == true)
                 {
