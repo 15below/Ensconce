@@ -14,11 +14,14 @@ namespace Ensconce.Cli
                 return;
             }
 
-            // Check for and uninstall services installed in directory
-            ApplicationInteraction.StopAndDeleteServicesInDirectory(directory);
+            Retry.Do(() =>
+            {
+                // Check for and uninstall services installed in directory
+                ApplicationInteraction.StopAndDeleteServicesInDirectory(directory);
 
-            // Try and kill processes we know about in the dir
-            ApplicationInteraction.StopProcessesInDirectory(directory);
+                // Try and kill processes we know about in the dir
+                ApplicationInteraction.StopProcessesInDirectory(directory);
+            }, TimeSpan.FromMilliseconds(1000));
 
             Logging.Log("Deleting from {0}", directory);
             var directoryInfo = new DirectoryInfo(directory);

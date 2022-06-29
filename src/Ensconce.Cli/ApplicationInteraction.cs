@@ -74,7 +74,7 @@ namespace Ensconce.Cli
                         // Process has already terminated.
                     }
 
-                    process.Process.WaitForExit();
+                    process.Process.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
                 }
             }
             else
