@@ -14,6 +14,8 @@ namespace Ensconce.Cli
 {
     internal static class ApplicationInteraction
     {
+        private static readonly Regex HandleRegEx = new Regex(@"^(?<exe>.*?)\s*pid:\s*(?<pid>[0-9]+)\s*type:\s*(?<type>\w*)\s*?(?<hash>[A-Z0-9]+)\s*:\s*(?<path>.*)$");
+
         internal static void StopAndDeleteServicesInDirectory(string directory)
         {
             Logging.Log("Finding services to stop and delete in {0}", directory);
@@ -47,12 +49,7 @@ namespace Ensconce.Cli
         internal static void StopProcessesInDirectory(string directory)
         {
             Logging.Log("Stopping processes in directory: {0}", directory);
-
             var processes = GetProcessesRunningInDirectory(directory);
-            if (!directory.EndsWith(@"\"))
-            {
-                directory += @"\";
-            }
 
             if (processes.Any())
             {
@@ -74,7 +71,7 @@ namespace Ensconce.Cli
                         // Process has already terminated.
                     }
 
-                    process.Process.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
+                    process.Process.WaitForExit(30000);
                 }
             }
             else
@@ -87,9 +84,8 @@ namespace Ensconce.Cli
         {
             var handleExe = Path.Combine(Arguments.DeployToolsDir, "Tools", "Handle", "handle.exe");
 
-            var handleRegEx = new Regex(@"^(?<exe>.*?)\s*pid:\s*(?<pid>[0-9]+)\s*type:\s*(?<type>\w*)\s*?(?<hash>[A-Z0-9]+)\s*:\s*(?<path>.*)$", RegexOptions.Compiled);
             Logging.Log("Finding handles in {0}", directory);
-            var handles = RunHandleAndGetOutput(handleExe, directory).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(x => handleRegEx.Match(x)).Where(x => x.Success).ToList();
+            var handles = RunHandleAndGetOutput(handleExe, directory).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(x => HandleRegEx.Match(x)).Where(x => x.Success).ToList();
             if (handles.Any())
             {
                 Logging.Log("{0} handles found in {1}", handles.Count, directory);
@@ -112,25 +108,25 @@ namespace Ensconce.Cli
             }
         }
 
-        private static void VerifyServiceStopped(string serviceName, int maxWait)
+        private static void VerifyServiceStopped(string serviceName, int maxAttempts)
         {
-            var waitAttempt = 0;
-            while (waitAttempt < maxWait)
+            var attempt = 0;
+            while (attempt < maxAttempts)
             {
                 if (ServiceController.GetServices().First(svc => svc.DisplayName == serviceName).Status == ServiceControllerStatus.Stopped)
                 {
                     break;
                 }
 
-                Logging.Log("Still waiting for service {0} to stop after {1} seconds", serviceName, waitAttempt);
+                Logging.Log("Still waiting for service {0} to stop after {1} seconds", serviceName, attempt);
                 Thread.Sleep(1000);
-                waitAttempt++;
+                attempt++;
             }
 
-            if (waitAttempt >= maxWait)
+            if (attempt >= maxAttempts)
             {
-                Logging.LogError("Service {0} didn't stop in {1} seconds!", serviceName, maxWait);
-                throw new Exception($"{serviceName} failed to stop in {maxWait} seconds");
+                Logging.LogError("Service {0} didn't stop in {1} seconds!", serviceName, maxAttempts);
+                throw new Exception($"{serviceName} failed to stop in {maxAttempts} seconds");
             }
         }
 
@@ -158,9 +154,9 @@ namespace Ensconce.Cli
 
         private static List<ServiceDetails> GetServicesInstalledInDirectory(string directory)
         {
-            if (!directory.EndsWith(@"\"))
+            if (!directory.EndsWith(Path.DirectorySeparatorChar.ToString()))
             {
-                directory = directory + @"\";
+                directory += Path.DirectorySeparatorChar;
             }
 
             var wqlObjectQuery = new WqlObjectQuery("SELECT * FROM Win32_Service");
@@ -182,9 +178,9 @@ namespace Ensconce.Cli
 
         private static List<ProcessDetails> GetProcessesRunningInDirectory(string directory)
         {
-            if (!directory.EndsWith(@"\"))
+            if (!directory.EndsWith(Path.DirectorySeparatorChar.ToString()))
             {
-                directory += @"\";
+                directory += Path.DirectorySeparatorChar;
             }
 
             var wmiQueryString = "SELECT ProcessId, ExecutablePath, CommandLine FROM Win32_Process";
@@ -192,11 +188,13 @@ namespace Ensconce.Cli
             using (var searcher = new ManagementObjectSearcher(wmiQueryString))
             using (var results = searcher.Get())
             {
+                var directoryFullName = new DirectoryInfo(directory).FullName;
+
                 var query = (from p in Process.GetProcesses()
                              join mo in results.Cast<ManagementObject>()
                                  on p.Id equals (int)(uint)mo["ProcessId"]
                              select new ProcessDetails { Process = p, Path = (string)mo["ExecutablePath"] })
-                             .Where(item => !string.IsNullOrEmpty(item.Path) && Path.GetFullPath(item.Path).Contains(new DirectoryInfo(directory).FullName))
+                             .Where(item => !string.IsNullOrEmpty(item.Path) && Path.GetFullPath(item.Path).Contains(directoryFullName))
                              .ToList();
 
                 return query;
