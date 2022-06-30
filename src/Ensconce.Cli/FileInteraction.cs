@@ -26,19 +26,6 @@ namespace Ensconce.Cli
             Logging.Log("Deleting from {0}", directory);
             var directoryInfo = new DirectoryInfo(directory);
 
-            // Disable any read-only flags
-            directoryInfo.Attributes = FileAttributes.Normal;
-
-            foreach (var dir in directoryInfo.EnumerateDirectories("*", SearchOption.AllDirectories))
-            {
-                dir.Attributes = FileAttributes.Normal;
-            }
-
-            foreach (var file in directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories))
-            {
-                file.Attributes = FileAttributes.Normal;
-            }
-
             // Delete directory tree
             Retry.Do(retry =>
             {
@@ -48,7 +35,21 @@ namespace Ensconce.Cli
                     ApplicationInteraction.ReleaseHandlesInDirectory(directory);
                 }
 
+                // Disable any read-only flags
+                directoryInfo.Attributes = FileAttributes.Normal;
+
+                foreach (var dir in directoryInfo.EnumerateDirectories("*", SearchOption.AllDirectories))
+                {
+                    dir.Attributes = FileAttributes.Normal;
+                }
+
+                foreach (var file in directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories))
+                {
+                    file.Attributes = FileAttributes.Normal;
+                }
+
                 directoryInfo.Delete(true);
+
             }, TimeSpan.FromMilliseconds(1000));
 
             Logging.Log("Ensure Directory {0} has been deleted", directory);
