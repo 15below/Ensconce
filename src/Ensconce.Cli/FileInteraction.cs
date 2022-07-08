@@ -21,7 +21,7 @@ namespace Ensconce.Cli
 
                 // Try and kill processes we know about in the dir
                 ApplicationInteraction.StopProcessesInDirectory(directory);
-            }, TimeSpan.FromMilliseconds(1000));
+            }, TimeSpan.FromSeconds(2));
 
             Logging.Log("Deleting from {0}", directory);
             var directoryInfo = new DirectoryInfo(directory);
@@ -50,16 +50,22 @@ namespace Ensconce.Cli
 
                 directoryInfo.Delete(true);
 
-            }, TimeSpan.FromMilliseconds(1000));
+            }, TimeSpan.FromSeconds(2));
 
             Logging.Log("Ensure Directory {0} has been deleted", directory);
-            Retry.Do(() =>
+            Retry.Do(retry =>
             {
+                if (retry > 0)
+                {
+                    // Try and kill handles in the dir
+                    ApplicationInteraction.ReleaseHandlesInDirectory(directory);
+                }
+                
                 if (directoryInfo.Exists)
                 {
                     throw new Exception("Directory still exists");
                 }
-            }, TimeSpan.FromMilliseconds(1000));
+            }, TimeSpan.FromSeconds(2));
         }
 
         internal static void CopyDirectory(string from, string to)
