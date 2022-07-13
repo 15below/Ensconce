@@ -83,12 +83,14 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         & $DatreeExe config set token $DatreeToken
         if([string]::IsNullOrWhiteSpace($DatreePolicyYaml) -eq $false)
         {
-        	$TempFile = New-TemporaryFile
-        	$PolicyYamlFile = $TempFile.FullName.Replace(".tmp", ".yaml")
-        	Rename-Item $TempFile $PolicyYamlFile
-        	$DatreePolicyYaml | Out-File -FilePath $PolicyYamlFile
-        	& $DatreeExe publish $PolicyYamlFile
-        	Remove-Item $PolicyYamlFile -force
+                $TempFolder = [System.IO.Path]::GetTempPath()
+                $Guid = ([System.Guid]::NewGuid()).ToString()
+                $datreeFolder = [IO.Path]::Combine($TempFolder, "datree")
+                EnsurePath $datreeFolder
+                $PolicyYamlFile = [IO.Path]::Combine($datreeFolder, "policy-$Guid.yaml")
+                $DatreePolicyYaml | Out-File -FilePath $PolicyYamlFile
+                & $DatreeExe publish $PolicyYamlFile
+                Remove-Item $PolicyYamlFile -force
         }
 
         if($DatreeRecord -eq $true)
