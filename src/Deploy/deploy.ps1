@@ -1,4 +1,5 @@
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType] 'Ssl3 , Tls12'
+Write-Host "Setting SecurityProtocol to TLS 1.1 or TLS 1.2"
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls11 -bor [System.Net.SecurityProtocolType]::Tls12;
 
 $scriptDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
 
