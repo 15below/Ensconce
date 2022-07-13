@@ -23,7 +23,7 @@ else
 {
 	$tools = @(
 		[pscustomobject]@{Tool='Az-Installer';Version='2.37.0';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
-		[pscustomobject]@{Tool='Datree';Version='1.5.20';ExeName='datree.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{Tool='Datree';Version='1.5.30';ExeName='datree.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 		[pscustomobject]@{Tool='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='4.22';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='4.22';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
