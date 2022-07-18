@@ -8,11 +8,11 @@ if ($deployHelpLoaded -eq $null)
 Write-Host "Ensconce - KubernetesHelper Loading"
 if ([string]::IsNullOrWhiteSpace($KubeCtlExe))
 {
-	$KubeCtlExe = "$EnsconceDir\Tools\KubeCtl\kubectl.exe"
+    $KubeCtlExe = "$EnsconceDir\Tools\KubeCtl\kubectl.exe"
 }
 if ([string]::IsNullOrWhiteSpace($DatreeExe))
 {
-	$DatreeExe = "$EnsconceDir\Tools\Datree\datree.exe"
+    $DatreeExe = "$EnsconceDir\Tools\Datree\datree.exe"
 }
 $rootConfigPath = "$Home\.kube"
 
@@ -34,9 +34,9 @@ else
 
 if (Test-Path $DatreeExe)
 {
-	(& $DatreeExe version 2>&1) | Select-Object -First 1 {
-    	Write-Host "Datree Version: $_"
-	}
+    (& $DatreeExe version 2>&1) | Select-Object -First 1 {
+        Write-Host "Datree Version: $_"
+    }
     $DatreeExeFound = $true
 }
 else
@@ -78,11 +78,24 @@ function PreProcessYaml([string]$yamlDirectory)
 
 function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 {
-    if([string]::IsNullOrWhiteSpace($DatreeToken) -eq $false -and $DatreeExeFound)
+    if($DatreeExeFound)
     {
-        & $DatreeExe config set token $DatreeToken
-        if([string]::IsNullOrWhiteSpace($DatreePolicyYaml) -eq $false)
+        $mtx = New-Object System.Threading.Mutex($false, "datree-mutex")
+        $mtxResult = $mtx.WaitOne(180000) #3 minutes timeout
+        if($mtxResult -eq $false)
         {
+            throw "Couldn't aquire 'datree-mutex' in 3 minutes"
+        }
+
+        try
+        {
+            if([string]::IsNullOrWhiteSpace($DatreeToken)
+            {
+                & $DatreeExe config set token $DatreeToken
+            }
+
+            if([string]::IsNullOrWhiteSpace($DatreePolicyYaml) -eq $false)
+            {
                 $TempFolder = [System.IO.Path]::GetTempPath()
                 $Guid = ([System.Guid]::NewGuid()).ToString()
                 $datreeFolder = [IO.Path]::Combine($TempFolder, "datree")
@@ -91,6 +104,11 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
                 $DatreePolicyYaml | Out-File -FilePath $PolicyYamlFile
                 & $DatreeExe publish $PolicyYamlFile
                 Remove-Item $PolicyYamlFile -force
+            }
+        }
+        finally
+        {
+            $mtx.ReleaseMutex()
         }
 
         if($DatreeRecord -eq $true)
