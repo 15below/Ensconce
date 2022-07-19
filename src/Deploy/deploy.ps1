@@ -81,9 +81,13 @@ Get-ChildItem -Path $scriptDir\Content\Tools | ForEach-Object {
 Write-Host "Create releaseVersion.txt"
 New-Item -Path $DeployPath -Name "releaseVersion.txt" -ItemType "file" -Value $VersionNumber | Out-Null
 
-Write-Host "Testing Ensconce Works For Text"
+Write-Host "Loading All PowerShell Scripts"
 
-. $DeployPath\deployHelp.ps1
+Get-ChildItem -Path $DeployPath -Filter "*.ps1" | ForEach-Object {
+    . $_.FullName
+}
+
+Write-Host "Testing Ensconce Works For Text"
 
 $env:FixedPath = "$scriptDir\Test-Config.xml"
 
