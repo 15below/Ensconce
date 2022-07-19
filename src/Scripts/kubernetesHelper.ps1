@@ -89,7 +89,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 
         try
         {
-            if([string]::IsNullOrWhiteSpace($DatreeToken)
+            if([string]::IsNullOrWhiteSpace($DatreeToken))
             {
                 & $DatreeExe config set token $DatreeToken
             }
