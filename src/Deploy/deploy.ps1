@@ -66,19 +66,25 @@ New-Item -Path $DeployPath -Type container -Force | Out-Null
 Get-ChildItem -Path $scriptDir\Content\*.ps1 | ForEach-Object {
 	$scriptName = $_.Name
 	$scriptFullName = $_.FullName
-	
+	$deployScript = $true
 	if($OctoAgent -eq $false)
     {
         if($scriptName -eq "azureHelper.ps1" -or
            $scriptName -eq "kubernetesHelper.ps1")
         {
-        	Write-Host "Skipping script $scriptName as not OctoAgent machine"
-            continue
+        	$deployScript = $false
         }
     }
 	
-	Write-Host "Deploying script $scriptName to $DeployPath"
-	Copy-Item -Path $scriptFullName -Destination $DeployPath -Force
+	if($deployScript)
+    {
+        Write-Host "Deploying script $scriptName to $DeployPath"
+        Copy-Item -Path $scriptFullName -Destination $DeployPath -Force
+    }
+    else
+    {
+    	Write-Host "Skipping script $scriptName as not applicable for machine"
+    }
 }
 
 Get-ChildItem -Path $scriptDir\Content\Tools | ForEach-Object {
