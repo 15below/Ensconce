@@ -87,6 +87,10 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
             {
                 $data = ConvertFrom-Json ($_ -replace "Server Version: version.Info", "")
                 $kubeServerVersion = $data.GitVersion
+                if($kubeServerVersion.StartsWith('v'))
+                {
+                    $kubeServerVersion = $kubeServerVersion.Substring(1)
+                }
             }
         }
 
