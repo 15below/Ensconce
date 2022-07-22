@@ -77,8 +77,19 @@ function PreProcessYaml([string]$yamlDirectory)
 
 function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 {
+    $kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
+
     if($DatreeExeFound)
     {
+        $kubeServerVersion = "1.15.0"
+        (& $KubeCtlExe version --kubeconfig=$kubernetesConfigFilePath 2>&1) | ForEach-Object {
+            if ($_ -match "^Server Version.*")
+            {
+                $data = ConvertFrom-Json ($_ -replace "Server Version: version.Info", "")
+                $kubeServerVersion = $data.GitVersion
+            }
+        }
+
         $mtx = New-Object System.Threading.Mutex($false, "datree-mutex")
         $mtxResult = $mtx.WaitOne(180000) #3 minutes timeout
         if($mtxResult -eq $false)
@@ -114,22 +125,22 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         {
             if([string]::IsNullOrWhiteSpace($DatreePolicy))
             {
-                & $DatreeExe test $yamlFile --output simple
+                & $DatreeExe test $yamlFile --output simple --schema-version "$kubeServerVersion"
             }
             else
             {
-                & $DatreeExe test $yamlFile --output simple --policy $DatreePolicy
+                & $DatreeExe test $yamlFile --output simple --schema-version "$kubeServerVersion" --policy $DatreePolicy
             }
         }
         else
         {
             if([string]::IsNullOrWhiteSpace($DatreePolicy))
             {
-                & $DatreeExe test $yamlFile --output simple --no-record
+                & $DatreeExe test $yamlFile --output simple --schema-version "$kubeServerVersion" --no-record
             }
             else
             {
-                & $DatreeExe test $yamlFile --output simple --no-record --policy $DatreePolicy
+                & $DatreeExe test $yamlFile --output simple --schema-version "$kubeServerVersion" --policy $DatreePolicy --no-record
             }
         }
 
@@ -146,8 +157,6 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
             }
         }
     }
-
-    $kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
 
     Write-Host "Validating yaml file $yamlFile (local)"
     & $KubeCtlExe apply --dry-run=client -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
