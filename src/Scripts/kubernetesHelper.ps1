@@ -129,22 +129,22 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         {
             if([string]::IsNullOrWhiteSpace($DatreePolicy))
             {
-                & $DatreeExe test $yamlFile --output simple --schema-version "$kubeServerVersion"
+                & $DatreeExe test $yamlFile --verbose --output simple --schema-version "$kubeServerVersion"
             }
             else
             {
-                & $DatreeExe test $yamlFile --output simple --schema-version "$kubeServerVersion" --policy $DatreePolicy
+                & $DatreeExe test $yamlFile --verbose --output simple --schema-version "$kubeServerVersion" --policy $DatreePolicy
             }
         }
         else
         {
             if([string]::IsNullOrWhiteSpace($DatreePolicy))
             {
-                & $DatreeExe test $yamlFile --output simple --schema-version "$kubeServerVersion" --no-record
+                & $DatreeExe test $yamlFile --verbose --output simple --schema-version "$kubeServerVersion" --no-record
             }
             else
             {
-                & $DatreeExe test $yamlFile --output simple --schema-version "$kubeServerVersion" --policy $DatreePolicy --no-record
+                & $DatreeExe test $yamlFile --verbose --output simple --schema-version "$kubeServerVersion" --policy $DatreePolicy --no-record
             }
         }
 
