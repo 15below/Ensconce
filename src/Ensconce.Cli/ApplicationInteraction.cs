@@ -82,7 +82,7 @@ namespace Ensconce.Cli
 
         internal static void ReleaseHandlesInDirectory(string directory)
         {
-            var handleExe = Path.Combine(Arguments.DeployToolsDir, "Tools", "Handle", "handle.exe");
+            var handleExe = Path.Combine(Arguments.EnsconceDir, "Tools", "Handle", "handle.exe");
 
             Logging.Log("Finding handles in {0}", directory);
             var handles = RunHandleAndGetOutput(handleExe, directory).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(x => HandleRegEx.Match(x)).Where(x => x.Success).ToList();
