@@ -24,7 +24,6 @@ namespace Ensconce.Cli
             }, TimeSpan.FromSeconds(2));
 
             Logging.Log("Deleting from {0}", directory);
-            var directoryInfo = new DirectoryInfo(directory);
 
             // Delete directory tree
             Retry.Do(retry =>
@@ -34,6 +33,8 @@ namespace Ensconce.Cli
                     // Try and kill handles in the dir
                     ApplicationInteraction.ReleaseHandlesInDirectory(directory);
                 }
+
+                var directoryInfo = new DirectoryInfo(directory);
 
                 // Disable any read-only flags
                 directoryInfo.Attributes = FileAttributes.Normal;
@@ -48,8 +49,7 @@ namespace Ensconce.Cli
                     file.Attributes = FileAttributes.Normal;
                 }
 
-                directoryInfo.Delete(true);
-
+                Directory.Delete(directory, true);
             }, TimeSpan.FromSeconds(2));
 
             Logging.Log("Ensure Directory {0} has been deleted", directory);
@@ -60,8 +60,8 @@ namespace Ensconce.Cli
                     // Try and kill handles in the dir
                     ApplicationInteraction.ReleaseHandlesInDirectory(directory);
                 }
-                
-                if (directoryInfo.Exists)
+
+                if (Directory.Exists(directory))
                 {
                     throw new Exception("Directory still exists");
                 }
@@ -76,15 +76,22 @@ namespace Ensconce.Cli
             {
                 if (from.EndsWith(@"\") == false)
                 {
-                    from = from + @"\";
+                    from += @"\";
                 }
 
                 foreach (var file in Directory.EnumerateFiles(from, "*", SearchOption.AllDirectories))
                 {
-                    var source = new FileInfo(file);
-                    var destination = new FileInfo(Path.Combine(to, file.Substring(from.Length)));
+                    Retry.Do(() =>
+                    {
+                        var source = new FileInfo(file);
+                        var destination = new FileInfo(Path.Combine(to, file.Substring(from.Length)));
+                        if (destination.Directory != null && !destination.Directory.Exists)
+                        {
+                            destination.Directory.Create();
+                        }
 
-                    Retry.Do(() => CheckDirectoryAndCopyFile(source, destination), TimeSpan.FromMilliseconds(500));
+                        source.CopyTo(destination.FullName, true);
+                    }, TimeSpan.FromMilliseconds(500));
                 }
             }
             catch (Exception ex)
@@ -98,16 +105,6 @@ namespace Ensconce.Cli
 
                 throw;
             }
-        }
-
-        private static void CheckDirectoryAndCopyFile(FileInfo sourceFileInfo, FileInfo destinationFileInfo)
-        {
-            if (destinationFileInfo.Directory != null && !destinationFileInfo.Directory.Exists)
-            {
-                destinationFileInfo.Directory.Create();
-            }
-
-            sourceFileInfo.CopyTo(destinationFileInfo.FullName, true);
         }
     }
 }
