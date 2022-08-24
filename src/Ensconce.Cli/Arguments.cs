@@ -34,7 +34,7 @@ namespace Ensconce.Cli
         internal static string DictionaryPostUrl { get; private set; }
         internal static string DictionarySavePath { get; private set; }
 
-        internal static string DeployToolsDir { get; private set; }
+        internal static string EnsconceDir { get; private set; }
 
         internal static List<string> BackupSources { get; private set; } = new List<string>();
         internal static string BackupDestination { get; private set; }
@@ -78,8 +78,8 @@ namespace Ensconce.Cli
             var envRoundhouseOutputPath = Environment.GetEnvironmentVariable("RoundhouseOutputPath");
             RoundhouseOutputPath = !string.IsNullOrEmpty(envRoundhouseOutputPath) ? envRoundhouseOutputPath : @"E:\RH\";
 
-            var envDeployToolsDir = Environment.GetEnvironmentVariable("DeployToolsDir");
-            DeployToolsDir = !string.IsNullOrEmpty(envDeployToolsDir) ? envDeployToolsDir : string.Empty;
+            var envEnsconceDir = Environment.GetEnvironmentVariable("EnsconceDir");
+            EnsconceDir = !string.IsNullOrEmpty(envEnsconceDir) ? envEnsconceDir : string.Empty;
         }
 
         private static OptionSet GetOptionSet()
