@@ -37,24 +37,4 @@ There are 3 required variables, these are:
 How do I use it?
 ----------------
 
-* Get a copy of your component with default configuration to the target server (at 15below we use [Octopus](https://octopus.com/))
-* Set up your environment; Ensconce expects one of the following environment variables sets to exist:
-	* ClientCode
-	* Environment
-	* DeployService
-* OR
-	* FixedStructure = true
-* Run Ensconce:
-	d:\DeployTools\Ensconce.Console.exe -replace -deployFrom . -deployTo c:\targetDir -updateConfig
-* Stuff happens: check the [wiki](https://github.com/15below/Ensconce/wiki) for details
-
-NDjango Usage Notes
-----------------
-
-NDjango has been taken from https://github.com/Hill30/NDjango
-
-This repo is no longer maintained and the nuget packages are out of date.
-
-When taken the last commit was: https://github.com/Hill30/NDjango/commit/7dc7a0260489c76f7197dcfb69c1105f8a4c6ab8
-
-Once inside Ensconce, the namespace were updated and code refactored and made to work with the latest frameworks
+Documentation for how to use ensconce can be found at https://15below.github.io/Ensconce/
