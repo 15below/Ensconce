@@ -172,5 +172,26 @@ function Retry-Command {
     }
 }
 
+function Copy-Item-Retry {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [string]$Path,
+
+        [Parameter(Position=1, Mandatory=$true)]
+        [string]$Destination,
+
+        [Parameter(Position=2, Mandatory=$false)]
+        [int]$Maximum = 5,
+
+        [Parameter(Position=3, Mandatory=$false)]
+        [int]$Delay = 2000
+    )
+
+    Retry-Command {
+	    Copy-Item -Path $Path -Destination $Destination
+    } $Maximum $Delay
+}
+
 Write-Host "Ensconce - DeployHelp Loaded"
 $deployHelpLoaded = $true
