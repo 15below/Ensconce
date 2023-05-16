@@ -204,7 +204,7 @@ namespace Ensconce.Cli
         private static string RunHandleAndGetOutput(string handleExe, string searchFolder)
         {
             var p = new Process();
-            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.UseShellExecute = true;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.FileName = handleExe;
@@ -219,7 +219,7 @@ namespace Ensconce.Cli
         private static void ReleaseHandle(string handleExe, string handleHash, string pid)
         {
             var p = new Process();
-            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.UseShellExecute = true;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.FileName = handleExe;
