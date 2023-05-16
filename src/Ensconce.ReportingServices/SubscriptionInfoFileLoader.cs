@@ -11,7 +11,7 @@ namespace Ensconce.ReportingServices
         public static IEnumerable<ReportSubscription> GetSubscriptions(string reportName, string reportPath, string sourceFolder)
         {
             var reportsDirectoryInfo = new DirectoryInfo(sourceFolder);
-            var subscriptionFileInfos = reportsDirectoryInfo.GetFiles(reportName + "*.subinfo");
+            var subscriptionFileInfos = reportsDirectoryInfo.GetFiles(reportName + "*.subinfo", SearchOption.AllDirectories);
 
             foreach (var subscriptionFileInfo in subscriptionFileInfos)
             {
