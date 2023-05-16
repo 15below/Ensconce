@@ -23,8 +23,8 @@ if ([string]::IsNullOrWhiteSpace($ExternalToolDownloadUrl))
 else
 {
 	$tools = @(
-		[pscustomobject]@{Tool='Az-Installer';Version='2.41.0';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
-		[pscustomobject]@{Tool='Datree';Version='1.6.48';ExeName='datree.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{Tool='Az-Installer';Version='2.48.1';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
+		[pscustomobject]@{Tool='Datree';Version='1.9.2';ExeName='datree.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 		[pscustomobject]@{Tool='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
