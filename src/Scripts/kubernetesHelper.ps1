@@ -53,7 +53,7 @@ function PreProcessYaml([string]$yamlDirectory)
         Get-ChildItem "$yamlDirectory" -Filter *.yaml | Foreach-Object {
             if ($_.Name -ne "kustomization.yaml")
             {
-                Add-Content -Path "$yamlDirectory\kustomization.yaml" -Value $_.Name
+                Add-Content -Path "$yamlDirectory\kustomization.yaml" -Value "  - $($_.Name)"
             }
         }
     }
