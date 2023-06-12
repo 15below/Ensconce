@@ -58,6 +58,11 @@ function PreProcessYaml([string]$yamlDirectory)
         }
     }
 
+    if ([string]::IsNullOrWhiteSpace($KustomizeTemplatesFolder) -eq $false -and (Test-Path $KustomizeTemplatesFolder))
+    {
+        Copy-Item -Path $KustomizeTemplatesFolder -Destination "$yamlDirectory\templates" -Recurse | Out-Null
+    }
+
     Write-Host "Replace tags in yaml in $yamlDirectory"
     ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
 
