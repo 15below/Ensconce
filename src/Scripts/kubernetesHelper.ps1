@@ -63,6 +63,11 @@ function PreProcessYaml([string]$yamlDirectory)
         Copy-Item -Path $KustomizeTemplatesFolder -Destination "$yamlDirectory\templates" -Recurse | Out-Null
     }
 
+    Get-ChildItem -Path $yamlDirectory -Filter "*subsitution.xml" | ForEach-Object {
+        Write-Host "Processing Subsitution: $($_.FullName)"
+        ensconce --deployFrom $yamlDirectory --updateConfig --substitutionPath $_.FullName
+    }
+
     Write-Host "Replace tags in yaml in $yamlDirectory"
     ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
 
