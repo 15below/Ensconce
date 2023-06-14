@@ -60,6 +60,7 @@ function PreProcessYaml([string]$yamlDirectory)
 
     if ([string]::IsNullOrWhiteSpace($KustomizeTemplatesFolder) -eq $false -and (Test-Path $KustomizeTemplatesFolder))
     {
+        Write-Host "Copying templates from $KustomizeTemplatesFolder into $yamlDirectory\templates"
         Copy-Item -Path $KustomizeTemplatesFolder -Destination "$yamlDirectory\templates" -Recurse | Out-Null
     }
 
