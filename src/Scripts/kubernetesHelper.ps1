@@ -53,16 +53,30 @@ function PreProcessYaml([string]$yamlDirectory)
         Get-ChildItem "$yamlDirectory" -Filter *.yaml | Foreach-Object {
             if ($_.Name -ne "kustomization.yaml")
             {
-                Add-Content -Path "$yamlDirectory\kustomization.yaml" -Value $_.Name
+                Add-Content -Path "$yamlDirectory\kustomization.yaml" -Value "  - $($_.Name)"
             }
         }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($KustomizeTemplatesFolder) -eq $false -and (Test-Path $KustomizeTemplatesFolder))
+    {
+        Copy-Item -Path $KustomizeTemplatesFolder -Destination "$yamlDirectory\templates" -Recurse | Out-Null
+    }
+
+    Get-ChildItem -Path $yamlDirectory -Filter "*subsitution.xml" | ForEach-Object {
+        Write-Host "Processing Subsitution: $($_.FullName)"
+        ensconce --deployFrom $yamlDirectory --updateConfig --substitutionPath $_.FullName
     }
 
     Write-Host "Replace tags in yaml in $yamlDirectory"
     ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.yaml | Write-Host
 
+    Write-Host "Replace tags in json in $yamlDirectory"
+    ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.json | Write-Host
+
     Write-Host "Running kustomize in $yamlDirectory"
-    $output = & $KubeCtlExe kustomize $yamlDirectory
+    $outputFile = "$yamlDirectory\kustomization-output.yaml"
+    & $KubeCtlExe kustomize $yamlDirectory --output $outputFile
 
     if ($LASTEXITCODE -ne 0)
     {
@@ -70,9 +84,7 @@ function PreProcessYaml([string]$yamlDirectory)
         exit $LASTEXITCODE
     }
 
-    Out-File -FilePath "$yamlDirectory\kustomization-output.yaml" -InputObject $output
-
-    "$yamlDirectory\kustomization-output.yaml"
+    $outputFile
 }
 
 function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
