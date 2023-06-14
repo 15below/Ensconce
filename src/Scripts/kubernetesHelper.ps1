@@ -75,7 +75,8 @@ function PreProcessYaml([string]$yamlDirectory)
     ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.json | Write-Host
 
     Write-Host "Running kustomize in $yamlDirectory"
-    $output = & $KubeCtlExe kustomize $yamlDirectory
+    $outputFile = "$yamlDirectory\kustomization-output.yaml"
+    & $KubeCtlExe kustomize $yamlDirectory --output $outputFile
 
     if ($LASTEXITCODE -ne 0)
     {
@@ -83,9 +84,7 @@ function PreProcessYaml([string]$yamlDirectory)
         exit $LASTEXITCODE
     }
 
-    Out-File -FilePath "$yamlDirectory\kustomization-output.yaml" -InputObject $output
-
-    "$yamlDirectory\kustomization-output.yaml"
+    $outputFile
 }
 
 function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
