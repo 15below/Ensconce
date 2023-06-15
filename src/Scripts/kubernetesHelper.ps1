@@ -66,14 +66,14 @@ function PreProcessYaml([string]$yamlDirectory)
 
     Get-ChildItem -Path $yamlDirectory -Filter "*substitution*.xml" -Recurse | ForEach-Object {
         Write-Host "Processing Subsitution: $($_.FullName)"
-        ensconce --deployFrom $yamlDirectory --updateConfig --substitutionPath $_.FullName
+        ensconce --deployFrom $yamlDirectory --updateConfig --substitutionPath $_.FullName | Write-Host
     }
     
     if ([string]::IsNullOrWhiteSpace($ScriptDir) -eq $false)
     {
 	    Get-ChildItem -Path $ScriptDir -Filter "*substitution*.xml" | ForEach-Object {
 	        Write-Host "Processing Subsitution: $($_.FullName)"
-	        ensconce --deployFrom $ScriptDir --updateConfig --substitutionPath $_.FullName
+	        ensconce --deployFrom $ScriptDir --updateConfig --substitutionPath $_.FullName | Write-Host
 	    }
     }
 
