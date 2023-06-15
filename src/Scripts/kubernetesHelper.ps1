@@ -64,14 +64,14 @@ function PreProcessYaml([string]$yamlDirectory)
         Copy-Item -Path $KustomizeTemplatesFolder -Destination "$yamlDirectory\templates" -Recurse | Out-Null
     }
 
-    Get-ChildItem -Path $yamlDirectory -Filter "*subsitution*.xml" -Recurse | ForEach-Object {
+    Get-ChildItem -Path $yamlDirectory -Filter "*substitution*.xml" -Recurse | ForEach-Object {
         Write-Host "Processing Subsitution: $($_.FullName)"
         ensconce --deployFrom $yamlDirectory --updateConfig --substitutionPath $_.FullName
     }
     
     if ([string]::IsNullOrWhiteSpace($ScriptDir) -eq $false)
     {
-	    Get-ChildItem -Path $ScriptDir -Filter "*subsitution*.xml" | ForEach-Object {
+	    Get-ChildItem -Path $ScriptDir -Filter "*substitution*.xml" | ForEach-Object {
 	        Write-Host "Processing Subsitution: $($_.FullName)"
 	        ensconce --deployFrom $ScriptDir --updateConfig --substitutionPath $_.FullName
 	    }
