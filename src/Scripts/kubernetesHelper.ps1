@@ -64,9 +64,17 @@ function PreProcessYaml([string]$yamlDirectory)
         Copy-Item -Path $KustomizeTemplatesFolder -Destination "$yamlDirectory\templates" -Recurse | Out-Null
     }
 
-    Get-ChildItem -Path $yamlDirectory -Filter "*subsitution.xml" | ForEach-Object {
+    Get-ChildItem -Path $yamlDirectory -Filter "*subsitution*.xml" | ForEach-Object {
         Write-Host "Processing Subsitution: $($_.FullName)"
         ensconce --deployFrom $yamlDirectory --updateConfig --substitutionPath $_.FullName
+    }
+    
+    if ([string]::IsNullOrWhiteSpace($ScriptDir) -eq $false)
+    {
+	    Get-ChildItem -Path $ScriptDir -Filter "*subsitution*.xml" | ForEach-Object {
+	        Write-Host "Processing Subsitution: $($_.FullName)"
+	        ensconce --deployFrom $ScriptDir --updateConfig --substitutionPath $_.FullName
+	    }
     }
 
     Write-Host "Replace tags in yaml in $yamlDirectory"
@@ -74,6 +82,13 @@ function PreProcessYaml([string]$yamlDirectory)
 
     Write-Host "Replace tags in json in $yamlDirectory"
     ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.json | Write-Host
+    
+    Get-ChildItem -Path $temporaryDirectory -Filter "*.*" -File | ForEach-Object {
+        Write-Host "Update Encoding To UTF-8 Without BOM: $($_.FullName)"
+        $MyRawString = Get-Content -Raw $_.FullName
+        $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
+        [System.IO.File]::WriteAllLines($_.FullName, $MyRawString, $Utf8NoBomEncoding)
+    }
 
     Write-Host "Running kustomize in $yamlDirectory"
     $outputFile = "$yamlDirectory\kustomization-output.yaml"
