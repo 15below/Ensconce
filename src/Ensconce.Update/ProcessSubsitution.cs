@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using System.Xml.Serialization;
 using System.Xml.XPath;
 using Formatting = Newtonsoft.Json.Formatting;
 
