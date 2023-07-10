@@ -219,6 +219,22 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
+        public void AddChildContentWorksWithNamespace()
+        {
+            var output = ProcessSubstitution.Update(
+                @"TestUpdateFiles\TestSubstitution40.xml", @"TestUpdateFiles\TestConfig6.xml");
+
+            var nms = new XmlNamespaceManager(new NameTable());
+            nms.AddNamespace("c", "http://madeup.com");
+
+            var doc = XElement.Parse(output);
+            Assert.IsTrue(doc.ToString().Contains("<c:NewTag Attr=\"1\">Bob</c:NewTag>"));
+
+            var result = doc.XPathSelectElements("//c:NewTag", nms);
+            Assert.AreEqual(1, result.Count());
+        }
+
+        [Test]
         public void ReplacementContentWorksWithAmpersandInTag()
         {
             ProcessSubstitution.Update(@"TestUpdateFiles\TestSubstitution24.xml", new Dictionary<string, object> { { "tagValue", "t&his*text" } }.ToLazyTagDictionary(), false);
