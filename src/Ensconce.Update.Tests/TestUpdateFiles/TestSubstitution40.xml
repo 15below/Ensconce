@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces>
+    <Namespace Prefix="c">http://madeup.com</Namespace>
+  </Namespaces>
+  <Files>
+    <File Filename="TestUpdateFiles\TestConfig6.xml">
+      <Changes>
+        <Change>
+          <XPath>/root/value</XPath>
+          <AddChildContent>
+            <![CDATA[<c:NewTag Attr="1">Bob</c:NewTag>]]>
+          </AddChildContent>
+        </Change>
+      </Changes>
+    </File>
+  </Files>
+</Root>

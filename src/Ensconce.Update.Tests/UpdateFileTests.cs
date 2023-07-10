@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
@@ -216,6 +217,22 @@ namespace Ensconce.Update.Tests
                 @"TestUpdateFiles\TestSubstitution15.xml", @"TestUpdateFiles\TestConfig1.xml", new Dictionary<string, object> { { "newValue", "after" } }.ToLazyTagDictionary()
                 ));
             Assert.AreEqual(1, newConfig.XPathSelectElements("/root/value/NewTag").Count());
+        }
+
+        [Test]
+        public void AddChildContentWorksWithNamespace()
+        {
+            var output = ProcessSubstitution.Update(
+                @"TestUpdateFiles\TestSubstitution40.xml", @"TestUpdateFiles\TestConfig6.xml");
+
+            var nms = new XmlNamespaceManager(new NameTable());
+            nms.AddNamespace("c", "http://madeup.com");
+
+            var doc = XElement.Parse(output);
+            Assert.IsTrue(doc.ToString().Contains("<c:NewTag Attr=\"1\">Bob</c:NewTag>"));
+
+            var result = doc.XPathSelectElements("//c:NewTag", nms);
+            Assert.AreEqual(1, result.Count());
         }
 
         [Test]
