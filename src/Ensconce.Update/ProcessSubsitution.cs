@@ -351,12 +351,25 @@ namespace Ensconce.Update
             activeNode.AddAfterSelf(fakeRoot.Elements());
         }
 
+        private static XElement GetXElementFromRawXmlString(string rawString, XmlNamespaceManager xmlNamespaceManager)
+        {
+            using (var sr = new StringReader($"<Root>{rawString}</Root>"))
+            {
+                var context = new XmlParserContext(null, xmlNamespaceManager, null, XmlSpace.Default);
+                using (var xmlReader = XmlReader.Create(sr, new XmlReaderSettings(), context))
+                {
+                    return XElement.Load(xmlReader);
+                }
+            }
+        }
+
         private static void AddChildContentToActive(Lazy<TagDictionary> tagValues, XContainer activeNode, Substitution sub, XmlNamespaceManager nsm)
         {
             if (!activeNode.Document.XPathExists(sub.AddChildContentIfNotExists, tagValues, nsm))
             {
-                var fakeRoot = XElement.Parse("<fakeRoot>" + sub.AddChildContent.RenderXmlTemplate(tagValues) + "</fakeRoot>");
-                activeNode.Add(fakeRoot.Elements());
+                var res = sub.AddChildContent.RenderXmlTemplate(tagValues);
+                var parsedXml = GetXElementFromRawXmlString(res, nsm);
+                activeNode.Add(parsedXml.Elements());
             }
         }
 
