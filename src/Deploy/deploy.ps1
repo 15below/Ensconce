@@ -24,7 +24,7 @@ else
 {
 	$tools = @(
 		[pscustomobject]@{Tool='Az-Installer';Version='2.48.1';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
-		[pscustomobject]@{Tool='Kube-Linter';Version='0.6.2';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{Tool='Kube-Linter';Version='0.6.4';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 		[pscustomobject]@{Tool='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
