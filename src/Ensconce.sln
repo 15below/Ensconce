@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31005.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{88B98F54-FBF2-4077-873C-5D3ED8961A6D}"
 	ProjectSection(SolutionItems) = preProject
@@ -55,6 +55,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.Helpers", "Ensconce.Helpers\Ensconce.Helpers.csproj", "{4E35B578-FFB8-4A9F-8E1D-DCCAEA15213F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.NDjango.Custom", "Ensconce.NDjango.Custom\Ensconce.NDjango.Custom.csproj", "{07E449DA-15D3-494F-A6CF-26C56B5620D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{7A60F098-8E7C-4EBC-9DD0-8E89579616E8}"
+	ProjectSection(SolutionItems) = preProject
+		Deploy\deploy.ps1 = Deploy\deploy.ps1
+		Deploy\Test-Config.xml = Deploy\Test-Config.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

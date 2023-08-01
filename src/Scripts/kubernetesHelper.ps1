@@ -9,9 +9,9 @@ if ([string]::IsNullOrWhiteSpace($KubeCtlExe))
 {
     $KubeCtlExe = "$DeployToolsDir\Tools\KubeCtl\kubectl.exe"
 }
-if ([string]::IsNullOrWhiteSpace($DatreeExe))
+if ([string]::IsNullOrWhiteSpace($KubeLinterExe))
 {
-    $DatreeExe = "$DeployToolsDir\Tools\Datree\datree.exe"
+    $KubeLinterExe = "$DeployToolsDir\Tools\Kube-Linter\kube-linter.exe"
 }
 $rootConfigPath = "$Home\.kube"
 
@@ -31,17 +31,16 @@ else
     throw "'$KubeCtlExe' doesn't exist"
 }
 
-if (Test-Path $DatreeExe)
+if (Test-Path $KubeLinterExe)
 {
-    (& $DatreeExe version 2>&1) | Select-Object -First 1 {
-        Write-Host "Datree Version: $_"
-    }
-    $DatreeExeFound = $true
+    $kubeLinterVersion = (& $KubeLinterExe version 2>&1)
+    Write-Host "Kube-Linter Version: $kubeLinterVersion"
+    $KubeLinterExeFound = $true
 }
 else
 {
-    Write-Warning "Datree exe not found at $DatreeExe"
-    $DatreeExeFound = $false
+    Write-Warning "Kube-Linter exe not found at $KubeLinterExe"
+    $KubeLinterExeFound = $false
 }
 
 function PreProcessYaml([string]$yamlDirectory)
@@ -68,7 +67,7 @@ function PreProcessYaml([string]$yamlDirectory)
         Write-Host "Processing Subsitution: $($_.FullName)"
         ensconce --deployFrom $yamlDirectory --updateConfig --substitutionPath $_.FullName | Write-Host
     }
-    
+
     if ([string]::IsNullOrWhiteSpace($ScriptDir) -eq $false)
     {
 	    Get-ChildItem -Path $ScriptDir -Filter "*substitution*.xml" | ForEach-Object {
@@ -82,7 +81,7 @@ function PreProcessYaml([string]$yamlDirectory)
 
     Write-Host "Replace tags in json in $yamlDirectory"
     ensconce --deployFrom $yamlDirectory --treatAsTemplateFilter=*.json | Write-Host
-    
+
     Get-ChildItem -Path $yamlDirectory -Filter "*.*" -File -Recurse | ForEach-Object {
         Write-Host "Update Encoding To UTF-8 Without BOM: $($_.FullName)"
         $MyRawString = Get-Content -Raw $_.FullName
@@ -105,90 +104,51 @@ function PreProcessYaml([string]$yamlDirectory)
 
 function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 {
-    $kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
-
-    if($DatreeExeFound)
+    if($KubeLinterExeFound)
     {
-        $kubeServerVersion = "1.15.0"
-        (& $KubeCtlExe version --kubeconfig=$kubernetesConfigFilePath 2>&1) | ForEach-Object {
-            if ($_ -match "^Server Version.*")
-            {
-                $data = ConvertFrom-Json ($_ -replace "Server Version: version.Info", "")
-                $kubeServerVersion = $data.GitVersion
-                if($kubeServerVersion.StartsWith('v'))
-                {
-                    $kubeServerVersion = $kubeServerVersion.Substring(1)
-                }
-            }
+        $KubeLinterConfigYamlFile = [IO.Path]::Combine((Split-Path -Path $yamlFile), "kube-linter-config.yaml")
+        if(Test-Path $KubeLinterConfigYamlFile)
+        {
+            Remove-Item $KubeLinterConfigYamlFile -Force
         }
 
-        $mtx = New-Object System.Threading.Mutex($false, "datree-mutex")
-        $mtxResult = $mtx.WaitOne(180000) #3 minutes timeout
-        if($mtxResult -eq $false)
+        if([string]::IsNullOrWhiteSpace($KubeLinterConfigYaml) -eq $false)
         {
-            throw "Couldn't aquire 'datree-mutex' in 3 minutes"
+            $KubeLinterConfigYaml | Out-File -FilePath $KubeLinterConfigYamlFile
         }
 
-        try
+        if(Test-Path $KubeLinterConfigYamlFile)
         {
-            if([string]::IsNullOrWhiteSpace($DatreeToken))
-            {
-                & $DatreeExe config set token $DatreeToken
-            }
-
-            if([string]::IsNullOrWhiteSpace($DatreePolicyYaml) -eq $false)
-            {
-                $TempFolder = [System.IO.Path]::GetTempPath()
-                $Guid = ([System.Guid]::NewGuid()).ToString()
-                $datreeFolder = [IO.Path]::Combine($TempFolder, "datree")
-                EnsurePath $datreeFolder
-                $PolicyYamlFile = [IO.Path]::Combine($datreeFolder, "policy-$Guid.yaml")
-                $DatreePolicyYaml | Out-File -FilePath $PolicyYamlFile
-                & $DatreeExe publish $PolicyYamlFile
-                Remove-Item $PolicyYamlFile -force
-            }
-        }
-        finally
-        {
-            $mtx.ReleaseMutex()
-        }
-
-        if($DatreeRecord -eq $true)
-        {
-            if([string]::IsNullOrWhiteSpace($DatreePolicy))
-            {
-                & $DatreeExe test $yamlFile --verbose --output simple --schema-version "$kubeServerVersion"
-            }
-            else
-            {
-                & $DatreeExe test $yamlFile --verbose --output simple --schema-version "$kubeServerVersion" --policy $DatreePolicy
-            }
+            & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource --config $KubeLinterConfigYamlFile 2>&1 | %{ "$_" }
         }
         else
         {
-            if([string]::IsNullOrWhiteSpace($DatreePolicy))
-            {
-                & $DatreeExe test $yamlFile --verbose --output simple --schema-version "$kubeServerVersion" --no-record
-            }
-            else
-            {
-                & $DatreeExe test $yamlFile --verbose --output simple --schema-version "$kubeServerVersion" --policy $DatreePolicy --no-record
-            }
+            & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource 2>&1 | %{ "$_" }
         }
 
         if ($LASTEXITCODE -ne 0)
         {
-            if($DatreeFailOnError -eq $false)
+            $KubeLinterFailureMessage = "Kube-Linter errors for yaml file $yamlFile"
+            if($KubeLinterFailureMode -eq "LOG")
             {
-                Write-Warning "Datree errors for yaml file $yamlFile"
+                Write-Host $KubeLinterFailureMessage
             }
             else
             {
-                Write-Error "Datree errors for yaml file $yamlFile"
-                exit $LASTEXITCODE
+                if($KubeLinterFailureMode -eq "WARN")
+                {
+                    Write-Warning $KubeLinterFailureMessage
+                }
+                else
+                {
+                    Write-Error $KubeLinterFailureMessage
+                    exit $LASTEXITCODE
+                }
             }
         }
     }
+
+    $kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
 
     Write-Host "Validating yaml file $yamlFile (local)"
     & $KubeCtlExe apply --dry-run=client -f $yamlFile --kubeconfig=$kubernetesConfigFilePath
