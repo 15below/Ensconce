@@ -123,26 +123,33 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         $ErrorActionPreference = "SilentlyContinue"
         if(Test-Path $KubeLinterConfigYamlFile)
         {
-            $kubeLinterOutput = & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource --config $KubeLinterConfigYamlFile 2>&1
+            $kubeLinterOutput = & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource --format json --config $KubeLinterConfigYamlFile 2>&1
         }
         else
         {
-            $kubeLinterOutput = & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource 2>&1
+            $kubeLinterOutput = & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource --format json 2>&1
         }
         $ErrorActionPreference = $ErrorActionPreferenceOrig
 
-        if ($LASTEXITCODE -ne 0)
+        $kubeLinterData = ConvertFrom-Json $kubeLinterOutput
+
+        if ($LASTEXITCODE -ne 0 -or $kubeLinterData.Summary.ChecksStatus -eq "Failed")
         {
-            $KubeLinterFailureMessage = @()
             $FailureCount = 0
-            $kubeLinterOutput | Where-Object {
-                $_.StartsWith($yamlFile)
-            } | ForEach-Object {
-                $formattedLine = $_.Substring($yamlFile.Length + 2)
-                $KubeLinterFailureMessage += "* $formattedLine"
+            $ErrorTable = @()
+            $kubeLinterData.Reports | ForEach-Object {
+                $ErrorTable += [PSCustomObject] @{
+                    Name = $_.Object.K8sObject.Name
+                    Check = $_.Check
+                    Message = $_.Diagnostic.Message
+                    Remediation = $_.Remediation
+                    Docs = "https://docs.kubelinter.io/#/generated/checks?id=$($_.Check)"
+                }
                 $FailureCount++
             }
-            $KubeLinterFailureMessage += "$FailureCount Errors for yaml file $yamlFile (kube-linter)"
+            $ErrorTable | Format-Table
+
+            $KubeLinterFailureMessage = "$FailureCount Errors for yaml file $yamlFile (kube-linter)"
             if($KubeLinterFailureMode -eq "LOG")
             {
                 $KubeLinterFailureMessage | Write-Host
