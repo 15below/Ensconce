@@ -117,6 +117,8 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
             $KubeLinterConfigYaml | Out-File -FilePath $KubeLinterConfigYamlFile
         }
 
+        $ErrorActionPreferenceOrig = $ErrorActionPreference
+        $ErrorActionPreference = "SilentlyContinue"
         if(Test-Path $KubeLinterConfigYamlFile)
         {
             & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource --config $KubeLinterConfigYamlFile 2>&1 | %{ "$_" }
@@ -125,6 +127,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         {
             & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource 2>&1 | %{ "$_" }
         }
+        $ErrorActionPreference = $ErrorActionPreferenceOrig
 
         if ($LASTEXITCODE -ne 0)
         {

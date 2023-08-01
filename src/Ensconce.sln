@@ -23,6 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ensconce.NDjango.Tests", "E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{C23AE314-584D-42D6-B80B-72B3048DE197}"
 	ProjectSection(SolutionItems) = preProject
+		Scripts\azureHelper.ps1 = Scripts\azureHelper.ps1
 		Scripts\backupHelper.ps1 = Scripts\backupHelper.ps1
 		Scripts\cloudflareHelper.ps1 = Scripts\cloudflareHelper.ps1
 		Scripts\compressionHelper.ps1 = Scripts\compressionHelper.ps1
