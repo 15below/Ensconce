@@ -117,6 +117,8 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
             $KubeLinterConfigYaml | Out-File -FilePath $KubeLinterConfigYamlFile
         }
 
+        Write-Host "Validating yaml file $yamlFile (kube-linter)"
+
         $ErrorActionPreferenceOrig = $ErrorActionPreference
         $ErrorActionPreference = "SilentlyContinue"
         if(Test-Path $KubeLinterConfigYamlFile)
@@ -131,7 +133,7 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 
         if ($LASTEXITCODE -ne 0)
         {
-            $KubeLinterFailureMessage = "Kube-Linter errors for yaml file $yamlFile"
+            $KubeLinterFailureMessage = "Errors for yaml file $yamlFile (kube-linter)"
             if($KubeLinterFailureMode -eq "LOG")
             {
                 Write-Host $KubeLinterFailureMessage
@@ -149,6 +151,10 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
                 }
             }
         }
+        else
+        {
+            Write-Host "No errors for yaml file $yamlFile (kube-linter)"
+        }
     }
 
     $kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
@@ -160,13 +166,17 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
     {
         if($KubeCtlFailOnDryRun -eq $false)
         {
-            Write-Warning "Invalid yaml file $yamlFile"
+            Write-Warning "Invalid yaml file $yamlFile (local)"
         }
         else
         {
-            Write-Error "Invalid yaml file $yamlFile"
+            Write-Error "Invalid yaml file $yamlFile (local)"
             exit $LASTEXITCODE
         }
+    }
+    else
+    {
+        Write-Host "Valid yaml file $yamlFile (local)"
     }
 
     Write-Host "Validating yaml file $yamlFile (server-side)"
@@ -176,13 +186,17 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
     {
         if($KubeCtlFailOnDryRun -eq $false)
         {
-            Write-Warning "Invalid yaml file $yamlFile"
+            Write-Warning "Invalid yaml file $yamlFile (server-side)"
         }
         else
         {
-            Write-Error "Invalid yaml file $yamlFile"
+            Write-Error "Invalid yaml file $yamlFile (server-side)"
             exit $LASTEXITCODE
         }
+    }
+    else
+    {
+        Write-Host "Valid yaml file $yamlFile (server-side)"
     }
 }
 
