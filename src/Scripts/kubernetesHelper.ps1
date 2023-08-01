@@ -123,30 +123,39 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
         $ErrorActionPreference = "SilentlyContinue"
         if(Test-Path $KubeLinterConfigYamlFile)
         {
-            & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource --config $KubeLinterConfigYamlFile 2>&1 | %{ "$_" }
+            $kubeLinterOutput = & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource --config $KubeLinterConfigYamlFile 2>&1
         }
         else
         {
-            & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource 2>&1 | %{ "$_" }
+            $kubeLinterOutput = & $KubeLinterExe lint $yamlFile --fail-if-no-objects-found --fail-on-invalid-resource 2>&1
         }
         $ErrorActionPreference = $ErrorActionPreferenceOrig
 
         if ($LASTEXITCODE -ne 0)
         {
-            $KubeLinterFailureMessage = "Errors for yaml file $yamlFile (kube-linter)"
+            $KubeLinterFailureMessage = @()
+            $FailureCount = 0
+            $kubeLinterOutput | Where-Object {
+                $_.StartsWith($yamlFile)
+            } | ForEach-Object {
+                $formattedLine = $_.Substring($yamlFile.Length + 2)
+                $KubeLinterFailureMessage += "* $formattedLine"
+                $FailureCount++
+            }
+            $KubeLinterFailureMessage += "$FailureCount Errors for yaml file $yamlFile (kube-linter)"
             if($KubeLinterFailureMode -eq "LOG")
             {
-                Write-Host $KubeLinterFailureMessage
+                $KubeLinterFailureMessage | Write-Host
             }
             else
             {
                 if($KubeLinterFailureMode -eq "WARN")
                 {
-                    Write-Warning $KubeLinterFailureMessage
+                    $KubeLinterFailureMessage | Write-Warning
                 }
                 else
                 {
-                    Write-Error $KubeLinterFailureMessage
+                    $KubeLinterFailureMessage | Write-Error
                     exit $LASTEXITCODE
                 }
             }
