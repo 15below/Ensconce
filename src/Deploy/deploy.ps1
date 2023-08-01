@@ -24,7 +24,7 @@ else
 {
 	$tools = @(
 		[pscustomobject]@{Tool='Az-Installer';Version='2.48.1';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
-		[pscustomobject]@{Tool='Datree';Version='1.9.2';ExeName='datree.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{Tool='Kube-Linter';Version='0.6.2';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 		[pscustomobject]@{Tool='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
@@ -75,7 +75,7 @@ Get-ChildItem -Path $scriptDir\Content\*.ps1 | ForEach-Object {
         	$deployScript = $false
         }
     }
-	
+
 	if($deployScript)
     {
         Write-Host "Deploying script $scriptName to $DeployPath"
