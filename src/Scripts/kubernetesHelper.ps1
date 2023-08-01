@@ -106,7 +106,11 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
 {
     if($KubeLinterExeFound)
     {
-        $KubeLinterConfigYamlFile = [IO.Path]::Combine((Split-Path -Path $yamlFile ), "kube-linter-config.yaml")
+        $KubeLinterConfigYamlFile = [IO.Path]::Combine((Split-Path -Path $yamlFile), "kube-linter-config.yaml")
+        if(Test-Path $KubeLinterConfigYamlFile)
+        {
+            Remove-Item $KubeLinterConfigYamlFile -Force
+        }
 
         if([string]::IsNullOrWhiteSpace($KubeLinterConfigYaml) -eq $false)
         {
