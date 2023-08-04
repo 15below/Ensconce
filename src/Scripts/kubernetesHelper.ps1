@@ -140,15 +140,22 @@ function ValidateK8sYaml([string]$yamlFile, [string]$kubernetesConfigFile)
             $kubeLinterData.Reports | ForEach-Object {
                 $ErrorTable += [PSCustomObject] @{
                     Name = $_.Object.K8sObject.Name
+                    Kind = $_.Object.K8sObject.GroupVersionKind.Kind
                     Check = $_.Check
                     Message = $_.Diagnostic.Message
                     Remediation = $_.Remediation
                     Docs = "https://docs.kubelinter.io/#/generated/checks?id=$($_.Check)"
+                    Full = $_
                 }
                 $FailureCount++
             }
-            $ErrorTable | Format-Table
-
+            Write-Host
+            Write-Host "--------------------------------------"
+            Write-Host "Failures Report"
+            Write-Host "_______________"
+            $ErrorTable | Format-Table -Wrap -AutoSize -GroupBy @{name = "Failure Object"; expr = {"$($_.Name) ($($_.Kind))"}} -Property Check, Message, Docs
+            Write-Host "--------------------------------------"
+            Write-Host
             $KubeLinterFailureMessage = "$FailureCount Errors for yaml file $yamlFile (kube-linter)"
             if($KubeLinterFailureMode -eq "LOG")
             {
