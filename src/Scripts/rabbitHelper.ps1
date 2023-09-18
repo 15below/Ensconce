@@ -61,6 +61,22 @@ function AddUserToVHost([string]$deployUser, [string]$deployPassword, [string]$r
     }
 }
 
+function CheckUserAccess([string]$rabbitApiUrl, [string]$user, [string]$password, [string]$vHost)
+{
+    $passwordSecure = ConvertTo-SecureString $password -AsPlainText -Force
+    $creds = New-Object System.Management.Automation.PSCredential ($user, $passwordSecure)
+
+    try {
+        Write-Host "Checking user $user access to $vHost."
+        $queues = Invoke-RestMethod -uri "$rabbitApiUrl/queues/$vHost" -Credential $creds -DisableKeepAlive
+    }
+    catch [Exception] {
+        return $false
+    }
+
+    return $true
+}
+
 function ValidateUserAccess([string]$rabbitApiUrl, [string]$user, [string]$password, [string]$vHost)
 {
     $passwordSecure = ConvertTo-SecureString $password -AsPlainText -Force
@@ -78,6 +94,13 @@ function ValidateUserAccess([string]$rabbitApiUrl, [string]$user, [string]$passw
 
 function CreateRabbitUserAndVHost([string]$deployUser, [string]$deployPassword, [string]$rabbitApiUrl, [string]$user, [string]$password, [string]$vHost)
 {
+    $UserAccess = CheckUserAccess $rabbitApiUrl $user $password $vHost
+
+    if($UserAccess) {
+        Write-Host "$user has access to $vHost already"
+        return
+    }      
+
     CreateRabbitVHost $deployUser $deployPassword $rabbitApiUrl $vHost
 
     CreateRabbitUser $deployUser $deployPassword $rabbitApiUrl $user $password
@@ -86,6 +109,5 @@ function CreateRabbitUserAndVHost([string]$deployUser, [string]$deployPassword, 
 
     ValidateUserAccess $rabbitApiUrl $user $password $vHost
 }
-
 
 Write-Host "Ensconce - RabbitHelper Loaded"
