@@ -1,12 +1,12 @@
-﻿#module nuget:?package=Cake.BuildSystems.Module&version=4.1.0
-#tool "nuget:?package=OctopusTools&version=9.1.1"
+﻿#module nuget:?package=Cake.BuildSystems.Module&version=5.0.0
+#tool "nuget:?package=OctopusTools&version=9.1.7"
 
 using System.Text.RegularExpressions;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var baseVersion = "1.19.2";
+var baseVersion = "1.20.0";
 var subVersion = "";
 var subVersionNumber = "";
 var isMasterOrDevelop = false;
@@ -174,7 +174,7 @@ Task("Publish")
     CopyFiles("./src/Deploy/*.xml", "./output/publish");
 
 
-    DotNetCorePublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetCorePublishSettings
+    DotNetPublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetPublishSettings
     {
         Configuration = configuration,
         NoBuild = true,

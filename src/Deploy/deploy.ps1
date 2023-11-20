@@ -18,17 +18,17 @@ if(Test-Path "$DeployPath\releaseVersion.txt")
 ### Download External Tools ###
 if ([string]::IsNullOrWhiteSpace($ExternalToolDownloadUrl))
 {
-	Write-Warning "No External Tools Downloaded!`nYou Should Download`n* AZ CLI (and install it)`n* Datree`n* Grant`n* Handle`n* KubeCtl"
+	Write-Warning "No External Tools Downloaded!`nYou Should Download`n* AZ CLI (and install it)`n* Kube-Linter`n* Grant`n* Handle`n* KubeCtl"
 }
 else
 {
 	$tools = @(
-		[pscustomobject]@{Tool='Az-Installer';Version='2.48.1';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
-		[pscustomobject]@{Tool='Kube-Linter';Version='0.6.4';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{Tool='Az-Installer';Version='2.54.0';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
+		[pscustomobject]@{Tool='Kube-Linter';Version='0.6.5';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 		[pscustomobject]@{Tool='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
-		[pscustomobject]@{Tool='KubeCtl';Version='1.23.9';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{Tool='KubeCtl';Version='1.24.7';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 	)
 
 	$tools | ForEach-Object {
