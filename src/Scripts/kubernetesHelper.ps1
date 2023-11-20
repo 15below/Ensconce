@@ -17,7 +17,7 @@ $rootConfigPath = "$Home\.kube"
 
 if (Test-Path $KubeCtlExe)
 {
-    (& $KubeCtlExe version --client 2>&1) | ForEach-Object {
+    (& $KubeCtlExe version --output=json --client 2>&1) | ForEach-Object {
         if ($_ -match "^Client Version.*")
         {
             $data = ConvertFrom-Json ($_ -replace "Client Version: version.Info", "")
