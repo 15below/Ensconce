@@ -1,5 +1,5 @@
-﻿#module nuget:?package=Cake.BuildSystems.Module&version=4.1.0
-#tool "nuget:?package=OctopusTools&version=9.1.1"
+﻿#module nuget:?package=Cake.BuildSystems.Module&version=5.0.0
+#tool "nuget:?package=OctopusTools&version=9.1.7"
 
 using System.Text.RegularExpressions;
 
