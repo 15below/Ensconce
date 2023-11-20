@@ -174,7 +174,7 @@ Task("Publish")
     CopyFiles("./src/Deploy/*.xml", "./output/publish");
 
 
-    DotNetCorePublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetCorePublishSettings
+    DotNetPublish("./src/Ensconce.Console/Ensconce.Console.csproj", new DotNetPublishSettings
     {
         Configuration = configuration,
         NoBuild = true,
