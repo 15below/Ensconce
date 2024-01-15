@@ -1,3 +1,9 @@
+if ($deployHelpLoaded -eq $null)
+{
+	$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+    . $DeployToolsDir\deployHelp.ps1
+}
+
 Write-Host "Ensconce - CreateWebsite Loading"
 
 # Resource For Looking Up IIS Powershell Snap In Commands/Functions
@@ -73,7 +79,7 @@ function StopAppPool([string]$name)
     if ($status -eq "Started")
     {
         "Stopping AppPool: " + $name | Write-Host
-        Stop-WebAppPool "$name"
+        Retry-Command { Stop-WebAppPool "$name" } 5 250
 
         $status = GetAppPoolState $name
 
@@ -103,7 +109,7 @@ function StartAppPool([string]$name)
         if ($status -ne "Started")
         {
             "Starting AppPool: " + $name | Write-Host
-            Start-WebAppPool "$name"
+            Retry-Command { Start-WebAppPool "$name" } 5 250
 
             $status = GetAppPoolState $name
 
@@ -131,7 +137,7 @@ function RestartAppPool([string]$name)
     if ($status -eq "Started")
     {
         "Restarting AppPool: " + $name | Write-Host
-        Restart-WebItem "IIS:\AppPools\$name"
+        Retry-Command { Restart-WebItem "IIS:\AppPools\$name" } 5 250
     }
     else
     {
@@ -150,7 +156,7 @@ function StopWebSite([string]$name)
         if ($status -eq "Started")
         {
             "Stopping WebSite: " + $name | Write-Host
-            Stop-WebSite -Name $name
+            Retry-Command { Stop-WebSite -Name $name } 5 250
 
             $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
@@ -190,7 +196,7 @@ function StartWebSite([string]$name)
         if ($status -ne "Started")
         {
             "Starting WebSite: " + $name + " Protocol " + $siteProtocol | Write-Host
-            Start-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol
+            Retry-Command { Start-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol } 5 250
 
             $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
