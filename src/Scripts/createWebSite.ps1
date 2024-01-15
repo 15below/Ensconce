@@ -74,6 +74,13 @@ function StopAppPool([string]$name)
     {
         "Stopping AppPool: " + $name | Write-Host
         Stop-WebAppPool "$name"
+
+        $status = GetAppPoolState $name
+
+        if ($status -ne "Stopped")
+        {
+            throw "Not stopped"
+        }
     }
     else
     {
@@ -144,6 +151,13 @@ function StopWebSite([string]$name)
         {
             "Stopping WebSite: " + $name | Write-Host
             Stop-WebSite -Name $name
+
+            $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+
+            if ($status -ne "Stopped")
+            {
+                throw "Not started"
+            }
         }
         else
         {
