@@ -81,12 +81,14 @@ function StopAppPool([string]$name)
         "Stopping AppPool: " + $name | Write-Host
         Retry-Command { Stop-WebAppPool "$name" } 5 250
 
-        $status = GetAppPoolState $name
+        Retry-Command {
+            $status = GetAppPoolState $name
 
-        if ($status -ne "Stopped")
-        {
-            throw "Not stopped"
-        }
+            if ($status -ne "Stopped")
+            {
+                throw "Not stopped"
+            }
+        } 10 1000
     }
     else
     {
@@ -111,12 +113,14 @@ function StartAppPool([string]$name)
             "Starting AppPool: " + $name | Write-Host
             Retry-Command { Start-WebAppPool "$name" } 5 250
 
-            $status = GetAppPoolState $name
+            Retry-Command {
+                $status = GetAppPoolState $name
 
-            if ($status -ne "Started")
-            {
-                throw "Not started"
-            }
+                if ($status -ne "Started")
+                {
+                    throw "Not started"
+                }
+             } 10 1000
         }
         else
         {
@@ -138,6 +142,15 @@ function RestartAppPool([string]$name)
     {
         "Restarting AppPool: " + $name | Write-Host
         Retry-Command { Restart-WebItem "IIS:\AppPools\$name" } 5 250
+
+        Retry-Command {
+            $status = GetAppPoolState $name
+
+            if ($status -ne "Started")
+            {
+                throw "Not started"
+            }
+        } 10 1000
     }
     else
     {
@@ -158,12 +171,14 @@ function StopWebSite([string]$name)
             "Stopping WebSite: " + $name | Write-Host
             Retry-Command { Stop-WebSite -Name $name } 5 250
 
-            $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+            Retry-Command {
+                $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
-            if ($status -ne "Stopped")
-            {
-                throw "Not started"
-            }
+                if ($status -ne "Stopped")
+                {
+                    throw "Not started"
+                }
+             } 10 1000
         }
         else
         {
@@ -198,12 +213,14 @@ function StartWebSite([string]$name)
             "Starting WebSite: " + $name + " Protocol " + $siteProtocol | Write-Host
             Retry-Command { Start-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol } 5 250
 
-            $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+            Retry-Command {
+                $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
-            if ($status -ne "Started")
-            {
-                throw "Not started"
-            }
+                if ($status -ne "Started")
+                {
+                    throw "Not started"
+                }
+             } 10 1000
         }
         else
         {
