@@ -86,9 +86,9 @@ function StopAppPool([string]$name)
 
             if ($status -ne "Stopped")
             {
-                throw "Not stopped"
+                throw "App pool $name not stopped.  Status $status"
             }
-        } 10 1000
+        } 30 2500
     }
     else
     {
@@ -118,9 +118,9 @@ function StartAppPool([string]$name)
 
                 if ($status -ne "Started")
                 {
-                    throw "Not started"
+                    throw "App pool $name not started.  Status $status"
                 }
-             } 10 1000
+             } 30 2500
         }
         else
         {
@@ -148,9 +148,9 @@ function RestartAppPool([string]$name)
 
             if ($status -ne "Started")
             {
-                throw "Not started"
+                throw "App pool $name not started.  Status $status"
             }
-        } 10 1000
+        } 30 2500
     }
     else
     {
@@ -176,9 +176,9 @@ function StopWebSite([string]$name)
 
                 if ($status -ne "Stopped")
                 {
-                    throw "Not started"
+                    throw "Website $name not stopped.  Status $status"
                 }
-             } 10 1000
+             } 30 2500
         }
         else
         {
@@ -218,9 +218,9 @@ function StartWebSite([string]$name)
 
                 if ($status -ne "Started")
                 {
-                    throw "Not started"
+                    throw "Website $name not started.  Status $status"
                 }
-             } 10 1000
+             } 30 2500
         }
         else
         {
