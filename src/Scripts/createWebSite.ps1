@@ -84,7 +84,7 @@ function StopAppPool([string]$name)
         for($i=1; $i -le 30; $i++) {
             $status = GetAppPoolState $name
 
-            if ($status -ne "Stopped")
+            if ($status -eq "Stopped")
             {
                 "AppPool stopped: " + $name | Write-Host
                 break
@@ -125,7 +125,7 @@ function StartAppPool([string]$name)
             for($i=1; $i -le 30; $i++) {
                 $status = GetAppPoolState $name
 
-                if ($status -ne "Started")
+                if ($status -eq "Started")
                 {
                     "AppPool started: " + $name | Write-Host
                     break
@@ -164,7 +164,7 @@ function RestartAppPool([string]$name)
         for($i=1; $i -le 30; $i++) {
             $status = GetAppPoolState $name
 
-            if ($status -ne "Started")
+            if ($status -eq "Started")
             {
                 "AppPool started: " + $name | Write-Host
                 break
@@ -201,7 +201,7 @@ function StopWebSite([string]$name)
             for($i=1; $i -le 30; $i++) {
                 $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
-                if ($status -ne "Stopped")
+                if ($status -eq "Stopped")
                 {
                     "Website Stopped: " + $name | Write-Host
                     break
@@ -252,7 +252,7 @@ function StartWebSite([string]$name)
             for($i=1; $i -le 30; $i++) {
                 $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
-                if ($status -ne "Started")
+                if ($status -eq "Started")
                 {
                     "Website Started: " + $name | Write-Host
                     break
