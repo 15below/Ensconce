@@ -61,9 +61,14 @@ function CheckIfAppPoolExists ([string]$name)
     Test-Path "IIS:\AppPools\$name"
 }
 
+function GetAppPoolState ([string]$name)
+{
+    return (Get-WebAppPoolState -Name $name).Value
+}
+
 function StopAppPool([string]$name)
 {
-    $status = (Get-WebAppPoolState -Name $name).Value
+    $status = GetAppPoolState $name
 
     if ($status -eq "Started")
     {
@@ -84,7 +89,7 @@ function UpdateAppPoolRecycling([string]$name, [string]$periodicRestart="02:00:0
 
 function StartAppPool([string]$name)
 {
-    $status = (Get-WebAppPoolState -Name $name).Value
+    $status = GetAppPoolState $name
 
     try
     {
@@ -93,7 +98,7 @@ function StartAppPool([string]$name)
             "Starting AppPool: " + $name | Write-Host
             Start-WebAppPool "$name"
 
-            $status = (Get-WebAppPoolState -Name $name).Value
+            $status = GetAppPoolState $name
 
             if ($status -ne "Started")
             {
@@ -114,7 +119,7 @@ function StartAppPool([string]$name)
 
 function RestartAppPool([string]$name)
 {
-    $status = (Get-WebAppPoolState -Name $name).Value
+    $status = GetAppPoolState $name
 
     if ($status -eq "Started")
     {
