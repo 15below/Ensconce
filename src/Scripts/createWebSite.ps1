@@ -1,3 +1,9 @@
+if ($deployHelpLoaded -eq $null)
+{
+	$DeployToolsDir = Split-Path ((Get-Variable MyInvocation -Scope 0).Value.MyCommand.Path)
+    . $DeployToolsDir\deployHelp.ps1
+}
+
 Write-Host "Ensconce - CreateWebsite Loading"
 
 # Resource For Looking Up IIS Powershell Snap In Commands/Functions
@@ -61,14 +67,28 @@ function CheckIfAppPoolExists ([string]$name)
     Test-Path "IIS:\AppPools\$name"
 }
 
+function GetAppPoolState ([string]$name)
+{
+    return (Get-WebAppPoolState -Name $name).Value
+}
+
 function StopAppPool([string]$name)
 {
-    $status = (Get-WebAppPoolState -Name $name).Value
+    $status = GetAppPoolState $name
 
     if ($status -eq "Started")
     {
         "Stopping AppPool: " + $name | Write-Host
-        Stop-WebAppPool "$name"
+        Retry-Command { Stop-WebAppPool "$name" } 5 250
+
+        Retry-Command {
+            $status = GetAppPoolState $name
+
+            if ($status -ne "Stopped")
+            {
+                throw "Not stopped"
+            }
+        } 10 1000
     }
     else
     {
@@ -84,21 +104,23 @@ function UpdateAppPoolRecycling([string]$name, [string]$periodicRestart="02:00:0
 
 function StartAppPool([string]$name)
 {
-    $status = (Get-WebAppPoolState -Name $name).Value
+    $status = GetAppPoolState $name
 
     try
     {
         if ($status -ne "Started")
         {
             "Starting AppPool: " + $name | Write-Host
-            Start-WebAppPool "$name"
+            Retry-Command { Start-WebAppPool "$name" } 5 250
 
-            $status = (Get-WebAppPoolState -Name $name).Value
+            Retry-Command {
+                $status = GetAppPoolState $name
 
-            if ($status -ne "Started")
-            {
-                throw "Not started"
-            }
+                if ($status -ne "Started")
+                {
+                    throw "Not started"
+                }
+             } 10 1000
         }
         else
         {
@@ -114,12 +136,21 @@ function StartAppPool([string]$name)
 
 function RestartAppPool([string]$name)
 {
-    $status = (Get-WebAppPoolState -Name $name).Value
+    $status = GetAppPoolState $name
 
     if ($status -eq "Started")
     {
         "Restarting AppPool: " + $name | Write-Host
-        Restart-WebItem "IIS:\AppPools\$name"
+        Retry-Command { Restart-WebItem "IIS:\AppPools\$name" } 5 250
+
+        Retry-Command {
+            $status = GetAppPoolState $name
+
+            if ($status -ne "Started")
+            {
+                throw "Not started"
+            }
+        } 10 1000
     }
     else
     {
@@ -138,7 +169,16 @@ function StopWebSite([string]$name)
         if ($status -eq "Started")
         {
             "Stopping WebSite: " + $name | Write-Host
-            Stop-WebSite -Name $name
+            Retry-Command { Stop-WebSite -Name $name } 5 250
+
+            Retry-Command {
+                $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+
+                if ($status -ne "Stopped")
+                {
+                    throw "Not started"
+                }
+             } 10 1000
         }
         else
         {
@@ -171,14 +211,16 @@ function StartWebSite([string]$name)
         if ($status -ne "Started")
         {
             "Starting WebSite: " + $name + " Protocol " + $siteProtocol | Write-Host
-            Start-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol
+            Retry-Command { Start-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol } 5 250
 
-            $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+            Retry-Command {
+                $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
-            if ($status -ne "Started")
-            {
-                throw "Not started"
-            }
+                if ($status -ne "Started")
+                {
+                    throw "Not started"
+                }
+             } 10 1000
         }
         else
         {
@@ -313,7 +355,7 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
                     }
                 }
                 else {
-                    "Error - cant add binding, protocol: $protocol is not supported in IIS7" | Write-Host
+                    "Error - cant add binding, protocol: $protocol is not supported in IIS" | Write-Host
                 }
             }
         }
@@ -351,15 +393,25 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
     }
 
     $checkBinding = CheckIfSslBindingExists $instanceName $hostHeader
-    if ( $checkBinding -eq $False) {
-        if ($iisVersion -gt 8)
-        {
-            New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader -SslFlags 1
-        }
-        else
-        {
-            New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader
-        }
+    if ($checkBinding -eq $True) {
+        write-host "SSL binding of $hostHeader on $instanceName already exists, skipping."
+        return
+    }
+
+    $cert = GetSslCert $friendlyName
+    $certThumbprint = $cert.Thumbprint
+
+    if($certThumbprint -eq $null -or $certThumbprint -eq "") {
+        throw "SSL Cert $friendlyName has no thumbprint"
+    }
+
+    if ($iisVersion -gt 8)
+    {
+        New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader -SslFlags 1
+    }
+    else
+    {
+        New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader
     }
 
     try
@@ -382,16 +434,14 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
         {
             if (($bindings | where-object {$_.port -eq "443" -and $_.Host -eq $hostHeader}) -eq $Null)
             {
-                $cert = GetSslCert $friendlyName
-                new-item *!443!$hostHeader -Thumbprint $cert.Thumbprint -SSLFlags 1
+                new-item *!443!$hostHeader -Thumbprint $certThumbprint -SSLFlags 1
             }
         }
         else
         {
             if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq $ipAddress -and $_.Host -eq $hostHeader}) -eq $Null)
             {
-                $cert = GetSslCert $friendlyName
-                new-item $ipAddress!443!$hostHeader -Thumbprint $cert.Thumbprint -SSLFlags 1
+                new-item $ipAddress!443!$hostHeader -Thumbprint $certThumbprint -SSLFlags 1
             }
         }
     }
@@ -404,8 +454,7 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 
         if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq $ipAddress}) -eq $Null)
         {
-            $cert = GetSslCert $friendlyName
-            new-item $ipAddress!443 -Thumbprint $cert.Thumbprint
+            new-item $ipAddress!443 -Thumbprint $certThumbprint
         }
     }
 
