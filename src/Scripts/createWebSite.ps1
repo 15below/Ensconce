@@ -76,23 +76,32 @@ function StopAppPool([string]$name)
 {
     $status = GetAppPoolState $name
 
-    if ($status -eq "Started")
+    if ($status -ne "Stopped")
     {
         "Stopping AppPool: " + $name | Write-Host
         Retry-Command { Stop-WebAppPool "$name" } 5 250
 
-        Retry-Command {
+        for($i=1; $i -le 30; $i++) {
             $status = GetAppPoolState $name
 
             if ($status -ne "Stopped")
             {
-                throw "App pool $name not stopped.  Status $status"
+                "AppPool stopped: " + $name | Write-Host
+                break
+            } else {
+                if($i -ge 30) {
+                    throw "AppPool not stopped (status=$status): " + $name
+                } else {
+                    "AppPool not stopped (status=$status): " + $name | Write-Host
+                    Write-Host "Sleep for 2 seconds..."
+                    Start-Sleep -Milliseconds 2000
+                }
             }
-        } 30 2500
+        }
     }
     else
     {
-        "AppPool not in Started state ($status): " + $name | Write-Host
+        "AppPool already in Stopped state: " + $name | Write-Host
     }
 }
 
@@ -113,14 +122,23 @@ function StartAppPool([string]$name)
             "Starting AppPool: " + $name | Write-Host
             Retry-Command { Start-WebAppPool "$name" } 5 250
 
-            Retry-Command {
+            for($i=1; $i -le 30; $i++) {
                 $status = GetAppPoolState $name
 
                 if ($status -ne "Started")
                 {
-                    throw "App pool $name not started.  Status $status"
+                    "AppPool started: " + $name | Write-Host
+                    break
+                } else {
+                    if($i -ge 30) {
+                        throw "AppPool not started (status=$status): " + $name
+                    } else {
+                        "AppPool not started (status=$status): " + $name | Write-Host
+                        Write-Host "Sleep for 2 seconds..."
+                        Start-Sleep -Milliseconds 2000
+                    }
                 }
-             } 30 2500
+            }
         }
         else
         {
@@ -143,14 +161,23 @@ function RestartAppPool([string]$name)
         "Restarting AppPool: " + $name | Write-Host
         Retry-Command { Restart-WebItem "IIS:\AppPools\$name" } 5 250
 
-        Retry-Command {
+        for($i=1; $i -le 30; $i++) {
             $status = GetAppPoolState $name
 
             if ($status -ne "Started")
             {
-                throw "App pool $name not started.  Status $status"
+                "AppPool started: " + $name | Write-Host
+                break
+            } else {
+                if($i -ge 30) {
+                    throw "AppPool not started (status=$status): " + $name
+                } else {
+                    "AppPool not started (status=$status): " + $name | Write-Host
+                    Write-Host "Sleep for 2 seconds..."
+                    Start-Sleep -Milliseconds 2000
+                }
             }
-        } 30 2500
+        }
     }
     else
     {
@@ -166,23 +193,32 @@ function StopWebSite([string]$name)
     {
         $status = (Get-WebsiteState -Name $name).Value
 
-        if ($status -eq "Started")
+        if ($status -ne "Stopped")
         {
-            "Stopping WebSite: " + $name | Write-Host
+            "Stopping Website: " + $name | Write-Host
             Retry-Command { Stop-WebSite -Name $name } 5 250
 
-            Retry-Command {
+            for($i=1; $i -le 30; $i++) {
                 $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
                 if ($status -ne "Stopped")
                 {
-                    throw "Website $name not stopped.  Status $status"
+                    "Website Stopped: " + $name | Write-Host
+                    break
+                } else {
+                    if($i -ge 30) {
+                        throw "Website not stopped (status=$status): " + $name
+                    } else {
+                        "Website not stopped (status=$status): " + $name | Write-Host
+                        Write-Host "Sleep for 2 seconds..."
+                        Start-Sleep -Milliseconds 2000
+                    }
                 }
-             } 30 2500
+            }
         }
         else
         {
-            "WebSite not in Started state ($status): " + $name | Write-Host
+            "WebSite already in Stopped state: " + $name | Write-Host
         }
     }
     catch
@@ -213,14 +249,23 @@ function StartWebSite([string]$name)
             "Starting WebSite: " + $name + " Protocol " + $siteProtocol | Write-Host
             Retry-Command { Start-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol } 5 250
 
-            Retry-Command {
+            for($i=1; $i -le 30; $i++) {
                 $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
 
                 if ($status -ne "Started")
                 {
-                    throw "Website $name not started.  Status $status"
+                    "Website Started: " + $name | Write-Host
+                    break
+                } else {
+                    if($i -ge 30) {
+                        throw "Website not started (status=$status): " + $name
+                    } else {
+                        "Website not started (status=$status): " + $name | Write-Host
+                        Write-Host "Sleep for 2 seconds..."
+                        Start-Sleep -Milliseconds 2000
+                    }
                 }
-             } 30 2500
+            }
         }
         else
         {
