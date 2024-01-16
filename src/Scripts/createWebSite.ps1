@@ -240,7 +240,7 @@ function StopWebSite([string]$name)
 
         if ($status -ne "Stopped")
         {
-            "Stopping Website: " + $name | Write-Host
+            "Stopping Website: " + $name + " Protocol " + $siteProtocol | Write-Host
             Retry-Command { Stop-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol } 5 250
 
             for($i=1; $i -le 30; $i++) {
