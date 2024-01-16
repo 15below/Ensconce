@@ -74,34 +74,47 @@ function GetAppPoolState ([string]$name)
 
 function StopAppPool([string]$name)
 {
-    $status = GetAppPoolState $name
-
-    if ($status -ne "Stopped")
+    try
     {
-        "Stopping AppPool: " + $name | Write-Host
-        Retry-Command { Stop-WebAppPool "$name" } 5 250
+        $status = GetAppPoolState $name
 
-        for($i=1; $i -le 30; $i++) {
-            $status = GetAppPoolState $name
+        if($status -eq $null){
+            "Skipping stop AppPool as no current status: " + $name | Write-Host
+            return
+        }
 
-            if ($status -eq "Stopped")
-            {
-                "AppPool stopped: " + $name | Write-Host
-                break
-            } else {
-                if($i -ge 30) {
-                    throw "AppPool not stopped (status=$status): " + $name
+        if ($status -ne "Stopped")
+        {
+            "Stopping AppPool: " + $name | Write-Host
+            Retry-Command { Stop-WebAppPool "$name" } 5 250
+
+            for($i=1; $i -le 30; $i++) {
+                $status = GetAppPoolState $name
+
+                if ($status -eq "Stopped")
+                {
+                    "AppPool stopped: " + $name | Write-Host
+                    break
                 } else {
-                    "AppPool not stopped (status=$status): " + $name | Write-Host
-                    Write-Host "Sleep for 2 seconds..."
-                    Start-Sleep -Milliseconds 2000
+                    if($i -ge 30) {
+                        throw "AppPool not stopped (status=$status): " + $name
+                    } else {
+                        "AppPool not stopped (status=$status): " + $name | Write-Host
+                        Write-Host "Sleep for 2 seconds..."
+                        Start-Sleep -Milliseconds 2000
+                    }
                 }
             }
         }
+        else
+        {
+            "AppPool already in Stopped state: " + $name | Write-Host
+        }
     }
-    else
+    catch
     {
-        "AppPool already in Stopped state: " + $name | Write-Host
+        "Error Stopping AppPool " + $name | Write-Host
+        throw
     }
 }
 
@@ -113,10 +126,15 @@ function UpdateAppPoolRecycling([string]$name, [string]$periodicRestart="02:00:0
 
 function StartAppPool([string]$name)
 {
-    $status = GetAppPoolState $name
-
     try
     {
+        $status = GetAppPoolState $name
+
+        if($status -eq $null){
+            "Skipping start AppPool as no current status: " + $name | Write-Host
+            return
+        }
+
         if ($status -ne "Started")
         {
             "Starting AppPool: " + $name | Write-Host
@@ -154,34 +172,47 @@ function StartAppPool([string]$name)
 
 function RestartAppPool([string]$name)
 {
-    $status = GetAppPoolState $name
-
-    if ($status -eq "Started")
+    try
     {
-        "Restarting AppPool: " + $name | Write-Host
-        Retry-Command { Restart-WebItem "IIS:\AppPools\$name" } 5 250
+        $status = GetAppPoolState $name
 
-        for($i=1; $i -le 30; $i++) {
-            $status = GetAppPoolState $name
+        if($status -eq $null){
+            "Skipping restart AppPool as no current status: " + $name | Write-Host
+            return
+        }
 
-            if ($status -eq "Started")
-            {
-                "AppPool started: " + $name | Write-Host
-                break
-            } else {
-                if($i -ge 30) {
-                    throw "AppPool not started (status=$status): " + $name
+        if ($status -eq "Started")
+        {
+            "Restarting AppPool: " + $name | Write-Host
+            Retry-Command { Restart-WebItem "IIS:\AppPools\$name" } 5 250
+
+            for($i=1; $i -le 30; $i++) {
+                $status = GetAppPoolState $name
+
+                if ($status -eq "Started")
+                {
+                    "AppPool started: " + $name | Write-Host
+                    break
                 } else {
-                    "AppPool not started (status=$status): " + $name | Write-Host
-                    Write-Host "Sleep for 2 seconds..."
-                    Start-Sleep -Milliseconds 2000
+                    if($i -ge 30) {
+                        throw "AppPool not started (status=$status): " + $name
+                    } else {
+                        "AppPool not started (status=$status): " + $name | Write-Host
+                        Write-Host "Sleep for 2 seconds..."
+                        Start-Sleep -Milliseconds 2000
+                    }
                 }
             }
         }
+        else
+        {
+            "AppPool not in Started state ($status): " + $name | Write-Host
+        }
     }
-    else
+    catch
     {
-        "AppPool not in Started state ($status): " + $name | Write-Host
+        "Error Restarting AppPool: " + $name | Write-Host
+        throw
     }
 }
 
@@ -191,12 +222,26 @@ function StopWebSite([string]$name)
 
     try
     {
-        $status = (Get-WebsiteState -Name $name).Value
+        $siteProtocol = "http"
+
+        (Get-WebBinding -Name $name) | ForEach-Object{
+            if ($_.Protocol -eq "ftp")
+            {
+                $siteProtocol = "ftp"
+            }
+        }
+
+        $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+
+        if($status -eq $null){
+            "Skipping stop website as no current status: " + $name | Write-Host
+            return
+        }
 
         if ($status -ne "Stopped")
         {
             "Stopping Website: " + $name | Write-Host
-            Retry-Command { Stop-WebSite -Name $name } 5 250
+            Retry-Command { Stop-WebItem -PsPath "IIS:\sites\$name" -Protocol $siteProtocol } 5 250
 
             for($i=1; $i -le 30; $i++) {
                 $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
@@ -224,6 +269,7 @@ function StopWebSite([string]$name)
     catch
     {
         "Error Stopping WebSite: " + $name | Write-Host
+        throw
     }
 }
 
@@ -243,6 +289,11 @@ function StartWebSite([string]$name)
         }
 
         $status = (Get-WebItemState -PSPath "IIS:\sites\$name" -Protocol $siteProtocol).Value
+
+        if($status -eq $null){
+            "Skipping start website as no current status: " + $name | Write-Host
+            return
+        }
 
         if ($status -ne "Started")
         {
