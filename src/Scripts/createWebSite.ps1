@@ -661,5 +661,23 @@ function SetManagedRuntimeToNoManagedCode([string] $appPoolName, [string] $runti
     Set-ItemProperty IIS:\AppPools\$appPoolName managedRuntimeVersion ""
 }
 
+function SetAppPoolStartMode([string] $appPoolName, [string] $startMode)
+{
+    #1 = AlwaysRunning, 0 = OnDemand
+    Set-ItemProperty IIS:\AppPools\$appPoolName startMode $startMode
+}
+
+function SetAppPoolIdleTimeout([string] $appPoolName, [string] $timeout)
+{
+    #0 = No timeout
+    Set-ItemProperty IIS:\AppPools\$appPoolName processModel.idleTimeout $timeout
+}
+
+function SetAppPoolAlwaysRunning([string] $appPoolName)
+{
+    Set-ItemProperty IIS:\AppPools\$appPoolName startMode 1
+    Set-ItemProperty IIS:\AppPools\$appPoolName processModel.idleTimeout "00:00:00"
+}
+
 Write-Host "Ensconce - CreateWebsite Loaded"
 $createWebSiteLoaded = $true
