@@ -24,11 +24,11 @@ else
 {
 	$tools = @(
 		[pscustomobject]@{Tool='Az-Installer';Version='2.54.0';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
-		[pscustomobject]@{Tool='Kube-Linter';Version='0.6.5';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{Tool='Kube-Linter';Version='0.6.7';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 		[pscustomobject]@{Tool='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
-		[pscustomobject]@{Tool='KubeCtl';Version='1.24.7';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{Tool='KubeCtl';Version='1.25.16';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 	)
 
 	$tools | ForEach-Object {
