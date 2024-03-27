@@ -76,33 +76,51 @@ function GetCloudflareDnsIp([string]$token, [string]$domain, [string]$record)
 
 function ExportDnsRecords([string]$token, [string]$zoneid, [string]$domain)
 {
-    $result = CallCloudflare $token "zones/$zoneid/dns_records/export" Get
     $records = New-Object Collections.Generic.List[string]
-    foreach ($item in $result -split '[\r\n]')
+
+    if($token -eq $null -or $token -eq "")
     {
-        if ($item.Contains("IN	CNAME") -or ($item.Contains("IN	A")))
+        Write-Warning "No token so no records exported"
+    }
+    else
+    {
+        $result = CallCloudflare $token "zones/$zoneid/dns_records/export" Get
+    
+        foreach ($item in $result -split '[\r\n]')
         {
-            $value = ($item -split '[\s]')[0]
-            $value = $value.ToLower()
-            $value = $value.Substring(0,$value.Length-1)
-            $value = $value.Replace(".$domain".ToLower(), "")
-            $records.Add($value)
+            if ($item.Contains("IN	CNAME") -or ($item.Contains("IN	A")))
+            {
+                $value = ($item -split '[\s]')[0]
+                $value = $value.ToLower()
+                $value = $value.Substring(0,$value.Length-1)
+                $value = $value.Replace(".$domain".ToLower(), "")
+                $records.Add($value)
+            }
         }
     }
+
     $records
 }
 
 function GetCloudflareDnsRecords([string]$token, [string]$domain, [string]$filter = "")
 {
-    $zone = GetCloudflareDnsZone $token $domain
-
-    $zoneid = $zone.id
-
-    $dnsRecords = [Collections.Generic.List[string]](ExportDnsRecords $token $zoneid $domain)
-
-    if ($filter -ne "")
+    if($token -eq $null -or $token -eq "")
     {
-        $dnsRecords = $dnsRecords | Where-Object { $_ -like $filter }
+        Write-Warning "No token so no records located"
+        $dnsRecords = New-Object Collections.Generic.List[string]
+    }
+    else
+    {
+        $zone = GetCloudflareDnsZone $token $domain
+        
+        $zoneid = $zone.id
+        
+        $dnsRecords = [Collections.Generic.List[string]](ExportDnsRecords $token $zoneid $domain)
+        
+        if ($filter -ne "")
+        {
+            $dnsRecords = $dnsRecords | Where-Object { $_ -like $filter }
+        }
     }
 
     $dnsRecords
@@ -167,6 +185,11 @@ function UpdateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$rec
 
 function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr, [bool]$warnOnUpdate = $false)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so no change for '$record.$domain'"
+    }
+
     $zone = GetCloudflareDnsZone $token $domain
     $zoneid = $zone.id
 
@@ -197,6 +220,11 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
 
 function CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [string]$record, [string]$cnameValue, [bool]$warnOnUpdate = $false)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so no change for '$record.$domain'"
+    }
+
     $zone = GetCloudflareDnsZone $token $domain
     $zoneid = $zone.id
 
@@ -227,6 +255,11 @@ function CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [s
 
 function RemoveCloudflareDnsRecord([string]$token, [string]$domain, [string]$record, [bool]$warnOnDelete = $false)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so '$record.$domain' not removed"
+    }
+
     $zone = GetCloudflareDnsZone $token $domain
     $zoneid = $zone.id
 
