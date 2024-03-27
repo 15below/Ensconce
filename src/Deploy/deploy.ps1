@@ -28,7 +28,7 @@ else
 		[pscustomobject]@{Tool='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{Tool='Handle';Version='5.0';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
-		[pscustomobject]@{Tool='KubeCtl';Version='1.25.16';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{Tool='KubeCtl';Version='1.27.12';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 	)
 
 	$tools | ForEach-Object {
