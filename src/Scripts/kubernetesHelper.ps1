@@ -348,8 +348,8 @@ function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$
     #Run using Invoke-Expression because of dynamic parameters
     if ($prunableList.Count -gt 0)
     {
-        $pruneWhiteList = $prunableList -join " --pune-allowlist="
-        $command = "$KubeCtlExe apply -f $yamlFile --prune -l $pruneSelector --pune-allowlist=$pruneWhiteList --kubeconfig=$kubernetesConfigFilePath"
+        $pruneWhiteList = $prunableList -join " --prune-allowlist="
+        $command = "$KubeCtlExe apply -f $yamlFile --prune -l $pruneSelector --prune-allowlist=$pruneWhiteList --kubeconfig=$kubernetesConfigFilePath"
     }
     else
     {
