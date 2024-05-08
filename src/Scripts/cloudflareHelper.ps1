@@ -107,6 +107,7 @@ function GetCloudflareDnsIp([string]$token, [string]$domain, [string]$record)
 function ExportDnsRecords([string]$token, [string]$zoneid, [string]$domain)
 {
     $records = New-Object Collections.Generic.List[string]
+    $records.Add("") #Empty item here to prevent returning null
 
     if($token -eq $null -or $token -eq "")
     {
@@ -138,6 +139,7 @@ function GetCloudflareDnsRecords([string]$token, [string]$domain, [string]$filte
     {
         Write-Warning "No token so no records located"
         $dnsRecords = New-Object Collections.Generic.List[string]
+        $dnsRecords.Add("") #Empty item here to prevent returning null
     }
     else
     {
