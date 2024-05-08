@@ -2,6 +2,12 @@ Write-Host "Ensconce - cloudflare helper Loading"
 
 function CallCloudflare([string]$token, [string]$urlPart, [Microsoft.PowerShell.Commands.WebRequestMethod]$method, [string]$body = $null)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so cannot call '$urlPart'"
+        return
+    }
+
     $baseurl = "https://api.cloudflare.com/client/v4"
 
     $headers = @{
@@ -24,6 +30,12 @@ function CallCloudflare([string]$token, [string]$urlPart, [Microsoft.PowerShell.
 
 function GetCloudflareDnsZone([string]$token, [string]$domain)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so cannot get zone for domain '$domain'"
+        return
+    }
+    
     $zone = CallCloudflare $token "zones/?name=$domain" Get
 
     if ($zone.result.Count -gt 0){
@@ -37,6 +49,12 @@ function GetCloudflareDnsZone([string]$token, [string]$domain)
 
 function GetCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so cannot get record for '$record.$domain'"
+        return
+    }
+    
     $dnsRecord = CallCloudflare $token "zones/$zoneid/dns_records/?name=$record.$domain" Get
 
     if ($dnsRecord.result.Count -gt 0)
@@ -51,6 +69,12 @@ function GetCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain
 
 function CheckCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so cannot check record for '$record.$domain'"
+        return
+    }
+    
     $dnsRecord = CallCloudflare $token "zones/$zoneid/dns_records/?name=$record.$domain" Get
 
     if ($dnsRecord.result.Count -gt 0)
@@ -65,6 +89,12 @@ function CheckCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$doma
 
 function GetCloudflareDnsIp([string]$token, [string]$domain, [string]$record)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so cannot get ip for '$record.$domain'"
+        return
+    }
+
     $zone = GetCloudflareDnsZone $token $domain
 
     $zoneid = $zone.id
