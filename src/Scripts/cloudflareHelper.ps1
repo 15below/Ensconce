@@ -158,6 +158,12 @@ function GetCloudflareDnsRecords([string]$token, [string]$domain, [string]$filte
 
 function CreateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain, [string]$record, [string]$content, [string]$type)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so cannot create '$record.$domain'"
+        return
+    }
+
     $name = "$record.$domain"
     $newDnsRecord = @{
         "type" = $type
@@ -185,6 +191,12 @@ function CreateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$dom
 
 function UpdateCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$recordid, [string]$domain, [string]$record, [string]$type, [string]$content, [bool]$warnOnUpdate = $false)
 {
+    if($token -eq $null -or $token -eq "")
+    {
+        Write-Warning "No token so no update for '$record.$domain'"
+        return
+    }
+
     $name = "$record.$domain"
     $dnsRecord | Add-Member "type" $type -Force
     $dnsRecord | Add-Member "content" $content -Force
@@ -218,6 +230,7 @@ function CreateOrUpdateCloudflareARecord([string]$token, [string]$domain, [strin
     if($token -eq $null -or $token -eq "")
     {
         Write-Warning "No token so no change for '$record.$domain'"
+        return
     }
 
     $zone = GetCloudflareDnsZone $token $domain
@@ -253,6 +266,7 @@ function CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [s
     if($token -eq $null -or $token -eq "")
     {
         Write-Warning "No token so no change for '$record.$domain'"
+        return
     }
 
     $zone = GetCloudflareDnsZone $token $domain
@@ -288,6 +302,7 @@ function RemoveCloudflareDnsRecord([string]$token, [string]$domain, [string]$rec
     if($token -eq $null -or $token -eq "")
     {
         Write-Warning "No token so '$record.$domain' not removed"
+        return
     }
 
     $zone = GetCloudflareDnsZone $token $domain
