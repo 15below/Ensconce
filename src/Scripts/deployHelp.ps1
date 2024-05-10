@@ -19,8 +19,8 @@ if ($psVersion.Version.Major -le 4)
     . $DeployToolsDir\powershell4Polyfill.ps1
 }
 
-Write-Host "Ensconce - Setting SecurityProtocol to TLS 1.1 or TLS 1.2"
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls11 -bor [System.Net.SecurityProtocolType]::Tls12;
+Write-Host "Ensconce - Setting SecurityProtocol to TLS 1.2 or TLS 1.3"
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12 -bor [System.Net.SecurityProtocolType]::Tls13;
 
 if (Test-Path variable:\OctopusParameters)
 {
