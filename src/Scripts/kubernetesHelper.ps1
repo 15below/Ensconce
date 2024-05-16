@@ -276,7 +276,7 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
             $resource = $resource.Substring(0, $resource.IndexOf("."))
         }
 
-        if (($resources.Count -eq 0) -or ($knownResourcesArray -contains $resource))
+        if (($knownResourcesArray.Count -eq 0) -or ($knownResourcesArray -contains $resource))
         {
             if ($resources -notcontains $resource)
             {
