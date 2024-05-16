@@ -23,31 +23,31 @@ if ([string]::IsNullOrWhiteSpace($ExternalToolDownloadUrl))
 else
 {
 	$tools = @(
-		[pscustomobject]@{Tool='Az-Installer';SubFolder='Az-Installer';Version='2.54.0';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
-		[pscustomobject]@{Tool='Kube-Linter';SubFolder='Kube-Linter';Version='0.6.7';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
-		[pscustomobject]@{Tool='Grant';SubFolder='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
-		[pscustomobject]@{Tool='Handle';SubFolder='Handle';Version='5.0';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
-		[pscustomobject]@{Tool='Handle64';SubFolder='Handle';Version='5.0';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
-		[pscustomobject]@{Tool='KubeCtl';SubFolder='KubeCtl';Version='1.27.12';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{CacheName='Az-Installer';Tool='Az-Installer';Version='2.54.0';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
+		[pscustomobject]@{CacheName='Kube-Linter';Tool='Kube-Linter';Version='0.6.7';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{CacheName='Grant';Tool='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
+		[pscustomobject]@{CacheName='Handle';Tool='Handle';Version='5.0';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
+		[pscustomobject]@{CacheName='Handle64';Tool='Handle';Version='5.0';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
+		[pscustomobject]@{CacheName='KubeCtl';Tool='KubeCtl';Version='1.27.12';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 	)
 
 	$tools | ForEach-Object {
 		if($_.OctoAgent -eq $false -or $OctoAgent -eq $true)
 		{
+			$CacheName = $_.CacheName
 			$Tool = $_.Tool
-			$SubFolder = $_.SubFolder
 			$ExeName = $_.ExeName
 			$Version = $_.Version
 
 			$DownloadUrl = "$ExternalToolDownloadUrl/$Tool/$Version/$ExeName"
-			$DownloadPath = "$scriptDir\Content\Tools\$SubFolder\$ExeName"
-			New-Item -Path "$scriptDir\Content\Tools" -Name $SubFolder -Type container -Force | Out-Null
+			$DownloadPath = "$scriptDir\Content\Tools\$Tool\$ExeName"
+			New-Item -Path "$scriptDir\Content\Tools" -Name $Tool -Type container -Force | Out-Null
 
 			$AlreadyDownloaded = $false
 
 			if($DownloadCachePath -ne "")
 			{
-				$ToolDownloadCacheFolder = "$DownloadCachePath\$Tool"
+				$ToolDownloadCacheFolder = "$DownloadCachePath\$CacheName"
 				$ToolDownloadCache = "$ToolDownloadCacheFolder\$ExeName"
 				$ToolDownloadCacheVersion = "$ToolDownloadCacheFolder\$Version.info"
 
