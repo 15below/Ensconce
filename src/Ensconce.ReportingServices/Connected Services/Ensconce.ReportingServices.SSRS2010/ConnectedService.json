@@ -1,9 +1,7 @@
-﻿{
-  "ProviderId": "Microsoft.VisualStudio.ConnectedService.Wcf",
-  "Version": "15.0.40203.910",
+{
   "ExtendedData": {
     "inputs": [
-      "http://btn-rs01.15b.local/ReportServer_NON1/ReportService2010.asmx"
+      "http://btn-rs02.15b.local/ReportServer/ReportService2010.asmx"
     ],
     "collectionTypes": [
       "System.Array",
@@ -14,7 +12,7 @@
       "*, Ensconce.ReportingServices.SSRS2010"
     ],
     "sync": true,
-    "targetFramework": "net471",
+    "targetFramework": "netstandard2.0",
     "typeReuseMode": "None"
   }
 }

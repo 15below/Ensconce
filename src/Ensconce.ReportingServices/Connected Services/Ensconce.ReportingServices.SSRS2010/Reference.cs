@@ -11,7 +11,7 @@ namespace Ensconce.ReportingServices.SSRS2010
 {
     
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", ConfigurationName="Ensconce.ReportingServices.SSRS2010.ReportingService2010Soap")]
     public interface ReportingService2010Soap
     {
@@ -301,6 +301,32 @@ namespace Ensconce.ReportingServices.SSRS2010
         [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/GetDataD" +
             "rivenSubscriptionProperties", ReplyAction="*")]
         System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.GetDataDrivenSubscriptionPropertiesResponse> GetDataDrivenSubscriptionPropertiesAsync(Ensconce.ReportingServices.SSRS2010.GetDataDrivenSubscriptionPropertiesRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/DisableS" +
+            "ubscription", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpirationDefinition))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RecurrencePattern))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ScheduleDefinitionOrReference))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DataSourceDefinitionOrReference))]
+        Ensconce.ReportingServices.SSRS2010.DisableSubscriptionResponse DisableSubscription(Ensconce.ReportingServices.SSRS2010.DisableSubscriptionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/DisableS" +
+            "ubscription", ReplyAction="*")]
+        System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.DisableSubscriptionResponse> DisableSubscriptionAsync(Ensconce.ReportingServices.SSRS2010.DisableSubscriptionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/EnableSu" +
+            "bscription", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpirationDefinition))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RecurrencePattern))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ScheduleDefinitionOrReference))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DataSourceDefinitionOrReference))]
+        Ensconce.ReportingServices.SSRS2010.EnableSubscriptionResponse EnableSubscription(Ensconce.ReportingServices.SSRS2010.EnableSubscriptionRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/EnableSu" +
+            "bscription", ReplyAction="*")]
+        System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.EnableSubscriptionResponse> EnableSubscriptionAsync(Ensconce.ReportingServices.SSRS2010.EnableSubscriptionRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/DeleteSu" +
             "bscription", ReplyAction="*")]
@@ -1290,6 +1316,32 @@ namespace Ensconce.ReportingServices.SSRS2010
             "mProperties", ReplyAction="*")]
         System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.GetSystemPropertiesResponse> GetSystemPropertiesAsync(Ensconce.ReportingServices.SSRS2010.GetSystemPropertiesRequest request);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/SetUserS" +
+            "ettings", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpirationDefinition))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RecurrencePattern))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ScheduleDefinitionOrReference))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DataSourceDefinitionOrReference))]
+        Ensconce.ReportingServices.SSRS2010.SetUserSettingsResponse SetUserSettings(Ensconce.ReportingServices.SSRS2010.SetUserSettingsRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/SetUserS" +
+            "ettings", ReplyAction="*")]
+        System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.SetUserSettingsResponse> SetUserSettingsAsync(Ensconce.ReportingServices.SSRS2010.SetUserSettingsRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/GetUserS" +
+            "ettings", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpirationDefinition))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RecurrencePattern))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ScheduleDefinitionOrReference))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DataSourceDefinitionOrReference))]
+        Ensconce.ReportingServices.SSRS2010.GetUserSettingsResponse GetUserSettings(Ensconce.ReportingServices.SSRS2010.GetUserSettingsRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/GetUserS" +
+            "ettings", ReplyAction="*")]
+        System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.GetUserSettingsResponse> GetUserSettingsAsync(Ensconce.ReportingServices.SSRS2010.GetUserSettingsRequest request);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer/SetSyste" +
             "mPolicies", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -1563,7 +1615,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class TrustedUserHeader
@@ -1603,7 +1655,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class CacheRefreshPlan
@@ -1739,7 +1791,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class CacheRefreshPlanState
@@ -1811,7 +1863,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Job
@@ -1979,7 +2031,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Event
@@ -2003,7 +2055,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Extension
@@ -2093,7 +2145,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     /// <remarks/>
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ScheduleExpiration))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TimeExpiration))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ExpirationDefinition
@@ -2101,7 +2153,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ScheduleExpiration : ExpirationDefinition
@@ -2126,11 +2178,13 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ScheduleDefinition : ScheduleDefinitionOrReference
     {
+        
+        private RecurrencePattern itemField;
         
         private System.DateTime startDateTimeField;
         
@@ -2138,10 +2192,26 @@ namespace Ensconce.ReportingServices.SSRS2010
         
         private bool endDateFieldSpecified;
         
-        private RecurrencePattern itemField;
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("DailyRecurrence", typeof(DailyRecurrence), Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("MinuteRecurrence", typeof(MinuteRecurrence), Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("MonthlyDOWRecurrence", typeof(MonthlyDOWRecurrence), Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("MonthlyRecurrence", typeof(MonthlyRecurrence), Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("WeeklyRecurrence", typeof(WeeklyRecurrence), Order=0)]
+        public RecurrencePattern Item
+        {
+            get
+            {
+                return this.itemField;
+            }
+            set
+            {
+                this.itemField = value;
+            }
+        }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public System.DateTime StartDateTime
         {
             get
@@ -2155,7 +2225,7 @@ namespace Ensconce.ReportingServices.SSRS2010
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public System.DateTime EndDate
         {
             get
@@ -2181,28 +2251,10 @@ namespace Ensconce.ReportingServices.SSRS2010
                 this.endDateFieldSpecified = value;
             }
         }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("DailyRecurrence", typeof(DailyRecurrence), Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("MinuteRecurrence", typeof(MinuteRecurrence), Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("MonthlyDOWRecurrence", typeof(MonthlyDOWRecurrence), Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("MonthlyRecurrence", typeof(MonthlyRecurrence), Order=2)]
-        [System.Xml.Serialization.XmlElementAttribute("WeeklyRecurrence", typeof(WeeklyRecurrence), Order=2)]
-        public RecurrencePattern Item
-        {
-            get
-            {
-                return this.itemField;
-            }
-            set
-            {
-                this.itemField = value;
-            }
-        }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DailyRecurrence : RecurrencePattern
@@ -2226,12 +2278,12 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(MonthlyDOWRecurrence))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(MinuteRecurrence))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DailyRecurrence))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(WeeklyRecurrence))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(MonthlyDOWRecurrence))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(MonthlyRecurrence))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(WeeklyRecurrence))]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class RecurrencePattern
@@ -2239,67 +2291,45 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
-    public partial class MinuteRecurrence : RecurrencePattern
+    public partial class MonthlyDOWRecurrence : RecurrencePattern
     {
         
-        private int minutesIntervalField;
+        private WeekNumberEnum whichWeekField;
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public int MinutesInterval
-        {
-            get
-            {
-                return this.minutesIntervalField;
-            }
-            set
-            {
-                this.minutesIntervalField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
-    public partial class WeeklyRecurrence : RecurrencePattern
-    {
-        
-        private int weeksIntervalField;
-        
-        private bool weeksIntervalFieldSpecified;
+        private bool whichWeekFieldSpecified;
         
         private DaysOfWeekSelector daysOfWeekField;
         
+        private MonthsOfYearSelector monthsOfYearField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public int WeeksInterval
+        public WeekNumberEnum WhichWeek
         {
             get
             {
-                return this.weeksIntervalField;
+                return this.whichWeekField;
             }
             set
             {
-                this.weeksIntervalField = value;
+                this.whichWeekField = value;
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool WeeksIntervalSpecified
+        public bool WhichWeekSpecified
         {
             get
             {
-                return this.weeksIntervalFieldSpecified;
+                return this.whichWeekFieldSpecified;
             }
             set
             {
-                this.weeksIntervalFieldSpecified = value;
+                this.whichWeekFieldSpecified = value;
             }
         }
         
@@ -2316,10 +2346,46 @@ namespace Ensconce.ReportingServices.SSRS2010
                 this.daysOfWeekField = value;
             }
         }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public MonthsOfYearSelector MonthsOfYear
+        {
+            get
+            {
+                return this.monthsOfYearField;
+            }
+            set
+            {
+                this.monthsOfYearField = value;
+            }
+        }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+    public enum WeekNumberEnum
+    {
+        
+        /// <remarks/>
+        FirstWeek,
+        
+        /// <remarks/>
+        SecondWeek,
+        
+        /// <remarks/>
+        ThirdWeek,
+        
+        /// <remarks/>
+        FourthWeek,
+        
+        /// <remarks/>
+        LastWeek,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DaysOfWeekSelector
@@ -2439,101 +2505,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
-    public partial class MonthlyDOWRecurrence : RecurrencePattern
-    {
-        
-        private WeekNumberEnum whichWeekField;
-        
-        private bool whichWeekFieldSpecified;
-        
-        private DaysOfWeekSelector daysOfWeekField;
-        
-        private MonthsOfYearSelector monthsOfYearField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public WeekNumberEnum WhichWeek
-        {
-            get
-            {
-                return this.whichWeekField;
-            }
-            set
-            {
-                this.whichWeekField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool WhichWeekSpecified
-        {
-            get
-            {
-                return this.whichWeekFieldSpecified;
-            }
-            set
-            {
-                this.whichWeekFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public DaysOfWeekSelector DaysOfWeek
-        {
-            get
-            {
-                return this.daysOfWeekField;
-            }
-            set
-            {
-                this.daysOfWeekField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public MonthsOfYearSelector MonthsOfYear
-        {
-            get
-            {
-                return this.monthsOfYearField;
-            }
-            set
-            {
-                this.monthsOfYearField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
-    public enum WeekNumberEnum
-    {
-        
-        /// <remarks/>
-        FirstWeek,
-        
-        /// <remarks/>
-        SecondWeek,
-        
-        /// <remarks/>
-        ThirdWeek,
-        
-        /// <remarks/>
-        FourthWeek,
-        
-        /// <remarks/>
-        LastWeek,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class MonthsOfYearSelector
@@ -2733,7 +2705,31 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+    public partial class MinuteRecurrence : RecurrencePattern
+    {
+        
+        private int minutesIntervalField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public int MinutesInterval
+        {
+            get
+            {
+                return this.minutesIntervalField;
+            }
+            set
+            {
+                this.minutesIntervalField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class MonthlyRecurrence : RecurrencePattern
@@ -2773,10 +2769,66 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+    public partial class WeeklyRecurrence : RecurrencePattern
+    {
+        
+        private int weeksIntervalField;
+        
+        private bool weeksIntervalFieldSpecified;
+        
+        private DaysOfWeekSelector daysOfWeekField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public int WeeksInterval
+        {
+            get
+            {
+                return this.weeksIntervalField;
+            }
+            set
+            {
+                this.weeksIntervalField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool WeeksIntervalSpecified
+        {
+            get
+            {
+                return this.weeksIntervalFieldSpecified;
+            }
+            set
+            {
+                this.weeksIntervalFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public DaysOfWeekSelector DaysOfWeek
+        {
+            get
+            {
+                return this.daysOfWeekField;
+            }
+            set
+            {
+                this.daysOfWeekField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ScheduleReference))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(NoSchedule))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ScheduleDefinition))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ScheduleDefinitionOrReference
@@ -2784,7 +2836,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ScheduleReference : ScheduleDefinitionOrReference
@@ -2824,7 +2876,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class NoSchedule : ScheduleDefinitionOrReference
@@ -2832,7 +2884,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class TimeExpiration : ExpirationDefinition
@@ -2856,7 +2908,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DataSourceCredentials
@@ -2912,7 +2964,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ItemParameter
@@ -3274,7 +3326,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ValidValue
@@ -3314,7 +3366,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Schedule
@@ -3498,7 +3550,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ModelPerspective
@@ -3554,7 +3606,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ModelCatalogItem
@@ -3610,7 +3662,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ModelItem
@@ -3698,7 +3750,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ModelDrillthroughReport
@@ -3738,7 +3790,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public enum DrillthroughType
     {
@@ -3751,7 +3803,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DataSourcePrompt
@@ -3807,7 +3859,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Policy
@@ -3847,7 +3899,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Role
@@ -3887,7 +3939,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Task
@@ -3943,7 +3995,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DataSource
@@ -3985,7 +4037,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DataSourceDefinition : DataSourceDefinitionOrReference
@@ -4201,7 +4253,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public enum CredentialRetrievalEnum
     {
@@ -4223,7 +4275,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DataSourceReference))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InvalidDataSourceReference))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DataSourceDefinition))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DataSourceDefinitionOrReference
@@ -4231,7 +4283,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DataSourceReference : DataSourceDefinitionOrReference
@@ -4255,7 +4307,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class InvalidDataSourceReference : DataSourceDefinitionOrReference
@@ -4263,7 +4315,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Subscription
@@ -4511,7 +4563,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ExtensionSettings
@@ -4553,7 +4605,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ParameterFieldReference : ParameterValueOrFieldReference
@@ -4595,7 +4647,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     /// <remarks/>
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ParameterFieldReference))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ParameterValue))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ParameterValueOrFieldReference
@@ -4603,7 +4655,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ParameterValue : ParameterValueOrFieldReference
@@ -4659,7 +4711,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ActiveState
@@ -4684,6 +4736,10 @@ namespace Ensconce.ReportingServices.SSRS2010
         private bool unknownReportParameterField;
         
         private bool unknownReportParameterFieldSpecified;
+        
+        private bool disabledByUserField;
+        
+        private bool disabledByUserFieldSpecified;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
@@ -4824,10 +4880,38 @@ namespace Ensconce.ReportingServices.SSRS2010
                 this.unknownReportParameterFieldSpecified = value;
             }
         }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public bool DisabledByUser
+        {
+            get
+            {
+                return this.disabledByUserField;
+            }
+            set
+            {
+                this.disabledByUserField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool DisabledByUserSpecified
+        {
+            get
+            {
+                return this.disabledByUserFieldSpecified;
+            }
+            set
+            {
+                this.disabledByUserFieldSpecified = value;
+            }
+        }
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ExtensionParameter
@@ -4996,7 +5080,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class QueryDefinition
@@ -5068,7 +5152,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Field
@@ -5108,7 +5192,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DataSetDefinition
@@ -5308,7 +5392,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public enum SensitivityEnum
     {
@@ -5324,7 +5408,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class DataRetrievalPlan
@@ -5366,7 +5450,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ItemReferenceData
@@ -5422,7 +5506,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ItemReference
@@ -5462,7 +5546,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ItemNamespaceHeader
@@ -5486,7 +5570,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public enum ItemNamespaceEnum
     {
@@ -5499,7 +5583,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class SearchCondition
@@ -5572,7 +5656,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public enum ConditionEnum
     {
@@ -5591,7 +5675,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ItemHistorySnapshot
@@ -5647,7 +5731,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class SYSTEMTIME
@@ -5783,7 +5867,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class TimeZoneInformation
@@ -5871,7 +5955,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class ServerInfoHeader
@@ -5959,7 +6043,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Warning
@@ -6047,7 +6131,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class CatalogItem
@@ -6327,7 +6411,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public partial class Property
@@ -6367,7 +6451,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateCatalogItem", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateCatalogItemRequest
     {
@@ -6411,7 +6495,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateCatalogItemResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateCatalogItemResponse
     {
@@ -6438,7 +6522,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemDefinition", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemDefinitionRequest
     {
@@ -6470,7 +6554,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemDefinitionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemDefinitionResponse
     {
@@ -6493,7 +6577,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemDefinition", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemDefinitionRequest
     {
@@ -6516,7 +6600,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemDefinitionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemDefinitionResponse
     {
@@ -6540,7 +6624,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemType", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemTypeRequest
     {
@@ -6563,7 +6647,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemTypeResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemTypeResponse
     {
@@ -6586,7 +6670,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteItem", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteItemRequest
     {
@@ -6609,7 +6693,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteItemResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteItemResponse
     {
@@ -6628,7 +6712,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="MoveItem", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class MoveItemRequest
     {
@@ -6655,7 +6739,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="MoveItemResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class MoveItemResponse
     {
@@ -6674,7 +6758,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="InheritParentSecurity", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class InheritParentSecurityRequest
     {
@@ -6697,7 +6781,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="InheritParentSecurityResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class InheritParentSecurityResponse
     {
@@ -6716,7 +6800,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListItemHistory", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListItemHistoryRequest
     {
@@ -6739,7 +6823,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListItemHistoryResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListItemHistoryResponse
     {
@@ -6762,7 +6846,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListChildren", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListChildrenRequest
     {
@@ -6789,7 +6873,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListChildrenResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListChildrenResponse
     {
@@ -6812,7 +6896,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListDependentItems", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListDependentItemsRequest
     {
@@ -6835,7 +6919,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListDependentItemsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListDependentItemsResponse
     {
@@ -6858,7 +6942,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
     public enum BooleanOperatorEnum
     {
@@ -6871,7 +6955,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="FindItems", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class FindItemsRequest
     {
@@ -6906,7 +6990,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="FindItemsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class FindItemsResponse
     {
@@ -6929,7 +7013,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListParents", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListParentsRequest
     {
@@ -6952,7 +7036,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListParentsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListParentsResponse
     {
@@ -6975,7 +7059,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateFolder", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateFolderRequest
     {
@@ -7006,7 +7090,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateFolderResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateFolderResponse
     {
@@ -7029,7 +7113,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetPropertiesRequest
     {
@@ -7056,7 +7140,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetPropertiesResponse
     {
@@ -7075,7 +7159,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetPropertiesRequest
     {
@@ -7106,7 +7190,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetPropertiesResponse
     {
@@ -7129,7 +7213,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemReferences", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemReferencesRequest
     {
@@ -7156,7 +7240,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemReferencesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemReferencesResponse
     {
@@ -7175,7 +7259,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemReferences", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemReferencesRequest
     {
@@ -7202,7 +7286,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemReferencesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemReferencesResponse
     {
@@ -7225,7 +7309,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListItemTypes", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListItemTypesRequest
     {
@@ -7244,7 +7328,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListItemTypesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListItemTypesResponse
     {
@@ -7267,7 +7351,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetSubscriptionProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetSubscriptionPropertiesRequest
     {
@@ -7310,7 +7394,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetSubscriptionPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetSubscriptionPropertiesResponse
     {
@@ -7329,7 +7413,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetSubscriptionProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSubscriptionPropertiesRequest
     {
@@ -7352,7 +7436,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetSubscriptionPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSubscriptionPropertiesResponse
     {
@@ -7403,7 +7487,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetDataDrivenSubscriptionProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetDataDrivenSubscriptionPropertiesRequest
     {
@@ -7450,7 +7534,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetDataDrivenSubscriptionPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetDataDrivenSubscriptionPropertiesResponse
     {
@@ -7469,7 +7553,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetDataDrivenSubscriptionProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetDataDrivenSubscriptionPropertiesRequest
     {
@@ -7492,7 +7576,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetDataDrivenSubscriptionPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetDataDrivenSubscriptionPropertiesResponse
     {
@@ -7547,7 +7631,91 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="DisableSubscription", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
+    public partial class DisableSubscriptionRequest
+    {
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+        public Ensconce.ReportingServices.SSRS2010.TrustedUserHeader TrustedUserHeader;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Order=0)]
+        public string SubscriptionID;
+        
+        public DisableSubscriptionRequest()
+        {
+        }
+        
+        public DisableSubscriptionRequest(Ensconce.ReportingServices.SSRS2010.TrustedUserHeader TrustedUserHeader, string SubscriptionID)
+        {
+            this.TrustedUserHeader = TrustedUserHeader;
+            this.SubscriptionID = SubscriptionID;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="DisableSubscriptionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
+    public partial class DisableSubscriptionResponse
+    {
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+        public Ensconce.ReportingServices.SSRS2010.ServerInfoHeader ServerInfoHeader;
+        
+        public DisableSubscriptionResponse()
+        {
+        }
+        
+        public DisableSubscriptionResponse(Ensconce.ReportingServices.SSRS2010.ServerInfoHeader ServerInfoHeader)
+        {
+            this.ServerInfoHeader = ServerInfoHeader;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="EnableSubscription", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
+    public partial class EnableSubscriptionRequest
+    {
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+        public Ensconce.ReportingServices.SSRS2010.TrustedUserHeader TrustedUserHeader;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Order=0)]
+        public string SubscriptionID;
+        
+        public EnableSubscriptionRequest()
+        {
+        }
+        
+        public EnableSubscriptionRequest(Ensconce.ReportingServices.SSRS2010.TrustedUserHeader TrustedUserHeader, string SubscriptionID)
+        {
+            this.TrustedUserHeader = TrustedUserHeader;
+            this.SubscriptionID = SubscriptionID;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="EnableSubscriptionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
+    public partial class EnableSubscriptionResponse
+    {
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+        public Ensconce.ReportingServices.SSRS2010.ServerInfoHeader ServerInfoHeader;
+        
+        public EnableSubscriptionResponse()
+        {
+        }
+        
+        public EnableSubscriptionResponse(Ensconce.ReportingServices.SSRS2010.ServerInfoHeader ServerInfoHeader)
+        {
+            this.ServerInfoHeader = ServerInfoHeader;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteSubscription", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteSubscriptionRequest
     {
@@ -7570,7 +7738,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteSubscriptionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteSubscriptionResponse
     {
@@ -7589,7 +7757,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateSubscription", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateSubscriptionRequest
     {
@@ -7632,7 +7800,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateSubscriptionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateSubscriptionResponse
     {
@@ -7655,7 +7823,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateDataDrivenSubscription", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateDataDrivenSubscriptionRequest
     {
@@ -7702,7 +7870,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateDataDrivenSubscriptionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateDataDrivenSubscriptionResponse
     {
@@ -7725,7 +7893,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetExtensionSettings", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetExtensionSettingsRequest
     {
@@ -7748,7 +7916,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetExtensionSettingsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetExtensionSettingsResponse
     {
@@ -7771,7 +7939,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ValidateExtensionSettings", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ValidateExtensionSettingsRequest
     {
@@ -7802,7 +7970,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ValidateExtensionSettingsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ValidateExtensionSettingsResponse
     {
@@ -7825,7 +7993,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListSubscriptions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListSubscriptionsRequest
     {
@@ -7848,7 +8016,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListSubscriptionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListSubscriptionsResponse
     {
@@ -7871,7 +8039,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListMySubscriptions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListMySubscriptionsRequest
     {
@@ -7894,7 +8062,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListMySubscriptionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListMySubscriptionsResponse
     {
@@ -7917,7 +8085,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListSubscriptionsUsingDataSource", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListSubscriptionsUsingDataSourceRequest
     {
@@ -7940,7 +8108,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListSubscriptionsUsingDataSourceResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListSubscriptionsUsingDataSourceResponse
     {
@@ -7963,7 +8131,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ChangeSubscriptionOwner", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ChangeSubscriptionOwnerRequest
     {
@@ -7990,7 +8158,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ChangeSubscriptionOwnerResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ChangeSubscriptionOwnerResponse
     {
@@ -8009,7 +8177,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateDataSource", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateDataSourceRequest
     {
@@ -8048,7 +8216,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateDataSourceResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateDataSourceResponse
     {
@@ -8071,7 +8239,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="PrepareQuery", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class PrepareQueryRequest
     {
@@ -8098,7 +8266,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="PrepareQueryResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class PrepareQueryResponse
     {
@@ -8129,7 +8297,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="EnableDataSource", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class EnableDataSourceRequest
     {
@@ -8152,7 +8320,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="EnableDataSourceResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class EnableDataSourceResponse
     {
@@ -8171,7 +8339,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DisableDataSource", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DisableDataSourceRequest
     {
@@ -8194,7 +8362,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DisableDataSourceResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DisableDataSourceResponse
     {
@@ -8213,7 +8381,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetDataSourceContents", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetDataSourceContentsRequest
     {
@@ -8240,7 +8408,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetDataSourceContentsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetDataSourceContentsResponse
     {
@@ -8259,7 +8427,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetDataSourceContents", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetDataSourceContentsRequest
     {
@@ -8282,7 +8450,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetDataSourceContentsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetDataSourceContentsResponse
     {
@@ -8305,7 +8473,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListDatabaseCredentialRetrievalOptions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListDatabaseCredentialRetrievalOptionsRequest
     {
@@ -8324,7 +8492,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListDatabaseCredentialRetrievalOptionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListDatabaseCredentialRetrievalOptionsResponse
     {
@@ -8347,7 +8515,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemDataSources", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemDataSourcesRequest
     {
@@ -8374,7 +8542,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemDataSourcesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemDataSourcesResponse
     {
@@ -8393,7 +8561,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemDataSources", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemDataSourcesRequest
     {
@@ -8416,7 +8584,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemDataSourcesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemDataSourcesResponse
     {
@@ -8439,7 +8607,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="TestConnectForDataSourceDefinition", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class TestConnectForDataSourceDefinitionRequest
     {
@@ -8470,7 +8638,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="TestConnectForDataSourceDefinitionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class TestConnectForDataSourceDefinitionResponse
     {
@@ -8497,7 +8665,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="TestConnectForItemDataSource", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class TestConnectForItemDataSourceRequest
     {
@@ -8532,7 +8700,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="TestConnectForItemDataSourceResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class TestConnectForItemDataSourceResponse
     {
@@ -8559,7 +8727,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateRole", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateRoleRequest
     {
@@ -8590,7 +8758,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateRoleResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateRoleResponse
     {
@@ -8609,7 +8777,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetRoleProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetRolePropertiesRequest
     {
@@ -8640,7 +8808,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetRolePropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetRolePropertiesResponse
     {
@@ -8659,7 +8827,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetRoleProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetRolePropertiesRequest
     {
@@ -8686,7 +8854,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetRolePropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetRolePropertiesResponse
     {
@@ -8713,7 +8881,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteRole", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteRoleRequest
     {
@@ -8736,7 +8904,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteRoleResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteRoleResponse
     {
@@ -8755,7 +8923,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListRoles", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListRolesRequest
     {
@@ -8782,7 +8950,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListRolesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListRolesResponse
     {
@@ -8805,7 +8973,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListTasks", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListTasksRequest
     {
@@ -8828,7 +8996,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListTasksResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListTasksResponse
     {
@@ -8851,7 +9019,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetPolicies", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetPoliciesRequest
     {
@@ -8878,7 +9046,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetPoliciesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetPoliciesResponse
     {
@@ -8897,7 +9065,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetPolicies", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetPoliciesRequest
     {
@@ -8920,7 +9088,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetPoliciesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetPoliciesResponse
     {
@@ -8947,7 +9115,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemDataSourcePrompts", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemDataSourcePromptsRequest
     {
@@ -8970,7 +9138,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemDataSourcePromptsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemDataSourcePromptsResponse
     {
@@ -8993,7 +9161,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GenerateModel", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GenerateModelRequest
     {
@@ -9028,7 +9196,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GenerateModelResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GenerateModelResponse
     {
@@ -9055,7 +9223,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetModelItemPermissions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetModelItemPermissionsRequest
     {
@@ -9082,7 +9250,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetModelItemPermissionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetModelItemPermissionsResponse
     {
@@ -9105,7 +9273,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetModelItemPolicies", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetModelItemPoliciesRequest
     {
@@ -9136,7 +9304,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetModelItemPoliciesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetModelItemPoliciesResponse
     {
@@ -9155,7 +9323,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetModelItemPolicies", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetModelItemPoliciesRequest
     {
@@ -9182,7 +9350,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetModelItemPoliciesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetModelItemPoliciesResponse
     {
@@ -9209,7 +9377,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetUserModel", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetUserModelRequest
     {
@@ -9236,7 +9404,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetUserModelResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetUserModelResponse
     {
@@ -9260,7 +9428,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="InheritModelItemParentSecurity", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class InheritModelItemParentSecurityRequest
     {
@@ -9287,7 +9455,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="InheritModelItemParentSecurityResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class InheritModelItemParentSecurityResponse
     {
@@ -9306,7 +9474,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetModelDrillthroughReports", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetModelDrillthroughReportsRequest
     {
@@ -9337,7 +9505,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetModelDrillthroughReportsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetModelDrillthroughReportsResponse
     {
@@ -9356,7 +9524,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListModelDrillthroughReports", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListModelDrillthroughReportsRequest
     {
@@ -9383,7 +9551,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListModelDrillthroughReportsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListModelDrillthroughReportsResponse
     {
@@ -9406,7 +9574,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListModelItemChildren", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListModelItemChildrenRequest
     {
@@ -9437,7 +9605,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListModelItemChildrenResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListModelItemChildrenResponse
     {
@@ -9460,7 +9628,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListModelItemTypes", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListModelItemTypesRequest
     {
@@ -9479,7 +9647,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListModelItemTypesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListModelItemTypesResponse
     {
@@ -9502,7 +9670,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListModelPerspectives", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListModelPerspectivesRequest
     {
@@ -9525,7 +9693,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListModelPerspectivesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListModelPerspectivesResponse
     {
@@ -9548,7 +9716,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="RegenerateModel", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class RegenerateModelRequest
     {
@@ -9571,7 +9739,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="RegenerateModelResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class RegenerateModelResponse
     {
@@ -9594,7 +9762,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="RemoveAllModelItemPolicies", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class RemoveAllModelItemPoliciesRequest
     {
@@ -9617,7 +9785,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="RemoveAllModelItemPoliciesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class RemoveAllModelItemPoliciesResponse
     {
@@ -9636,7 +9804,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateSchedule", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateScheduleRequest
     {
@@ -9667,7 +9835,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateScheduleResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateScheduleResponse
     {
@@ -9690,7 +9858,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteSchedule", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteScheduleRequest
     {
@@ -9713,7 +9881,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteScheduleResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteScheduleResponse
     {
@@ -9732,7 +9900,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListSchedules", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListSchedulesRequest
     {
@@ -9755,7 +9923,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListSchedulesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListSchedulesResponse
     {
@@ -9778,7 +9946,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetScheduleProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSchedulePropertiesRequest
     {
@@ -9801,7 +9969,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetSchedulePropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSchedulePropertiesResponse
     {
@@ -9824,7 +9992,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListScheduleStates", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListScheduleStatesRequest
     {
@@ -9843,7 +10011,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListScheduleStatesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListScheduleStatesResponse
     {
@@ -9866,7 +10034,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="PauseSchedule", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class PauseScheduleRequest
     {
@@ -9889,7 +10057,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="PauseScheduleResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class PauseScheduleResponse
     {
@@ -9908,7 +10076,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ResumeSchedule", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ResumeScheduleRequest
     {
@@ -9931,7 +10099,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ResumeScheduleResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ResumeScheduleResponse
     {
@@ -9950,7 +10118,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetScheduleProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetSchedulePropertiesRequest
     {
@@ -9981,7 +10149,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetSchedulePropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetSchedulePropertiesResponse
     {
@@ -10000,7 +10168,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListScheduledItems", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListScheduledItemsRequest
     {
@@ -10023,7 +10191,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListScheduledItemsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListScheduledItemsResponse
     {
@@ -10046,7 +10214,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemParameters", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemParametersRequest
     {
@@ -10073,7 +10241,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemParametersResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemParametersResponse
     {
@@ -10092,7 +10260,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemParameters", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemParametersRequest
     {
@@ -10131,7 +10299,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemParametersResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemParametersResponse
     {
@@ -10154,7 +10322,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListParameterTypes", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListParameterTypesRequest
     {
@@ -10173,7 +10341,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListParameterTypesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListParameterTypesResponse
     {
@@ -10196,7 +10364,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListParameterStates", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListParameterStatesRequest
     {
@@ -10215,7 +10383,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListParameterStatesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListParameterStatesResponse
     {
@@ -10238,7 +10406,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateReportEditSession", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateReportEditSessionRequest
     {
@@ -10270,7 +10438,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateReportEditSessionResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateReportEditSessionResponse
     {
@@ -10297,7 +10465,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateLinkedItem", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateLinkedItemRequest
     {
@@ -10332,7 +10500,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateLinkedItemResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateLinkedItemResponse
     {
@@ -10351,7 +10519,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemLink", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemLinkRequest
     {
@@ -10378,7 +10546,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemLinkResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemLinkResponse
     {
@@ -10397,7 +10565,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemLink", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemLinkRequest
     {
@@ -10420,7 +10588,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemLinkResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemLinkResponse
     {
@@ -10443,7 +10611,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListExecutionSettings", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListExecutionSettingsRequest
     {
@@ -10462,7 +10630,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListExecutionSettingsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListExecutionSettingsResponse
     {
@@ -10485,7 +10653,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionOptions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetExecutionOptionsRequest
     {
@@ -10519,7 +10687,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetExecutionOptionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetExecutionOptionsResponse
     {
@@ -10538,7 +10706,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionOptions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetExecutionOptionsRequest
     {
@@ -10561,7 +10729,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetExecutionOptionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetExecutionOptionsResponse
     {
@@ -10591,7 +10759,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="UpdateItemExecutionSnapshot", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class UpdateItemExecutionSnapshotRequest
     {
@@ -10614,7 +10782,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="UpdateItemExecutionSnapshotResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class UpdateItemExecutionSnapshotResponse
     {
@@ -10633,7 +10801,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetCacheOptions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetCacheOptionsRequest
     {
@@ -10666,7 +10834,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetCacheOptionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetCacheOptionsResponse
     {
@@ -10685,7 +10853,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetCacheOptions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetCacheOptionsRequest
     {
@@ -10708,7 +10876,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetCacheOptionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetCacheOptionsResponse
     {
@@ -10737,7 +10905,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="FlushCache", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class FlushCacheRequest
     {
@@ -10760,7 +10928,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="FlushCacheResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class FlushCacheResponse
     {
@@ -10779,7 +10947,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateItemHistorySnapshot", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateItemHistorySnapshotRequest
     {
@@ -10802,7 +10970,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateItemHistorySnapshotResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateItemHistorySnapshotResponse
     {
@@ -10829,7 +10997,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteItemHistorySnapshot", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteItemHistorySnapshotRequest
     {
@@ -10856,7 +11024,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteItemHistorySnapshotResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteItemHistorySnapshotResponse
     {
@@ -10875,7 +11043,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemHistoryLimit", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemHistoryLimitRequest
     {
@@ -10906,7 +11074,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemHistoryLimitResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemHistoryLimitResponse
     {
@@ -10925,7 +11093,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemHistoryLimit", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemHistoryLimitRequest
     {
@@ -10948,7 +11116,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemHistoryLimitResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemHistoryLimitResponse
     {
@@ -10979,7 +11147,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemHistoryOptions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemHistoryOptionsRequest
     {
@@ -11017,7 +11185,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetItemHistoryOptionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetItemHistoryOptionsResponse
     {
@@ -11036,7 +11204,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemHistoryOptions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemHistoryOptionsRequest
     {
@@ -11059,7 +11227,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetItemHistoryOptionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetItemHistoryOptionsResponse
     {
@@ -11093,7 +11261,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetReportServerConfigInfo", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetReportServerConfigInfoRequest
     {
@@ -11116,7 +11284,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetReportServerConfigInfoResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetReportServerConfigInfoResponse
     {
@@ -11139,7 +11307,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="IsSSLRequired", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class IsSSLRequiredRequest
     {
@@ -11158,7 +11326,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="IsSSLRequiredResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class IsSSLRequiredResponse
     {
@@ -11181,7 +11349,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetSystemProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetSystemPropertiesRequest
     {
@@ -11204,7 +11372,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetSystemPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetSystemPropertiesResponse
     {
@@ -11223,7 +11391,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetSystemProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSystemPropertiesRequest
     {
@@ -11246,7 +11414,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetSystemPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSystemPropertiesResponse
     {
@@ -11269,7 +11437,95 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="SetUserSettings", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
+    public partial class SetUserSettingsRequest
+    {
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+        public Ensconce.ReportingServices.SSRS2010.TrustedUserHeader TrustedUserHeader;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Order=0)]
+        public Ensconce.ReportingServices.SSRS2010.Property[] Properties;
+        
+        public SetUserSettingsRequest()
+        {
+        }
+        
+        public SetUserSettingsRequest(Ensconce.ReportingServices.SSRS2010.TrustedUserHeader TrustedUserHeader, Ensconce.ReportingServices.SSRS2010.Property[] Properties)
+        {
+            this.TrustedUserHeader = TrustedUserHeader;
+            this.Properties = Properties;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="SetUserSettingsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
+    public partial class SetUserSettingsResponse
+    {
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+        public Ensconce.ReportingServices.SSRS2010.ServerInfoHeader ServerInfoHeader;
+        
+        public SetUserSettingsResponse()
+        {
+        }
+        
+        public SetUserSettingsResponse(Ensconce.ReportingServices.SSRS2010.ServerInfoHeader ServerInfoHeader)
+        {
+            this.ServerInfoHeader = ServerInfoHeader;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="GetUserSettings", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
+    public partial class GetUserSettingsRequest
+    {
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+        public Ensconce.ReportingServices.SSRS2010.TrustedUserHeader TrustedUserHeader;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Order=0)]
+        public Ensconce.ReportingServices.SSRS2010.Property[] Properties;
+        
+        public GetUserSettingsRequest()
+        {
+        }
+        
+        public GetUserSettingsRequest(Ensconce.ReportingServices.SSRS2010.TrustedUserHeader TrustedUserHeader, Ensconce.ReportingServices.SSRS2010.Property[] Properties)
+        {
+            this.TrustedUserHeader = TrustedUserHeader;
+            this.Properties = Properties;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="GetUserSettingsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
+    public partial class GetUserSettingsResponse
+    {
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer")]
+        public Ensconce.ReportingServices.SSRS2010.ServerInfoHeader ServerInfoHeader;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", Order=0)]
+        public Ensconce.ReportingServices.SSRS2010.Property[] Values;
+        
+        public GetUserSettingsResponse()
+        {
+        }
+        
+        public GetUserSettingsResponse(Ensconce.ReportingServices.SSRS2010.ServerInfoHeader ServerInfoHeader, Ensconce.ReportingServices.SSRS2010.Property[] Values)
+        {
+            this.ServerInfoHeader = ServerInfoHeader;
+            this.Values = Values;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetSystemPolicies", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetSystemPoliciesRequest
     {
@@ -11292,7 +11548,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetSystemPoliciesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetSystemPoliciesResponse
     {
@@ -11311,7 +11567,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetSystemPolicies", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSystemPoliciesRequest
     {
@@ -11330,7 +11586,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetSystemPoliciesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSystemPoliciesResponse
     {
@@ -11353,7 +11609,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListExtensions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListExtensionsRequest
     {
@@ -11376,7 +11632,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListExtensionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListExtensionsResponse
     {
@@ -11399,7 +11655,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListExtensionTypes", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListExtensionTypesRequest
     {
@@ -11418,7 +11674,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListExtensionTypesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListExtensionTypesResponse
     {
@@ -11441,7 +11697,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListEvents", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListEventsRequest
     {
@@ -11460,7 +11716,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListEventsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListEventsResponse
     {
@@ -11483,7 +11739,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="FireEvent", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class FireEventRequest
     {
@@ -11514,7 +11770,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="FireEventResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class FireEventResponse
     {
@@ -11533,7 +11789,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListJobs", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListJobsRequest
     {
@@ -11552,7 +11808,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListJobsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListJobsResponse
     {
@@ -11575,7 +11831,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListJobTypes", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListJobTypesRequest
     {
@@ -11594,7 +11850,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListJobTypesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListJobTypesResponse
     {
@@ -11617,7 +11873,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListJobActions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListJobActionsRequest
     {
@@ -11636,7 +11892,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListJobActionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListJobActionsResponse
     {
@@ -11659,7 +11915,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListJobStates", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListJobStatesRequest
     {
@@ -11678,7 +11934,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListJobStatesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListJobStatesResponse
     {
@@ -11701,7 +11957,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CancelJob", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CancelJobRequest
     {
@@ -11724,7 +11980,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CancelJobResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CancelJobResponse
     {
@@ -11747,7 +12003,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateCacheRefreshPlan", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateCacheRefreshPlanRequest
     {
@@ -11786,7 +12042,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="CreateCacheRefreshPlanResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class CreateCacheRefreshPlanResponse
     {
@@ -11809,7 +12065,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetCacheRefreshPlanProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetCacheRefreshPlanPropertiesRequest
     {
@@ -11848,7 +12104,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="SetCacheRefreshPlanPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class SetCacheRefreshPlanPropertiesResponse
     {
@@ -11867,7 +12123,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetCacheRefreshPlanProperties", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetCacheRefreshPlanPropertiesRequest
     {
@@ -11890,7 +12146,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetCacheRefreshPlanPropertiesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetCacheRefreshPlanPropertiesResponse
     {
@@ -11933,7 +12189,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteCacheRefreshPlan", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteCacheRefreshPlanRequest
     {
@@ -11956,7 +12212,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="DeleteCacheRefreshPlanResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class DeleteCacheRefreshPlanResponse
     {
@@ -11975,7 +12231,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListCacheRefreshPlans", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListCacheRefreshPlansRequest
     {
@@ -11998,7 +12254,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListCacheRefreshPlansResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListCacheRefreshPlansResponse
     {
@@ -12021,7 +12277,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="LogonUser", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class LogonUserRequest
     {
@@ -12052,7 +12308,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="LogonUserResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class LogonUserResponse
     {
@@ -12071,7 +12327,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="Logoff", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class LogoffRequest
     {
@@ -12090,7 +12346,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="LogoffResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class LogoffResponse
     {
@@ -12109,7 +12365,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetPermissions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetPermissionsRequest
     {
@@ -12132,7 +12388,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetPermissionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetPermissionsResponse
     {
@@ -12156,7 +12412,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetSystemPermissions", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSystemPermissionsRequest
     {
@@ -12175,7 +12431,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="GetSystemPermissionsResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class GetSystemPermissionsResponse
     {
@@ -12199,7 +12455,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListSecurityScopes", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListSecurityScopesRequest
     {
@@ -12218,7 +12474,7 @@ namespace Ensconce.ReportingServices.SSRS2010
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="ListSecurityScopesResponse", WrapperNamespace="http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer", IsWrapped=true)]
     public partial class ListSecurityScopesResponse
     {
@@ -12240,13 +12496,13 @@ namespace Ensconce.ReportingServices.SSRS2010
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     public interface ReportingService2010SoapChannel : Ensconce.ReportingServices.SSRS2010.ReportingService2010Soap, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     public partial class ReportingService2010SoapClient : System.ServiceModel.ClientBase<Ensconce.ReportingServices.SSRS2010.ReportingService2010Soap>, Ensconce.ReportingServices.SSRS2010.ReportingService2010Soap
     {
         
@@ -12501,6 +12757,26 @@ namespace Ensconce.ReportingServices.SSRS2010
         public System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.GetDataDrivenSubscriptionPropertiesResponse> GetDataDrivenSubscriptionPropertiesAsync(Ensconce.ReportingServices.SSRS2010.GetDataDrivenSubscriptionPropertiesRequest request)
         {
             return base.Channel.GetDataDrivenSubscriptionPropertiesAsync(request);
+        }
+        
+        public Ensconce.ReportingServices.SSRS2010.DisableSubscriptionResponse DisableSubscription(Ensconce.ReportingServices.SSRS2010.DisableSubscriptionRequest request)
+        {
+            return base.Channel.DisableSubscription(request);
+        }
+        
+        public System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.DisableSubscriptionResponse> DisableSubscriptionAsync(Ensconce.ReportingServices.SSRS2010.DisableSubscriptionRequest request)
+        {
+            return base.Channel.DisableSubscriptionAsync(request);
+        }
+        
+        public Ensconce.ReportingServices.SSRS2010.EnableSubscriptionResponse EnableSubscription(Ensconce.ReportingServices.SSRS2010.EnableSubscriptionRequest request)
+        {
+            return base.Channel.EnableSubscription(request);
+        }
+        
+        public System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.EnableSubscriptionResponse> EnableSubscriptionAsync(Ensconce.ReportingServices.SSRS2010.EnableSubscriptionRequest request)
+        {
+            return base.Channel.EnableSubscriptionAsync(request);
         }
         
         public Ensconce.ReportingServices.SSRS2010.DeleteSubscriptionResponse DeleteSubscription(Ensconce.ReportingServices.SSRS2010.DeleteSubscriptionRequest request)
@@ -13263,6 +13539,26 @@ namespace Ensconce.ReportingServices.SSRS2010
             return base.Channel.GetSystemPropertiesAsync(request);
         }
         
+        public Ensconce.ReportingServices.SSRS2010.SetUserSettingsResponse SetUserSettings(Ensconce.ReportingServices.SSRS2010.SetUserSettingsRequest request)
+        {
+            return base.Channel.SetUserSettings(request);
+        }
+        
+        public System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.SetUserSettingsResponse> SetUserSettingsAsync(Ensconce.ReportingServices.SSRS2010.SetUserSettingsRequest request)
+        {
+            return base.Channel.SetUserSettingsAsync(request);
+        }
+        
+        public Ensconce.ReportingServices.SSRS2010.GetUserSettingsResponse GetUserSettings(Ensconce.ReportingServices.SSRS2010.GetUserSettingsRequest request)
+        {
+            return base.Channel.GetUserSettings(request);
+        }
+        
+        public System.Threading.Tasks.Task<Ensconce.ReportingServices.SSRS2010.GetUserSettingsResponse> GetUserSettingsAsync(Ensconce.ReportingServices.SSRS2010.GetUserSettingsRequest request)
+        {
+            return base.Channel.GetUserSettingsAsync(request);
+        }
+        
         public Ensconce.ReportingServices.SSRS2010.SetSystemPoliciesResponse SetSystemPolicies(Ensconce.ReportingServices.SSRS2010.SetSystemPoliciesRequest request)
         {
             return base.Channel.SetSystemPolicies(request);
@@ -13514,11 +13810,11 @@ namespace Ensconce.ReportingServices.SSRS2010
         {
             if ((endpointConfiguration == EndpointConfiguration.ReportingService2010Soap))
             {
-                return new System.ServiceModel.EndpointAddress("http://btn-rs01.15b.local/ReportServer_NON1/ReportService2010.asmx");
+                return new System.ServiceModel.EndpointAddress("http://btn-rs02.15b.local/ReportServer/ReportService2010.asmx");
             }
             if ((endpointConfiguration == EndpointConfiguration.ReportingService2010Soap12))
             {
-                return new System.ServiceModel.EndpointAddress("http://btn-rs01.15b.local/ReportServer_NON1/ReportService2010.asmx");
+                return new System.ServiceModel.EndpointAddress("http://btn-rs02.15b.local/ReportServer/ReportService2010.asmx");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }
