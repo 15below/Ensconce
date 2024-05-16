@@ -259,6 +259,7 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
     Write-Host "Get Accessible Resources"
     $resourceVersions = @()
     $resources = @()
+    $knownResourcesArray = $knownResources -Split ","
 
     $rawResources = & $KubeCtlExe api-resources --verbs=list --namespaced -o name --kubeconfig=$kubernetesConfigFilePath
 
@@ -275,14 +276,17 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
             $resource = $resource.Substring(0, $resource.IndexOf("."))
         }
 
-        if ($resources -notcontains $resource)
+        if (($resources.Count -eq 0) -or ($knownResourcesArray -contains $resource))
         {
-            Write-Host "  Checking $resource is accessible"
-            $cani = & $KubeCtlExe auth can-i list $resource --kubeconfig=$kubernetesConfigFilePath
-
-            if ($LASTEXITCODE -eq 0 -and $cani -eq "yes")
+            if ($resources -notcontains $resource)
             {
-                $resources += $resource
+                Write-Host "  Checking $resource is accessible"
+                $cani = & $KubeCtlExe auth can-i list $resource --kubeconfig=$kubernetesConfigFilePath
+
+                if ($LASTEXITCODE -eq 0 -and $cani -eq "yes")
+                {
+                    $resources += $resource
+                }
             }
         }
     }
