@@ -37,16 +37,65 @@ else
 			$Tool = $_.Tool
 			$ExeName = $_.ExeName
 			$Version = $_.Version
+
 			$DownloadUrl = "$ExternalToolDownloadUrl/$Tool/$Version/$ExeName"
 			$DownloadPath = "$scriptDir\Content\Tools\$Tool\$ExeName"
-			Write-Host "Downloading $DownloadUrl to $DownloadPath"
 			New-Item -Path "$scriptDir\Content\Tools" -Name $Tool -Type container -Force | Out-Null
-			Invoke-WebRequest -Uri $DownloadUrl -OutFile $DownloadPath | Write-Host
+
+			$AlreadyDownloaded = $false
+
+			if($DownloadCachePath -ne "")
+			{
+				$ToolDownloadCacheFolder = "$DownloadCachePath\$Tool"
+				$ToolDownloadCache = "$ToolDownloadCacheFolder\$ExeName"
+				$ToolDownloadCacheVersion = "$ToolDownloadCacheFolder\$Version.info"
+
+				if(Test-Path $ToolDownloadCacheFolder)
+				{
+					if(Test-Path $ToolDownloadCacheVersion)
+					{
+						$AlreadyDownloaded = $true
+					}
+					else
+					{
+						Remove-Item $ToolDownloadCacheFolder -Force -Recurse
+						New-Item -Path $ToolDownloadCacheFolder -Name $Version -Type container -Force | Out-Null
+					}
+				}
+				else
+				{
+					New-Item -Path $ToolDownloadCacheFolder -Name $Version -Type container -Force | Out-Null
+				}
+
+				if($AlreadyDownloaded -eq $false)
+				{
+					Write-Host "Downloading $DownloadUrl to $ToolDownloadCache"
+					Invoke-WebRequest -Uri $DownloadUrl -OutFile $ToolDownloadCache | Write-Host
+					New-Item -Path $ToolDownloadCacheVersion -ItemType File | Out-Null
+				}
+
+				Write-Host "Copying $ToolDownloadCache to $DownloadPath"
+				Copy-Item -Path $ToolDownloadCache -Destination $DownloadPath
+			}
+			else
+			{
+				Write-Host "Downloading $DownloadUrl to $DownloadPath"
+				Invoke-WebRequest -Uri $DownloadUrl -OutFile $DownloadPath | Write-Host
+			}
+
 
 			if($_.RunExe)
 			{
-				Write-Host "Running $DownloadPath"
-				Start-Process -FilePath "$scriptDir\Content\Tools\$Tool\$ExeName" -ArgumentList $_.RunArgs -Wait
+				if($AlreadyDownloaded)
+				{
+					Write-Host "Skipping $DownloadPath as already ran on machine"
+				}
+				else
+				{
+					Write-Host "Running $DownloadPath"
+					Start-Process -FilePath "$scriptDir\Content\Tools\$Tool\$ExeName" -ArgumentList $_.RunArgs -Wait
+				}
+
 				Remove-Item "$scriptDir\Content\Tools\$Tool" -Force -Recurse
 			}
 		}
