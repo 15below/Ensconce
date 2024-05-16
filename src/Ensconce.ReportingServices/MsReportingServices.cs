@@ -45,7 +45,7 @@ namespace Ensconce.ReportingServices
                 {
                     Transport = new HttpTransportSecurity
                     {
-                        ClientCredentialType = HttpClientCredentialType.Ntlm
+                        ClientCredentialType = HttpClientCredentialType.Windows
                     },
                     Mode = BasicHttpSecurityMode.TransportCredentialOnly
                 },
