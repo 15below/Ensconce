@@ -100,6 +100,14 @@ new inner2
                 new ContextObjects.Person("Pat","Smith","Unknown")
             };
 
+            ContextObjects.Person[] peopleUnordered = new ContextObjects.Person[] {
+                new ContextObjects.Person("George", "Bush","Male"),
+                new ContextObjects.Person("Margaret","Thatcher","Female"),
+                new ContextObjects.Person("Bill","Clinton","Male"),
+                new ContextObjects.Person("Pat","Smith","Unknown"),
+                new ContextObjects.Person("Condoleezza","Rice","Female")
+            };
+
             // regroup tag
             lst.Add(new TestDescriptor("regroup-01",
 @"{% regroup people by gender as gender_list %}<ul>{% for gender in gender_list %}
@@ -112,6 +120,36 @@ new inner2
                 ContextObjects.p("people", people),
                 ContextObjects.p(
 @"<ul>
+    <li>Male
+    <ul>
+        <li>George Bush</li>
+        <li>Bill Clinton</li>
+    </ul>
+    </li>
+    <li>Female
+    <ul>
+        <li>Margaret Thatcher</li>
+        <li>Condoleezza Rice</li>
+    </ul>
+    </li>
+    <li>Unknown
+    <ul>
+        <li>Pat Smith</li>
+    </ul>
+    </li>
+</ul>")));
+
+            lst.Add(new TestDescriptor("regroup-02",
+                @"{% regroup people by gender as gender_list %}<ul>{% for gender in gender_list %}
+    <li>{{ gender.grouper }}
+    <ul>{% for item in gender.list %}
+        <li>{{ item.first_name }} {{ item.last_name }}</li>{% endfor %}
+    </ul>
+    </li>{% endfor %}
+</ul>",
+                ContextObjects.p("people", peopleUnordered),
+                ContextObjects.p(
+                    @"<ul>
     <li>Male
     <ul>
         <li>George Bush</li>

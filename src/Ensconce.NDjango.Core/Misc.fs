@@ -166,37 +166,6 @@ module internal Misc =
 ///
 /// grouper -- the item that was grouped by (e.g., the string "Male" or "Female").
 /// list -- a list of all items in this group (e.g., a list of all people with gender='Male').
-/// Note that {% regroup %} does not order its input! Our example relies on the fact that the people list was ordered by gender in the first place. If the people list did not order its members by gender, the regrouping would naively display more than one group for a single gender. For example, say the people list was set to this (note that the males are not grouped together):
-///
-/// people = [
-///     {'first_name': 'Bill', 'last_name': 'Clinton', 'gender': 'Male'},
-///     {'first_name': 'Pat', 'last_name': 'Smith', 'gender': 'Unknown'},
-///     {'first_name': 'Margaret', 'last_name': 'Thatcher', 'gender': 'Female'},
-///     {'first_name': 'George', 'last_name': 'Bush', 'gender': 'Male'},
-///     {'first_name': 'Condoleezza', 'last_name': 'Rice', 'gender': 'Female'},
-/// ]
-/// With this input for people, the example {% regroup %} template code above would result in the following output:
-///
-///
-/// Male:
-/// Bill Clinton
-///
-/// Unknown:
-/// Pat Smith
-///
-/// Female:
-/// Margaret Thatcher
-///
-/// Male:
-/// George Bush
-///
-/// Female:
-/// Condoleezza Rice
-/// The easiest solution to this gotcha is to make sure in your view code that the data is ordered according to how you want to display it.
-///
-/// Another solution is to sort the data in the template using the dictsort filter, if your data is in a list of dictionaries:
-///
-/// {% regroup people|dictsort:"gender" by gender as gender_list %}
 
     type Grouper =
         {
@@ -218,28 +187,23 @@ module internal Misc =
                         | Some o ->
                             match o with
                             | :? System.Collections.IEnumerable as loop ->
-                                let groupers =
-                                    loop |> Seq.cast |>
-                                        Seq.fold
-                                            // this function takes a tuple with the first element representing the grouper
-                                            // currently under construction and the second the list of groupers built so far
-                                            (fun (groupers:Grouper option*Grouper list) item ->
-                                                match Variables.resolve_members item [grouper.RawText] with
-                                                | Some value ->  // this is the current value to group by
-                                                    match fst groupers with
-                                                    | Some group -> // group is a group currently being built
-                                                        if value = group.grouper then
-                                                            (Some {group with list=group.list @ [item]}, snd groupers)
-                                                        else
-                                                            (Some {grouper=value; list=[item]}, snd groupers@[group])
-                                                    | None -> (Some {grouper=value; list=[item]}, []) // No group - we are just starting
-                                                | None -> groupers
-                                                )
-
-                                            (None, [])  // start expression for seq.fold
-                                match fst groupers with
-                                | None -> []
-                                | Some grouper -> snd groupers @ [grouper]
+                                loop
+                                |> Seq.cast
+                                // this function takes a tuple with the first element representing the grouper
+                                // currently under construction and the second the list of groupers built so far
+                                |> Seq.fold(fun (groupers:Grouper list) item ->
+                                             match Variables.resolve_members item [grouper.RawText] with
+                                             | Some value ->  // this is the current value to group by
+                                                 match groupers |> List.tryFindIndex(fun group -> value = group.grouper) with
+                                                 | Some i -> let parts = List.splitAt i groupers
+                                                             let bef = (fst parts)
+                                                             let group = (snd parts) |> List.head
+                                                             let aft = (snd parts) |> List.skip(1)
+                                                             let updatedGroup = group.Append [item]
+                                                             bef@[updatedGroup]@aft
+                                                 | None -> groupers@[{grouper=value; list=[item]}]
+                                             | None -> groupers
+                                           ) []  // start expression for seq.fold
                             | _ -> []
                         | None -> []
                     ({
