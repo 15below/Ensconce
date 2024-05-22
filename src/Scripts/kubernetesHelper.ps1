@@ -259,7 +259,12 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
     Write-Host "Get Accessible Resources"
     $resourceVersions = @()
     $resources = @()
-    $knownResourcesArray = $knownResources.Split(",",[System.StringSplitOptions]::RemoveEmptyEntries)
+    $knownResourcesArray = @()
+
+    if($knownResources -ne $null)
+    {
+        $knownResourcesArray = $knownResources.Split(",",[System.StringSplitOptions]::RemoveEmptyEntries)
+    }
 
     $rawResources = & $KubeCtlExe api-resources --verbs=list --namespaced -o name --kubeconfig=$kubernetesConfigFilePath
 
