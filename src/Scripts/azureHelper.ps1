@@ -75,7 +75,7 @@ function Azure-LoginServicePrincipal([string]$username, [string]$password, [stri
     }
 }
 
-function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$slot, [string]$zipPath)
+function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$slot, [string]$zipPath, [string]$subscription)
 {
     Azure-LoginServicePrincipal $username $password $tenant
     
@@ -83,13 +83,13 @@ function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$
     {
         Write-Host "Deploying $name in resource group $resourceGroup into production slot"
 
-        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath --only-show-errors
+        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath --only-show-errors --subscription $subscription
     }
     else
     {
         Write-Host "Deploying $name in resource group $resourceGroup into slot $slot"
 
-        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath --slot $slot --only-show-errors
+        & az webapp deployment source config-zip --resource-group $resourceGroup --name $name --src $zipPath --slot $slot --only-show-errors --subscription $subscription
     }    
 
     if ($LASTEXITCODE -ne 0)
@@ -99,13 +99,13 @@ function Azure-DeployZipToWebApp([string]$username, [string]$password, [string]$
     }
 }
 
-function Azure-WebAppSlotSwapStagingToProduction([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name)
+function Azure-WebAppSlotSwapStagingToProduction([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [string]$subscription)
 {
     Azure-LoginServicePrincipal $username $password $tenant
     
     Write-Host "Swapping slot staging to production for $name in resource group $resourceGroup"
     
-    & az webapp deployment slot swap --resource-group $resourceGroup --name $name --slot "staging" --target-slot "production" --only-show-errors
+    & az webapp deployment slot swap --resource-group $resourceGroup --name $name --slot "staging" --target-slot "production" --only-show-errors --subscription $subscription
     
     if ($LASTEXITCODE -ne 0)
     {
@@ -114,7 +114,7 @@ function Azure-WebAppSlotSwapStagingToProduction([string]$username, [string]$pas
     }
 }
 
-function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [bool]$useStagingSlot, [string]$contentFolder)
+function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$name, [bool]$useStagingSlot, [string]$contentFolder, [string]$subscription)
 {
     if (Test-Path "$contentFolder.zip")
     {
@@ -125,13 +125,13 @@ function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenan
 
     if ($useStagingSlot -eq $true)
     {
-        Azure-DeployZipToWebApp $username $password $tenant $resourceGroup $name "staging" "$contentFolder.zip"
+        Azure-DeployZipToWebApp $username $password $tenant $resourceGroup $name "staging" "$contentFolder.zip" $subscription
 
-        Azure-WebAppSlotSwapStagingToProduction $username $password $tenant $resourceGroup $name
+        Azure-WebAppSlotSwapStagingToProduction $username $password $tenant $resourceGroup $name $subscription
     }
     else
     {
-        Azure-DeployZipToWebApp $username $password $tenant $resourceGroup $name $null "$contentFolder.zip"
+        Azure-DeployZipToWebApp $username $password $tenant $resourceGroup $name $null "$contentFolder.zip" $subscription
     }
 }
 
