@@ -16,6 +16,7 @@ Azure-DeployWebApp
     [-name] <String>
     [-useStagingSlot] <Bool>
     [-contentFolder] <String>
+    [-subscription] <String>
 {% endraw %}
 ```
 
@@ -27,6 +28,6 @@ Will deploy the contents of the folder provided into a named Azure WebApp within
 
 ```PowerShell
 {% raw %}
-Azure-DeployWebApp -username "[service-guid]" -password "PASSWORD-HERE" -tenant "[tenant-guid]" -resourceGroup "MyWebAppResource" -name "MyWebApp" -useStagingSlot $true -contentFolder "Path\To\Folder"
+Azure-DeployWebApp -username "[service-guid]" -password "PASSWORD-HERE" -tenant "[tenant-guid]" -resourceGroup "MyWebAppResource" -name "MyWebApp" -useStagingSlot $true -contentFolder "Path\To\Folder" -subscription "MySubscription"
 {% endraw %}
 ```
