@@ -35,7 +35,7 @@ function GetCloudflareDnsZone([string]$token, [string]$domain)
         Write-Warning "No token so cannot get zone for domain '$domain'"
         return
     }
-    
+
     $zone = CallCloudflare $token "zones/?name=$domain" Get
 
     if ($zone.result.Count -gt 0){
@@ -54,7 +54,7 @@ function GetCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$domain
         Write-Warning "No token so cannot get record for '$record.$domain'"
         return
     }
-    
+
     $dnsRecord = CallCloudflare $token "zones/$zoneid/dns_records/?name=$record.$domain" Get
 
     if ($dnsRecord.result.Count -gt 0)
@@ -74,7 +74,7 @@ function CheckCloudflareDnsRecord([string]$token, [string]$zoneid, [string]$doma
         Write-Warning "No token so cannot check record for '$record.$domain'"
         return
     }
-    
+
     $dnsRecord = CallCloudflare $token "zones/$zoneid/dns_records/?name=$record.$domain" Get
 
     if ($dnsRecord.result.Count -gt 0)
@@ -116,7 +116,7 @@ function ExportDnsRecords([string]$token, [string]$zoneid, [string]$domain)
     else
     {
         $result = CallCloudflare $token "zones/$zoneid/dns_records/export" Get
-    
+
         foreach ($item in $result -split '[\r\n]')
         {
             if ($item.Contains("IN	CNAME") -or ($item.Contains("IN	A")))
@@ -144,11 +144,11 @@ function GetCloudflareDnsRecords([string]$token, [string]$domain, [string]$filte
     else
     {
         $zone = GetCloudflareDnsZone $token $domain
-        
+
         $zoneid = $zone.id
-        
+
         $dnsRecords = [Collections.Generic.List[string]](ExportDnsRecords $token $zoneid $domain)
-        
+
         if ($filter -ne "")
         {
             $dnsRecords = $dnsRecords | Where-Object { $_ -like $filter }
@@ -296,6 +296,72 @@ function CreateOrUpdateCloudflareCNAMERecord([string]$token, [string]$domain, [s
     else
     {
         CreateCloudflareDnsRecord $token $zoneid $domain $record $cnameValue "CNAME"
+    }
+}
+
+function CheckCloudflareARecord([string]$token, [string]$domain, [string]$record, [string]$ipaddr)
+{
+    $zone = GetCloudflareDnsZone $token $domain
+    $zoneid = $zone.id
+
+    $recordExists = CheckCloudflareDnsRecord $token $zoneid $domain $record
+
+    if ($recordExists -eq $true)
+    {
+        $dnsRecords = GetCloudflareDnsRecord $token $zoneid $domain $record
+        Foreach($dnsRecord in $dnsRecords)
+        {
+            $recordid = $dnsRecord.id
+			$recordvalue = $dnsRecord.content
+            if ($recordvalue -eq $ipaddr -and $dnsRecord.type -eq "A")
+            {
+                Write-Host "Record '$record.$domain' already has an 'A' record with the value '$ipaddr'"
+                $true
+            }
+            else
+            {
+                Write-Warning "Record '$record.$domain' has an 'A' record with the value '$recordvalue' rather than '$ipaddr'"
+				$false
+            }
+        }
+    }
+    else
+    {
+        Write-Warning "No Record '$record.$domain' (value '$ipaddr')"
+		$false
+    }
+}
+
+function CheckCloudflareCNAMERecord([string]$token, [string]$domain, [string]$record, [string]$cnameValue)
+{
+    $zone = GetCloudflareDnsZone $token $domain
+    $zoneid = $zone.id
+
+    $recordExists = CheckCloudflareDnsRecord $token $zoneid $domain $record
+
+    if ($recordExists -eq $true)
+    {
+        $dnsRecords = GetCloudflareDnsRecord $token $zoneid $domain $record
+        Foreach($dnsRecord in $dnsRecords)
+        {
+            $recordid = $dnsRecord.id
+			$recordvalue = $dnsRecord.content
+            if ($recordvalue -eq $cnameValue -and $dnsRecord.type -eq "CNAME")
+            {
+                Write-Host "Record '$record.$domain' already has an 'CNAME' record with the value '$cnameValue'"
+                $true
+            }
+            else
+            {
+                Write-Warning "Record '$record.$domain' has an 'CNAME' record with the value '$recordvalue' rather than '$cnameValue'"
+				$false
+            }
+        }
+    }
+    else
+    {
+        Write-Warning "No Record '$record.$domain' (value '$cnameValue')"
+		$false
     }
 }
 
