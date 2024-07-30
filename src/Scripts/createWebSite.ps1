@@ -679,5 +679,11 @@ function SetAppPoolAlwaysRunning([string] $appPoolName)
     Set-ItemProperty IIS:\AppPools\$appPoolName processModel.idleTimeout "00:00:00"
 }
 
+function SetSiteConnectAs([string] $name, [string] $userName, [string] $password)
+{
+	Set-ItemProperty IIS:\Sites\$name -name userName -value $userName
+	Set-ItemProperty IIS:\Sites\$name -name password -value $password
+}
+
 Write-Host "Ensconce - CreateWebsite Loaded"
 $createWebSiteLoaded = $true
