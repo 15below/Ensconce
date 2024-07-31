@@ -406,7 +406,6 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
     $site = Get-WebSite | where { $_.Name -eq $name }
     if ($site -eq $null)
     {
-        EnsurePath $localPath
         if ($port -eq 443) {
             New-WebSite $name -IPAddress $ipAddress -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName -ssl
         } else {
@@ -463,9 +462,10 @@ function AddHostHeader([string]$siteName, [string] $hostHeader, [int] $port, [st
 
 function CreateWebApplication([string]$webSite, [string]$appName, [string] $appPool, [string]$InstallDir, [string]$SubFolders)
 {
-    EnsurePath $installDir
     if ($subFolders -eq $null -or $subFolders -eq "")
-    { New-WebApplication -Name $appName -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool }
+    { 
+    	New-WebApplication -Name $appName -Site $webSite -PhysicalPath $installDir -ApplicationPool $appPool 
+    }
     else
     {
         "$installDir\$SubFolders"
@@ -476,7 +476,6 @@ function CreateWebApplication([string]$webSite, [string]$appName, [string] $appP
 function CreateVirtualDirectory([string]$webSite, [string]$virtualDir, [string]$physicalPath)
 {
     "Creating $virtualDir pointing at $physicalPath" | Write-Host
-    EnsurePath $physicalPath
     New-WebVirtualDirectory -Site $webSite -Name $virtualDir -PhysicalPath $physicalPath
 }
 
