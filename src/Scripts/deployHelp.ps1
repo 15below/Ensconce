@@ -101,7 +101,8 @@ function EnsurePath([string]$name)
 
     if ((Test-Path $path) -eq $False)
     {
-        md $path
+        Write-Host "Path '$path' does not exist, try to create"
+        New-Item -ItemType Directory -Path $path -ErrorAction Continue
     }
 }
 
