@@ -101,14 +101,8 @@ function EnsurePath([string]$name)
 
     if ((Test-Path $path) -eq $False)
     {
-        if($path.StartsWith("\\"))
-        {
-            Write-Warning "Path '$path' does not exist or cannot be found by deployment user"
-        }
-        else
-        {
-            md $path
-        }
+        Write-Host "Path '$path' does not exist, try to create"
+        New-Item -ItemType Directory -Path $path -ErrorAction Continue
     }
 }
 
