@@ -11,10 +11,9 @@ namespace Ensconce.ReportingServices.Tests
         [SetUp]
         public void Setup()
         {
-            //var reportingServicesUrl = "http://LOC-POPERINGE/ReportServer/ReportService2010.asmx";
-            var reportingServicesUrl = "http://btn-rs01.15b.local/ReportServer_NON1/ReportService2010.asmx";
-            var loginDomain = "15below";
-            var loginUser = "RS-Deploy-NON1";
+            var reportingServicesUrl = "http://localhost/ReportServer/ReportService2010.asmx";
+            var loginDomain = ".";
+            var loginUser = "";
             var loginPassword = "";
 
             sut = new MsReportingServices(reportingServicesUrl, loginDomain, loginUser, loginPassword);
