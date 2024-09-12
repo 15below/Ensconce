@@ -408,7 +408,7 @@ function CreateWebSite ([string]$name, [string]$localPath, [string] $appPoolName
     {
         EnsurePath $localPath
         if ($port -eq 443) {
-            New-WebSite $name -IPAddress $ipAddress -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName -ssl
+            New-WebSite $name -IPAddress $ipAddress -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName -ssl -SslFlags 1
         } else {
             New-WebSite $name -IPAddress $ipAddress -Port $port -HostHeader $hostName -PhysicalPath $localPath -ApplicationPool $appPoolName
         }
