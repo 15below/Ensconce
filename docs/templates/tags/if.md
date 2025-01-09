@@ -8,6 +8,6 @@ description: If Tag
 
 Used to set parts of the output to be conditional
 
-To be combined with the [operators](../../templates/operators/index)
+To be combined with the [operators](../../operators/index)
 
 See operators for examples.
