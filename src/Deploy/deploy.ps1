@@ -23,12 +23,12 @@ if ([string]::IsNullOrWhiteSpace($ExternalToolDownloadUrl))
 else
 {
 	$tools = @(
-		[pscustomobject]@{CacheName='Az-Installer';Tool='Az-Installer';Version='2.54.0';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
-		[pscustomobject]@{CacheName='Kube-Linter';Tool='Kube-Linter';Version='0.6.7';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{CacheName='Az-Installer';Tool='Az-Installer';Version='2.67.0';ExeName='azure-cli.msi';RunExe=$true;RunArgs="/quiet /norestart";OctoAgent=$true}
+		[pscustomobject]@{CacheName='Kube-Linter';Tool='Kube-Linter';Version='0.7.1';ExeName='kube-linter.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 		[pscustomobject]@{CacheName='Grant';Tool='Grant';Version='1.01';ExeName='Grant.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{CacheName='Handle';Tool='Handle';Version='5.0';ExeName='handle.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
 		[pscustomobject]@{CacheName='Handle64';Tool='Handle';Version='5.0';ExeName='handle64.exe';RunExe=$false;RunArgs="";OctoAgent=$false}
-		[pscustomobject]@{CacheName='KubeCtl';Tool='KubeCtl';Version='1.27.12';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
+		[pscustomobject]@{CacheName='KubeCtl';Tool='KubeCtl';Version='1.29.12';ExeName='kubectl.exe';RunExe=$false;RunArgs="";OctoAgent=$true}
 	)
 
 	$tools | ForEach-Object {
