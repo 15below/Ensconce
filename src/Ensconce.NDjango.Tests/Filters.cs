@@ -13,7 +13,7 @@ namespace Ensconce.NDjango.Tests
             test.Run(manager);
         }
 
-        [Test, TestCaseSource("GetFilters")]
+        [Test, TestCaseSource(nameof(GetFilters))]
         public void ProcessMiscFilters(TestDescriptor test)
         {
             InternalFilterProcess(test);
@@ -21,13 +21,13 @@ namespace Ensconce.NDjango.Tests
 
         #region Pluralize filter
 
-        [Test, TestCaseSource("GetPluralizeFilters")]
+        [Test, TestCaseSource(nameof(GetPluralizeFilters))]
         public void ProcessPluralizeFilters(TestDescriptor test)
         {
             InternalFilterProcess(test);
         }
 
-        public static IList<TestDescriptor> GetPluralizeFilters()
+        private static IList<TestDescriptor> GetPluralizeFilters()
         {
             IList<TestDescriptor> lst = new List<TestDescriptor>();
 
@@ -113,13 +113,13 @@ namespace Ensconce.NDjango.Tests
 
         #region Phone2Numeric filter
 
-        [Test, TestCaseSource("GetPhone2NumericFilters")]
+        [Test, TestCaseSource(nameof(GetPhone2NumericFilters))]
         public void ProcessPhone2NumericFilters(TestDescriptor test)
         {
             InternalFilterProcess(test);
         }
 
-        public static IList<TestDescriptor> GetPhone2NumericFilters()
+        private static IList<TestDescriptor> GetPhone2NumericFilters()
         {
             IList<TestDescriptor> lst = new List<TestDescriptor>();
             ///>>> phone2numeric(u'0800 flowers')
@@ -135,13 +135,13 @@ namespace Ensconce.NDjango.Tests
 
         #region DefaultIfNone filter
 
-        [Test, TestCaseSource("GetDefaultIfNoneFilters")]
+        [Test, TestCaseSource(nameof(GetDefaultIfNoneFilters))]
         public void ProcessDefaultIfNoneFilters(TestDescriptor test)
         {
             InternalFilterProcess(test);
         }
 
-        public static IList<TestDescriptor> GetDefaultIfNoneFilters()
+        private static IList<TestDescriptor> GetDefaultIfNoneFilters()
         {
             IList<TestDescriptor> lst = new List<TestDescriptor>();
             ///>>> default_if_none(u"val", u"default")
@@ -158,17 +158,58 @@ namespace Ensconce.NDjango.Tests
             return lst;
         }
 
+        #region Default filter
+
+#pragma warning disable IDE0300 // Simplify collection initialization
+        [Test, TestCaseSource(nameof(DefaultFilterTests), new object[] { false, })]
+        public void DefaultFiltersTest(TestDescriptor test) => InternalFilterProcess(test);
+
+        [Test, TestCaseSource(nameof(DefaultFilterTests), new object[] { true, })]
+        public void DefaultFiltersTest_WithWhitespace(TestDescriptor test) => InternalFilterProcess(test);
+#pragma warning restore IDE0300 // Simplify collection initialization
+
+        private static IEnumerable<TestDescriptor> DefaultFilterTests(bool whitespaceBeforeArg)
+        {
+            string BuildTemplate(object filterArg) => $"{{{{ value|default:{(whitespaceBeforeArg ? " " : string.Empty)}{filterArg} }}}}";
+
+            yield return new TestDescriptor("When variable has value, returns variable", BuildTemplate("\"default\""), ContextObjects.p("value", "val"), ContextObjects.p("val"), "value");
+            //>>> default(u"val", u"default")
+            //u'val'
+
+            yield return new TestDescriptor("When variable has null, returns default", BuildTemplate("\"default\""), ContextObjects.p("value", null), ContextObjects.p("default"));
+            //>>> default(None, u"default")
+            //u'default'
+
+            yield return new TestDescriptor("When variable has empty string, returns default", BuildTemplate("\"default\""), ContextObjects.p("value", ""), ContextObjects.p("default"));
+            //>>> default(u"", u"default")
+            //u'default'
+
+            yield return new TestDescriptor("When default is numeric string, returns as expected", BuildTemplate("\"0\""), ContextObjects.p("value", ""), ContextObjects.p("0"));
+            //>>> default(u"val", u"0")
+            //u'0'
+
+            yield return new TestDescriptor("When default is integer, returns as expected", BuildTemplate(42), ContextObjects.p("value", ""), ContextObjects.p("42"));
+            //>>> default(u"val", 42)
+            //42
+
+            yield return new TestDescriptor("When default is float, returns as expected", BuildTemplate(3.14f), ContextObjects.p("value", ""), ContextObjects.p("3.14"));
+            //>>> default(u"val", 3.14)
+            //3.41
+        }
+
+        #endregion
+
         #endregion DefaultIfNone filter
 
         #region FileSizeFormat filter
 
-        [Test, TestCaseSource("GetFileSizeFormatFilters")]
+        [Test, TestCaseSource(nameof(GetFileSizeFormatFilters))]
         public void ProcessFileSizeFormatFilters(TestDescriptor test)
         {
             InternalFilterProcess(test);
         }
 
-        public static IList<TestDescriptor> GetFileSizeFormatFilters()
+        private static IList<TestDescriptor> GetFileSizeFormatFilters()
         {
             IList<TestDescriptor> lst = new List<TestDescriptor>();
 
@@ -209,7 +250,7 @@ namespace Ensconce.NDjango.Tests
 
         #endregion FileSizeFormat filter
 
-        public static IList<TestDescriptor> GetFilters()
+        private static IList<TestDescriptor> GetFilters()
         {
             IList<TestDescriptor> lst = new List<TestDescriptor>();
             Aaa newVal = new Aaa();
@@ -253,22 +294,6 @@ namespace Ensconce.NDjango.Tests
             lst.Add(new TestDescriptor("get_digit-filter05", "{{ value|get_digit:\"0\" }}", ContextObjects.p("value", "xyz"), ContextObjects.p("xyz")));
             //>>> get_digit(u'xyz', 0)
             //u'xyz'
-
-            lst.Add(new TestDescriptor("default-filter01", "{{ value|default:\"default\"}}", ContextObjects.p("value", "val"), ContextObjects.p("val"), "value"));
-            //>>> default(u"val", u"default")
-            //u'val'
-
-            lst.Add(new TestDescriptor("default-filter02", "{{ value|default:\"default\"}}", ContextObjects.p("value", null), ContextObjects.p("default")));
-            //>>> default(None, u"default")
-            //u'default'
-
-            lst.Add(new TestDescriptor("default-filter03", "{{ value|default:\"default\"}}", ContextObjects.p("value", ""), ContextObjects.p("default")));
-            //>>> default(u'', u"default")
-            //u'default'
-
-            lst.Add(new TestDescriptor("default-filter04", "{{ value|default:\"0\"}}", ContextObjects.p("value", ""), ContextObjects.p("0")));
-            //>>> default(u'', u"default")
-            //u'default'
 
             lst.Add(new TestDescriptor("divisibleby-filter01", "{{value|divisibleby:2}}", ContextObjects.p("value", 4), ContextObjects.p("True")));
             //>>> divisibleby(4, 2)

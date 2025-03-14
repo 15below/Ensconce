@@ -24,7 +24,7 @@ namespace Ensconce.NDjango.Tests
         }
 
         //        [Test, TestCaseSource("GetDesignerTests")]
-        public void DesignerTests(TestDescriptor test)
+        private void DesignerTests(TestDescriptor test)
         {
             DesignerTest(test);
         }
@@ -82,7 +82,7 @@ namespace Ensconce.NDjango.Tests
                 ).Run(managerForDesigner);
         }
 
-        public IEnumerable<TestDescriptor> GetDesignerTests()
+        private IEnumerable<TestDescriptor> GetDesignerTests()
         {
             //SetupStandartdValues();
             throw new Exception();

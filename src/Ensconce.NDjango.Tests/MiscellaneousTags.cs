@@ -8,13 +8,13 @@ namespace Ensconce.NDjango.Tests
 {
     public partial class TestsRunner
     {
-        [Test, TestCaseSource("GetMiscellaneousTagsTests")]
+        [Test, TestCaseSource(nameof(GetMiscellaneousTagsTests))]
         public void MiscellaneousTags(TestDescriptor test)
         {
             test.Run(manager);
         }
 
-        public static IList<TestDescriptor> GetMiscellaneousTagsTests()
+        private static IList<TestDescriptor> GetMiscellaneousTagsTests()
         {
             IList<TestDescriptor> lst = new List<TestDescriptor>();
             // autoescape tag

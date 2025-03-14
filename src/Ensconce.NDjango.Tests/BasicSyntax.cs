@@ -8,13 +8,13 @@ namespace Ensconce.NDjango.Tests
 {
     public partial class TestsRunner
     {
-        [Test, TestCaseSource("GetBasicTests")]
+        [Test, TestCaseSource(nameof(GetBasicTests))]
         public void BasicSyntax(TestDescriptor test)
         {
             test.Run(manager);
         }
 
-        public static IList<TestDescriptor> GetBasicTests()
+        private static IList<TestDescriptor> GetBasicTests()
         {
             IList<TestDescriptor> lst = new List<TestDescriptor>();
             //*
