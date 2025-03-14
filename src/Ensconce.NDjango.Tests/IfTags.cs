@@ -7,13 +7,13 @@ namespace Ensconce.NDjango.Tests
 {
     public partial class TestsRunner
     {
-        [Test, TestCaseSource("GetIfTagTests")]
+        [Test, TestCaseSource(nameof(GetIfTagTests))]
         public void IfTag(TestDescriptor test)
         {
             test.Run(manager);
         }
 
-        public static IList<TestDescriptor> GetIfTagTests()
+        private static IList<TestDescriptor> GetIfTagTests()
         {
             IList<TestDescriptor> lst = new List<TestDescriptor>();
 

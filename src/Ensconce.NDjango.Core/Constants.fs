@@ -83,7 +83,7 @@ module Constants =
                 Replace("%(strs)s", "[^'\\\\]*(?:\\\\.[^'\\\\]*)*").
                 Replace("%(var_chars)s", @"\w\.-"). // apparently the python \w also captures the (-) sign, whereas the .net doesn't. including this here means we also need to check for it in Variable as an illegal first character
                 Replace("%(filter_sep)s", "(\s*)" + !!FILTER_SEPARATOR + "(\s*)").
-                Replace("%(arg_sep)s", !!FILTER_ARGUMENT_SEPARATOR).
+                Replace("%(arg_sep)s", !!FILTER_ARGUMENT_SEPARATOR + "(?:\s*)").
                 Replace("%(i18n_open)s", !!I18N_OPEN).
                 Replace("%(i18n_close)s", !!I18N_CLOSE), RegexOptions.Compiled)
 

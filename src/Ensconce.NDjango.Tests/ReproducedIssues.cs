@@ -7,7 +7,7 @@ namespace Ensconce.NDjango.Tests
     public partial class TestsRunner
     {
         //       [Test, TestCaseSource("GetReproducedIssues")]
-        public void ReproducedIssues(TestDescriptor test)
+        private void ReproducedIssues(TestDescriptor test)
         {
             test.Run(manager);
         }
@@ -36,7 +36,7 @@ namespace Ensconce.NDjango.Tests
             return retList;
         }
 
-        public static IList<TestDescriptor> GetReproducedIssues()
+        private static IList<TestDescriptor> GetReproducedIssues()
         {
             IList<TestDescriptor> lst = new List<TestDescriptor>();
 

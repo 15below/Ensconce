@@ -150,7 +150,7 @@ namespace Ensconce.NDjango.Tests
         /// </summary>
         /// <param name="test"></param>
         //[Test, TestCaseSource("smart_split_tests")]
-        public void TestSmartSplit(StringTest test)
+        private void TestSmartSplit(StringTest test)
         {
             Regex r = new Regex(@"(""(?:[^""\\]*(?:\\.[^""\\]*)*)""|'(?:[^'\\]*(?:\\.[^'\\]*)*)'|[^\s]+)", RegexOptions.Compiled);
             MatchCollection m = r.Matches(@"'\'funky\' style'");
@@ -173,7 +173,7 @@ namespace Ensconce.NDjango.Tests
             //         Assert.AreEqual(to_string_array(of_array(test.expected)), to_string_array(OutputHandling.smart_split(test.provided)));
         }
 
-        public IEnumerable<StringTest> smart_split_tests()
+        private IEnumerable<StringTest> smart_split_tests()
         {
             System.Collections.Generic.List<StringTest> result = new System.Collections.Generic.List<StringTest>();
             result.Add(new StringTest("smart split-01",
@@ -200,7 +200,7 @@ namespace Ensconce.NDjango.Tests
         }
 
         //[Test, TestCaseSource("split_token_tests")]
-        public void TestSplitContent(StringTest test)
+        private void TestSplitContent(StringTest test)
         {
             Func<string[], FSStringList> of_array = (array) => ListModule.OfArray<string>(array);
 
@@ -220,7 +220,7 @@ namespace Ensconce.NDjango.Tests
             //Assert.AreEqual(to_string_array(of_array(test.expected)), to_string_array(OutputHandling.split_token_contents(test.provided)));
         }
 
-        public IEnumerable<StringTest> split_token_tests()
+        private IEnumerable<StringTest> split_token_tests()
         {
             System.Collections.Generic.List<StringTest> result = new System.Collections.Generic.List<StringTest>();
             result.Add(new StringTest("split token-01",

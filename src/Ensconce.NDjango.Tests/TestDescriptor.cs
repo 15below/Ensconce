@@ -166,7 +166,7 @@ namespace Ensconce.NDjango.Tests
                     Result = resultGetter();
                 }
 
-                Assert.AreEqual(Result[0], RunTemplate(manager, Template, context), "** Invalid rendering result");
+                Assert.That(RunTemplate(manager, Template, context), Is.EqualTo(Result[0]), "** Invalid rendering result");
                 //if (Vars.Length != 0)
                 //    Assert.AreEqual(Vars, manager.GetTemplateVariables(Template), "** Invalid variable list");
             }
@@ -181,7 +181,7 @@ namespace Ensconce.NDjango.Tests
 
                 if (Result[0] is Type)
                 {
-                    Assert.AreEqual(Result[0], ex.GetType(), "Exception: " + ex.Message);
+                    Assert.That(ex.GetType(), Is.EqualTo(Result[0]), "Exception: " + ex.Message);
                 }
                 else
                 {
@@ -229,14 +229,18 @@ namespace Ensconce.NDjango.Tests
 
             for (var i = 0; i < actualResult.Count; i++)
             {
-                Assert.AreEqual(ResultForDesigner[i].Length, actualResult[i].Length, "Invalid Length");
-                Assert.AreEqual(ResultForDesigner[i].Position, actualResult[i].Position, "Invalid Position");
-                Assert.AreEqual(ResultForDesigner[i].ErrorMessage, actualResult[i].ErrorMessage, "Invalid ErrorMessage");
-                Assert.AreEqual(ResultForDesigner[i].Severity, actualResult[i].Severity, "Invalid Severity");
-                Assert.AreEqual(ResultForDesigner[i].Values.OrderBy(x => x), actualResult[i].Values.OrderBy(x => x), "Invalid Values Array " + i);
+                var result = actualResult[i];
+                Assert.Multiple(() =>
+                {
+                    Assert.That(result.Length, Is.EqualTo(ResultForDesigner[i].Length), "Invalid Length");
+                    Assert.That(result.Position, Is.EqualTo(ResultForDesigner[i].Position), "Invalid Position");
+                    Assert.That(result.ErrorMessage, Is.EqualTo(ResultForDesigner[i].ErrorMessage), "Invalid ErrorMessage");
+                    Assert.That(result.Severity, Is.EqualTo(ResultForDesigner[i].Severity), "Invalid Severity");
+                    Assert.That(result.Values.OrderBy(x => x), Is.EqualTo(ResultForDesigner[i].Values.OrderBy(x => x)), "Invalid Values Array " + i);
+                });
             }
 
-            Assert.AreEqual(ResultForDesigner.Count(), actualResult.Count);
+            Assert.That(actualResult, Has.Count.EqualTo(ResultForDesigner.Count));
         }
 
         private static List<string> GetModelValues(TypeResolver.IDjangoType model, int recursionDepth)
