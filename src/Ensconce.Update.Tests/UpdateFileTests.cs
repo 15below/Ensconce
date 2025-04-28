@@ -564,5 +564,15 @@ namespace Ensconce.Update.Tests
 
             Assert.AreEqual("before", newConfig.XPathSelectElement("/root/value").Attribute("myAttr").Value);
         }
+
+        [Test]
+        public void SubstituteNestedLoops()
+        {
+            var loader = new Lazy<TagDictionary>(() => TagDictionary.FromSources("myId", new Dictionary<TagSource, string> { { TagSource.XmlFileName, "TagDictionaryTestFiles\\structure.xml" } }));
+            var newConfig = XDocument.Parse(ProcessSubstitution.Update(@"TestUpdateFiles\TestSubstitution41.xml", @"TestUpdateFiles\TestConfig1.xml", loader, true));
+            Assert.AreEqual("A", newConfig.XPathSelectElement("/root/value/grouping[@name='1']/values/value[@key='Default']")?.Value.Trim());
+            Assert.AreEqual("B", newConfig.XPathSelectElement("/root/value/grouping[@name='1']/values/value[@key='SubGroup']")?.Value.Trim());
+            Assert.AreEqual("C", newConfig.XPathSelectElement("/root/value/grouping[@name='2']/values/value[@key='Default']")?.Value.Trim());
+        }
     }
 }

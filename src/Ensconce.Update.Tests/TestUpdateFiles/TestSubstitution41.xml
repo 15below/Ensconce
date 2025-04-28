@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces />
+  <Files>
+    <File Filename="TestUpdateFiles\TestConfig1.xml">
+      <Changes>
+        <Change>
+          <XPath>/root/value</XPath>
+          <ReplacementContent>
+            <![CDATA[
+              {% for grouping in Group2 %}
+              {% if grouping.SubGroup|exists %}
+              {% else %}
+              <grouping name="{{ grouping.GroupName }}">
+                <values>
+                  <value key="Default">
+                    {{ grouping.myValue }}
+                  </value>
+                  {% for subGrouping in Group2 %}
+                  {% if subGrouping.GroupName == grouping.GroupName and subGrouping.SubGroup|exists %}
+                    <value key="{{ subGrouping.SubGroup }}">
+                      {{ subGrouping.myValue }}
+                    </value>
+		              {% endif %}
+		              {% endfor %}
+                </values>
+              </grouping>
+              {% endif %}
+              {% endfor %}
+            ]]>
+          </ReplacementContent>
+        </Change>
+      </Changes>
+    </File>
+  </Files>
+</Root>

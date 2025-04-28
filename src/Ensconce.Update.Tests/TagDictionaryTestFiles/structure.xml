@@ -26,6 +26,28 @@
         <Property name="avalue">idvalue</Property>
       </Properties>
     </PropertyGroup>
+    <PropertyGroup identity="0">
+      <Label>Group2</Label>
+      <Properties>
+        <Property name="GroupName">1</Property>
+        <Property name="myValue">A</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup identity="1">
+      <Label>Group2</Label>
+      <Properties>
+        <Property name="GroupName">1</Property>
+        <Property name="SubGroup">SubGroup</Property>
+        <Property name="myValue">B</Property>
+      </Properties>
+    </PropertyGroup>
+    <PropertyGroup identity="2">
+      <Label>Group2</Label>
+      <Properties>
+        <Property name="GroupName">2</Property>
+        <Property name="myValue">C</Property>
+      </Properties>
+    </PropertyGroup>
   </PropertyGroups>
   <DbLogins>
     <DbLogin>
