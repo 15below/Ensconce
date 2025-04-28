@@ -363,7 +363,14 @@ function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$
 {
     $kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
 
-    $prunableList = GetResourceVersionsUsed $kubernetesConfigFile $pruneSelector
+    if ($pruneSelector -eq $null -or $pruneSelector -eq "")
+    {
+        $prunableList = @()
+    }
+    else
+    {
+        $prunableList = GetResourceVersionsUsed $kubernetesConfigFile $pruneSelector
+    }
 
     $deploymentName = ""
     Write-Host "Deploying yaml file $yamlFile"
