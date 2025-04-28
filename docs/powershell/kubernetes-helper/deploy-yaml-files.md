@@ -11,7 +11,8 @@ description: Details about the DeployYamlFilesToK8sCluster function in kubernete
 DeployYamlFilesToK8sCluster
     [-yamlDirectory] <String>
     [-kubernetesConfigFile] <String>
-    [-pruneSelector] <String>
+    [-pruneSelector] <String> = $null
+	[-waitForDeployment] <Bool> = $true
 {% endraw %}
 ```
 
@@ -26,5 +27,11 @@ For prune to work correctly it needs to be provided with a selector
 ```PowerShell
 {% raw %}
 DeployYamlFilesToK8sCluster -yamlDirectory "/Path/To/YAML" -kubernetesConfigFile "/.kube/instance1.yaml" -pruneSelector "app=myapp"
+{% endraw %}
+```
+
+```PowerShell
+{% raw %}
+DeployYamlFilesToK8sCluster -yamlDirectory "/Path/To/YAML" -kubernetesConfigFile "/.kube/instance1.yaml" -waitForDeployment $false
 {% endraw %}
 ```
