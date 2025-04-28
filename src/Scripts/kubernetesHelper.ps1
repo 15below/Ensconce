@@ -359,7 +359,7 @@ function GetResourceVersionsUsed([string]$kubernetesConfigFile, [string]$selecto
     $resourceVersions
 }
 
-function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$pruneSelector)
+function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$pruneSelector, [bool]$waitForDeployment)
 {
     $kubernetesConfigFilePath = "$rootConfigPath\$kubernetesConfigFile"
 
@@ -386,8 +386,8 @@ function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$
     }
 
     Invoke-Expression $command | foreach-object {
-        Write-Host $_
-        if ($_.StartsWith("deployment.apps/"))
+        Write-Host $_        
+        if ($waitForDeployment -and $_.StartsWith("deployment.apps/"))
         {
             $deploymentLineName = $_.Substring(0, $_.IndexOf(' '))
             if ($deploymentName -eq "")
@@ -407,29 +407,32 @@ function DeployToK8s([string]$yamlFile, [string]$kubernetesConfigFile, [string]$
         exit $LASTEXITCODE
     }
 
-    if ($deploymentName -eq "")
+    if ($waitForDeployment)
     {
-        Write-Error "Unable to establish deployment name"
-        exit -1
-    }
-
-    For ($i=0; $i -lt 5; $i++) {
-        & $KubeCtlExe get $deploymentName --kubeconfig=$kubernetesConfigFilePath
-        if ($LASTEXITCODE -eq 0) {
-            break
+        if ($deploymentName -eq "")
+        {
+            Write-Error "Unable to establish deployment name"
+            exit -1
         }
-        Start-Sleep 5
-    }
 
-    & $KubeCtlExe rollout status $deploymentName --kubeconfig=$kubernetesConfigFilePath
-    if ($LASTEXITCODE -ne 0)
-    {
-        Write-Error "Rollout of $deploymentName was not successful"
-        exit $LASTEXITCODE
+        For ($i=0; $i -lt 5; $i++) {
+            & $KubeCtlExe get $deploymentName --kubeconfig=$kubernetesConfigFilePath
+            if ($LASTEXITCODE -eq 0) {
+                break
+            }
+            Start-Sleep 5
+        }
+
+        & $KubeCtlExe rollout status $deploymentName --kubeconfig=$kubernetesConfigFilePath
+        if ($LASTEXITCODE -ne 0)
+        {
+            Write-Error "Rollout of $deploymentName was not successful"
+            exit $LASTEXITCODE
+        }
     }
 }
 
-function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string]$kubernetesConfigFile, [string]$pruneSelector)
+function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string]$kubernetesConfigFile, [string]$pruneSelector = $null, [bool]$waitForDeployment = $true)
 {
     $yamlFile = PreProcessYaml $yamlDirectory
 
@@ -437,7 +440,7 @@ function DeployYamlFilesToK8sCluster([string]$yamlDirectory, [string]$kubernetes
 
     ValidateK8sYaml $yamlFile $kubernetesConfigFile
 
-    DeployToK8s $yamlFile $kubernetesConfigFile $pruneSelector
+    DeployToK8s $yamlFile $kubernetesConfigFile $pruneSelector $waitForDeployment
 }
 
 Write-Host "Ensconce - KubernetesHelper Loaded"
