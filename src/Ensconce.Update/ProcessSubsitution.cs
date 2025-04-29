@@ -34,6 +34,8 @@ namespace Ensconce.Update
             public string AddChildContent;
             public string AddChildContentIfNotExists;
             public bool HasAddChildContent;
+            public bool EncryptValue;
+            public string EncryptionCert;
             public bool Execute;
 
             public Substitution()
@@ -52,6 +54,8 @@ namespace Ensconce.Update
                 AddChildContent = "";
                 AddChildContentIfNotExists = "";
                 HasAddChildContent = false;
+                EncryptValue = false;
+                EncryptionCert = "";
                 Execute = true;
             }
         }
@@ -299,7 +303,7 @@ namespace Ensconce.Update
 
         private static void ChangeNodeValue(Lazy<TagDictionary> tagValues, XElement activeNode, Substitution sub)
         {
-            activeNode.Value = sub.ChangeValue.RenderTemplate(tagValues);
+            activeNode.Value = sub.ChangeValue.RenderTemplateEncrypted(tagValues, sub.EncryptValue ? sub.EncryptionCert : "");
         }
 
         private static void RemoveAllAttributes(XElement activeNode)
@@ -311,7 +315,7 @@ namespace Ensconce.Update
         {
             foreach (var (attribute, value) in sub.SetAttributes)
             {
-                activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                activeNode.SetAttributeValue(attribute, value.RenderTemplateEncrypted(tagValues, sub.EncryptValue ? sub.EncryptionCert : ""));
             }
         }
 
@@ -321,7 +325,7 @@ namespace Ensconce.Update
             {
                 if (activeNode.Attribute(attribute) != null)
                 {
-                    activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                    activeNode.SetAttributeValue(attribute, value.RenderTemplateEncrypted(tagValues, sub.EncryptValue ? sub.EncryptionCert : ""));
                 }
                 else
                 {
@@ -336,7 +340,7 @@ namespace Ensconce.Update
             {
                 if (activeNode.Attribute(attribute) == null)
                 {
-                    activeNode.SetAttributeValue(attribute, value.RenderTemplate(tagValues));
+                    activeNode.SetAttributeValue(attribute, value.RenderTemplateEncrypted(tagValues, sub.EncryptValue ? sub.EncryptionCert : ""));
                 }
                 else
                 {
@@ -433,7 +437,7 @@ namespace Ensconce.Update
                         throw new ApplicationException("Replacement content is not supported with json files");
                     }
 
-                    var updatedData = sub.ChangeValue.RenderTemplate(tagValues);
+                    var updatedData = sub.ChangeValue.RenderTemplateEncrypted(tagValues, sub.EncryptValue ? sub.EncryptionCert : "");
 
                     JToken value;
                     if (updatedData.TrimStart().StartsWith("{") || updatedData.TrimStart().StartsWith("["))
@@ -519,6 +523,12 @@ namespace Ensconce.Update
                 {
                     sub.Execute = bool.Parse($"{{% if {change.Attribute("if")?.Value} %}}true{{% else %}}false{{% endif %}}".RenderTemplate(tagValues));
                 }
+
+                if (change.Attribute("encryptValueCert") != null)
+                {
+                    sub.EncryptValue = true;
+                    sub.EncryptionCert = change.Attribute("encryptValueCert")?.Value;
+                }
             }
             else
             {
@@ -585,6 +595,12 @@ namespace Ensconce.Update
                 if (change.Attribute("if") != null)
                 {
                     sub.Execute = bool.Parse($"{{% if {change.Attribute("if")?.Value} %}}true{{% else %}}false{{% endif %}}".RenderTemplate(tagValues));
+                }
+
+                if (change.Attribute("encryptValueCert") != null)
+                {
+                    sub.EncryptValue = true;
+                    sub.EncryptionCert = change.Attribute("encryptValueCert")?.Value;
                 }
             }
 

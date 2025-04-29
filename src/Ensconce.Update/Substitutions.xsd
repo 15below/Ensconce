@@ -129,6 +129,7 @@
                               <xs:attribute name="value" type="xs:string" use="optional" />
                               <xs:attribute name="ifNotExists" type="xs:string" use="optional" />
                               <xs:attribute name="if" type="xs:string" use="optional" />
+                              <xs:attribute name="encryptValueCert" type="xs:string" use="optional" />
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>

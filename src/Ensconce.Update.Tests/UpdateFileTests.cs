@@ -574,5 +574,38 @@ namespace Ensconce.Update.Tests
             Assert.AreEqual("B", newConfig.XPathSelectElement("/root/value/grouping[@name='1']/values/value[@key='SubGroup']")?.Value.Trim());
             Assert.AreEqual("C", newConfig.XPathSelectElement("/root/value/grouping[@name='2']/values/value[@key='Default']")?.Value.Trim());
         }
+
+        [Test]
+        [Explicit("You can only run this with a specific certificate loaded into your computer")]
+        [TestCase("hello")]
+        [TestCase("")]
+        public void EncryptValue_Test(string data)
+        {
+            var dic = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties>
+                                                        <Property name=""Data"">{data}</Property>
+                                                        <Property name=""Certificate"">XX-NON-Certificate</Property>
+                                                      </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
+                                                  </Structure>");
+
+            var loader = new Lazy<TagDictionary>(() => dic);
+            var newConfig = XDocument.Parse(ProcessSubstitution.Update(@"TestUpdateFiles\TestSubstitution42.xml", @"TestUpdateFiles\TestConfig1.xml", loader, true));
+            var newValue = newConfig.XPathSelectElement("/root/value")?.Value.Trim();
+            Assert.IsNotNull(newValue);
+            if (string.IsNullOrEmpty(data))
+            {
+                Assert.IsEmpty(newValue);
+                Assert.AreEqual(0, newValue.Length);
+            }
+            else
+            {
+                Assert.IsNotEmpty(newValue);
+                Assert.Greater(newValue.Length, 10);
+            }
+        }
     }
 }
