@@ -48,7 +48,7 @@ namespace Ensconce.Update
                     return raw;
                 }
 
-                var renderedCertificate = Render($"{{{{ {certificate}|default:'{certificate}' }}}}", values, TemplateManager.Value);
+                var renderedCertificate = certificate.Contains("{{") || certificate.Contains("{%") ? Render(certificate, values, TemplateManager.Value) : Render($"{{{{ {certificate}|default:'{certificate}' }}}}", values, TemplateManager.Value);
                 var tagDictionary = TagDictionary.FromDictionary(new Dictionary<string, object>
                 {
                     { "data", raw },
