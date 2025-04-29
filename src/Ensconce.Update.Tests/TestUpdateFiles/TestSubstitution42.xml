@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Root xmlns="http://15below.com/Substitutions.xsd">
+  <Namespaces />
+  <Files>
+    <File Filename="TestUpdateFiles\TestConfig1.xml">
+      <Changes>
+        <Change type="ChangeValue" xPath="/root/value" value="{{ Data }}" encryptValueCert="Certificate" />
+      </Changes>
+    </File>
+  </Files>
+</Root>

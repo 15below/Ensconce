@@ -1,6 +1,7 @@
 ﻿using Ensconce.NDjango.Core;
 using Ensconce.NDjango.Custom;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Ensconce.Update
@@ -29,6 +30,32 @@ namespace Ensconce.Update
                                                     .GetNewManager();
             }
 
+        }
+
+        public static string RenderTemplateEncrypted(this string template, Lazy<TagDictionary> values, string certificate)
+        {
+            if (string.IsNullOrWhiteSpace(certificate))
+            {
+                return RenderTemplate(template, values);
+            }
+
+            lock (Locker)
+            {
+                var raw = Render(template, values, TemplateManager.Value);
+
+                if (string.IsNullOrWhiteSpace(raw))
+                {
+                    return raw;
+                }
+
+                var renderedCertificate = Render($"{{{{ {certificate}|default:'{certificate}' }}}}", values, TemplateManager.Value);
+                var tagDictionary = TagDictionary.FromDictionary(new Dictionary<string, object>
+                {
+                    { "data", raw },
+                    { "cert", renderedCertificate }
+                });
+                return Render("{{ data|encrypt:cert }}", new Lazy<TagDictionary>(() => tagDictionary), TemplateManager.Value);
+            }
         }
 
         public static string RenderTemplate(this string template, Lazy<TagDictionary> values)

@@ -680,6 +680,27 @@ namespace Ensconce.Update.Tests
 
             var data = "{{ Data|encrypt:Certificate }}".RenderTemplate(sut.ToLazyTagDictionary());
             Assert.IsNotNull(data);
+            Assert.Greater(data.Length, 10);
+        }
+
+        [Test]
+        [Explicit("You can only run this with a specific certificate loaded into your computer")]
+        public void EncryptRender_Test()
+        {
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties>
+                                                        <Property name=""Data"">hello</Property>
+                                                        <Property name=""Certificate"">XX-NON-Certificate</Property>
+                                                      </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
+                                                  </Structure>");
+
+            var data = "{{ Data }}".RenderTemplateEncrypted(sut.ToLazyTagDictionary(), "Certificate");
+            Assert.IsNotNull(data);
+            Assert.Greater(data.Length, 10);
         }
 
         [Test]
