@@ -26,7 +26,7 @@ if (Test-Path variable:\OctopusParameters)
 {
     foreach($kp in $OctopusParameters.GetEnumerator())
     {
-        if (!($kp.Key.Contains("Octopus.Step[")) -and !($kp.Key.Contains("Octopus.Action[")) -and !($kp.Key.Contains("Octopus.Only")) -and !($kp.Key.StartsWith("env:")))
+        if (!($kp.Key.Contains("Octopus.Step[")) -and !($kp.Key.Contains("Octopus.Action[")) -and !($kp.Key.Contains("Octopus.Only")) -and !($kp.Key.StartsWith("env:")) -and ($kp.Value.Length -lt 20000))
         {
             Set-Content ("env:\" + $kp.Key.replace("[","-").replace("]","")) ($kp.Value) -Force
         }
