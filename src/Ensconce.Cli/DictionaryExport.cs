@@ -10,7 +10,7 @@ namespace Ensconce.Cli
         internal static void ExportTagDictionary()
         {
             var tagDictionary = TagDictionaryBuilder.BuildLazy(Arguments.FixedPath);
-            var tagDictionaryJson = JsonConvert.SerializeObject(tagDictionary, Formatting.Indented);
+            var tagDictionaryJson = JsonConvert.SerializeObject(tagDictionary.Value, Formatting.Indented);
 
             if (!string.IsNullOrWhiteSpace(Arguments.DictionarySavePath))
             {
