@@ -76,11 +76,7 @@ namespace Ensconce.Update
 
             foreach (var kvp in raw)
             {
-                if (kvp.Value is string || kvp.Value is SubTagDictionary)
-                {
-                    Add(kvp.Key, kvp.Value);
-                }
-                else if (kvp.Value is JObject valJObject)
+                if (kvp.Value is JObject valJObject)
                 {
                     var subDictionary = valJObject.ToObject<Dictionary<string, Dictionary<string, object>>>();
                     var subTagDictionary = new SubTagDictionary();
@@ -88,9 +84,16 @@ namespace Ensconce.Update
 
                     foreach (var subDictionaryValue in subDictionary)
                     {
-                        //var instanceDictionary = subDictionaryValue.Value.ToDictionary<KeyValuePair<string, string>, string, object>(instanceValue => instanceValue.Key, instanceValue => instanceValue.Value);
                         subTagDictionary.Add(subDictionaryValue.Key, subDictionaryValue.Value);
                     }
+                }
+                else if (kvp.Value is string || kvp.Value is IEnumerable<object> || kvp.Value is IEnumerable<string> || kvp.Value is SubTagDictionary)
+                {
+                    Add(kvp.Key, kvp.Value);
+                }
+                else
+                {
+                    throw new InvalidDataException($"Unsupported value type '{kvp.Value.GetType()}' for key '{kvp.Key}'. Only string, List<object>, and SubTagDictionary are supported.");
                 }
             }
         }
