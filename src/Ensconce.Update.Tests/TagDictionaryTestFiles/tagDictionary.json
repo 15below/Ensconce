@@ -1,0 +1,36 @@
+{
+  "Prop1": "GeneralValue1",
+  "Prop2": "GeneralValue2",
+  "Label1": {
+    "Identity1": {
+      "identity": "Identity1",
+      "Prop1": "Label1Identity1Value1",
+      "Prop2": "Label1Identity1Value2"
+    },
+    "Identity2": {
+      "identity": "Identity2",
+      "Prop1": "Label1Identity2Value1",
+      "Prop2": "Label1Identity2Value2"
+    }
+  },
+  "Label2": {
+    "Identity1": {
+      "identity": "Identity1",
+      "Prop1": "Label2Identity1Value1",
+      "Prop2": "Label2Identity1Value2"
+    },
+    "Identity2": {
+      "identity": "Identity2",
+      "Prop1": "Label2Identity2Value1",
+      "Prop2": "Label2Identity2Value2"
+    }
+  },
+  "DbLogins": {
+    "MyDB": {
+      "Username": "MyUser",
+      "Password": "MyPassword",
+      "DefaultDb": "MyDatabase",
+      "ConnectionString": "Data Source=MyServer; Initial Catalog=MyDatabase; User ID=MyUser; Password=MyPassword;"
+    }
+  }
+}

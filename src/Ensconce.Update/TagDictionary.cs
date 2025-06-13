@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -15,13 +17,9 @@ namespace Ensconce.Update
     {
         private readonly IDictionary<string, object> innerDictionary;
 
-        private TagDictionary() : this(new Dictionary<string, object>())
+        private TagDictionary()
         {
-        }
-
-        private TagDictionary(IDictionary<string, object> baseDictionary)
-        {
-            innerDictionary = baseDictionary;
+            innerDictionary = new Dictionary<string, object>();
         }
 
         public static TagDictionary Empty()
@@ -57,9 +55,44 @@ namespace Ensconce.Update
             return tagDictionary;
         }
 
+        public static TagDictionary FromDictionary(string raw)
+        {
+            return FromDictionary(JsonConvert.DeserializeObject<IDictionary<string, object>>(raw));
+        }
+
         public static TagDictionary FromDictionary(IDictionary<string, object> raw)
         {
-            return new TagDictionary(raw);
+            var tagDictionary = new TagDictionary();
+            tagDictionary.LoadDictionary(raw);
+            return tagDictionary;
+        }
+
+        private void LoadDictionary(IDictionary<string, object> raw)
+        {
+            if (raw == null || raw.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var kvp in raw)
+            {
+                if (kvp.Value is string || kvp.Value is SubTagDictionary)
+                {
+                    Add(kvp.Key, kvp.Value);
+                }
+                else if (kvp.Value is JObject valJObject)
+                {
+                    var subDictionary = valJObject.ToObject<Dictionary<string, Dictionary<string, object>>>();
+                    var subTagDictionary = new SubTagDictionary();
+                    Add(kvp.Key, subTagDictionary);
+
+                    foreach (var subDictionaryValue in subDictionary)
+                    {
+                        //var instanceDictionary = subDictionaryValue.Value.ToDictionary<KeyValuePair<string, string>, string, object>(instanceValue => instanceValue.Key, instanceValue => instanceValue.Value);
+                        subTagDictionary.Add(subDictionaryValue.Key, subDictionaryValue.Value);
+                    }
+                }
+            }
         }
 
         private void LoadDictionary(string identifier, Dictionary<TagSource, string> sources)

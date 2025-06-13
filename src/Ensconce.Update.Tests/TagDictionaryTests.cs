@@ -22,11 +22,17 @@ namespace Ensconce.Update.Tests
         private const string Avalue = "avalue";
         private const string Idvalue = "idvalue";
 
-        private readonly Lazy<string> xml = new Lazy<string>(() => new StreamReader(File.OpenRead(@"webservice-structure.xml")).ReadToEnd());
+        private readonly Lazy<string> xml = new Lazy<string>(() => new StreamReader(File.OpenRead("webservice-structure.xml")).ReadToEnd());
+        private readonly Lazy<string> json = new Lazy<string>(() => new StreamReader(File.OpenRead("tagDictionary.json")).ReadToEnd());
 
         private string XmlData
         {
             get { return xml.Value; }
+        }
+
+        private string JsonData
+        {
+            get { return json.Value; }
         }
 
         [SetUp]
@@ -777,6 +783,28 @@ namespace Ensconce.Update.Tests
             var sut = TagDictionary.FromSources("ident", new Dictionary<TagSource, string> { { TagSource.XmlData, XmlData } });
             //Environment = LOC
             Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% if Environment|lower in (\"uat\",\"tst\") %}True{% else %}False{% endif %}".RenderTemplate(sut.ToLazyTagDictionary()));
+        }
+
+        [Test]
+        [TestCase("{{ Prop1 }}", "GeneralValue1")]
+        [TestCase("{{ Prop2 }}", "GeneralValue2")]
+        [TestCase("{{ Label1.Identity1.Prop1 }}", "Label1Identity1Value1")]
+        [TestCase("{{ Label1.Identity1.Prop2 }}", "Label1Identity1Value2")]
+        [TestCase("{{ Label1.Identity2.Prop1 }}", "Label1Identity2Value1")]
+        [TestCase("{{ Label1.Identity2.Prop2 }}", "Label1Identity2Value2")]
+        [TestCase("{{ Label2.Identity1.Prop1 }}", "Label2Identity1Value1")]
+        [TestCase("{{ Label2.Identity1.Prop2 }}", "Label2Identity1Value2")]
+        [TestCase("{{ Label2.Identity2.Prop1 }}", "Label2Identity2Value1")]
+        [TestCase("{{ Label2.Identity2.Prop2 }}", "Label2Identity2Value2")]
+        [TestCase("{{ DbLogins.MyDB.Username }}", "MyUser")]
+        [TestCase("{{ DbLogins.MyDB.Password }}", "MyPassword")]
+        [TestCase("{{ DbLogins.MyDB.DefaultDb }}", "MyDatabase")]
+        [TestCase("{{ DbLogins.MyDB.ConnectionString }}", "Data Source=MyServer; Initial Catalog=MyDatabase; User ID=MyUser; Password=MyPassword;")]
+        [TestCase("{% for instance in Label1 %}{{ instance.Prop1 }}|{% endfor %}", "Label1Identity1Value1|Label1Identity2Value1|")]
+        public void LoadFromJsonDictionary(string input, string expected)
+        {
+            var sut = TagDictionary.FromDictionary(JsonData);
+            Assert.AreEqual(expected, input.RenderTemplate(sut.ToLazyTagDictionary()));
         }
     }
 }
