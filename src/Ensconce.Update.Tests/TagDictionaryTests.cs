@@ -648,6 +648,112 @@ namespace Ensconce.Update.Tests
         }
 
         [Test]
+        [TestCase("a,b,c", ",", 3)]
+        [TestCase("hello-world-test", "-", 3)]  
+        [TestCase("single", ",", 1)]
+        [TestCase("", ",", 1)]
+        [TestCase("a,,c", ",", 3)]
+        [TestCase("start,", ",", 2)]
+        [TestCase(",end", ",", 2)]
+        public void Split_ReturnsCorrectNumberOfItems(string value, string delimiter, int expectedCount)
+        {
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties>
+                                                        <Property name=""Data"">{value}</Property>
+                                                      </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
+                                                  </Structure>");
+
+            // Count the number of iterations to verify split worked correctly
+            var template = "{% for item in Data|split:'#delimiter#' %}x{% endfor %}".Replace("#delimiter#", delimiter);
+            var result = template.RenderTemplate(sut.ToLazyTagDictionary());
+            Assert.AreEqual(expectedCount, result.Length, $"Expected {expectedCount} items but got {result.Length}");
+        }
+
+        [Test] 
+        [TestCase("a,b,c", ",", "a", "b", "c")]
+        [TestCase("hello-world", "-", "hello", "world")]  
+        [TestCase("single", ",", "single")]
+        [TestCase("", ",", "")]
+        [TestCase("a,,c", ",", "a", "", "c")]
+        public void Split_ReturnsCorrectItems(string value, string delimiter, params string[] expectedItems)
+        {
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties>
+                                                        <Property name=""Data"">{value}</Property>
+                                                      </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
+                                                  </Structure>");
+
+            // Use position-based checking to verify content without relying on forloop.last
+            for (int i = 0; i < expectedItems.Length; i++)
+            {
+                var template = "{% for item in Data|split:'" + delimiter + "' %}{% if forloop.counter0 == " + i + " %}{{ item }}{% endif %}{% endfor %}";
+                var result = template.RenderTemplate(sut.ToLazyTagDictionary());
+                Assert.AreEqual(expectedItems[i], result, $"Item at position {i} should be '{expectedItems[i]}' but was '{result}'");
+            }
+        }
+
+        [Test]
+        public void Split_EmptyString_Throws()
+        {
+            var sut = TagDictionary.FromXml("ident", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties>
+                                                        <Property name=""Data"">a,b,c</Property>
+                                                      </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
+                                                  </Structure>");
+
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% for item in Data|split:'' %}{{ item }}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
+        }
+
+        [Test]
+        public void Split_WhenPropertyDoesntExist_Throws()
+        {
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties>
+                                                        <Property name=""Data"">a,b,c</Property>
+                                                      </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
+                                                  </Structure>");
+
+            Assert.Throws<NDjangoWrapper.NDjangoWrapperException>(() => "{% for item in Undata|split:',' %}{{ item }}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary()));
+        }
+
+        [Test]
+        [TestCase("a,b,c", ",", 3)]
+        [TestCase("hello-world", "-", 2)]
+        [TestCase("test", ",", 1)]
+        public void Split_WhenPropertyDoesntExist_Defaulted(string value, string delimiter, int expectedCount)
+        {
+            var sut = TagDictionary.FromXml("ident", $@"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties />
+                                                      <PropertyGroups />
+                                                      <DbLogins />
+                                                  </Structure>");
+
+            var template = "{% for item in Data|default:'#value#'|split:'#delimiter#' %}x{% endfor %}"
+                .Replace("#value#", value)
+                .Replace("#delimiter#", delimiter);
+            var result = template.RenderTemplate(sut.ToLazyTagDictionary());
+            Assert.AreEqual(expectedCount, result.Length, $"Expected {expectedCount} items but got {result.Length}");
+        }
+
+        [Test]
         [Explicit("You can only run this with a specific certificate loaded into your computer")]
         public void Decrypt_Test()
         {
@@ -805,6 +911,33 @@ namespace Ensconce.Update.Tests
         {
             var sut = TagDictionary.FromDictionary(JsonData);
             Assert.AreEqual(expected, input.RenderTemplate(sut.ToLazyTagDictionary()));
+        }
+
+        [Test]
+        public void Split_IntegrationTest_WorksWithRealScenario()
+        {
+            var sut = TagDictionary.FromXml("test", @"<Structure xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">
+                                                      <ClientCode>XX</ClientCode>
+                                                      <Environment>LOC</Environment>
+                                                      <Properties>
+                                                         <Property name=""Servers"">web01,web02,web03</Property>
+                                                         <Property name=""Paths"">/app/bin:/app/config:/app/logs</Property>
+                                                      </Properties>
+                                                      <PropertyGroups />
+                                                      <DbLogins />
+                                                  </Structure>");
+
+            // Test comma-separated server list
+            var serverResult = "Server list: {% for server in Servers|split:',' %}{{ server }}{% if not forloop.last %}, {% endif %}{% endfor %}".RenderTemplate(sut.ToLazyTagDictionary());
+            Assert.AreEqual("Server list: web01, web02, web03", serverResult);
+            
+            // Test colon-separated paths
+            var pathResult = "Path count: {{ Paths|split:':'|length }}".RenderTemplate(sut.ToLazyTagDictionary());
+            Assert.AreEqual("Path count: 3", pathResult);
+            
+            // Test combining split with other filters
+            var firstServerResult = "First server: {{ Servers|split:','|first }}".RenderTemplate(sut.ToLazyTagDictionary());
+            Assert.AreEqual("First server: web01", firstServerResult);
         }
     }
 }

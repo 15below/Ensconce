@@ -13,6 +13,7 @@ namespace Ensconce.NDjango.Custom.Filters
             new Filter("contains", new ContainsFilter()),
             new Filter("startsWith", new StartsWithFilter()),
             new Filter("endsWith", new EndsWithFilter()),
+            new Filter("split", new SplitFilter()),
             new Filter("decrypt", new DecryptFilter()),
             new Filter("encrypt", new EncryptFilter())
         };
