@@ -488,26 +488,19 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
         $ipAddress = "*"
     }
 
-    $checkBinding = CheckIfSslBindingExists $instanceName $hostHeader
+    $checkBinding = CheckIfSslBindingExists $websiteName $hostHeader
     if ($checkBinding -eq $True) {
-        write-host "SSL binding of $hostHeader on $instanceName already exists, skipping."
-        return
-    }
-
-    $cert = GetSslCert $friendlyName
-    $certThumbprint = $cert.Thumbprint
-
-    if($certThumbprint -eq $null -or $certThumbprint -eq "") {
-        throw "SSL Cert $friendlyName has no thumbprint"
-    }
-
-    if ($iisVersion -gt 8)
-    {
-        New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader -SslFlags 1
-    }
-    else
-    {
-        New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader
+        write-host "SSL binding of $hostHeader on $websiteName already exists."
+    } else {
+        write-host "Creating SSL binding of $hostHeader on $websiteName."
+        if ($iisVersion -gt 8)
+        {
+            New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader -SslFlags 1
+        }
+        else
+        {
+            New-WebBinding -Name $websiteName -IP $ipAddress -Port 443 -Protocol https -HostHeader $hostHeader
+        }
     }
 
     try
@@ -522,36 +515,52 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
         $bindings=Get-ChildItem IIS:\SslBindings
     }
 
+    if ($iisVersion -le 8)
+    {
+        if ($ipAddress -eq "*")
+        {
+            $ipAddress = "0.0.0.0"
+        }
+    }
+
+    if ($ipAddress -eq "*")
+    {
+        if (($bindings | where-object {$_.port -eq "443" -and $_.Host -eq $hostHeader }) -ne $Null)
+        {
+            write-host "SSL binding of $hostHeader has certificate bound."
+            return
+        }
+    } else {
+        if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq $ipAddress -and $_.Host -eq $hostHeader }) -ne $Null)
+        {
+            write-host "SSL binding of $hostHeader with IP address $ipAddress has certificate bound."
+            return
+        }
+    }
+
+    $cert = GetSslCert $friendlyName
+    $certThumbprint = $cert.Thumbprint
+
+    if($certThumbprint -eq $null -or $certThumbprint -eq "") {
+        throw "SSL Cert $friendlyName has no thumbprint"
+    }
+
     Set-Location IIS:\sslbindings
 
     if ($iisVersion -gt 8)
     {
         if ($ipAddress -eq "*")
         {
-            if (($bindings | where-object {$_.port -eq "443" -and $_.Host -eq $hostHeader}) -eq $Null)
-            {
-                new-item *!443!$hostHeader -Thumbprint $certThumbprint -SSLFlags 1
-            }
+            new-item *!443!$hostHeader -Thumbprint $certThumbprint -SSLFlags 1
         }
         else
         {
-            if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq $ipAddress -and $_.Host -eq $hostHeader}) -eq $Null)
-            {
-                new-item $ipAddress!443!$hostHeader -Thumbprint $certThumbprint -SSLFlags 1
-            }
+            new-item $ipAddress!443!$hostHeader -Thumbprint $certThumbprint -SSLFlags 1
         }
     }
     else
     {
-        if ($ipAddress -eq "*")
-        {
-            $ipAddress = "0.0.0.0"
-        }
-
-        if (($bindings | where-object {$_.port -eq "443" -and $_.IPAddress -eq $ipAddress}) -eq $Null)
-        {
-            new-item $ipAddress!443 -Thumbprint $certThumbprint
-        }
+        new-item $ipAddress!443 -Thumbprint $certThumbprint
     }
 
     Set-Location $scriptDir
