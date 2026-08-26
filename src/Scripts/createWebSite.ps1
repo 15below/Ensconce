@@ -559,11 +559,11 @@ function AddSslCertificate ([string] $websiteName, [string] $friendlyName, [stri
 
 function GetSslCert([string] $friendlyName)
 {
-    $cert = get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName} | Select-Object -first 1
+    $cert = get-childitem -Path cert:\LocalMachine -Recurse | Where-Object {$_.FriendlyName -eq $friendlyName -and $_.NotAfter -ge (Get-Date) -and $_.NotBefore -le (Get-Date) } | Sort-Object { $_.NotAfter } -Descending | Select-Object -first 1
 
     if ($cert -eq $null)
     {
-        throw "SSL Cert $friendlyName not found"
+        throw "SSL Cert $friendlyName not found or is invalid"
     }
 
     $cert
