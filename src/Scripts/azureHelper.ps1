@@ -135,4 +135,160 @@ function Azure-DeployWebApp([string]$username, [string]$password, [string]$tenan
     }
 }
 
+function Azure-GetDnsRecord([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$zoneName, [string]$recordName, [string]$subscription)
+{
+    Azure-LoginServicePrincipal $username $password $tenant
+
+    $recordsJson = & az network dns record-set list --resource-group $resourceGroup --zone-name $zoneName --subscription $subscription --only-show-errors --output json
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "Error looking up DNS records in zone $zoneName"
+    }
+
+    $records = @($recordsJson | ConvertFrom-Json | Where-Object {
+        $_.name -eq $recordName -and $_.type -in @("Microsoft.Network/dnszones/A", "Microsoft.Network/dnszones/CNAME")
+    })
+
+    $records
+}
+
+function Azure-CreateOrUpdateDnsRecord([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$zoneName, [string]$recordName, [ValidateSet("A", "CNAME")][string]$recordType, [string]$value, [string]$subscription, [int]$ttl = 3600, [bool]$warnOnUpdate = $false)
+{
+    if ($ttl -lt 1)
+    {
+        throw "TTL must be greater than zero"
+    }
+
+    if ($recordType -eq "A")
+    {
+        $parsedAddress = $null
+        if (-not [System.Net.IPAddress]::TryParse($value, [ref]$parsedAddress) -or $parsedAddress.AddressFamily -ne [System.Net.Sockets.AddressFamily]::InterNetwork)
+        {
+            throw "An A record requires an IPv4 address"
+        }
+    }
+    elseif ([string]::IsNullOrWhiteSpace($value))
+    {
+        throw "A CNAME record requires a target"
+    }
+
+    Azure-LoginServicePrincipal $username $password $tenant
+
+    $recordsJson = & az network dns record-set list --resource-group $resourceGroup --zone-name $zoneName --subscription $subscription --only-show-errors --output json
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "Error looking up DNS records in zone $zoneName"
+    }
+
+    $records = @($recordsJson | ConvertFrom-Json | Where-Object {
+        $_.name -eq $recordName -and $_.type -in @("Microsoft.Network/dnszones/A", "Microsoft.Network/dnszones/CNAME")
+    })
+    $desiredType = "Microsoft.Network/dnszones/$recordType"
+    $existingRecord = $records | Select-Object -First 1
+
+    if ($null -ne $existingRecord -and $existingRecord.type -ne $desiredType)
+    {
+        & az network dns record-set delete --resource-group $resourceGroup --zone-name $zoneName --name $recordName --type ($existingRecord.type -split "/")[-1] --subscription $subscription --yes --only-show-errors
+        if ($LASTEXITCODE -ne 0)
+        {
+            throw "Error replacing DNS record $recordName"
+        }
+        $existingRecord = $null
+    }
+
+    if ($recordType -eq "A")
+    {
+        if ($null -eq $existingRecord)
+        {
+            & az network dns record-set a create --resource-group $resourceGroup --zone-name $zoneName --name $recordName --ttl $ttl --subscription $subscription --only-show-errors
+            if ($LASTEXITCODE -ne 0)
+            {
+                throw "Error creating DNS A record $recordName"
+            }
+        }
+        elseif ($existingRecord.ttl -ne $ttl)
+        {
+            & az network dns record-set a update --resource-group $resourceGroup --zone-name $zoneName --record-set-name $recordName --set ttl=$ttl --subscription $subscription --only-show-errors
+            if ($LASTEXITCODE -ne 0)
+            {
+                throw "Error updating DNS A record $recordName TTL"
+            }
+        }
+
+        $currentAddresses = @($existingRecord | Select-Object -ExpandProperty aRecords -ErrorAction SilentlyContinue | Select-Object -ExpandProperty ipv4Address)
+        $addressesToRemove = @($currentAddresses | Where-Object { $_ -ne $value })
+        foreach ($currentAddress in $addressesToRemove)
+        {
+            & az network dns record-set a remove-record --resource-group $resourceGroup --zone-name $zoneName --record-set-name $recordName --ipv4-address $currentAddress --subscription $subscription --only-show-errors
+            if ($LASTEXITCODE -ne 0)
+            {
+                throw "Error updating DNS A record $recordName"
+            }
+        }
+
+        if ($currentAddresses -notcontains $value)
+        {
+            & az network dns record-set a add-record --resource-group $resourceGroup --zone-name $zoneName --record-set-name $recordName --ipv4-address $value --subscription $subscription --only-show-errors
+            if ($LASTEXITCODE -ne 0)
+            {
+                throw "Error updating DNS A record $recordName"
+            }
+            if ($warnOnUpdate)
+            {
+                Write-Warning "DNS A record $recordName.$zoneName updated to $value"
+            }
+        }
+    }
+    else
+    {
+        if ($null -eq $existingRecord)
+        {
+            & az network dns record-set cname create --resource-group $resourceGroup --zone-name $zoneName --name $recordName --ttl $ttl --subscription $subscription --only-show-errors
+            if ($LASTEXITCODE -ne 0)
+            {
+                throw "Error creating DNS CNAME record $recordName"
+            }
+        }
+        elseif ($existingRecord.ttl -ne $ttl)
+        {
+            & az network dns record-set cname update --resource-group $resourceGroup --zone-name $zoneName --record-set-name $recordName --set ttl=$ttl --subscription $subscription --only-show-errors
+            if ($LASTEXITCODE -ne 0)
+            {
+                throw "Error updating DNS CNAME record $recordName TTL"
+            }
+        }
+
+        $currentTarget = $existingRecord | Select-Object -ExpandProperty cnameRecord -ErrorAction SilentlyContinue | Select-Object -ExpandProperty cname
+        if ($null -ne $currentTarget)
+        {
+            $currentTarget = $currentTarget.TrimEnd(".")
+        }
+        $target = $value.TrimEnd(".")
+        if ($currentTarget -ne $target)
+        {
+            & az network dns record-set cname set-record --resource-group $resourceGroup --zone-name $zoneName --record-set-name $recordName --cname $target --subscription $subscription --only-show-errors
+            if ($LASTEXITCODE -ne 0)
+            {
+                throw "Error updating DNS CNAME record $recordName"
+            }
+            if ($warnOnUpdate)
+            {
+                Write-Warning "DNS CNAME record $recordName.$zoneName updated to $value"
+            }
+        }
+    }
+
+    $true
+}
+
+function Azure-CreateOrUpdateDnsARecord([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$zoneName, [string]$recordName, [string]$ipAddress, [string]$subscription, [int]$ttl = 3600, [bool]$warnOnUpdate = $false)
+{
+    Azure-CreateOrUpdateDnsRecord $username $password $tenant $resourceGroup $zoneName $recordName "A" $ipAddress $subscription $ttl $warnOnUpdate
+}
+
+function Azure-CreateOrUpdateDnsCNameRecord([string]$username, [string]$password, [string]$tenant, [string]$resourceGroup, [string]$zoneName, [string]$recordName, [string]$target, [string]$subscription, [int]$ttl = 3600, [bool]$warnOnUpdate = $false)
+{
+    Azure-CreateOrUpdateDnsRecord $username $password $tenant $resourceGroup $zoneName $recordName "CNAME" $target $subscription $ttl $warnOnUpdate
+}
+
 Write-Host "Ensconce - AzureHelper Loaded"
