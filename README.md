@@ -38,3 +38,5 @@ How do I use it?
 ----------------
 
 Documentation for how to use ensconce can be found at https://15below.github.io/Ensconce/
+
+PowerShell helper documentation, including Azure DNS record management, is available at https://15below.github.io/Ensconce/powershell/azure-helper/
