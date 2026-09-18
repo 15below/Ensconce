@@ -15,3 +15,5 @@ Azure-GetDnsRecord -username $servicePrincipal -password $password -tenant $tena
 ```
 
 The function returns Azure CLI record-set objects. Only A and CNAME record sets matching `recordName` are returned.
+
+The lookup does not create or modify records.
